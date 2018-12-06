@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 import math
-import Loop
+import Maze
 import Drawing
 
 
@@ -9,15 +9,16 @@ class App:
     # Creation of App object
     def __init__(self):
         self._running = True
-        self._display_surf = None
-        self.size = self.weight, self.height = 1000, 625
+        self.screen = None
+        self.size = self.weight, self.height = 1600, 900
         self.background = None
         self.FPS = 0
-        self.key = None
+        # One key for each character
+        self.key = {1:None, 2:None}
     # Initialisation of App object
     def on_init(self):
         pygame.init()
-        self._display_surf = pygame.display.set_mode(self.size, pygame.DOUBLEBUF)
+        self.screen = pygame.display.set_mode(self.size, pygame.DOUBLEBUF)
         self.background = pygame.Surface((self.size)).convert()
         self.background_()
         self._running = True
@@ -52,16 +53,25 @@ class App:
             elif event.key == pygame.K_0:
                 self.FPS = 1000
             elif event.key == pygame.K_UP:
-                self.key ='up'
+                self.key[1] = 'up'
             elif event.key == pygame.K_DOWN:
-                self.key ='down'
+                self.key[1] = 'down'
             elif event.key == pygame.K_LEFT:
-                self.key ='left'
+                self.key[1] = 'left'
             elif event.key == pygame.K_RIGHT:
-                self.key ='right'
+                self.key[1] = 'right'
+            elif event.key == pygame.K_w:
+                self.key[2] = 'up'
+            elif event.key == pygame.K_s:
+                self.key[2] = 'down'
+            elif event.key == pygame.K_a:
+                self.key[2] = 'left'
+            elif event.key == pygame.K_d:
+                self.key[2] = 'right'
+
         else:
-            self.key = 'none'
-    # Main loop (where things happen ;) )
+            self.key = {1:'none', 2:'none'}
+    # Main loop (where things are supposed happen ;) )
     def on_loop(self):
         pass
 
@@ -78,11 +88,15 @@ class App:
         if self.on_init() == False:
             self._running = False
 
+        # Initialisation of variables
         clock = pygame.time.Clock()
         self.FPS = 60 # FPS max
         playtime = 0
-        Harry = Drawing.Bonhomme(self._display_surf, self.background, 'Image\Harry.png', (50,340))
-        Hermione = Drawing.Bonhomme(self._display_surf, self.background, 'Image\Hermione.png', (700,340))
+        Maze_ = Maze.Maze(self.screen)
+        #Harry_Potter_Quidditch = Drawing.Bonhomme(self.screen, self.background,'Wizarding Game\\Image\\120x120\\Harry_Potter_Quidditch', (63,72,204), (50,340))
+        Harry_Potter = Drawing.Bonhomme(self.screen, self.background, 'Wizarding Game\\Image\\120x120\\Harry_Potter', (63,72,204), Maze_.start_position)
+
+
         # Frame
         while( self._running ):
             milliseconds = clock.tick(self.FPS)  # Milliseconds passed since last frame
@@ -93,13 +107,18 @@ class App:
             # Display FPS
             pygame.display.set_caption("Wizarding Game"" : limit FPS to {}"
                                " (now: {:.2f})".format(self.FPS,clock.get_fps()))
+            # Loop (not usefull for now)
             self.on_loop()
+            # Main loop (The actual one :) )
 
-            self._display_surf.blit(self.background, (0,0))
-            Harry.draw()
-            Hermione.draw_motion(self.key)
+            """
+            self.screen.blit(self.background, (0,0))
+            """
+            #Harry_Potter_Quidditch.draw_motion(self.key[2])
+            Harry_Potter.draw_motion(self.key[1], Maze_.start, Maze_.length, Maze_.height)
             pygame.display.flip()
-
+            Maze_.run_()
+            # Render (nor usefull now)
             self.on_render()
 
         # Time played
