@@ -11,7 +11,7 @@ class Bonhomme():
         self.switchy = switchy
         self.load = [load, load+'_Right.png']
         self.colorkey = colorkey
-        self.dx, self.dy = 3, 3
+        self.dx, self.dy = 10, 10
     """Test"""
     def draw_squeleton(self):
         # Head
@@ -43,8 +43,8 @@ class Bonhomme():
         self.image()
 
     # Alows characters to be moved with keypad
-    def draw_motion(self, way, level, length, height):
-        self.motion_keys(way, level, length, height)
+    def draw_motion(self, way, maze):
+        self.motion_keys(way, maze)
         self.image()
 
     # Charges an image (as character for example)
@@ -54,59 +54,63 @@ class Bonhomme():
         self.screen.blit(monsieur, (self.position))
 
     # Defines motions made with keys events
-    def motion_keys(self, way, level, length, height):
+    def motion_keys(self, way, maze):
         if way == 'left':
             if self.x-self.dx >= 0:
-                pixels = [(self.x-self.dx,self.y), (self.x-self.dx,self.y+58), (self.x-self.dx,self.y+116)]
+                pixels = [(self.x-self.dx,self.y),(self.x-self.dx,self.y+29), (self.x-self.dx,self.y+58), (self.x-self.dx,self.y+87), (self.x-self.dx,self.y+116)]
                 wall = False
                 for pixel in pixels:
                     if self.screen.get_at(pixel) == (20,0,50):
                         wall = True
-            # pygame.draw.circle(self.screen, (255,0,0), pixels[0], 1)
-            # pygame.draw.circle(self.screen, (255,0,0), pixels[1], 1)
-            # pygame.draw.circle(self.screen, (255,0,0), pixels[2], 1)
+                # pygame.draw.circle(self.screen, (255,0,0), pixels[0], 1)
+                # pygame.draw.circle(self.screen, (255,0,0), pixels[1], 1)
+                # pygame.draw.circle(self.screen, (255,0,0), pixels[2], 1)
                 if not(wall):
                     self.x -= self.dx
             self.load[1] = self.load[0]+'_Left.png'
             way = None
-        if way == 'right':
+        elif way == 'right':
             if self.x+self.dx <= self.screen.get_size()[0]-108:
-                pixels = [(self.x+self.dx+88,self.y), (self.x+self.dx+88,self.y+58), (self.x+self.dx+88,self.y+116)]
+                pixels = [(self.x+self.dx+88,self.y), (self.x+self.dx+88,self.y+29),(self.x+self.dx+88,self.y+58), (self.x+self.dx+88,self.y+87), (self.x+self.dx+88,self.y+116)]
                 wall = False
                 for pixel in pixels:
                     if self.screen.get_at(pixel) == (20,0,50):
                         wall = True
-            # pygame.draw.circle(self.screen, (255,0,0), pixels[0], 1)
-            # pygame.draw.circle(self.screen, (255,0,0), pixels[1], 1)
-            # pygame.draw.circle(self.screen, (255,0,0), pixels[2], 1)
+                # pygame.draw.circle(self.screen, (255,0,0), pixels[0], 1)
+                # pygame.draw.circle(self.screen, (255,0,0), pixels[1], 1)
+                # pygame.draw.circle(self.screen, (255,0,0), pixels[2], 1)
                 if not(wall):
                     self.x += self.dx
             self.load[1] = self.load[0]+'_Right.png'
             way = None
-        if way == 'up':
+        elif way == 'up':
             if self.y-self.dy >= 0:
-                pixels = [(self.x,self.y-self.dy), (self.x+88,self.y-self.dy)]
+                pixels = [(self.x,self.y-self.dy), (self.x+44,self.y-self.dy), (self.x+88,self.y-self.dy)]
                 wall = False
                 for pixel in pixels:
                     if self.screen.get_at(pixel) == (20,0,50):
                         wall = True
-            # pygame.draw.circle(self.screen, (255,0,0), pixels[0], 1)
-            # pygame.draw.circle(self.screen, (255,0,0), pixels[1], 1)
+                # pygame.draw.circle(self.screen, (255,0,0), pixels[0], 1)
+                # pygame.draw.circle(self.screen, (255,0,0), pixels[1], 1)
                 if not(wall):
                     self.y -= self.dy
             way = None
-        if way == 'down':
+        elif way == 'down':
             if self.y+self.dy <= self.screen.get_size()[1]-116:
-                pixels = [(self.x,self.y+self.dy+116), (self.x+88,self.y+self.dy+116)]
+                pixels = [(self.x,self.y+self.dy+116), (self.x+44,self.y+self.dy+116), (self.x+88,self.y+self.dy+116)]
                 wall = False
                 for pixel in pixels:
                     if self.screen.get_at(pixel) == (20,0,50):
                         wall = True
-            # pygame.draw.circle(self.screen, (255,0,0), pixels[0], 1)
-            # pygame.draw.circle(self.screen, (255,0,0), pixels[1], 1)
+                # pygame.draw.circle(self.screen, (255,0,0), pixels[0], 1)
+                # pygame.draw.circle(self.screen, (255,0,0), pixels[1], 1)
                 if not(wall):
                     self.y += self.dy
             way = None
+        if self.screen.get_at((self.x+44,self.y+58)) == (255,50,50):
+            maze.start[1] +=1
+            maze.start[0] = maze.levels[maze.start[1]]
+            pygame.display.flip()
         self.position = (self.x, self.y)
 
     # Defines motions made from left to right

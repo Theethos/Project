@@ -18,9 +18,8 @@ class App:
     # Initialisation of App object
     def on_init(self):
         pygame.init()
-        self.screen = pygame.display.set_mode(self.size, pygame.DOUBLEBUF)
+        self.screen = pygame.display.set_mode(self.size, (pygame.FULLSCREEN))
         self.background = pygame.Surface((self.size)).convert()
-        self.background_()
         self._running = True
 
     # Event
@@ -110,12 +109,8 @@ class App:
             # Loop (not usefull for now)
             self.on_loop()
             # Main loop (The actual one :) )
-
-            """
-            self.screen.blit(self.background, (0,0))
-            """
             #Harry_Potter_Quidditch.draw_motion(self.key[2])
-            Harry_Potter.draw_motion(self.key[1], Maze_.start, Maze_.length, Maze_.height)
+            Harry_Potter.draw_motion(self.key[1], Maze_)
             pygame.display.flip()
             Maze_.run_()
             # Render (nor usefull now)
