@@ -3,6 +3,7 @@ from pygame.locals import *
 import math
 import Maze
 import Drawing
+import time
 
 
 class App:
@@ -12,7 +13,9 @@ class App:
         self.screen = None
         self.size = self.weight, self.height = 1600, 900
         self.background = None
-        self.FPS = 0
+        self.FPS = 60
+        self.text = [None, self.FPS]
+        self.print_FPS = False
         # One key for each character
         self.key = {1:None, 2:None}
     # Initialisation of App object
@@ -21,6 +24,7 @@ class App:
         self.screen = pygame.display.set_mode(self.size, (pygame.FULLSCREEN))
         self.background = pygame.Surface((self.size)).convert()
         self._running = True
+        self.text[0] = pygame.font.SysFont('mono', 12, bold=True)
 
     # Event
     def on_event(self, event):
@@ -32,7 +36,10 @@ class App:
             if event.key == pygame.K_ESCAPE:
                 self._running = False
             elif event.key == pygame.K_1:
-                self.FPS = 10
+                if self.print_FPS:
+                    self.print_FPS = False
+                else:
+                    self.print_FPS = True
             elif event.key == pygame.K_2:
                 self.FPS = 20
             elif event.key == pygame.K_3:
@@ -71,8 +78,12 @@ class App:
         else:
             self.key = {1:'none', 2:'none'}
     # Main loop (where things are supposed happen ;) )
-    def on_loop(self):
-        pass
+    def on_loop(self, clock_fps):
+        if self.print_FPS:
+            self.text[1] = "FPS : {}".format(clock_fps)
+            self.text[0].size(self.text[1])
+            surface = self.text[0].render(self.text[1], True, (0,255,0))
+            self.screen.blit(surface, (0, 0))
 
     # Render
     def on_render(self):
@@ -92,7 +103,7 @@ class App:
         self.FPS = 60 # FPS max
         playtime = 0
         Maze_ = Maze.Maze(self.screen)
-        #Harry_Potter_Quidditch = Drawing.Bonhomme(self.screen, self.background,'Wizarding Game\\Image\\120x120\\Harry_Potter_Quidditch', (63,72,204), (50,340))
+        Harry_Potter_Quidditch = Drawing.Bonhomme(self.screen, self.background,'Wizarding Game\\Image\\120x120\\Harry_Potter_Quidditch', (63,72,204), Maze_.start_position)
         Harry_Potter = Drawing.Bonhomme(self.screen, self.background, 'Wizarding Game\\Image\\120x120\\Harry_Potter', (63,72,204), Maze_.start_position)
 
 
@@ -106,16 +117,17 @@ class App:
             # Display FPS
             pygame.display.set_caption("Wizarding Game"" : limit FPS to {}"
                                " (now: {:.2f})".format(self.FPS,clock.get_fps()))
-            # Loop (not usefull for now)
-            self.on_loop()
+            self.on_loop(int(clock.get_fps()))
             # Main loop (The actual one :) )
-            #Harry_Potter_Quidditch.draw_motion(self.key[2])
-            Harry_Potter.draw_motion(self.key[1], Maze_)
+            #stop = Harry_Potter_Quidditch.draw_motion(self.key[2], Maze_)
+            stop = Harry_Potter.draw_motion(self.key[1], Maze_)
             pygame.display.flip()
             Maze_.run_()
             # Render (nor usefull now)
             self.on_render()
-
+            if not(stop):
+                time.sleep(2)
+                break
         # Time played
         if playtime < 61:
             print("You played : "+str(int(playtime))+" second(s)")

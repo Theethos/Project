@@ -5,6 +5,7 @@ class Maze():
     def __init__(self, screen):
         self.levels = self.maze_levels()
         self.start = [self.levels[0], 0]
+        self.max_level = len(self.levels)
         self.screen = screen
         self.background = pygame.Surface((self.screen.get_size())).convert()
         self.background.fill((255,255,255))
@@ -23,11 +24,18 @@ class Maze():
         # r...random level
         # e...end (game won)
         # x...wall
+        # w...wall -
+        # v...wall |  __
+        # t...wall   |
+        # +... wall +
+        # u... wall _|  __
+        # y... wall      |
+
 
         # startlevel = 25 x 15
         startlevel = ["xxxxx..xxxxxxxxxxxxxxxxxx",
-                      "xs.......v...............",
-                      "x........v..............x",
+                      "xs.......v.............rx",
+                      "x........v.............rx",
                       "xwww...twu....wwy.......x",
                       "x......v........v.......x",
                       "x......v........v.......x",
@@ -38,8 +46,8 @@ class Maze():
                       "x......v........v.......x",
                       "x......v...twwwwu...wwwwx",
                       "x..........v............x",
-                      "x..........v............x",
-                      "xxxxxxxxxxxxxxxxxxxxxnnxx"]
+                      "xpp........v............x",
+                      "xxxxxxxxxxxxxxxxxxxxnnnxx"]
         # middlelevel = 16 x 15
         middlelevel =  ["xxxxxxxxxxxxxxxx",
                         "xs.............x",
@@ -67,14 +75,14 @@ class Maze():
                     "x..............................x",
                     "x................x.............x",
                     "x................x.............x",
-                    "x................x.............x",
+                    "x..............................x",
                     "x..............................x",
                     "x................r.............x",
-                    "x............xx....xxx.........x",
-                    "x.............xxxxxxx..........x",
+                    "x............xxxxxxxxx.........x",
                     "x..............................x",
                     "x..............................x",
-                    "xxxxxxpxxxxxxxxxxxnxxxxxxxxxxxex"]
+                    "x..............................x",
+                    "xxxxxppxxxxxxxxxxxnnxxxxxxxxxeex"]
         return [startlevel, middlelevel, winlevel]
 
 

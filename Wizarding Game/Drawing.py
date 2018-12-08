@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 
 class Bonhomme():
     def __init__(self, screen, background, load, colorkey=(0,0,0), coordonnees=(100,100), color=(0,0,0), switchx=1, switchy=1):
@@ -12,6 +13,7 @@ class Bonhomme():
         self.load = [load, load+'_Right.png']
         self.colorkey = colorkey
         self.dx, self.dy = 10, 10
+        self.text = pygame.font.SysFont('mono', 60, bold=True)
     """Test"""
     def draw_squeleton(self):
         # Head
@@ -46,6 +48,10 @@ class Bonhomme():
     def draw_motion(self, way, maze):
         self.motion_keys(way, maze)
         self.image()
+        result = self.blocks(maze)
+        if result == None:
+            result = True
+        return result
 
     # Charges an image (as character for example)
     def image(self):
@@ -107,10 +113,42 @@ class Bonhomme():
                 if not(wall):
                     self.y += self.dy
             way = None
-        if self.screen.get_at((self.x+44,self.y+58)) == (255,50,50):
-            maze.start[1] +=1
+    def blocks(self, maze):
+        # Next level block
+        if maze.background.get_at((self.x+44,self.y+87)) == (255,50,50):
+            if maze.start[1]+1 < maze.max_level:
+                maze.start[1] +=1
+                maze.start[0] = maze.levels[maze.start[1]]
+            else:
+                maze.start[1] = 0
+                maze.start[0] = maze.levels[0]
+            maze.start_position = maze.x, maze.y = self.x, self.y = maze.addlevel(maze.start[0])[5]
+            self.screen.blit(self.background, (0,0))
+        # Random block
+        elif maze.background.get_at((self.x+44,self.y+87)) == (0,0,200):
+            maze.start[1] = random.randint(0,maze.max_level-1)
             maze.start[0] = maze.levels[maze.start[1]]
-            pygame.display.flip()
+            maze.start_position = maze.x, maze.y = self.x, self.y = maze.addlevel(maze.start[0])[5]
+            self.screen.blit(self.background, (0,0))
+        # End block
+        elif maze.background.get_at((self.x+44,self.y+87)) == (100,100,100):
+            maze.background.fill((0,0,0))
+            text = "GG le sang, t'es sorti."
+            self.text.size(text)
+            surface = self.text.render(text, True, (255,255,254))
+            self.screen.blit(maze.background, (0,0))
+            self.screen.blit(surface, (self.screen.get_size()[0]/4, 2*self.screen.get_size()[1]/5))
+            return False
+        elif maze.background.get_at((self.x+44,self.y+87)) == (255,50,255):
+            if maze.start[1]-1 >= 0:
+                maze.start[1] -=1
+                maze.start[0] = maze.levels[maze.start[1]]
+            else:
+                maze.start[1] = 0
+                maze.start[0] = maze.levels[0]
+            maze.start_position = maze.x, maze.y = self.x, self.y = maze.addlevel(maze.start[0])[5]
+            self.screen.blit(self.background, (0,0))
+
         self.position = (self.x, self.y)
 
     # Defines motions made from left to right
