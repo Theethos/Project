@@ -13,7 +13,8 @@ class Maze():
         self.start = [self.levels[0], 0, self.transition]
         self.max_level = len(self.levels)
         self.background = pygame.Surface((self.screen.get_size())).convert()
-        self.background.fill((88,88,88))
+        self.background_color = (88,88,88)
+        self.background.fill(self.background_color)
         self.background_copy = self.background.copy()
         self.start_position = self.x, self.y = self.addlevel(self.start[0])[5]
         self.walls = self.addlevel(self.start[0])[6]
@@ -117,7 +118,7 @@ class Maze():
                     "x..............................x",
                     "x..............................x",
                     "xxxxxppxxxxxxxxxxxnnxxxxxxxxxeex"]
-        return [bridge, startlevel, middlelevel, winlevel]
+        return [startlevel, middlelevel, winlevel]
 
 
     def createblock(self, length, height, color):
@@ -128,42 +129,42 @@ class Maze():
 
     def createhalfblock(self, length, height, color):
         tmpblock = pygame.Surface((length, height))
-        tmpblock.fill((255,255,255))
+        tmpblock.fill(self.background_color)
         pygame.draw.polygon(tmpblock, color, ((0,height/4),(length,height/4),(length,3*height/4),(0,3*height/4)))
         tmpblock.convert()
         return tmpblock
 
     def createhalfblockstraight(self, length, height, color):
         tmpblock = pygame.Surface((length, height))
-        tmpblock.fill((255,255,255))
+        tmpblock.fill(self.background_color)
         pygame.draw.polygon(tmpblock, color, ((length/4,0),(length/4,height),(3*length/4,height),(3*length/4,0)))
         tmpblock.convert()
         return tmpblock
 
     def createcornerleft(self, length, height, color):
         tmpblock = pygame.Surface((length, height))
-        tmpblock.fill((255,255,255))
+        tmpblock.fill(self.background_color)
         pygame.draw.polygon(tmpblock, color, ((length/4,height/4),(length/4,height),(3*length/4,height),(3*length/4,(3*height+4)/4),(length,3*height/4), (length,height/4)))
         tmpblock.convert()
         return tmpblock
 
     def createcornerright_reverse(self, length, height, color):
         tmpblock = pygame.Surface((length, height))
-        tmpblock.fill((255,255,255))
+        tmpblock.fill(self.background_color)
         pygame.draw.polygon(tmpblock, color, ((length/4,0),(length/4,3*height/4),(length,3*height/4),(length,height/4),(3*length/4,height/4), (3*length/4,0)))
         tmpblock.convert()
         return tmpblock
 
     def createcornerleft_reverse(self, length, height, color):
         tmpblock = pygame.Surface((length, height))
-        tmpblock.fill((255,255,255))
+        tmpblock.fill(self.background_color)
         pygame.draw.polygon(tmpblock, color, ((length/4,0),(length/4,height/4),(0,height/4),(0,3*height/4),(3*length/4,3*height/4), (3*length/4,0)))
         tmpblock.convert()
         return tmpblock
 
     def createcornerright(self, length, height, color):
         tmpblock = pygame.Surface((length, height))
-        tmpblock.fill((255,255,255))
+        tmpblock.fill(self.background_color)
         pygame.draw.polygon(tmpblock, color, ((3*length/4,height/4),(3*length/4,height),(length/4,height),(length/4,(3*height+4)/4),(0,3*height/4), (0,height/4)))
         tmpblock.convert()
         return tmpblock
@@ -171,18 +172,18 @@ class Maze():
     def createcross(self, length, height, color):
         tmpblock = pygame.Surface((length, height))
         tmpblock.fill(color)
-        pygame.draw.rect(tmpblock, (255,255,255), (0, 0, length/4, height/4))
-        pygame.draw.rect(tmpblock, (255,255,255), ((3*length+4)/4, 0, length/4, height/4))
-        pygame.draw.rect(tmpblock, (255,255,255), ((3*length+4)/4, (3*height+4)/4, length/4, height/4))
-        pygame.draw.rect(tmpblock, (255,255,255), (0, (3*height+4)/4, length/4, height/4))
+        pygame.draw.rect(tmpblock, self.background_color, (0, 0, length/4, height/4))
+        pygame.draw.rect(tmpblock, self.background_color, ((3*length+4)/4, 0, length/4, height/4))
+        pygame.draw.rect(tmpblock, self.background_color, ((3*length+4)/4, (3*height+4)/4, length/4, height/4))
+        pygame.draw.rect(tmpblock, self.background_color, (0, (3*height+4)/4, length/4, height/4))
         tmpblock.convert()
         return tmpblock
 
     def createcross_bottom(self, length, height, color):
         tmpblock = pygame.Surface((length, height))
         tmpblock.fill(color)
-        pygame.draw.rect(tmpblock, (255,255,255), ((3*length+4)/4, (3*height+4)/4, length/4, height/4))
-        pygame.draw.rect(tmpblock, (255,255,255), (0, (3*height+4)/4, length/4, height/4))
+        pygame.draw.rect(tmpblock, self.background_color, ((3*length+4)/4, (3*height+4)/4, length/4, height/4))
+        pygame.draw.rect(tmpblock, self.background_color, (0, (3*height+4)/4, length/4, height/4))
         tmpblock.convert()
         return tmpblock
 

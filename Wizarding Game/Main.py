@@ -122,7 +122,7 @@ class App:
             self.on_loop(int(clock.get_fps()), Harry_Potter)
             # Center of loop
             # stop allows to close the pygame window when the maze is complete (only way I found to make it work)
-            #stop = Harry_Potter_Quidditch.draw_motion(self.key[2], Maze_)
+            stop = Harry_Potter_Quidditch.draw_motion(self.key[2], Maze_)
             stop = Harry_Potter.draw_motion(self.key[1], Maze_)
             pygame.display.flip()
             Maze_.run_(stop)

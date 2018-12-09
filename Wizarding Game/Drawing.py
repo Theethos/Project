@@ -16,9 +16,10 @@ class Bonhomme():
         self.dx, self.dy = 10, 10
         self.text = pygame.font.SysFont('mono', 60, bold=True)
         self.color_wall = (20,0,50)
-        self.lifebar = Lifebar(self.screen, self.position, self.color_wall, self.load)
+        self.lifebar = Lifebar(self.screen, self.position, self.color_wall, self.load, self.dx, self.dy)
         self.timer = 0
         self.alive = True
+        self.colision = False
     # For NPC, moves characters from left to right
     # (On his own)
     def draw(self):
@@ -27,19 +28,21 @@ class Bonhomme():
 
     # Alows characters to be moved with keypad
     def draw_motion(self, way, maze):
-        if self.lifebar.percentage == 0:
+        self.motion_keys(way, maze)
+        self.image()
+        self.lifebar.position = self.lifebar.x, self.lifebar.y = self.position
+        self.lifebar.path_character = self.load
+        self.lifebar.colision = self.colision
+        self.lifebar.run_life()
+        if self.lifebar.percentage <= 10 and self.colision:
             if self.alive:
+                self.lifebar.percentage = 0
                 self.death()
             elif not(self.alive) and self.timer < 150:
                 self.timer+=1
             elif not(self.alive) and self.timer == 150:
                 self.respawn(maze)
                 self.timer = 0
-        self.motion_keys(way, maze)
-        self.image()
-        self.lifebar.position = self.lifebar.x, self.lifebar.y = self.position
-        self.lifebar.path_character = self.load
-        self.lifebar.run_life()
         result = self.blocks(maze)
         if result == None:
             result = True
@@ -63,6 +66,9 @@ class Bonhomme():
                             wall = True
                     if not(wall):
                         self.x -= self.dx
+                        self.colision = False
+                    elif wall:
+                        self.colision = True
                 self.load[2] = '_Left.png'
                 self.load[1] = self.load[0]+self.load[2]
                 way = None
@@ -75,6 +81,9 @@ class Bonhomme():
                             wall = True
                     if not(wall):
                         self.x += self.dx
+                        self.colision = False
+                    elif wall:
+                        self.colision = True
                 self.load[2] = '_Right.png'
                 self.load[1] = self.load[0]+self.load[2]
                 way = None
@@ -87,6 +96,9 @@ class Bonhomme():
                             wall = True
                     if not(wall):
                         self.y -= self.dy
+                        self.colision = False
+                    elif wall:
+                        self.colision = True
                 way = None
             elif way == 'down':
                 if self.y+self.dy <= self.screen.get_size()[1]-116:
@@ -97,6 +109,9 @@ class Bonhomme():
                             wall = True
                     if not(wall):
                         self.y += self.dy
+                        self.colision = False
+                    elif wall:
+                        self.colision = True
                 way = None
     def blocks(self, maze):
         # Next level block
@@ -168,7 +183,7 @@ class Bonhomme():
 
     def death(self):
         if self.load[2] == '_Right.png':
-            self.position = self.x, self.y = self.x-20, self.y
+            self.position = self.x, self.y = self.x-30, self.y
             self.load[2] = '_Right_Dead.png'
             self.load[1] = self.load[0]+self.load[2]
         elif self.load[2] == '_Left.png':
@@ -176,21 +191,22 @@ class Bonhomme():
             self.load[2] = '_Left_Dead.png'
             self.load[1] = self.load[0]+self.load[2]
         self.alive = False
+
     def respawn(self, maze):
         self.alive = True
         if self.load[2] == '_Left_Dead.png':
             self.load[2] == '_Left.png'
             self.load[1] = self.load[0]+self.load[2]
-            self.lifebar.percentage = 100
+            self.lifebar.percentage = 110
             self.motion_keys('right', maze)
         elif self.load[2] == '_Right_Dead.png':
             self.load[2] == '_Right.png'
             self.load[1] = self.load[0]+self.load[2]
-            self.lifebar.percentage = 100
+            self.lifebar.percentage = 110
             self.motion_keys('left', maze)
 
 class Lifebar(Bonhomme):
-    def __init__(self, screen, position, color_wall, path_character):
+    def __init__(self, screen, position, color_wall, path_character, dx, dy):
         self.screen = screen
         self.position = self.x, self.y = position
         self.color_wall = color_wall
@@ -200,22 +216,35 @@ class Lifebar(Bonhomme):
         self.position_life = self.x_life, self.y_life = 0,0
         self.damage = 0
         self.path_character = path_character
+        self.dx, self.dy = dx, dy
+        self.colision = False
+        self.compteur = 1
 
     def set_position_life(self):
         if (self.x-5 > self.screen.get_size()[0] or self.x-5 < 0) or (self.y-20 > self.screen.get_size()[1] or self.y-20 < 0):
             self.path[0] = self.path[1]+"alpha.png"
             self.position_life = self.x_life, self.y_life = 0, 0
-            self.damage = 1
+        elif self.screen.get_at((self.x-5, self.y-20)) == self.color_wall or self.screen.get_at((self.x+98, self.y-20)) == self.color_wall:
+            self.path[0] = self.path[1]+"alpha.png"
+            self.position_life = self.x_life, self.y_life = 0, 0
+        elif self.screen.get_at((self.x-5, self.y-10)) == self.color_wall or self.screen.get_at((self.x+98, self.y-10)) == self.color_wall:
+            self.path[0] = self.path[1]+"alpha.png"
+            self.position_life = self.x_life, self.y_life = 0, 0
         elif self.screen.get_at((self.x-5, self.y-20)) != self.color_wall and self.screen.get_at((self.x+98, self.y-20)) != self.color_wall:
-            self.path[0] = self.path[1]+str(self.percentage)+".png"
+            if self.percentage > 100:
+                self.path[0] = self.path[1]+"100.png"
+            else:
+                self.path[0] = self.path[1]+str(self.percentage)+".png"
             self.position_life = self.x_life, self.y_life = self.x-5, self.y-20
+            self.compteur = 0
+        if self.colision and self.compteur == 0:
             self.damage = 1
-        else:
-            if self.damage == 1:
-                if self.percentage > 0:
-                    self.percentage -= 10
-                self.path[0] = self.path[1]+"alpha.png"
-                self.damage = 0
+            self.compteur = 1
+        if self.damage == 1  and self.compteur == 0:
+            if self.percentage > 0:
+                self.percentage -= 10
+            self.path[0] = self.path[1]+"alpha.png"
+            self.damage = 0
 
     def draw_life(self):
         self.image = pygame.image.load(self.path[0])
