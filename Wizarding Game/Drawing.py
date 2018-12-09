@@ -2,6 +2,7 @@ import pygame
 import random
 import time
 
+
 class Bonhomme():
     def __init__(self, screen, background, load, colorkey=(0,0,0), coordonnees=(100,100), color=(0,0,0), switchx=1, switchy=1):
         self.screen = screen
@@ -10,34 +11,14 @@ class Bonhomme():
         self.color = color
         self.switchx = switchx
         self.switchy = switchy
-        self.load = [load, load+'_Right.png']
+        self.load = [load, load+'_Right.png','_Right.png']
         self.colorkey = colorkey
         self.dx, self.dy = 10, 10
         self.text = pygame.font.SysFont('mono', 60, bold=True)
-    """Test"""
-    def draw_squeleton(self):
-        # Head
-        pygame.draw.circle(self.screen, self.color, (self.x,self.y-20), 20, 0)
-        # Body ~Trait
-        pygame.draw.line(self.screen, self.color, (self.x,self.y), (self.x,self.y+40),8)
-        # Body ~Ventre
-        pygame.draw.ellipse(self.screen, self.color, (self.x-9,self.y,20,40), 0)
-        # Left arm
-        pygame.draw.line(self.screen, self.color, (self.x,self.y+20), (self.x-30,self.y),8)
-        # Right arm
-        pygame.draw.line(self.screen, self.color, (self.x,self.y+20), (self.x+30,self.y),8)
-        # Left leg
-        pygame.draw.line(self.screen, self.color, (self.x,self.y+40), (self.x-20,self.y+60),8)
-        # Right leg
-        pygame.draw.line(self.screen, self.color, (self.x,self.y+40), (self.x+20,self.y+60),8)
-
-    def draw_test(self):
-        pygame.draw.circle(self.screen, self.color, (self.position), 20, 4)
-    def draw_hair(self):
-        # Girl's hair:
-        listPoint = ((self.x-20,self.y-45), (self.x, self.y-50), (self.x+20,self.y-45), (self.x+30,self.y-25), (self.x-30,self.y-25))
-        pygame.draw.polygon(self.screen, (255,255,0), listPoint)
-    """Until Here"""
+        self.color_wall = (20,0,50)
+        self.lifebar = Lifebar(self.screen, self.position, self.color_wall, self.load)
+        self.timer = 0
+        self.alive = True
     # For NPC, moves characters from left to right
     # (On his own)
     def draw(self):
@@ -46,8 +27,19 @@ class Bonhomme():
 
     # Alows characters to be moved with keypad
     def draw_motion(self, way, maze):
+        if self.lifebar.percentage == 0:
+            if self.alive:
+                self.death()
+            elif not(self.alive) and self.timer < 150:
+                self.timer+=1
+            elif not(self.alive) and self.timer == 150:
+                self.respawn(maze)
+                self.timer = 0
         self.motion_keys(way, maze)
         self.image()
+        self.lifebar.position = self.lifebar.x, self.lifebar.y = self.position
+        self.lifebar.path_character = self.load
+        self.lifebar.run_life()
         result = self.blocks(maze)
         if result == None:
             result = True
@@ -61,58 +53,51 @@ class Bonhomme():
 
     # Defines motions made with keys events
     def motion_keys(self, way, maze):
-        if way == 'left':
-            if self.x-self.dx >= 0:
-                pixels = [(self.x-self.dx,self.y),(self.x-self.dx,self.y+29), (self.x-self.dx,self.y+58), (self.x-self.dx,self.y+87), (self.x-self.dx,self.y+116)]
-                wall = False
-                for pixel in pixels:
-                    if self.screen.get_at(pixel) == (20,0,50):
-                        wall = True
-                # pygame.draw.circle(self.screen, (255,0,0), pixels[0], 1)
-                # pygame.draw.circle(self.screen, (255,0,0), pixels[1], 1)
-                # pygame.draw.circle(self.screen, (255,0,0), pixels[2], 1)
-                if not(wall):
-                    self.x -= self.dx
-            self.load[1] = self.load[0]+'_Left.png'
-            way = None
-        elif way == 'right':
-            if self.x+self.dx <= self.screen.get_size()[0]-108:
-                pixels = [(self.x+self.dx+88,self.y), (self.x+self.dx+88,self.y+29),(self.x+self.dx+88,self.y+58), (self.x+self.dx+88,self.y+87), (self.x+self.dx+88,self.y+116)]
-                wall = False
-                for pixel in pixels:
-                    if self.screen.get_at(pixel) == (20,0,50):
-                        wall = True
-                # pygame.draw.circle(self.screen, (255,0,0), pixels[0], 1)
-                # pygame.draw.circle(self.screen, (255,0,0), pixels[1], 1)
-                # pygame.draw.circle(self.screen, (255,0,0), pixels[2], 1)
-                if not(wall):
-                    self.x += self.dx
-            self.load[1] = self.load[0]+'_Right.png'
-            way = None
-        elif way == 'up':
-            if self.y-self.dy >= 0:
-                pixels = [(self.x,self.y-self.dy), (self.x+44,self.y-self.dy), (self.x+88,self.y-self.dy)]
-                wall = False
-                for pixel in pixels:
-                    if self.screen.get_at(pixel) == (20,0,50):
-                        wall = True
-                # pygame.draw.circle(self.screen, (255,0,0), pixels[0], 1)
-                # pygame.draw.circle(self.screen, (255,0,0), pixels[1], 1)
-                if not(wall):
-                    self.y -= self.dy
-            way = None
-        elif way == 'down':
-            if self.y+self.dy <= self.screen.get_size()[1]-116:
-                pixels = [(self.x,self.y+self.dy+116), (self.x+44,self.y+self.dy+116), (self.x+88,self.y+self.dy+116)]
-                wall = False
-                for pixel in pixels:
-                    if self.screen.get_at(pixel) == (20,0,50):
-                        wall = True
-                # pygame.draw.circle(self.screen, (255,0,0), pixels[0], 1)
-                # pygame.draw.circle(self.screen, (255,0,0), pixels[1], 1)
-                if not(wall):
-                    self.y += self.dy
-            way = None
+        if self.alive:
+            if way == 'left':
+                if self.x-self.dx >= 0:
+                    pixels = [(self.x-self.dx,self.y),(self.x-self.dx,self.y+29), (self.x-self.dx,self.y+58), (self.x-self.dx,self.y+87), (self.x-self.dx,self.y+116)]
+                    wall = False
+                    for pixel in pixels:
+                        if self.screen.get_at(pixel) == self.color_wall:
+                            wall = True
+                    if not(wall):
+                        self.x -= self.dx
+                self.load[2] = '_Left.png'
+                self.load[1] = self.load[0]+self.load[2]
+                way = None
+            elif way == 'right':
+                if self.x+self.dx <= self.screen.get_size()[0]-108:
+                    pixels = [(self.x+self.dx+88,self.y), (self.x+self.dx+88,self.y+29),(self.x+self.dx+88,self.y+58), (self.x+self.dx+88,self.y+87), (self.x+self.dx+88,self.y+116)]
+                    wall = False
+                    for pixel in pixels:
+                        if self.screen.get_at(pixel) == self.color_wall:
+                            wall = True
+                    if not(wall):
+                        self.x += self.dx
+                self.load[2] = '_Right.png'
+                self.load[1] = self.load[0]+self.load[2]
+                way = None
+            elif way == 'up':
+                if self.y-self.dy >= 0:
+                    pixels = [(self.x,self.y-self.dy), (self.x+44,self.y-self.dy), (self.x+88,self.y-self.dy)]
+                    wall = False
+                    for pixel in pixels:
+                        if self.screen.get_at(pixel) == self.color_wall:
+                            wall = True
+                    if not(wall):
+                        self.y -= self.dy
+                way = None
+            elif way == 'down':
+                if self.y+self.dy <= self.screen.get_size()[1]-116:
+                    pixels = [(self.x,self.y+self.dy+116), (self.x+44,self.y+self.dy+116), (self.x+88,self.y+self.dy+116)]
+                    wall = False
+                    for pixel in pixels:
+                        if self.screen.get_at(pixel) == self.color_wall:
+                            wall = True
+                    if not(wall):
+                        self.y += self.dy
+                way = None
     def blocks(self, maze):
         # Next level block
         if maze.background.get_at((self.x+44,self.y+87)) == (255,50,50):
@@ -123,7 +108,6 @@ class Bonhomme():
                 maze.start[1] = 0
                 maze.start[0] = maze.levels[0]
             maze.start_position = maze.x, maze.y = self.x, self.y = maze.addlevel(maze.start[0])[5]
-            self.screen.blit(self.background, (0,0))
         # Random block
         elif maze.background.get_at((self.x+44,self.y+87)) == (0,0,200):
             maze.start[1] = random.randint(0,maze.max_level-1)
@@ -181,3 +165,64 @@ class Bonhomme():
                 self.switchy = -1
                 self.y += self.switchy
         self.position = (self.x, self.y)
+
+    def death(self):
+        if self.load[2] == '_Right.png':
+            self.position = self.x, self.y = self.x-20, self.y
+            self.load[2] = '_Right_Dead.png'
+            self.load[1] = self.load[0]+self.load[2]
+        elif self.load[2] == '_Left.png':
+            self.position = self.x, self.y = self.x+20, self.y
+            self.load[2] = '_Left_Dead.png'
+            self.load[1] = self.load[0]+self.load[2]
+        self.alive = False
+    def respawn(self, maze):
+        self.alive = True
+        if self.load[2] == '_Left_Dead.png':
+            self.load[2] == '_Left.png'
+            self.load[1] = self.load[0]+self.load[2]
+            self.lifebar.percentage = 100
+            self.motion_keys('right', maze)
+        elif self.load[2] == '_Right_Dead.png':
+            self.load[2] == '_Right.png'
+            self.load[1] = self.load[0]+self.load[2]
+            self.lifebar.percentage = 100
+            self.motion_keys('left', maze)
+
+class Lifebar(Bonhomme):
+    def __init__(self, screen, position, color_wall, path_character):
+        self.screen = screen
+        self.position = self.x, self.y = position
+        self.color_wall = color_wall
+        self.path = ["Wizarding Game\\Image\\120x120\\Lifebar\\100.png", "Wizarding Game\\Image\\120x120\\Lifebar\\"]
+        self.image = pygame.image.load(self.path[0])
+        self.percentage = 100
+        self.position_life = self.x_life, self.y_life = 0,0
+        self.damage = 0
+        self.path_character = path_character
+
+    def set_position_life(self):
+        if (self.x-5 > self.screen.get_size()[0] or self.x-5 < 0) or (self.y-20 > self.screen.get_size()[1] or self.y-20 < 0):
+            self.path[0] = self.path[1]+"alpha.png"
+            self.position_life = self.x_life, self.y_life = 0, 0
+            self.damage = 1
+        elif self.screen.get_at((self.x-5, self.y-20)) != self.color_wall and self.screen.get_at((self.x+98, self.y-20)) != self.color_wall:
+            self.path[0] = self.path[1]+str(self.percentage)+".png"
+            self.position_life = self.x_life, self.y_life = self.x-5, self.y-20
+            self.damage = 1
+        else:
+            if self.damage == 1:
+                if self.percentage > 0:
+                    self.percentage -= 10
+                self.path[0] = self.path[1]+"alpha.png"
+                self.damage = 0
+
+    def draw_life(self):
+        self.image = pygame.image.load(self.path[0])
+        self.image.set_colorkey((0,0,0))
+        self.image.convert_alpha()
+        self.screen.blit(self.image, self.position_life)
+
+    def run_life(self):
+        self.set_position_life()
+        self.draw_life()

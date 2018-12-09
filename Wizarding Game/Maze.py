@@ -1,21 +1,29 @@
 import pygame
 import decimal
+import time
+
 
 class Maze():
     def __init__(self, screen):
         self.levels = self.maze_levels()
-        self.start = [self.levels[0], 0]
-        self.max_level = len(self.levels)
         self.screen = screen
+        self.text = pygame.font.SysFont('mono', 60, bold=True)
+        self.transition = [pygame.Surface((self.screen.get_size())).convert(), None]
+        self.transition[0].fill((0,0,0))
+        self.start = [self.levels[0], 0, self.transition]
+        self.max_level = len(self.levels)
         self.background = pygame.Surface((self.screen.get_size())).convert()
-        self.background.fill((255,255,255))
+        self.background.fill((88,88,88))
         self.background_copy = self.background.copy()
         self.start_position = self.x, self.y = self.addlevel(self.start[0])[5]
         self.walls = self.addlevel(self.start[0])[6]
         self.height = self.addlevel(self.start[0])[1]
         self.length = self.addlevel(self.start[0])[0]
-    def run_(self):
+        self.compteur = 0
+
+    def run_(self, transition):
         self.addlevel(self.start[0])
+
     def maze_levels(self):
         # -------------------- Maze ----------------
         # s...startposition of ball
@@ -30,6 +38,32 @@ class Maze():
         # +... wall +
         # u... wall _|  __
         # y... wall      |
+
+        # diviser: 1600 : 1,2,4,5,8,10,16,20,25,32,40,50,64,80,100,160,200,320,400,800,1600
+        #           900 : 1,2,3,4,5,6,9,10,12,15,18,20,25,30,36,45,50,60,75,90,100,150,180,225,300,450,900
+
+
+        # bridge = 25x20
+        bridge = ["x.......................x",
+                  ".x.....................x.",
+                  "..x.........s.........x..",
+                  "...x.................x...",
+                  "....x...............x....",
+                  ".....x.............x.....",
+                  ".....x.............x.....",
+                  ".....x.............x.....",
+                  ".....x.............x.....",
+                  ".....x.............x.....",
+                  ".....x.............x.....",
+                  ".....x.............x.....",
+                  ".....x.............x.....",
+                  ".....x.............x.....",
+                  ".....x.............x.....",
+                  "....x...............x....",
+                  "...x.................x...",
+                  "..x...................x..",
+                  ".x.....................x.",
+                  "x.......................x"]
 
 
         # startlevel = 25 x 15
@@ -83,7 +117,7 @@ class Maze():
                     "x..............................x",
                     "x..............................x",
                     "xxxxxppxxxxxxxxxxxnnxxxxxxxxxeex"]
-        return [startlevel, middlelevel, winlevel]
+        return [bridge, startlevel, middlelevel, winlevel]
 
 
     def createblock(self, length, height, color):
@@ -165,7 +199,6 @@ class Maze():
         columns = len(level[0])
 
         screenrect = self.screen.get_rect()
-
         length = screenrect.width/columns
         height = screenrect.height/lines
 
