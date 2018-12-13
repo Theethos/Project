@@ -1,1 +1,0 @@
-﻿Right = 20 88 12 (largeur →) x 116 4 (hauteur ↓)	Left = 12 88 20 → x 116 4 ↓
