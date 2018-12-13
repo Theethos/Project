@@ -1,0 +1,7 @@
+Biggest = 6th 7th : 78 x 101
+	  5th : 78 x 89 (12 margin on top)
+	  4 th : 78 x 77 (24 margin on top)
+	  3 rd : 78 x 73 (28 margin on top)
+	  2 nd : 78 x 63 (38 margin on top)
+	  1 st : 78 x 56 (45 margin on top)
+Max widness of picture = 25 
