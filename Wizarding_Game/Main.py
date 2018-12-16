@@ -146,9 +146,9 @@ class App:
         self.interval = 0.5 # Interval for displaying animations
         Maze_ = Maze.Maze(self.screen) # Maze object
         # Bonhomme objects
-        self.character[0] =  Character.Bonhomme(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Voldemort', (63,72,204), Maze_.start_position, "darkness")
+        self.character[0] =  Character.Bonhomme(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Ronald_Weasley', (63,72,204), Maze_.start_position, "neutral")
         self.character[1] =  Character.Bonhomme(self.screen, self.background, 'Wizarding_Game\\Image\\120x120\\Characters\\Harry_Potter', (63,72,204), Maze_.start_position, "light")
-
+        self.character.append(Character.Bonhomme(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Voldemort', (63,72,204), Maze_.start_position, "darkness"))
 
         # Main loop
         while( self._running ):
@@ -168,6 +168,7 @@ class App:
             # stop allows to close the pygame window when the maze is complete (only way I found to make it work)
             stop = self.character[0].draw_motion(self.key[2], Maze_)
             stop = self.character[1].draw_motion(self.key[1], Maze_)
+            stop = self.character[2].draw_motion(2, Maze_)
             pygame.display.flip()
             Maze_.run_(stop)
             # Render (nor usefull now)

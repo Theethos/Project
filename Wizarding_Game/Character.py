@@ -460,7 +460,6 @@ class Spells(Bonhomme):
                     elif self.animation_progress > 0:
                         if self.position_attack[0]-42 >= 0:
                             self.screen.blit(self.animation_both[1], self.position_attack) # Displays the "Traveling" image
-                            #self.screen.blit(self.cleanup, (self.position_attack[0]+42, self.position_attack[1])) # Displays image with the dimensions of the attack but with the color of the BG
                             self.position_attack = (self.position_attack[0]-21, self.position_attack[1])
                         elif self.position_attack[0]-21 > 0: # If it goes through this, it means it is the last frame of the animation
                             self.screen.blit(self.animation_both[0], self.position_attack)
@@ -525,13 +524,6 @@ class Spells(Bonhomme):
                                 self.index_animation += 1
                         self.cycletime = 0
 
-                # elif self.index_animation < len(self.animation):
-                #     self.screen.blit(self.eraser,self.position_spell)
-                #     mypicture = self.animation[self.index_animation]
-                #     self.screen.blit(mypicture, self.position_spell)
-                #     if self.running and self.cycletime > self.interval:
-                #         self.index_animation += 1
-                #         self.cycletime = 0
             if self.index_animation == len(self.animation)-1:
                 self.index_animation = 0
                 self.animation_progress = 0
