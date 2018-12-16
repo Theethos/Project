@@ -11,7 +11,8 @@ class App:
     def __init__(self):
         self._running = True
         self.screen = None
-        self.size = self.weight, self.height = 1920, 1080
+        #self.size = self.weight, self.height = 1920, 1080
+        self.size = self.weight, self.height = 1600, 900
         self.background = None
         self.FPS = 60
         self.text = [None, self.FPS]
@@ -19,9 +20,8 @@ class App:
         # One key for each character
         self.key = {1:None, 2:None}
         self.interval = None
-        self.background_color = (88,88,88)
-        self.spells = [{'Character_Spell':None, 'Running': False},{'Character_Spell':None, 'Running': False}]
-        self.character= [[None],[None]]
+        self.background_color = (20,20,20)
+        self.character = [[None],[None]]
         self.animation_timer = [0,0]
 
     # Initialisation of App object
@@ -48,20 +48,37 @@ class App:
                 else:
                     self.print_FPS = True
             elif event.key == pygame.K_1:
-                self.character[0].spells.running = True
-                self.character[0].spells.path_spell = self.character[0].spells.which_spell(1)
-                if self.character[0].spells.lock_spells == False:
-                    self.character[0].spells.animation, self.character[0].spells.animation_both = self.character[0].spells.set_animation()
-                    self.character[0].spells.lock_spells = True
+                if self.character[0].spells.lock_spells[0] == False and self.character[0].spells.lock_spells[1] == False and self.character[0].spells.lock_spells[2] == False and self.character[0].spells.lock_spells[3] == False and self.character[0].spells.lock_spells[4] == False and self.character[0].spells.lock_spells[5] == False:
+                    self.character[0].spells.running = True
+                    self.character[0].spells.number = 1
+                    self.character[0].spells.path_spell = self.character[0].spells.which_spell()
+                    if self.character[0].spells.lock_spells[0] == False:
+                        self.character[0].spells.animation, self.character[0].spells.animation_both = self.character[0].spells.set_animation()
+                        self.character[0].spells.lock_spells[0] = True
             elif event.key == pygame.K_KP1:
-                self.character[1].spells.running = True
-                self.character[1].spells.path_spell = self.character[1].spells.which_spell(1)
-                if self.character[1].spells.lock_spells == False:
-                    self.character[1].spells.animation, self.character[1].spells.animation_both = self.character[1].spells.set_animation()
-                    self.character[1].spells.lock_spells = True
+                if self.character[1].spells.lock_spells[1] == False and self.character[1].spells.lock_spells[1] == False and self.character[1].spells.lock_spells[2] == False and self.character[1].spells.lock_spells[3] == False and self.character[1].spells.lock_spells[4] == False and self.character[1].spells.lock_spells[5] == False:
+                    self.character[1].spells.running = True
+                    self.character[1].spells.number = 1
+                    self.character[1].spells.path_spell = self.character[1].spells.which_spell()
+                    if self.character[1].spells.lock_spells[0] == False:
+                        self.character[1].spells.animation, self.character[1].spells.animation_both = self.character[1].spells.set_animation()
+                        self.character[1].spells.lock_spells[0] = True
             elif event.key == pygame.K_2:
-                self.spells[0].path_spell = self.which_spell(2)
-                self.animation, self.animation_both = self.set_animation(path)
+                if self.character[0].spells.lock_spells[0] == False and self.character[0].spells.lock_spells[1] == False and self.character[0].spells.lock_spells[2] == False and self.character[0].spells.lock_spells[3] == False and self.character[0].spells.lock_spells[4] == False and self.character[0].spells.lock_spells[5] == False:
+                    self.character[0].spells.running = True
+                    self.character[0].spells.number = 2
+                    self.character[0].spells.path_spell = self.character[0].spells.which_spell()
+                    if self.character[0].spells.lock_spells[1] == False:
+                        self.character[0].spells.animation, self.character[0].spells.animation_both = self.character[0].spells.set_animation()
+                        self.character[0].spells.lock_spells[1] = True
+            elif event.key == pygame.K_KP2:
+                if self.character[1].spells.lock_spells[0] == False and self.character[1].spells.lock_spells[1] == False and self.character[1].spells.lock_spells[2] == False and self.character[1].spells.lock_spells[3] == False and self.character[1].spells.lock_spells[4] == False and self.character[1].spells.lock_spells[5] == False:
+                    self.character[1].spells.running = True
+                    self.character[1].spells.number = 2
+                    self.character[1].spells.path_spell = self.character[1].spells.which_spell()
+                    if self.character[1].spells.lock_spells[1] == False:
+                        self.character[1].spells.animation, self.character[1].spells.animation_both = self.character[1].spells.set_animation()
+                        self.character[1].spells.lock_spells[1] = True
             elif event.key == pygame.K_3:
                 self.spells[0].path_spell = self.which_spell(3)
                 self.animation, self.animation_both = self.set_animation(path)
@@ -129,9 +146,9 @@ class App:
         self.interval = 0.5 # Interval for displaying animations
         Maze_ = Maze.Maze(self.screen) # Maze object
         # Bonhomme objects
-        self.character =  Character.Bonhomme(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Harry_Potter_Quidditch', (63,72,204), Maze_.start_position, "light"), Character.Bonhomme(self.screen, self.background, 'Wizarding_Game\\Image\\120x120\\Harry_Potter', (63,72,204), Maze_.start_position, "neutral")
-        #self.spells[0]['Character_Spell'] = Character.Spells(self.screen, self.FPS, self.background_color, self.character[0])
-        #self.spells[1]['Character_Spell'] = Character.Spells(self.screen, self.FPS, self.background_color, self.character[1])
+        self.character[0] =  Character.Bonhomme(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Voldemort', (63,72,204), Maze_.start_position, "darkness")
+        self.character[1] =  Character.Bonhomme(self.screen, self.background, 'Wizarding_Game\\Image\\120x120\\Characters\\Harry_Potter', (63,72,204), Maze_.start_position, "light")
+
 
         # Main loop
         while( self._running ):

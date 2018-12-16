@@ -13,7 +13,7 @@ class Maze():
         self.start = [self.levels[0], 0, self.transition]
         self.max_level = len(self.levels)
         self.background = pygame.Surface((self.screen.get_size())).convert()
-        self.background_color = (88,88,88)
+        self.background_color = (20,20,20)
         self.background.fill(self.background_color)
         self.background_copy = self.background.copy()
         self.start_position = self.x, self.y = self.addlevel(self.start[0])[5]

@@ -7,7 +7,7 @@ class Bonhomme():
     def __init__(self, screen, background, load, colorkey=(0,0,0), coordonnees=(100,100), side='neutral', color=(0,0,0), switchx=1, switchy=1):
         self.screen = screen
         self.background = background
-        self.background_color = (88,88,88)
+        self.background_color = (20,20,20)
         self.position = self.x, self.y = coordonnees
         self.color = color
         self.switchx = switchx
@@ -298,7 +298,10 @@ class Spells(Bonhomme):
         self.cycletime = 0
         self.interval = 0.05
         self.lock = False
-        self.lock_spells = False
+        self.lock_spells = [False,False,False,False,False,False]
+        self.number = None
+        self.eraser = pygame.Surface((78,101)).convert()
+        self.eraser.fill(self.background_color)
 
         self.path()
 
@@ -306,7 +309,7 @@ class Spells(Bonhomme):
     def offensive(self):
         offensive_spell = None
         if self.side == 'darkness':
-            offensive_spell = 'Avada_Kedravra'
+            offensive_spell = 'Avada_Kedavra'
         elif self.side == 'light':
             offensive_spell = 'Expelliarmus'
         elif self.side == 'neutral':
@@ -371,36 +374,42 @@ class Spells(Bonhomme):
             for image in both:
                 self.spells[spell]['Both'].append(os.path.join("Wizarding_Game","Image","120x120","Spells",spell,image+".png"))
 
-    def which_spell(self, number):
+    def which_spell(self):
         keys = list(self.spells.keys())
-        return self.spells[keys[number-1]]
+        return self.spells[keys[self.number-1]]
 
     def set_animation(self):
         # Charges every images required for animation, depending on the orientation of the character
-        if self.lock_spells == False:
-            animation = []
-            if self.orientation == 'Left':
-                self.position_spell = self.x_spell, self.y_spell = self.x-71, self.y+42
+        animation = []
+        if self.orientation == 'Left':
+            if self.number == 1:
+                self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+42
                 self.position_attack = self.x_spell-13, self.y_spell+15 # self.x_spell -21(length of the attack) + 8(empty area of the Seventh image), self.y_spell +15(wand's top position)
-                for image in self.path_spell['Left']:
-                    try:
-                        animation.append(pygame.image.load(os.path.join(image)))
-                    except:
-                        print("Error, can't find the file '"+image+"' \nPlease, make sure you wrote the right path.")
-            elif self.orientation == 'Right':
-                self.position_spell = self.x_spell, self.y_spell = self.x+71, self.y+42
+            elif self.number == 2:
+                self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+6
+            for image in self.path_spell['Left']:
+                try:
+                    animation.append(pygame.image.load(os.path.join(image)))
+                except:
+                    print("Error, can't find the file '"+image+"' \nPlease, make sure you wrote the right path.")
+        elif self.orientation == 'Right':
+            if self.number == 1:
+                self.position_spell = self.x_spell, self.y_spell = self.x+72, self.y+42
                 self.position_attack = self.x_spell+78, self.y_spell+15 # self.x_spell +88(length of the character) - 8 or 10 (empty area of the Seventh image), self.y_spell +15(wand's top position)
-                for image in self.path_spell['Right']:
-                    try:
-                        animation.append(pygame.image.load(os.path.join(image)))
-                    except:
-                        raise UserWarning("Error, can't find the file '"+image+"' \nPlease, make sure you wrote the right path.")
-            for image in range (len(animation)):
-               animation[image].set_colorkey(self.color_key)
-               animation[image] = animation[image].convert_alpha()
+            elif self.number == 2:
+                self.position_spell = self.x_spell, self.y_spell = self.x+82, self.y+6
+            for image in self.path_spell['Right']:
+                try:
+                    animation.append(pygame.image.load(os.path.join(image)))
+                except:
+                    raise UserWarning("Error, can't find the file '"+image+"' \nPlease, make sure you wrote the right path.")
+        for image in range (len(animation)):
+           animation[image].set_colorkey(self.color_key)
+           animation[image] = animation[image].convert_alpha()
 
-            # Charges every images required for animation, which will be usefull for both orientation
-            animation_both = []
+        # Charges every images required for animation, which will be usefull for both orientation
+        animation_both = []
+        if self.number == 1:
             for image in self.path_spell['Both']:
                 try:
                     animation_both.append(pygame.image.load(os.path.join(image)))
@@ -409,79 +418,123 @@ class Spells(Bonhomme):
             for image in range (len(animation_both)):
                animation_both[image].set_colorkey(self.color_key)
                animation_both[image] = animation_both[image].convert_alpha()
+        elif self.number == 2:
+            try:
+                animation_both.append(pygame.image.load(os.path.join(self.path_spell['Both'][-1])))
+            except:
+                raise UserWarning("Error, can't find the file '"+self.path_spell['Both'][-1]+"' \nPlease, make sure you wrote the right path.")
+            animation_both[0].set_colorkey(self.color_key)
+            animation_both[0] = animation_both[0].convert_alpha()
 
-            return animation, animation_both
+        return animation, animation_both
     # Display the animation
     def display(self):
         milliseconds = self.clock.tick(60)  # Milliseconds passed since last frame
         seconds = milliseconds / 1000.0 # Seconds passed since last frame (float)
         self.cycletime += seconds
-        if not(self.animation) or self.index_animation <= len(self.animation)-6:
-            if self.orientation == 'Left':
-                self.position_spell = self.x_spell, self.y_spell = self.x-71, self.y+42
-                self.position_attack = self.x_spell-13, self.y_spell+15
-            elif self.orientation == 'Right':
-                self.position_spell = self.x_spell, self.y_spell = self.x+71, self.y+42
-                self.position_attack = self.x_spell+78, self.y_spell+15 # self.x_spell +88(length of the character) - 8 or 10 (empty area of the Seventh image), self.y_spell +15(wand's top position)
-        # Beginning of the animation on the wand
-        if self.running and self.index_animation < len(self.animation):
-                self.lock = True
-                mypicture = self.animation[self.index_animation]
-                self.screen.blit(mypicture, self.position_spell)# -71 +42 par rapport au personnage
-        # Beginning of the traveling part
-        if self.running and self.index_animation > len(self.animation)-6:
-            # First frame
-            if self.orientation == 'Left':
-                if self.animation_progress == 0:
-                    self.animation_progress += 1 # Juste utile pour la premiere apparition de l'attaque
-                    if self.position_attack[0]-42 > 0: # 2 times the length of the attack image (for remanence)
-                        self.screen.blit(self.animation_both[0], self.position_attack) # Displays the "Beginning_End" image
-                        self.position_attack = (self.position_attack[0]-21, self.position_attack[1]) # Upgrading position_attack
-                # Other frame
-                elif self.animation_progress > 0:
-                    if self.position_attack[0]-42 >= 0:
-                        self.screen.blit(self.animation_both[1], self.position_attack) # Displays the "Traveling" image
-                        #self.screen.blit(self.cleanup, (self.position_attack[0]+42, self.position_attack[1])) # Displays image with the dimensions of the attack but with the color of the BG
-                        self.position_attack = (self.position_attack[0]-21, self.position_attack[1])
-                    elif self.position_attack[0]-21 > 0: # If it goes through this, it means it is the last frame of the animation
-                        self.screen.blit(self.animation_both[0], self.position_attack)
-                        self.screen.blit(self.cleanup, (self.position_attack[0]+42, self.position_attack[1]))
-                        self.screen.blit(self.cleanup, (self.position_attack[0]+21, self.position_attack[1]))
-                        self.position_attack = (self.position_attack[0]-21, self.position_attack[1])
-                    # Last frame
-                    else:
-                        self.screen.blit(self.animation_both[2], (0,0)) # Displays the "Alpha" image. End of animation
-                        self.screen.blit(self.cleanup, (self.position_attack[0]+21, self.position_attack[1]))
-                        self.animation_progress = 'done'
-            elif self.orientation == 'Right':
-                if self.animation_progress == 0:
-                    self.animation_progress += 1 # Juste utile pour la premiere apparition de l'attaque
-                    if self.position_attack[0]+42 < self.screen.get_size()[0]: # 2 times the length of the attack image (for remanence)
-                        self.screen.blit(self.animation_both[0], self.position_attack) # Displays the "Beginning_End" image
-                        self.position_attack = (self.position_attack[0]+21, self.position_attack[1]) # Upgrading position_attack
-                # Other frame
-                elif self.animation_progress > 0 :
-                    if self.position_attack[0]+42 < self.screen.get_size()[0]:
-                        self.screen.blit(self.animation_both[1], self.position_attack) # Displays the "Traveling" image
-                        self.screen.blit(self.cleanup, (self.position_attack[0]-42, self.position_attack[1])) # Displays image with the dimensions of the attack but with the color of the BG
-                        self.position_attack = (self.position_attack[0]+21, self.position_attack[1])
-                    elif self.position_attack[0]+21 < self.screen.get_size()[0]: # If it goes through this, it means it is the last frame of the animation
-                        self.screen.blit(self.animation_both[0], self.position_attack)
-                        self.screen.blit(self.cleanup, (self.position_attack[0]-42, self.position_attack[1]))
-                        self.screen.blit(self.cleanup, (self.position_attack[0]-21, self.position_attack[1]))
-                        self.position_attack = (self.position_attack[0]+21, self.position_attack[1])
-                    # Last frame
-                    elif self.position_attack[0]+21 >= self.screen.get_size()[0]:
-                        self.screen.blit(self.animation_both[2], (0,0)) # Displays the "Alpha" image. End of animation
-                        self.screen.blit(self.cleanup, (self.position_attack[0]-21, self.position_attack[1]))
-                        self.animation_progress = 'done'
-        if self.running and self.cycletime > self.interval:
-            self.index_animation += 1
-            self.cycletime = 0
-        # Reset
-        if self.animation_progress == 'done': # Time of the animation (majorized)
-            self.index_animation = 0
-            self.animation_progress = 0
-            self.running = False
-            self.lock = False
-            self.lock_spells = False
+        if self.number == 1 and self.lock_spells[1] == False and self.lock_spells[2] == False and self.lock_spells[3] == False and self.lock_spells[4] == False and self.lock_spells[5] == False:
+            if self.animation and self.index_animation <= len(self.animation)-6:
+                if self.orientation == 'Left':
+                    self.position_attack = self.x_spell-13, self.y_spell+15
+                elif self.orientation == 'Right':
+                    self.position_attack = self.x_spell+78, self.y_spell+15 # self.x_spell +88(length of the character) - 8 or 10 (empty area of the Seventh image), self.y_spell +15(wand's top position)
+            # Beginning of the animation on the wand
+            if self.running and self.index_animation < len(self.animation):
+                    if self.orientation == 'Left':
+                        self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+42
+                    elif self.orientation == 'Right':
+                        self.position_spell = self.x_spell, self.y_spell = self.x+72, self.y+42
+                    self.lock = True
+                    mypicture = self.animation[self.index_animation]
+                    self.screen.blit(mypicture, self.position_spell)# -71 +42 par rapport au personnage
+            # Beginning of the traveling part
+            if self.running and self.index_animation > len(self.animation)-6:
+                # First frame
+                if self.orientation == 'Left':
+                    if self.animation_progress == 0:
+                        self.animation_progress += 1 # Juste utile pour la premiere apparition de l'attaque
+                        if self.position_attack[0]-42 > 0: # 2 times the length of the attack image (for remanence)
+                            self.screen.blit(self.animation_both[0], self.position_attack) # Displays the "Beginning_End" image
+                            self.position_attack = (self.position_attack[0]-21, self.position_attack[1]) # Upgrading position_attack
+                    # Other frame
+                    elif self.animation_progress > 0:
+                        if self.position_attack[0]-42 >= 0:
+                            self.screen.blit(self.animation_both[1], self.position_attack) # Displays the "Traveling" image
+                            #self.screen.blit(self.cleanup, (self.position_attack[0]+42, self.position_attack[1])) # Displays image with the dimensions of the attack but with the color of the BG
+                            self.position_attack = (self.position_attack[0]-21, self.position_attack[1])
+                        elif self.position_attack[0]-21 > 0: # If it goes through this, it means it is the last frame of the animation
+                            self.screen.blit(self.animation_both[0], self.position_attack)
+                            self.screen.blit(self.cleanup, (self.position_attack[0]+42, self.position_attack[1]))
+                            self.screen.blit(self.cleanup, (self.position_attack[0]+21, self.position_attack[1]))
+                            self.position_attack = (self.position_attack[0]-21, self.position_attack[1])
+                        # Last frame
+                        else:
+                            self.screen.blit(self.animation_both[2], (0,0)) # Displays the "Alpha" image. End of animation
+                            self.screen.blit(self.cleanup, (self.position_attack[0]+21, self.position_attack[1]))
+                            self.animation_progress = 'done'
+                elif self.orientation == 'Right':
+                    if self.animation_progress == 0:
+                        self.animation_progress += 1 # Juste utile pour la premiere apparition de l'attaque
+                        if self.position_attack[0]+42 < self.screen.get_size()[0]: # 2 times the length of the attack image (for remanence)
+                            self.screen.blit(self.animation_both[0], self.position_attack) # Displays the "Beginning_End" image
+                            self.position_attack = (self.position_attack[0]+21, self.position_attack[1]) # Upgrading position_attack
+                    # Other frame
+                    elif self.animation_progress > 0 :
+                        if self.position_attack[0]+42 < self.screen.get_size()[0]:
+                            self.screen.blit(self.animation_both[1], self.position_attack) # Displays the "Traveling" image
+                            self.screen.blit(self.cleanup, (self.position_attack[0]-42, self.position_attack[1])) # Displays image with the dimensions of the attack but with the color of the BG
+                            self.position_attack = (self.position_attack[0]+21, self.position_attack[1])
+                        elif self.position_attack[0]+21 < self.screen.get_size()[0]: # If it goes through this, it means it is the last frame of the animation
+                            self.screen.blit(self.animation_both[0], self.position_attack)
+                            self.screen.blit(self.cleanup, (self.position_attack[0]-42, self.position_attack[1]))
+                            self.screen.blit(self.cleanup, (self.position_attack[0]-21, self.position_attack[1]))
+                            self.position_attack = (self.position_attack[0]+21, self.position_attack[1])
+                        # Last frame
+                        elif self.position_attack[0]+21 >= self.screen.get_size()[0]:
+                            self.screen.blit(self.animation_both[2], (0,0)) # Displays the "Alpha" image. End of animation
+                            self.screen.blit(self.cleanup, (self.position_attack[0]-21, self.position_attack[1]))
+                            self.animation_progress = 'done'
+            if self.running and self.cycletime > self.interval:
+                self.index_animation += 1
+                self.cycletime = 0
+            # Reset
+            if self.animation_progress == 'done':
+                self.index_animation = 0
+                self.animation_progress = 0
+                self.running = False
+                self.lock = False
+                self.lock_spells[0] = False
+        elif self.number == 2 and self.lock_spells[0] == False and self.lock_spells[2] == False and self.lock_spells[3] == False and self.lock_spells[4] == False and self.lock_spells[5] == False:
+            if self.running and self.index_animation < len(self.animation):
+                if self.orientation == 'Left':
+                    self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+6
+                elif self.orientation == 'Right':
+                    self.position_spell = self.x_spell, self.y_spell = self.x+82, self.y+6
+                if self.index_animation < len(self.animation):
+                    self.screen.blit(self.animation_both[0],(0,0))
+                    self.lock = True
+                    mypicture = self.animation[self.index_animation]
+                    self.screen.blit(mypicture, self.position_spell)
+                    if self.running and self.cycletime > self.interval:
+                        if self.index_animation != 6:
+                            self.index_animation += 1
+                        elif self.index_animation == 6:
+                            self.animation_progress +=1
+                            if self.animation_progress == 10:
+                                self.animation_progress = 0
+                                self.index_animation += 1
+                        self.cycletime = 0
+
+                # elif self.index_animation < len(self.animation):
+                #     self.screen.blit(self.eraser,self.position_spell)
+                #     mypicture = self.animation[self.index_animation]
+                #     self.screen.blit(mypicture, self.position_spell)
+                #     if self.running and self.cycletime > self.interval:
+                #         self.index_animation += 1
+                #         self.cycletime = 0
+            if self.index_animation == len(self.animation)-1:
+                self.index_animation = 0
+                self.animation_progress = 0
+                self.running = False
+                self.lock = False
+                self.lock_spells[1] = False
