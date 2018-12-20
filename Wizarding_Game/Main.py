@@ -11,8 +11,8 @@ class App:
     def __init__(self):
         self._running = True
         self.screen = None
-        #self.size = self.weight, self.height = 1920, 1080
-        self.size = self.weight, self.height = 1600, 900
+        self.size = self.weight, self.height = 1920, 1080
+        #self.size = self.weight, self.height = 1600, 900
         self.background = None
         self.FPS = 60
         self.text = [None, self.FPS]
@@ -23,11 +23,13 @@ class App:
         self.background_color = (20,20,20)
         self.character = [[None],[None]]
         self.animation_timer = [0,0]
+        self.position_character = [None, None, None, None]
 
     # Initialisation of App object
     def on_init(self):
         pygame.init()
         self.screen = pygame.display.set_mode(self.size, (pygame.FULLSCREEN))
+        self.screen.set_colorkey((63,72,204))
         self.background = pygame.Surface((self.size)).convert()
         self.background.fill(self.background_color)
         self._running = True
@@ -48,7 +50,7 @@ class App:
                 else:
                     self.print_FPS = True
             elif event.key == pygame.K_1:
-                if self.character[0].spells.lock_spells[0] == False and self.character[0].spells.lock_spells[1] == False and self.character[0].spells.lock_spells[2] == False and self.character[0].spells.lock_spells[3] == False and self.character[0].spells.lock_spells[4] == False and self.character[0].spells.lock_spells[5] == False:
+                if self.character[0].alive and self.character[0].spells.lock_spells[0] == False and self.character[0].spells.lock_spells[1] == False and self.character[0].spells.lock_spells[2] == False and self.character[0].spells.lock_spells[3] == False and self.character[0].spells.lock_spells[4] == False and self.character[0].spells.lock_spells[5] == False:
                     self.character[0].spells.running = True
                     self.character[0].spells.number = 1
                     self.character[0].spells.path_spell = self.character[0].spells.which_spell()
@@ -56,7 +58,7 @@ class App:
                         self.character[0].spells.animation, self.character[0].spells.animation_both = self.character[0].spells.set_animation()
                         self.character[0].spells.lock_spells[0] = True
             elif event.key == pygame.K_KP1:
-                if self.character[1].spells.lock_spells[1] == False and self.character[1].spells.lock_spells[1] == False and self.character[1].spells.lock_spells[2] == False and self.character[1].spells.lock_spells[3] == False and self.character[1].spells.lock_spells[4] == False and self.character[1].spells.lock_spells[5] == False:
+                if self.character[1].alive and self.character[1].spells.lock_spells[0] == False and self.character[1].spells.lock_spells[1] == False and self.character[1].spells.lock_spells[2] == False and self.character[1].spells.lock_spells[3] == False and self.character[1].spells.lock_spells[4] == False and self.character[1].spells.lock_spells[5] == False:
                     self.character[1].spells.running = True
                     self.character[1].spells.number = 1
                     self.character[1].spells.path_spell = self.character[1].spells.which_spell()
@@ -64,7 +66,7 @@ class App:
                         self.character[1].spells.animation, self.character[1].spells.animation_both = self.character[1].spells.set_animation()
                         self.character[1].spells.lock_spells[0] = True
             elif event.key == pygame.K_2:
-                if self.character[0].spells.lock_spells[0] == False and self.character[0].spells.lock_spells[1] == False and self.character[0].spells.lock_spells[2] == False and self.character[0].spells.lock_spells[3] == False and self.character[0].spells.lock_spells[4] == False and self.character[0].spells.lock_spells[5] == False:
+                if self.character[0].alive and self.character[0].spells.lock_spells[0] == False and self.character[0].spells.lock_spells[1] == False and self.character[0].spells.lock_spells[2] == False and self.character[0].spells.lock_spells[3] == False and self.character[0].spells.lock_spells[4] == False and self.character[0].spells.lock_spells[5] == False:
                     self.character[0].spells.running = True
                     self.character[0].spells.number = 2
                     self.character[0].spells.path_spell = self.character[0].spells.which_spell()
@@ -72,7 +74,7 @@ class App:
                         self.character[0].spells.animation, self.character[0].spells.animation_both = self.character[0].spells.set_animation()
                         self.character[0].spells.lock_spells[1] = True
             elif event.key == pygame.K_KP2:
-                if self.character[1].spells.lock_spells[0] == False and self.character[1].spells.lock_spells[1] == False and self.character[1].spells.lock_spells[2] == False and self.character[1].spells.lock_spells[3] == False and self.character[1].spells.lock_spells[4] == False and self.character[1].spells.lock_spells[5] == False:
+                if self.character[1].alive and self.character[1].spells.lock_spells[0] == False and self.character[1].spells.lock_spells[1] == False and self.character[1].spells.lock_spells[2] == False and self.character[1].spells.lock_spells[3] == False and self.character[1].spells.lock_spells[4] == False and self.character[1].spells.lock_spells[5] == False:
                     self.character[1].spells.running = True
                     self.character[1].spells.number = 2
                     self.character[1].spells.path_spell = self.character[1].spells.which_spell()
@@ -80,8 +82,21 @@ class App:
                         self.character[1].spells.animation, self.character[1].spells.animation_both = self.character[1].spells.set_animation()
                         self.character[1].spells.lock_spells[1] = True
             elif event.key == pygame.K_3:
-                self.spells[0].path_spell = self.which_spell(3)
-                self.animation, self.animation_both = self.set_animation(path)
+                if self.character[0].alive and self.character[0].spells.lock_spells[0] == False and self.character[0].spells.lock_spells[1] == False and self.character[0].spells.lock_spells[2] == False and self.character[0].spells.lock_spells[3] == False and self.character[0].spells.lock_spells[4] == False and self.character[0].spells.lock_spells[5] == False:
+                    self.character[0].spells.running = True
+                    self.character[0].spells.number = 3
+                    self.character[0].spells.path_spell = self.character[0].spells.which_spell()
+                    if self.character[0].spells.lock_spells[2] == False:
+                        self.character[0].spells.animation, self.character[0].spells.animation_both = self.character[0].spells.set_animation()
+                        self.character[0].spells.lock_spells[2] = True
+            elif event.key == pygame.K_KP3:
+                if self.character[1].alive and self.character[1].spells.lock_spells[0] == False and self.character[1].spells.lock_spells[1] == False and self.character[1].spells.lock_spells[2] == False and self.character[1].spells.lock_spells[3] == False and self.character[1].spells.lock_spells[4] == False and self.character[1].spells.lock_spells[5] == False:
+                    self.character[1].spells.running = True
+                    self.character[1].spells.number = 3
+                    self.character[1].spells.path_spell = self.character[1].spells.which_spell()
+                    if self.character[1].spells.lock_spells[2] == False:
+                        self.character[1].spells.animation, self.character[1].spells.animation_both = self.character[1].spells.set_animation()
+                        self.character[1].spells.lock_spells[2] = True
             elif event.key == pygame.K_4:
                 self.spells[0].path_spell = self.which_spell(4)
                 self.animation, self.animation_both = self.set_animation(path)
@@ -146,9 +161,12 @@ class App:
         self.interval = 0.5 # Interval for displaying animations
         Maze_ = Maze.Maze(self.screen) # Maze object
         # Bonhomme objects
-        self.character[0] =  Character.Bonhomme(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Ronald_Weasley', (63,72,204), Maze_.start_position, "neutral")
+
+        self.character[0] =  Character.Bonhomme(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Voldemort', (63,72,204), Maze_.start_position, "darkness")
         self.character[1] =  Character.Bonhomme(self.screen, self.background, 'Wizarding_Game\\Image\\120x120\\Characters\\Harry_Potter', (63,72,204), Maze_.start_position, "light")
-        self.character.append(Character.Bonhomme(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Voldemort', (63,72,204), Maze_.start_position, "darkness"))
+        self.character.append(Character.Bonhomme(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Ronald_Weasley', (63,72,204), Maze_.start_position, "neutral"))
+        self.character.append(Character.Bonhomme(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Hermione_Granger', (63,72,204), (500,950), "darkness"))
+
 
         # Main loop
         while( self._running ):
@@ -166,9 +184,20 @@ class App:
             self.on_loop(int(clock.get_fps()))
             # Center of loop
             # stop allows to close the pygame window when the maze is complete (only way I found to make it work)
+
+            stop = self.character[2].draw_NPC(Maze_)
+            stop = self.character[3].draw_NPC(Maze_)
             stop = self.character[0].draw_motion(self.key[2], Maze_)
             stop = self.character[1].draw_motion(self.key[1], Maze_)
-            stop = self.character[2].draw_motion(2, Maze_)
+
+            for character in self.character:
+                if character.spells.running and (character.spells.number == 1 or character.spells.number == 3) and character.spells.index_animation > len(character.spells.animation)-6:
+                    for other_character in self.character:
+                        if character != other_character:
+                            if character.spells.position_attack[0]+21 > other_character.hitbox[0] and character.spells.position_attack[0] < other_character.hitbox[0]+88 and character.spells.position_attack[1] > other_character.hitbox[1] and character.spells.position_attack[1]+7 < other_character.hitbox[1]+116:
+                                character.spells.hit_someone = True
+                                other_character.get_hit()
+
             pygame.display.flip()
             Maze_.run_(stop)
             # Render (nor usefull now)

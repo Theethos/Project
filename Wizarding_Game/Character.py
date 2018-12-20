@@ -3,7 +3,7 @@ import random
 import time
 import os
 
-class Bonhomme():
+class Bonhomme(pygame.sprite.Sprite):
     def __init__(self, screen, background, load, colorkey=(0,0,0), coordonnees=(100,100), side='neutral', color=(0,0,0), switchx=1, switchy=1):
         self.screen = screen
         self.background = background
@@ -20,45 +20,79 @@ class Bonhomme():
         self.lifebar = Lifebar(self.screen, self.position, self.color_wall, self.load, self.dx, self.dy)
         self.timer = 0
         self.alive = True
-        self.colision = False
         self.side = side
         self.lock = False
         self.spells = Spells(self.screen, self.background_color, self.side, self.x, self.y)
+        self.hitbox = (self.x, self.y, 88, 116)
+        self.hit = 0
+        self.ways = ['left', 'right', 'up', 'down']
+        self.way = None
+        self.timer_NPC = 0
+        self.distance = 120
+        self.waitime = 0
+
     # For NPC, moves characters from left to right
     # (On his own)
-    def draw(self):
-        self.motion()
-        self.image()
-
-    # Alows characters to be moved with keypad
-    def draw_motion(self, way, maze):
-        self.motion_keys(way)
-        self.image()
+    def draw_NPC(self, maze):
+        if self.timer_NPC == 0:
+            self.way = self.ways[random.randint(0,3)]
+            self.distance = random.randint(80,200)
+        self.motion_NPC(self.way)
+        self.display()
+        self.hitbox = (self.x, self.y, 88, 116)
         self.spells.position = self.spells.x, self.spells.y = self.x, self.y
         self.spells.orientation = self.load[3]
         self.spells.display()
         self.lifebar.position = self.lifebar.x, self.lifebar.y = self.position
         self.lifebar.path_character = self.load
-        self.lifebar.colision = self.colision
         self.lifebar.run_life()
-        if self.lifebar.percentage <= 10 and self.colision:
-            if self.alive:
-                self.lifebar.percentage = 0
-                self.death()
-            elif not(self.alive) and self.timer < 150:
-                self.timer+=1
-            elif not(self.alive) and self.timer == 150:
-                self.respawn()
-                self.timer = 0
+        if self.load[1] == self.load[0]+'_Hit.png':
+            self.load[1] = self.load[0]+self.load[2]
+        if not(self.alive) and self.timer < 150:
+            self.timer+=1
+        elif not(self.alive) and self.timer == 150:
+            self.respawn()
+            self.timer = 0
         result = self.blocks(maze)
         if result == None:
             result = True
+        self.timer_NPC += 1
+        if self.timer_NPC == self.distance:
+            self.way = None
+            self.waitime = random.randint(200,400)
+        if self.timer_NPC == self.distance+self.waitime:
+            self.timer_NPC = 0
+    # Alows characters to be moved with keypad
+
+    def draw_motion(self, way, maze):
+        self.motion_keys(way)
+        self.display()
+        self.hitbox = (self.x, self.y, 88, 116)
+        self.spells.position = self.spells.x, self.spells.y = self.x, self.y
+        self.spells.orientation = self.load[3]
+        self.spells.display()
+        self.lifebar.position = self.lifebar.x, self.lifebar.y = self.position
+        self.lifebar.path_character = self.load
+        self.lifebar.run_life()
+        if self.load[1] == self.load[0]+'_Hit.png':
+            self.load[1] = self.load[0]+self.load[2]
+        if not(self.alive) and self.timer < 150:
+            self.timer+=1
+        elif not(self.alive) and self.timer == 150:
+            self.respawn()
+            self.timer = 0
+        result = self.blocks(maze)
+        if result == None:
+            result = True
+
+
         return result
 
     # Charges an image (as character for example)
-    def image(self):
+    def display(self):
         monsieur = pygame.image.load(self.load[1])
         monsieur.set_colorkey(self.colorkey)
+        monsieur.convert_alpha()
         self.screen.blit(monsieur, (self.position))
 
     # Defines motions made with keys events
@@ -73,9 +107,6 @@ class Bonhomme():
                             wall = True
                     if not(wall):
                         self.x -= self.dx
-                        self.colision = False
-                    elif wall:
-                        self.colision = True
                 if not(self.spells.lock):
                     self.load[3] = 'Left'
                     self.load[2] = '_Left.png'
@@ -90,9 +121,6 @@ class Bonhomme():
                             wall = True
                     if not(wall):
                         self.x += self.dx
-                        self.colision = False
-                    elif wall:
-                        self.colision = True
                 if not(self.spells.lock):
                     self.load[3] = 'Right'
                     self.load[2] = '_Right.png'
@@ -107,9 +135,6 @@ class Bonhomme():
                             wall = True
                     if not(wall):
                         self.y -= self.dy
-                        self.colision = False
-                    elif wall:
-                        self.colision = True
                 way = None
             elif way == 'down':
                 if self.y+self.dy <= self.screen.get_size()[1]-116:
@@ -120,9 +145,6 @@ class Bonhomme():
                             wall = True
                     if not(wall):
                         self.y += self.dy
-                        self.colision = False
-                    elif wall:
-                        self.colision = True
                 way = None
     def blocks(self, maze):
         # Next level block
@@ -162,36 +184,52 @@ class Bonhomme():
         self.position = (self.x, self.y)
 
     # Defines motions made from left to right
-    def motion(self):
-        choice = random.randint(0,1)
-        if choice == 0:
-            # Variations on x-axys
-            if self.x >= 0-10 and self.x <= self.screen.get_size()[0]-111:
-                self.x += self.switchx
-            elif self.x < 0-10:
-                self.x = 0-10
-                self.switchx = 1
-                self.x += self.switchx
-                self.load[1] = self.load[0]+'_Right.png'
-            elif self.x > self.screen.get_size()[0]-111:
-                self.x = self.screen.get_size()[0]-111
-                self.switchx = -1
-                self.x += self.switchx
-                self.load[1] = self.load[0]+'_Left.png'
-        if choice == 1:
-            # Variation on y-axys
-            if self.y >= 287 and self.y <= self.screen.get_size()[1]-120:
-                self.y += self.switchy
-            elif self.y < 287:
-                self.y = 287
-                self.switchy = 1
-                self.y += self.switchy
-            elif self.y > self.screen.get_size()[1]-120:
-                self.y = self.screen.get_size()[1]-120
-                self.switchy = -1
-                self.y += self.switchy
-        self.position = (self.x, self.y)
-
+    def motion_NPC(self, way):
+        if self.alive:
+            if self.way == 'left':
+                if self.x-1 >= 0:
+                    pixels = [(self.x-1,self.y),(self.x-1,self.y+29), (self.x-1,self.y+58), (self.x-1,self.y+87), (self.x-1,self.y+116)]
+                    wall = False
+                    for pixel in pixels:
+                        if self.screen.get_at(pixel) == self.color_wall:
+                            wall = True
+                    if not(wall):
+                        self.x -= 1
+                if not(self.spells.lock):
+                    self.load[3] = 'Left'
+                    self.load[2] = '_Left.png'
+                    self.load[1] = self.load[0]+self.load[2]
+            elif self.way == 'right':
+                if self.x+1 <= self.screen.get_size()[0]-108:
+                    pixels = [(self.x+1+88,self.y), (self.x+1+88,self.y+29),(self.x+1+88,self.y+58), (self.x+1+88,self.y+87), (self.x+1+88,self.y+116)]
+                    wall = False
+                    for pixel in pixels:
+                        if self.screen.get_at(pixel) == self.color_wall:
+                            wall = True
+                    if not(wall):
+                        self.x += 1
+                if not(self.spells.lock):
+                    self.load[3] = 'Right'
+                    self.load[2] = '_Right.png'
+                    self.load[1] = self.load[0]+self.load[2]
+            elif self.way == 'up':
+                if self.y-1 >= 0:
+                    pixels = [(self.x,self.y-1), (self.x+44,self.y-1), (self.x+88,self.y-1)]
+                    wall = False
+                    for pixel in pixels:
+                        if self.screen.get_at(pixel) == self.color_wall:
+                            wall = True
+                    if not(wall):
+                        self.y -= 1
+            elif self.way == 'down':
+                if self.y+1 < self.screen.get_size()[1]-116:
+                    pixels = [(self.x,self.y+1+116), (self.x+44,self.y+1+116), (self.x+88,self.y+1+116)]
+                    wall = False
+                    for pixel in pixels:
+                        if self.screen.get_at(pixel) == self.color_wall:
+                            wall = True
+                    if not(wall):
+                        self.y += 1
     def death(self):
         if self.load[2] == '_Right.png':
             self.position = self.x, self.y = self.x-30, self.y
@@ -209,17 +247,26 @@ class Bonhomme():
             self.load[3] = 'Left'
             self.load[2] == '_Left.png'
             self.load[1] = self.load[0]+self.load[2]
-            self.lifebar.percentage = 110
-            self.motion_keys('right')
+            self.lifebar.percentage = 100
+            self.motion_keys('left')
         elif self.load[2] == '_Right_Dead.png':
             self.load[3] = 'Right'
             self.load[2] == '_Right.png'
             self.load[1] = self.load[0]+self.load[2]
-            self.lifebar.percentage = 110
-            self.motion_keys('left')
+            self.lifebar.percentage = 100
+            self.motion_keys('right')
 
-        def lock(self):
-            pass
+    def get_hit(self):
+        if not(self.spells.protected) and self.alive:
+            self.load[1] = self.load[0]+'_Hit.png'
+            if self.lifebar.percentage > 10:
+                self.lifebar.percentage -= 10
+            elif self.lifebar.percentage <= 10:
+                if self.alive:
+                    self.lifebar.percentage = 0
+                    self.death()
+
+
 
 class Lifebar(Bonhomme):
     def __init__(self, screen, position, color_wall, path_character, dx, dy):
@@ -233,8 +280,7 @@ class Lifebar(Bonhomme):
         self.damage = 0
         self.path_character = path_character
         self.dx, self.dy = dx, dy
-        self.colision = False
-        self.compteur = 1
+
 
     def set_position_life(self):
         if (self.x-5 > self.screen.get_size()[0] or self.x-5 < 0) or (self.y-20 > self.screen.get_size()[1] or self.y-20 < 0):
@@ -252,15 +298,7 @@ class Lifebar(Bonhomme):
             else:
                 self.path[0] = self.path[1]+str(self.percentage)+".png"
             self.position_life = self.x_life, self.y_life = self.x-5, self.y-20
-            self.compteur = 0
-        if self.colision and self.compteur == 0:
-            self.damage = 1
-            self.compteur = 1
-        if self.damage == 1  and self.compteur == 0:
-            if self.percentage > 0:
-                self.percentage -= 10
-            self.path[0] = self.path[1]+"alpha.png"
-            self.damage = 0
+
 
     def draw_life(self):
         self.image = pygame.image.load(self.path[0])
@@ -302,6 +340,8 @@ class Spells(Bonhomme):
         self.number = None
         self.eraser = pygame.Surface((78,101)).convert()
         self.eraser.fill(self.background_color)
+        self.protected = False
+        self.hit_someone = False
 
         self.path()
 
@@ -382,7 +422,7 @@ class Spells(Bonhomme):
         # Charges every images required for animation, depending on the orientation of the character
         animation = []
         if self.orientation == 'Left':
-            if self.number == 1:
+            if self.number == 1 or self.number == 3:
                 self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+42
                 self.position_attack = self.x_spell-13, self.y_spell+15 # self.x_spell -21(length of the attack) + 8(empty area of the Seventh image), self.y_spell +15(wand's top position)
             elif self.number == 2:
@@ -393,7 +433,7 @@ class Spells(Bonhomme):
                 except:
                     print("Error, can't find the file '"+image+"' \nPlease, make sure you wrote the right path.")
         elif self.orientation == 'Right':
-            if self.number == 1:
+            if self.number == 1 or self.number == 3:
                 self.position_spell = self.x_spell, self.y_spell = self.x+72, self.y+42
                 self.position_attack = self.x_spell+78, self.y_spell+15 # self.x_spell +88(length of the character) - 8 or 10 (empty area of the Seventh image), self.y_spell +15(wand's top position)
             elif self.number == 2:
@@ -409,7 +449,7 @@ class Spells(Bonhomme):
 
         # Charges every images required for animation, which will be usefull for both orientation
         animation_both = []
-        if self.number == 1:
+        if self.number == 1 or self.number == 3:
             for image in self.path_spell['Both']:
                 try:
                     animation_both.append(pygame.image.load(os.path.join(image)))
@@ -432,6 +472,9 @@ class Spells(Bonhomme):
         milliseconds = self.clock.tick(60)  # Milliseconds passed since last frame
         seconds = milliseconds / 1000.0 # Seconds passed since last frame (float)
         self.cycletime += seconds
+        #
+        # 1st spell
+        #
         if self.number == 1 and self.lock_spells[1] == False and self.lock_spells[2] == False and self.lock_spells[3] == False and self.lock_spells[4] == False and self.lock_spells[5] == False:
             if self.animation and self.index_animation <= len(self.animation)-6:
                 if self.orientation == 'Left':
@@ -497,18 +540,24 @@ class Spells(Bonhomme):
                 self.index_animation += 1
                 self.cycletime = 0
             # Reset
-            if self.animation_progress == 'done':
+            if self.animation_progress == 'done' or self.hit_someone == True:
                 self.index_animation = 0
                 self.animation_progress = 0
                 self.running = False
                 self.lock = False
                 self.lock_spells[0] = False
+                self.hit_someone = False
+        #
+        # 2nd spell
+        #
         elif self.number == 2 and self.lock_spells[0] == False and self.lock_spells[2] == False and self.lock_spells[3] == False and self.lock_spells[4] == False and self.lock_spells[5] == False:
             if self.running and self.index_animation < len(self.animation):
                 if self.orientation == 'Left':
                     self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+6
                 elif self.orientation == 'Right':
                     self.position_spell = self.x_spell, self.y_spell = self.x+82, self.y+6
+                if self.index_animation == 3:
+                    self.protected = True
                 if self.index_animation < len(self.animation):
                     self.screen.blit(self.animation_both[0],(0,0))
                     self.lock = True
@@ -530,3 +579,54 @@ class Spells(Bonhomme):
                 self.running = False
                 self.lock = False
                 self.lock_spells[1] = False
+                self.protected = False
+        #
+        # 3rd spell
+        #
+        elif self.number == 3 and self.lock_spells[0] == False and self.lock_spells[1] == False and self.lock_spells[3] == False and self.lock_spells[4] == False and self.lock_spells[5] == False:
+            if self.animation and self.index_animation < len(self.animation)-2:
+                if self.orientation == 'Left':
+                    self.position_attack = self.x_spell-72, self.y_spell+6
+                elif self.orientation == 'Right':
+                    self.position_attack = self.x_spell+77, self.y_spell+6 # self.x_spell +88(length of the character) - 8 or 10 (empty area of the Seventh image), self.y_spell +15(wand's top position)
+            # Beginning of the animation on the wand
+            if self.running and self.index_animation < len(self.animation):
+                    if self.orientation == 'Left':
+                        self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+42
+                    elif self.orientation == 'Right':
+                        self.position_spell = self.x_spell, self.y_spell = self.x+72, self.y+42
+                    self.lock = True
+                    mypicture = self.animation[self.index_animation]
+                    self.screen.blit(mypicture, self.position_spell)# -71 +42 par rapport au personnage
+            # Beginning of the traveling part
+            if self.running and self.index_animation >= len(self.animation)-2:
+                # First frame
+                if self.orientation == 'Left':
+                    if self.position_attack[0]-23 >= 0:
+                        self.screen.blit(self.animation_both[1], self.position_attack) # Display Traveling
+                        self.screen.blit(self.cleanup, (self.position_attack[0]+23, self.position_attack[1]))
+                        self.position_attack = (self.position_attack[0]-23, self.position_attack[1])
+                    elif self.position_attack[0]-23 < 0:
+                        self.screen.blit(self.animation_both[2], (0,0)) # Displays the "Alpha" image. End of animation
+                        self.screen.blit(self.cleanup, (self.position_attack[0]+23, self.position_attack[1]))
+                        self.animation_progress = 'done'
+                elif self.orientation == 'Right':
+                    if self.position_attack[0]+23 < self.screen.get_size()[0]:
+                        self.screen.blit(self.animation_both[1], self.position_attack) # Display Traveling
+                        self.screen.blit(self.cleanup, (self.position_attack[0]-23, self.position_attack[1]))
+                        self.position_attack = (self.position_attack[0]+23, self.position_attack[1])
+                    elif self.position_attack[0]+23 >= self.screen.get_size()[0]:
+                        self.screen.blit(self.animation_both[2], (0,0)) # Displays the "Alpha" image. End of animation
+                        self.screen.blit(self.cleanup, (self.position_attack[0]-23, self.position_attack[1]))
+                        self.animation_progress = 'done'
+            if self.running and self.cycletime > self.interval:
+                self.index_animation += 1
+                self.cycletime = 0
+            # Reset
+            if self.animation_progress == 'done' or self.hit_someone == True:
+                self.index_animation = 0
+                self.animation_progress = 0
+                self.running = False
+                self.lock = False
+                self.lock_spells[2] = False
+                self.hit_someone = False

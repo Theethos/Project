@@ -2,14 +2,16 @@ import pygame
 import os
 
 pygame.init()
-screen = pygame.display.set_mode((1600,900), (pygame.FULLSCREEN))
-background = pygame.Surface((1600,900)).convert()
+# screen = pygame.display.set_mode((1600,900), (pygame.FULLSCREEN))
+# background = pygame.Surface((1600,900)).convert()
+screen = pygame.display.set_mode((1920,1080), (pygame.FULLSCREEN))
+background = pygame.Surface((1920,1080)).convert()
 screen.fill((20,20,20))
 background.fill((20,20,20))
 
 animation_left = []
 animation_right = []
-path = os.path.join("Wizarding_Game","Image","120x120","Spells","Stupefy")
+path = os.path.join("Wizarding_Game","Image","120x120","Spells","Petrificus_Totalus")
 # Taille = 78 x 31
 images_left = ["First_Left.png","Second_Left.png","Third_Left.png","Fourth_Left.png","Fifth_Left.png","Sixth_Left.png","Seventh_Left.png","Fifth_Left.png","Fourth_Left.png","Third_Left.png","Second_Left.png","First_Left.png","Alpha.png"]
 images_right = ["First_Right.png","Second_Right.png","Third_Right.png","Fourth_Right.png","Fifth_Right.png","Sixth_Right.png","Seventh_Right.png","Fifth_Right.png","Fourth_Right.png","Third_Right.png","Second_Right.png","First_Right.png","Alpha.png"]
@@ -45,7 +47,7 @@ monsieur_right.set_colorkey((63,72,204))
 monsieur_right.convert_alpha()
 interval = .1 # how long one single images should be displayed in seconds
 picnr = 0
-attack = (928,348) # 1000 -21(taille de l'attaque) + 8(zone vide de l'animation Seventh), 300 +15(décalage vers la baguette) (1000,300) = pos de la boule vers la gauche
+attack = (1528,348) # 1000 -21(taille de l'attaque) + 8(zone vide de l'animation Seventh), 300 +15(décalage vers la baguette) (1000,300) = pos de la boule vers la gauche
 image_attack = pygame.image.load(os.path.join(path,"Traveling.png"))
 image_attack.set_colorkey((63,72,204))
 image_attack.convert_alpha()
@@ -93,24 +95,24 @@ while mainloop:
     cycletime += seconds
     if side == 'left':
         if cycletime > interval and picnr < len(animation_right):
-            screen.blit(mu,(928,342))
+            screen.blit(mu,(1528,342))
             mypicture = animation_left[picnr] ##
-            screen.blit(monsieur_left, (1000,300))# +71, -42 par rapport a la boule
-            screen.blit(mypicture, (928,342))# -71 +42 par rapport au personnage
+            screen.blit(monsieur_left, (1600,300))# +71, -42 par rapport a la boule
+            screen.blit(mypicture, (1528,342))# -71 +42 par rapport au personnage
             cycletime = 0
             picnr += 1
 
         if picnr >= len(animation_left)-6:
-            if attack[0]-23 > 0:
+            if attack[0]-23 >= 0:
                 screen.blit(image_attack, attack)
                 screen.blit(surface, (attack[0]+23, attack[1]))
                 attack = (attack[0]-23, attack[1])
-            else:
+            elif attack[0]-23 < 0:
                 screen.blit(animation_left[-1], (0,0)) # Fin
                 screen.blit(surface, (attack[0]+23, attack[1]))
             compteur += 1 # Juste utile pour la premiere apparition de l'attaque
 
-        if picnr == len(animation_left) : # compteur > 60: # Pour le changement de sens
+        if compteur == 120:
             picnr = 0
             compteur = 0
             cycletime = 0
@@ -131,19 +133,19 @@ while mainloop:
                 screen.blit(image_attack, attack)
                 screen.blit(surface, (attack[0]-23, attack[1]))
                 attack = (attack[0]+23, attack[1])
-            else:
+            elif attack[0]+23 >= screen.get_size()[0]:
                 screen.blit(animation_left[-1], (0,0)) # Fin
                 screen.blit(surface, (attack[0]-23, attack[1]))
             compteur += 1 # Juste utile pour la premiere apparition de l'attaque
 
 
-        if picnr == len(animation_right):
+        if compteur == 120:
             picnr = 0
             compteur = 0
             cycletime = 0
             screen.fill((20,20,20))
             side = 'left'
-            attack = (928,348)
+            attack = (1528,348)
             # if path == ("Wizarding_Game\\Image\\120x120\\Spells\\Protego"):
             #     path = os.path.join("Wizarding_Game","Image","120x120","Spells","Spero_Patronum")
             # elif path == ("Wizarding_Game\\Image\\120x120\\Spells\\Spero_Patronum"):
