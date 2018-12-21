@@ -15,7 +15,7 @@ class Game_Start_Menu():
         self._running = True
         self.print_FPS = False
         self.menu = 'menu'
-        self.language = 'francais'
+        self.language = 'english'
         self.counter = 0
         self.font =\
         {'Title':pygame.font.Font('Wizarding_Game\\Image\\start_menu\\Police\\harryp__.ttf', 200),
@@ -59,7 +59,7 @@ class Game_Start_Menu():
     """
     Run the loop to display the whole menu
     """
-    def run(self):
+    def run_start(self):
         clock = pygame.time.Clock()
         # Loop for the start menu
         self.screen.blit(self.background, (0,0))
@@ -121,15 +121,15 @@ class Game_Start_Menu():
             else:
                 Options = pygame.draw.rect(self.screen, self.color['Even_Button'], (680,510,300,150))
             # Quit button
-            Quit = pygame.draw.rect(self.screen, self.color['Shadow'], (700,690,300,150))
+            Quit = pygame.draw.rect(self.screen, self.color['Shadow'], (700,750,300,150))
             if 680+300 > mouse[0] > 680 and 680+150 > mouse[1] > 680:
-                Quit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,680,300,150))
+                Quit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,740,300,150))
                 # User click on "Quit"
                 if click[0]:
                     self.quit = True
                     self._running = False
             else:
-                Quit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,680,300,150))
+                Quit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,740,300,150))
             # If the menu changes
             if self.menu != previous_menu:
                 self.screen.blit(self.background, (0,0))
@@ -224,15 +224,15 @@ class Game_Start_Menu():
             else:
                 Francais = pygame.draw.rect(self.screen, self.color['Even_Button'], (680,510,300,150))
             # Exit button
-            Exit = pygame.draw.rect(self.screen, self.color['Shadow'], (700,710,300,150))
+            Exit = pygame.draw.rect(self.screen, self.color['Shadow'], (700,750,300,150))
             if 680+300 > mouse[0] > 680 and 700+150 > mouse[1] > 700:
-                Exit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,700,300,150))
+                Exit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,740,300,150))
                 # User click on "Exit"
                 if click[0]:
                     self.menu = 'option'
                     self.counter = 0
             else:
-                Exit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,700,300,150))
+                Exit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,740,300,150))
 
             # If the menu changes
             if self.menu != previous_menu or self.language != previous_language:
@@ -270,15 +270,15 @@ class Game_Start_Menu():
             else:
                 Window = pygame.draw.rect(self.screen, self.color['Even_Button'], (680,510,300,150))
             # Exit button
-            Exit = pygame.draw.rect(self.screen, self.color['Shadow'], (700,710,300,150))
+            Exit = pygame.draw.rect(self.screen, self.color['Shadow'], (700,750,300,150))
             if 680+300 > mouse[0] > 680 and 700+150 > mouse[1] > 700:
-                Exit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,700,300,150))
+                Exit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,740,300,150))
                 # User click on "Exit"
                 if click[0]:
                     self.menu = 'option'
                     self.counter = 0
             else:
-                Exit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,700,300,150))
+                Exit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,740,300,150))
 
             # If the menu changes
             if self.menu != previous_menu:
@@ -312,7 +312,7 @@ class Game_Start_Menu():
                 Options = self.font['Menu'].render("Options", True, self.color['Shadow']).convert_alpha()
                 self.screen.blit(Options, (720,560))
                 Quit = self.font['Menu'].render("Quit", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Quit, (770,730))
+                self.screen.blit(Quit, (770,780))
             elif self.menu == 'option':
                 Language = self.font['Option'].render("Language", True, self.color['Shadow']).convert_alpha()
                 self.screen.blit(Language, (720,370))
@@ -332,7 +332,7 @@ class Game_Start_Menu():
                 Francais = self.font['Menu'].render("Francais", True, self.color['Shadow']).convert_alpha()
                 self.screen.blit(Francais, (720,560))
                 Exit = self.font['Menu'].render("Exit", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Exit, (770,750))
+                self.screen.blit(Exit, (770,790))
             elif self.menu == 'video':
                 Full = self.font['Menu'].render("Full", True, self.color['Shadow']).convert_alpha()
                 self.screen.blit(Full, (750,350))
@@ -341,7 +341,7 @@ class Game_Start_Menu():
                 Window = self.font['Menu'].render("Window", True, self.color['Shadow']).convert_alpha()
                 self.screen.blit(Window, (720,560))
                 Exit = self.font['Menu'].render("Exit", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Exit, (770,750))
+                self.screen.blit(Exit, (770,790))
 
         elif self.language == 'francais':
             # Title
@@ -365,7 +365,7 @@ class Game_Start_Menu():
                 Options = self.font['Menu'].render("Options", True, self.color['Shadow']).convert_alpha()
                 self.screen.blit(Options, (720,560))
                 Quitter = self.font['Menu'].render("Quitter", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Quitter, (730,730))
+                self.screen.blit(Quitter, (730,780))
             elif self.menu == 'option':
                 Langue = self.font['Option'].render("Langue", True, self.color['Shadow']).convert_alpha()
                 self.screen.blit(Langue, (750,370))
@@ -383,7 +383,7 @@ class Game_Start_Menu():
                 Francais = self.font['Menu'].render("Francais", True, self.color['Shadow']).convert_alpha()
                 self.screen.blit(Francais, (720,560))
                 Retour = self.font['Menu'].render("Retour", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Retour, (730,750))
+                self.screen.blit(Retour, (730,790))
             elif self.menu == 'video':
                 Plein = self.font['Menu'].render("Plein", True, self.color['Shadow']).convert_alpha()
                 self.screen.blit(Plein, (750,350))
@@ -392,8 +392,51 @@ class Game_Start_Menu():
                 Fenetre = self.font['Menu'].render("Fenetre", True, self.color['Shadow']).convert_alpha()
                 self.screen.blit(Fenetre, (720,560))
                 Retour = self.font['Menu'].render("Retour", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Retour, (730,750))
+                self.screen.blit(Retour, (730,790))
 
+# Class that manage the pause menu (when the player press 'escape')
+#
+
+
+class Game_Pause_Menu():
+    """
+    Constructor.
+
+    :param screen: the main screen
+    :type screen: surface
+
+    :param background: the background of the screen
+    :type background: surface
+
+    :param :
+    :type :
+
+    :param :
+    :type :
+
+    :param :
+    :type :
+
+    :param :
+    :type :
+
+    :param :
+    :type :
+
+    :param :
+    :type :
+
+    """
+    def __init__(self, screen=None, background=None):
+        self.screen = screen
+        self.background = background
+        self.menu = 'menu'
+
+    def button(self):
+        pass
+
+    def text(self):
+        pass
 
 if __name__ == "__main__" :
     gameStartMenu = Game_Start_Menu()

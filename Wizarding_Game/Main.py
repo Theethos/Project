@@ -156,7 +156,7 @@ class App:
     # Execution
     def on_execute(self):
         # Menu
-        self.menu.run()
+        self.menu.run_start()
         if not(self.menu.quit):
             if self.on_init() == False:
                 self._running = False
@@ -170,10 +170,10 @@ class App:
             Maze_ = Maze.Maze(self.screen) # Maze object
 
             # Bonhomme objects
-            self.character[0] =  Character.Bonhomme(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Voldemort', (63,72,204), Maze_.start_position, "darkness")
-            self.character[1] =  Character.Bonhomme(self.screen, self.background, 'Wizarding_Game\\Image\\120x120\\Characters\\Harry_Potter', (63,72,204), Maze_.start_position, "light")
-            self.character.append(Character.Bonhomme(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Ronald_Weasley', (63,72,204), Maze_.start_position, "neutral"))
-            self.character.append(Character.Bonhomme(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Hermione_Granger', (63,72,204), (500,950), "darkness"))
+            self.character[0] =  Character.Character(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Voldemort', (63,72,204), Maze_.start_position, "darkness")
+            self.character[1] =  Character.Character(self.screen, self.background, 'Wizarding_Game\\Image\\120x120\\Characters\\Harry_Potter', (63,72,204), Maze_.start_position, "light")
+            self.character.append(Character.Character(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Ronald_Weasley', (63,72,204), Maze_.start_position, "neutral"))
+            self.character.append(Character.Character(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Hermione_Granger', (63,72,204), (500,950), "darkness"))
 
 
             # Main loop
@@ -195,8 +195,8 @@ class App:
 
                 # Center of loop
                 # stop allows to close the pygame window when the maze is complete (only way I found to make it work)
-                stop = self.character[2].draw_NPC(Maze_)
-                stop = self.character[3].draw_NPC(Maze_)
+                stop = self.character[2].draw_NPC()
+                stop = self.character[3].draw_NPC()
                 stop = self.character[0].draw_motion(self.key[2], Maze_)
                 stop = self.character[1].draw_motion(self.key[1], Maze_)
 
