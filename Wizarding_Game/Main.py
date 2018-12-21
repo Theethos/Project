@@ -5,14 +5,19 @@ import Maze
 import Character
 import time
 import Menu
+import ctypes
+import os
+
 
 class App:
     # Creation of App object
     def __init__(self):
         self._running = True
         self.screen = None
-        self.size = self.weight, self.height = 1920, 1080
-        #self.size = self.weight, self.height = 1600, 900
+        # Adapt the pygame widow to the monitor
+        user32 = ctypes.windll.user32
+        user32.SetProcessDPIAware()
+        self.size = self.weight, self.height = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
         self.background = None
         self.FPS = 60
         self.text = [None, self.FPS]
@@ -25,16 +30,24 @@ class App:
         self.animation_timer = [0,0]
         self.position_character = [None, None, None, None]
         self.menu = Menu.Game_Start_Menu()
+        self.pause_menu = None
+        self.pause = False
+        self.pause_background = None
+        self.font =\
+        {'Title':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","harryp__.ttf"), 200),
+        'Menu':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), 60),
+        'Option':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), 50)}
 
     # Initialisation of App object
     def on_init(self):
         pygame.init()
-        self.screen = pygame.display.set_mode(self.size, (pygame.FULLSCREEN))
+        self.screen = pygame.display.set_mode((self.size), (pygame.FULLSCREEN))
         self.screen.set_colorkey((63,72,204))
         self.background = pygame.Surface((self.size)).convert()
         self.background.fill(self.background_color)
         self._running = True
         self.text[0] = pygame.font.SysFont('mono', 12, bold=True)
+        self.pause_menu = Menu.Game_Pause_Menu(self.screen, self.background)
 
     # Event
     def on_event(self, event):
@@ -44,6 +57,8 @@ class App:
         elif event.type == pygame.KEYDOWN:
             # If user press ESC
             if event.key == pygame.K_ESCAPE:
+                self.pause = True
+            elif event.key == pygame.K_F2:
                 self._running = False
             elif event.key == pygame.K_F1:
                 if self.print_FPS:
@@ -162,6 +177,7 @@ class App:
                 self._running = False
 
             # Initialisation of variables
+            self.pause_menu.language = self.menu.language
             clock = pygame.time.Clock()
             self.FPS = 60 # FPS max
             playtime = 0 # Time playedd
@@ -169,45 +185,51 @@ class App:
             self.interval = 0.5 # Interval for displaying animations
             Maze_ = Maze.Maze(self.screen) # Maze object
 
-            # Bonhomme objects
-            self.character[0] =  Character.Character(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Voldemort', (63,72,204), Maze_.start_position, "darkness")
-            self.character[1] =  Character.Character(self.screen, self.background, 'Wizarding_Game\\Image\\120x120\\Characters\\Harry_Potter', (63,72,204), Maze_.start_position, "light")
-            self.character.append(Character.Character(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Ronald_Weasley', (63,72,204), Maze_.start_position, "neutral"))
-            self.character.append(Character.Character(self.screen, self.background,'Wizarding_Game\\Image\\120x120\\Characters\\Hermione_Granger', (63,72,204), (500,950), "darkness"))
+            # Character objects
+            self.character[0] =  Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Voldemort"), (63,72,204), Maze_.start_position, "darkness")
+            self.character[1] =  Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Harry_Potter"), (63,72,204), Maze_.start_position, "light")
+            self.character.append(Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Ronald_Weasley"), (63,72,204), Maze_.start_position, "neutral"))
+            self.character.append(Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Hermione_Granger"), (63,72,204), (500,950), "darkness"))
 
 
             # Main loop
-            while (self._running) and not(self.menu.quit):
-                # Milliseconds passed since last frame
-                milliseconds = clock.tick(self.FPS)
-                # Seconds passed since last frame (float)
-                seconds = milliseconds / 1000.0
-                playtime += seconds
-                cycletime[0] += seconds
-                cycletime[1] += seconds
-                # Managing events
-                for event in pygame.event.get():
-                    self.on_event(event)
-                # Display FPS
-                pygame.display.set_caption("Wizarding Game"" : limit FPS to {}"
-                                   " (now: {:.2f})".format(self.FPS,clock.get_fps()))
-                self.print_FPS_(int(clock.get_fps()))
+            while (self._running) and not(self.menu.quit) and not(self.pause_menu.quit):
+                if not(self.pause):
+                    # Milliseconds passed since last frame
+                    milliseconds = clock.tick(self.FPS)
+                    # Seconds passed since last frame (float)
+                    seconds = milliseconds / 1000.0
+                    playtime += seconds
+                    cycletime[0] += seconds
+                    cycletime[1] += seconds
+                    # Managing events
+                    for event in pygame.event.get():
+                        self.on_event(event)
+                    # Display FPS
+                    pygame.display.set_caption("Wizarding Game"" : limit FPS to {}"
+                                       " (now: {:.2f})".format(self.FPS,clock.get_fps()))
+                    self.print_FPS_(int(clock.get_fps()))
 
-                # Center of loop
-                # stop allows to close the pygame window when the maze is complete (only way I found to make it work)
-                stop = self.character[2].draw_NPC()
-                stop = self.character[3].draw_NPC()
-                stop = self.character[0].draw_motion(self.key[2], Maze_)
-                stop = self.character[1].draw_motion(self.key[1], Maze_)
+                    # Center of loop
+                    # stop allows to close the pygame window when the maze is complete (only way I found to make it work)
+                    stop = self.character[2].draw_NPC()
+                    stop = self.character[3].draw_NPC()
+                    stop = self.character[0].draw_motion(self.key[2], Maze_)
+                    stop = self.character[1].draw_motion(self.key[1], Maze_)
 
-                # Managing damage with spells
-                for character in self.character:
-                    if character.spells.running and (character.spells.number == 1 or character.spells.number == 3) and character.spells.index_animation > len(character.spells.animation)-6:
-                        for other_character in self.character:
-                            if character != other_character:
-                                if character.spells.position_attack[0]+21 > other_character.hitbox[0] and character.spells.position_attack[0] < other_character.hitbox[0]+88 and character.spells.position_attack[1] > other_character.hitbox[1] and character.spells.position_attack[1]+7 < other_character.hitbox[1]+116:
-                                    character.spells.hit_someone = True
-                                    other_character.get_hit()
+                    # Managing damage with spells
+                    for character in self.character:
+                        if character.spells.running and (character.spells.number == 1 or character.spells.number == 3) and character.spells.index_animation > len(character.spells.animation)-6:
+                            for other_character in self.character:
+                                if character != other_character:
+                                    if character.spells.position_attack[0]+21 > other_character.hitbox[0] and character.spells.position_attack[0] < other_character.hitbox[0]+88 and character.spells.position_attack[1] > other_character.hitbox[1] and character.spells.position_attack[1]+7 < other_character.hitbox[1]+116:
+                                        character.spells.hit_someone = True
+                                        other_character.get_hit()
+                    self.pause_menu.background = self.screen.copy()
+                    if self.pause_menu.escape:
+                        self.pause_menu.escape = False
+                elif self.pause:
+                    self.pause = self.pause_menu.run_pause()
 
                 pygame.display.flip()
                 Maze_.run_(stop)

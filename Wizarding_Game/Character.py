@@ -429,7 +429,7 @@ class Lifebar(Character):
         self.screen = screen
         self.position = self.x, self.y = position
         self.color_wall = color_wall
-        self.path = ["Wizarding_Game\\Image\\120x120\\Lifebar\\100.png", "Wizarding_Game\\Image\\120x120\\Lifebar\\"]
+        self.path = [os.path.join("Wizarding_Game\\Image\\120x120\\Lifebar\\100.png"), os.path.join("Wizarding_Game\\Image\\120x120\\Lifebar\\")]
         self.image = pygame.image.load(self.path[0])
         self.percentage = 100
         self.position_life = self.x_life, self.y_life = 0,0
