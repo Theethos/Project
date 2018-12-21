@@ -57,7 +57,7 @@ class Game_Start_Menu():
                 pass
 
     """
-    Run the loop to display the whole menu
+    Function that display the start menu
     """
     def run_start(self):
         clock = pygame.time.Clock()
@@ -87,6 +87,39 @@ class Game_Start_Menu():
             pygame.display.flip()
         # Quit pygame
         pygame.quit()
+
+    """
+    Function that display the pause menu
+    """
+    def run_pause(self):
+        clock = pygame.time.Clock()
+        # Loop for the start menu
+        self.screen.blit(self.background, (0,0))
+        while self._running:
+            # Clock for 60 fps
+            clock.tick(self.FPS)
+            # Event mannaging
+            for event in pygame.event.get():
+                self.on_event(event)
+
+            # Display FPS
+            if self.print_FPS:
+                text = [pygame.font.SysFont('mono', 12, bold=True)]
+                text.append("FPS : {}".format(int(clock.get_fps())))
+                fps = text[0].render(text[1], True, (0,255,0))
+                surface = pygame.image.load("Wizarding_Game\\Image\\start_menu\\FPS_corner.png").convert()
+                self.screen.blit(surface, (0,0))
+                self.screen.blit(fps, (0,0))
+
+
+            self.button()
+            self.text()
+
+
+            pygame.display.flip()
+        # Quit pygame
+        pygame.quit()
+
     """
     Create buttons depending on menu
     """
