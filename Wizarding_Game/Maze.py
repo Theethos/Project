@@ -223,7 +223,6 @@ class Maze():
         walls = dict()
         for y in range(lines):
             for x in range(columns):
-                # pygame.draw.rect(self.background,(0,0,0),(length * x, height * y, length, height), 3)
                 if level[y][x] == "x": # wall
                     walls[(int(x*length),int(y*height))] = True
                     self.background.blit(wallblock, (length * x, height * y))

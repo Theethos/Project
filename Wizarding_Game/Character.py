@@ -30,7 +30,7 @@ import os
 # distance : int, distance (in pixel) of a NPC's move
 # waitime : int, time between two moves of a NPC
 
-class Character(pygame.sprite.Sprite):
+class Character():
     """
     Constructor.
 
@@ -119,7 +119,7 @@ class Character(pygame.sprite.Sprite):
             self.timer_NPC = 0
 
     """
-    Function that display the characterand allows player to move his/her character.
+    Function that display the character and allows player to move his/her character.
 
     :param way: Way toward the player wants to move, generated with keyboard event
     :type way: str
@@ -443,7 +443,7 @@ class Lifebar(Character):
     """
     def set_position_life(self):
         # Check if the lifebar will still be inside the screen surface
-        if (0 > self.x-5 > self.screen.get_size()[0]) or (0 > self.y-20 > self.screen.get_size()[1]):
+        if (0 > self.x-5 or self.x-5 > self.screen.get_size()[0]) or (0 > self.y-20 > self.screen.get_size()[1]):
             self.path[0] = self.path[1]+"alpha.png"
             self.position_life = self.x_life, self.y_life = 0, 0
         # Check if the lifebar will not hit a wall from the top
@@ -476,26 +476,61 @@ class Lifebar(Character):
         self.set_position_life()
         self.display()
 
-
+# Class which generated the spells of the character, depending on its side,
+# it display animation when a spell is cast
+#
+# screen : surface, surface where everything is displayed
+# background : surface, background of the screen
+# side : str, allegiance of the character
+# spells : dict of dict, dict with the spells of the character, depending on its side
+#          the keys of the main dictionnary are the name of the spells,
+#          for each key (spells), the item is a dictionnary with every paths of the spell
+#          the keys of this second dictionnary are left, right, and both
+# position : tuple, coordinates of the top-left pixel of the character (not of the spells)
+# x : int, position[0], y : int, position[1]
+# position_spell : tuple, position of the animation on the wand
+#  x_spell : int, position_spell[0], y_spell : int, position_spell[1]
+# orientation : str, side toward which the character is turned
+# color_key : tuple, color key of the background of the images of animations
+# animation : list, list of the images of the animation, depending on the character's orientation
+# animation_both : list, list of the images which are used in both orientation
+# cleanup : surface, rectangle with the background's color blit after the attack animation of the first spell to remove it from the screen
+# index_animation : int, index of the image blitted during the animation to follow its evolution
+# animation_progress : int and str, state of the animation
+# position_attack : tuple, position of the attack image during the attack animation
+# path_spell : str, path of the spell
+# running : boolean, True if a spell is cast, False otherwise
+# clock : Clock, to mesure time
+# cycletime : float (milliseconds), time between two loops
+# interval : float (milliseconds), interval between two frame of the animation
+# lock : boolean, usefill to lock the orientation of the character, so he can't rotate while casting a spell
+# lock_spells : list of boolean, True if the spell [index+1] is cast (if lock_spells[2] = True, spell 3 is being casted)
+# number : int, number of the spell the player want to cast
+# eraser : surface, rectangle with the background's color blit after the attack animation of the third spell to remove it from the screen
+# protected : boolean, True if the player casts the "Defensive spell", and blocks every damage
+# hit_someone : boolean, True if the spells hit an other character
 
 class Spells(Character):
     """
     Constructor.
 
-    :param :
-    :type :
+    :param screen: the main screen
+    :type screen: surface
 
-    :param :
-    :type :
+    :param background: the background of the screen
+    :type background: surface
 
-    :param :
-    :type :
+    :param background_color: color of the background
+    :type background_color: tuple
 
-    :param :
-    :type :
+    :param side: allegiance of the character
+    :type side: str
 
-    :param :
-    :type :
+    :param x: position[0] of the character
+    :type x: int
+
+    :param y: position[1] of the character
+    :type y: int
     """
     def __init__(self, screen, background_color, side, x, y):
         self.screen = screen
@@ -527,9 +562,12 @@ class Spells(Character):
         self.protected = False
         self.hit_someone = False
 
+        # Initialize the path
         self.path()
 
     """
+    Function that append to the list of spells the offensive
+    spell of the character depending on its side
     """
     def offensive(self):
         offensive_spell = None
@@ -542,6 +580,8 @@ class Spells(Character):
         return offensive_spell
 
     """
+    Function that append to the list of spells the defensive
+    spell of the character depending on its side
     """
     def defensive(self):
         defensive_spell = None
@@ -554,6 +594,8 @@ class Spells(Character):
         return defensive_spell
 
     """
+    Function that append to the list of spells the stunning
+    spell of the character depending on its side
     """
     def stunning(self):
         stunning_spell = None
@@ -566,6 +608,8 @@ class Spells(Character):
         return stunning_spell
 
     """
+    Function that append to the list of spells the teleporting
+    spell of the character depending on its side
     """
     def disappartition(self):
         disappartition_spell = None
@@ -578,12 +622,15 @@ class Spells(Character):
         return disappartition_spell
 
     """
+    Function that append to the list of spells lumos
     """
     def light(self):
         light_spell = 'Lumos'
         return light_spell
 
     """
+    Function that append to the list of spells the metamorphosis
+    spell of the character depending on its side
     """
     def metamorphosis(self):
         metamorphosis_spell = None
@@ -596,8 +643,8 @@ class Spells(Character):
         return metamorphosis_spell
 
     """
-    Update and set the dictionnary containing every path needed for
-    the animation of each spell
+    Function that update and set the dictionnary containing every path
+    needed for the animation of each spell
     """
     def path(self):
         # Name of every image needed for the animation, different between left and right.
@@ -612,56 +659,72 @@ class Spells(Character):
                 self.spells[spell]['Both'].append(os.path.join("Wizarding_Game","Image","120x120","Spells",spell,image+".png"))
 
     """
+    Function that returns the dictionnary of the spell
+    when it is about to be cast
     """
     def which_spell(self):
         keys = list(self.spells.keys())
         return self.spells[keys[self.number-1]]
 
     """
+    Function that load into self.animation and self.animation_both all the images
+    needed to display the animation, depending on the spell and the orientation of
+    the character
     """
     def set_animation(self):
         # Charges every images required for animation, depending on the orientation of the character
         animation = []
         if self.orientation == 'Left':
+            # If it is a damage spell
             if self.number == 1 or self.number == 3:
+                # It initializes the position of the spell and the attack
                 self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+42
-                self.position_attack = self.x_spell-13, self.y_spell+15 # self.x_spell -21(length of the attack) + 8(empty area of the Seventh image), self.y_spell +15(wand's top position)
+                # self.x_spell -21(length of the attack) + 8(empty area of the Seventh image), self.y_spell +15(wand's top position)
+                self.position_attack = self.x_spell-13, self.y_spell+15
+            # If it is a defensive spell
             elif self.number == 2:
+                # It only initializes the spell position
                 self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+6
             for image in self.path_spell['Left']:
                 try:
-                    animation.append(pygame.image.load(os.path.join(image)))
+                    animation.append(pygame.image.load(image))
                 except:
                     print("Error, can't find the file '"+image+"' \nPlease, make sure you wrote the right path.")
         elif self.orientation == 'Right':
             if self.number == 1 or self.number == 3:
                 self.position_spell = self.x_spell, self.y_spell = self.x+72, self.y+42
-                self.position_attack = self.x_spell+78, self.y_spell+15 # self.x_spell +88(length of the character) - 8 or 10 (empty area of the Seventh image), self.y_spell +15(wand's top position)
+                # self.x_spell +88(length of the character) - 8 or 10 (empty area of the Seventh image), self.y_spell +15(wand's top position)
+                self.position_attack = self.x_spell+78, self.y_spell+15
             elif self.number == 2:
                 self.position_spell = self.x_spell, self.y_spell = self.x+82, self.y+6
             for image in self.path_spell['Right']:
                 try:
-                    animation.append(pygame.image.load(os.path.join(image)))
+                    animation.append(pygame.image.load(image))
                 except:
                     raise UserWarning("Error, can't find the file '"+image+"' \nPlease, make sure you wrote the right path.")
+        # Set the images background transparent
         for image in range (len(animation)):
            animation[image].set_colorkey(self.color_key)
            animation[image] = animation[image].convert_alpha()
 
-        # Charges every images required for animation, which will be usefull for both orientation
+        # Charges every images required for animation, which are the same for both orientation
         animation_both = []
+        # If it is a damage spell
         if self.number == 1 or self.number == 3:
+            # There are three image in both
             for image in self.path_spell['Both']:
                 try:
-                    animation_both.append(pygame.image.load(os.path.join(image)))
+                    animation_both.append(pygame.image.load(image))
                 except:
                     raise UserWarning("Error, can't find the file '"+image+"' \nPlease, make sure you wrote the right path.")
             for image in range (len(animation_both)):
                animation_both[image].set_colorkey(self.color_key)
                animation_both[image] = animation_both[image].convert_alpha()
+        # Whereas if it is a defensive spell
         elif self.number == 2:
+            # We only need the alpha image
             try:
-                animation_both.append(pygame.image.load(os.path.join(self.path_spell['Both'][-1])))
+                animation_both.append(pygame.image.load(self.path_spell['Both'][-1]))
             except:
                 raise UserWarning("Error, can't find the file '"+self.path_spell['Both'][-1]+"' \nPlease, make sure you wrote the right path.")
             animation_both[0].set_colorkey(self.color_key)
@@ -670,81 +733,109 @@ class Spells(Character):
         return animation, animation_both
 
     """
-    Display the animation
+    Function that displays the animation of the spell which the player
+    want to cast. It also manages some arguments of the Spells class, such
+    as self.protected if the player casts the defensive spell
     """
     def display(self):
-        milliseconds = self.clock.tick(60)  # Milliseconds passed since last frame
-        seconds = milliseconds / 1000.0 # Seconds passed since last frame (float)
+        # Milliseconds passed since last frame
+        milliseconds = self.clock.tick(60)
+        # Seconds passed since last frame (float)
+        seconds = milliseconds / 1000.0
         self.cycletime += seconds
         #
         # 1st spell
         #
+        # If the player want to cast the first spell and if there is not an other spell being cast
         if self.number == 1 and self.lock_spells[1] == False and self.lock_spells[2] == False and self.lock_spells[3] == False and self.lock_spells[4] == False and self.lock_spells[5] == False:
+            # If the attack animation is not being cast already
             if self.animation and self.index_animation <= len(self.animation)-6:
+                # It update the position of the upcomming attack depending on the orientation
                 if self.orientation == 'Left':
                     self.position_attack = self.x_spell-13, self.y_spell+15
                 elif self.orientation == 'Right':
                     self.position_attack = self.x_spell+78, self.y_spell+15 # self.x_spell +88(length of the character) - 8 or 10 (empty area of the Seventh image), self.y_spell +15(wand's top position)
             # Beginning of the animation on the wand
             if self.running and self.index_animation < len(self.animation):
+                    # Update of the spell position
                     if self.orientation == 'Left':
                         self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+42
                     elif self.orientation == 'Right':
                         self.position_spell = self.x_spell, self.y_spell = self.x+72, self.y+42
+                    # It locks the possible rotation of the character
                     self.lock = True
                     mypicture = self.animation[self.index_animation]
-                    self.screen.blit(mypicture, self.position_spell)# -71 +42 par rapport au personnage
-            # Beginning of the traveling part
+                    self.screen.blit(mypicture, self.position_spell)
+            # Beginning of the traveling animation (attack)
             if self.running and self.index_animation > len(self.animation)-6:
-                # First frame
+                # First frame (the first and the last frame are different than the other)
                 if self.orientation == 'Left':
+                    # indicate it is the first frame
                     if self.animation_progress == 0:
-                        self.animation_progress += 1 # Juste utile pour la premiere apparition de l'attaque
-                        if self.position_attack[0]-42 > 0: # 2 times the length of the attack image (for remanence)
-                            self.screen.blit(self.animation_both[0], self.position_attack) # Displays the "Beginning_End" image
-                            self.position_attack = (self.position_attack[0]-21, self.position_attack[1]) # Upgrading position_attack
+                        self.animation_progress += 1
+                        # 42 = 2 times the length of the attack image (it blits two frame at the same time for remanence)
+                        # Check if the spell we be displayed inside the screen
+                        if self.position_attack[0]-42 > 0:
+                            # Displays the "Beginning_End" image
+                            self.screen.blit(self.animation_both[0], self.position_attack)
+                            # Updating position_attack
+                            self.position_attack = (self.position_attack[0]-21, self.position_attack[1])
                     # Other frame
                     elif self.animation_progress > 0:
+                         # Displays the "Traveling" image
                         if self.position_attack[0]-42 >= 0:
-                            self.screen.blit(self.animation_both[1], self.position_attack) # Displays the "Traveling" image
+                            self.screen.blit(self.animation_both[1], self.position_attack)
                             self.position_attack = (self.position_attack[0]-21, self.position_attack[1])
-                        elif self.position_attack[0]-21 > 0: # If it goes through this, it means it is the last frame of the animation
+                        # If it goes through this, it means it is the before-last frame of the animation
+                        elif self.position_attack[0]-21 > 0:
+                            # Then it blits the "Beginning_End" image
                             self.screen.blit(self.animation_both[0], self.position_attack)
+                            # And blits self.surface to make the two last frame of the animation disappear from the screen
                             self.screen.blit(self.cleanup, (self.position_attack[0]+42, self.position_attack[1]))
                             self.screen.blit(self.cleanup, (self.position_attack[0]+21, self.position_attack[1]))
                             self.position_attack = (self.position_attack[0]-21, self.position_attack[1])
                         # Last frame
                         else:
+                            # Blits the "Alpha" image
                             self.screen.blit(self.animation_both[2], (0,0)) # Displays the "Alpha" image. End of animation
                             self.screen.blit(self.cleanup, (self.position_attack[0]+21, self.position_attack[1]))
+                            # Indicates that the animation is done
                             self.animation_progress = 'done'
+                # Same as left way except that - become + in coordinates
                 elif self.orientation == 'Right':
+                    # First frame
                     if self.animation_progress == 0:
-                        self.animation_progress += 1 # Juste utile pour la premiere apparition de l'attaque
-                        if self.position_attack[0]+42 < self.screen.get_size()[0]: # 2 times the length of the attack image (for remanence)
-                            self.screen.blit(self.animation_both[0], self.position_attack) # Displays the "Beginning_End" image
-                            self.position_attack = (self.position_attack[0]+21, self.position_attack[1]) # Upgrading position_attack
+                        self.animation_progress += 1
+                        if self.position_attack[0]+42 < self.screen.get_size()[0]:
+                            self.screen.blit(self.animation_both[0], self.position_attack)
+                            self.position_attack = (self.position_attack[0]+21, self.position_attack[1])
                     # Other frame
                     elif self.animation_progress > 0 :
                         if self.position_attack[0]+42 < self.screen.get_size()[0]:
-                            self.screen.blit(self.animation_both[1], self.position_attack) # Displays the "Traveling" image
-                            self.screen.blit(self.cleanup, (self.position_attack[0]-42, self.position_attack[1])) # Displays image with the dimensions of the attack but with the color of the BG
+                            self.screen.blit(self.animation_both[1], self.position_attack)
+                            self.screen.blit(self.cleanup, (self.position_attack[0]-42, self.position_attack[1]))
                             self.position_attack = (self.position_attack[0]+21, self.position_attack[1])
-                        elif self.position_attack[0]+21 < self.screen.get_size()[0]: # If it goes through this, it means it is the last frame of the animation
+                        elif self.position_attack[0]+21 < self.screen.get_size()[0]:
                             self.screen.blit(self.animation_both[0], self.position_attack)
                             self.screen.blit(self.cleanup, (self.position_attack[0]-42, self.position_attack[1]))
                             self.screen.blit(self.cleanup, (self.position_attack[0]-21, self.position_attack[1]))
                             self.position_attack = (self.position_attack[0]+21, self.position_attack[1])
                         # Last frame
                         elif self.position_attack[0]+21 >= self.screen.get_size()[0]:
-                            self.screen.blit(self.animation_both[2], (0,0)) # Displays the "Alpha" image. End of animation
+                            self.screen.blit(self.animation_both[2], (0,0))
                             self.screen.blit(self.cleanup, (self.position_attack[0]-21, self.position_attack[1]))
                             self.animation_progress = 'done'
+            """
+            If the time past since the last frame of the animation is superior
+            to the interval time, it can blits the next frame
+            (otherwise it is to fast to be seen)
+            """
             if self.running and self.cycletime > self.interval:
                 self.index_animation += 1
                 self.cycletime = 0
-            # Reset
+            # If the animation is finished or if the spell hit someone
             if self.animation_progress == 'done' or self.hit_someone == True:
+                # It reinitializes everything needed for the next spell being cast
                 self.index_animation = 0
                 self.animation_progress = 0
                 self.running = False
@@ -754,30 +845,41 @@ class Spells(Character):
         #
         # 2nd spell
         #
+        # If the player want to cast the second spell and if there is not an other spell being cast
         elif self.number == 2 and self.lock_spells[0] == False and self.lock_spells[2] == False and self.lock_spells[3] == False and self.lock_spells[4] == False and self.lock_spells[5] == False:
             if self.running and self.index_animation < len(self.animation):
+                # Update the position of the spell animation
                 if self.orientation == 'Left':
                     self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+6
                 elif self.orientation == 'Right':
                     self.position_spell = self.x_spell, self.y_spell = self.x+82, self.y+6
+                # If the animation is a little advanced
                 if self.index_animation == 3:
+                    # Puts the protected state to True to annul the damage if the character is hit by a spell
                     self.protected = True
                 if self.index_animation < len(self.animation):
                     self.screen.blit(self.animation_both[0],(0,0))
+                    # Lock the rotation
                     self.lock = True
                     mypicture = self.animation[self.index_animation]
-                    self.screen.blit(mypicture, self.position_spell)
-                    if self.running and self.cycletime > self.interval:
+                    self.screen.blit(mypicture,self.position_spell)
+                    # Blits the next frame if the interval time is past
+                    if self.cycletime > self.interval:
                         if self.index_animation != 6:
                             self.index_animation += 1
+                        # If it is at the middle of the animation,it waits a little to make a better
+                        # shielded sensation
                         elif self.index_animation == 6:
                             self.animation_progress +=1
                             if self.animation_progress == 10:
                                 self.animation_progress = 0
                                 self.index_animation += 1
+                        # Reset time between two frames
                         self.cycletime = 0
 
+            # If the animation is done
             if self.index_animation == len(self.animation)-1:
+                # It reinitializes everything needed for the next spell being cast
                 self.index_animation = 0
                 self.animation_progress = 0
                 self.running = False
@@ -787,13 +889,16 @@ class Spells(Character):
         #
         # 3rd spell
         #
+        # This spell has pretty much the same way of being animated than the first
+        # one, except that the wand animation is the same for both side
         elif self.number == 3 and self.lock_spells[0] == False and self.lock_spells[1] == False and self.lock_spells[3] == False and self.lock_spells[4] == False and self.lock_spells[5] == False:
+            # Update the positions
             if self.animation and self.index_animation < len(self.animation)-2:
                 if self.orientation == 'Left':
                     self.position_attack = self.x_spell-30, self.y_spell+6
                 elif self.orientation == 'Right':
-                    self.position_attack = self.x_spell+30, self.y_spell+6 # self.x_spell +88(length of the character) - 8 or 10 (empty area of the Seventh image), self.y_spell +15(wand's top position)
-            # Beginning of the animation on the wand
+                    self.position_attack = self.x_spell+30, self.y_spell+6
+            # Beginning of the wand's animation
             if self.running and self.index_animation < len(self.animation):
                     if self.orientation == 'Left':
                         self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+42
@@ -801,10 +906,10 @@ class Spells(Character):
                         self.position_spell = self.x_spell, self.y_spell = self.x+72, self.y+42
                     self.lock = True
                     mypicture = self.animation[self.index_animation]
-                    self.screen.blit(mypicture, self.position_spell)# -71 +42 par rapport au personnage
+                    self.screen.blit(mypicture, self.position_spell)
             # Beginning of the traveling part
             if self.running and self.index_animation >= len(self.animation)-2:
-                # First frame
+                # 23 is the length of the attack image
                 if self.orientation == 'Left':
                     if self.position_attack[0]-23 >= 0:
                         self.screen.blit(self.animation_both[1], self.position_attack) # Display Traveling
@@ -823,11 +928,13 @@ class Spells(Character):
                         self.screen.blit(self.animation_both[2], (0,0)) # Displays the "Alpha" image. End of animation
                         self.screen.blit(self.cleanup, (self.position_attack[0]-23, self.position_attack[1]))
                         self.animation_progress = 'done'
+            # If the interval time between two frames is past
             if self.running and self.cycletime > self.interval:
                 self.index_animation += 1
                 self.cycletime = 0
-            # Reset
+            # If the animation is done
             if self.animation_progress == 'done' or self.hit_someone == True:
+                # It reinitializes everything needed for the next spell being cast
                 self.index_animation = 0
                 self.animation_progress = 0
                 self.running = False

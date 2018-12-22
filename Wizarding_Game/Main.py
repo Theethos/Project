@@ -186,10 +186,10 @@ class App:
             Maze_ = Maze.Maze(self.screen) # Maze object
 
             # Character objects
-            self.character[0] =  Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Voldemort"), (63,72,204), Maze_.start_position, "darkness")
+            self.character[0] =  Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Jules","Albus_Dumbledore"), (63,72,204), Maze_.start_position, "neutral")
             self.character[1] =  Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Harry_Potter"), (63,72,204), Maze_.start_position, "light")
             self.character.append(Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Ronald_Weasley"), (63,72,204), Maze_.start_position, "neutral"))
-            self.character.append(Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Hermione_Granger"), (63,72,204), (500,950), "darkness"))
+            self.character.append(Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Hermione_Granger"), (63,72,204), (500,600), "darkness"))
 
 
             # Main loop
@@ -228,6 +228,7 @@ class App:
                     self.pause_menu.background = self.screen.copy()
                     if self.pause_menu.escape:
                         self.pause_menu.escape = False
+
                 elif self.pause:
                     self.pause = self.pause_menu.run_pause()
 
