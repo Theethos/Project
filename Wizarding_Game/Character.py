@@ -72,7 +72,7 @@ class Character():
         self.way = None
         self.timer_NPC = 0
         self.distance = 120
-        self.waitime = 0
+        self.waitime = 120
 
     """
     Function that handles the moves of NPCs
@@ -111,11 +111,12 @@ class Character():
             self.timer = 0
         self.timer_NPC += 1
         # Stop the character when he moved the distance generated
-        if self.timer_NPC == self.distance:
+        if self.timer_NPC > self.distance:
             self.way = None
             self.waitime = random.randint(200,400)
+            self.distance = 999999999
         # Wait before moving again
-        if self.timer_NPC == self.distance+self.waitime:
+        if self.timer_NPC > self.distance+self.waitime:
             self.timer_NPC = 0
 
     """
@@ -180,15 +181,15 @@ class Character():
         if self.alive:
             if way == 'left':
                 # Check if the character won't get out of the screen if it moves left
-                if self.x-self.dx >= 0:
-                    # List of pixels : the top-left one, the middle-left one and the bottom-left one (all shifted by self.dx on the left)
+                if self.x-self.dx > 0:
+                    # List of pixels : the top-left one, the one third left one, the middle-left one, the two third left one, and the bottom-left one (all shifted by self.dx on the left)
                     pixels = [(self.x-self.dx,self.y),(self.x-self.dx,self.y+29), (self.x-self.dx,self.y+58), (self.x-self.dx,self.y+87), (self.x-self.dx,self.y+116)]
                     wall = False
                     # If one of these pixels has the color of a wall, it means the character will hit a wall
                     for pixel in pixels:
                         if self.screen.get_at(pixel) == self.color_wall:
                             wall = True
-                    # If the character doesn't it a wall, it can be moved
+                    # If the character doesn't hit a wall, it can be moved
                     if not(wall):
                         self.x -= self.dx
                 # If the character is casting a spell, it cannot turn over.
@@ -201,7 +202,7 @@ class Character():
                 way = None
             elif way == 'right':
                 # Check if the character won't get out of the screen if it moves right, and ...
-                if self.x+self.dx <= self.screen.get_size()[0]-108:
+                if self.x+self.dx < self.screen.get_size()[0]-88:
                     pixels = [(self.x+self.dx+88,self.y), (self.x+self.dx+88,self.y+29),(self.x+self.dx+88,self.y+58), (self.x+self.dx+88,self.y+87), (self.x+self.dx+88,self.y+116)]
                     wall = False
                     for pixel in pixels:
@@ -216,7 +217,7 @@ class Character():
                 way = None
                 # Check if the character won't get out of the screen if it moves up, and ...
             elif way == 'up':
-                if self.y-self.dy >= 0:
+                if self.y-self.dy > 0:
                     pixels = [(self.x,self.y-self.dy), (self.x+44,self.y-self.dy), (self.x+88,self.y-self.dy)]
                     wall = False
                     for pixel in pixels:
@@ -227,7 +228,7 @@ class Character():
                 way = None
                 # Check if the character won't get out of the screen if it moves down, and ...
             elif way == 'down':
-                if self.y+self.dy <= self.screen.get_size()[1]-116:
+                if self.y+self.dy < self.screen.get_size()[1]-116:
                     pixels = [(self.x,self.y+self.dy+116), (self.x+44,self.y+self.dy+116), (self.x+88,self.y+self.dy+116)]
                     wall = False
                     for pixel in pixels:
@@ -299,7 +300,7 @@ class Character():
     def motion_NPC(self, way):
         if self.alive:
             if self.way == 'left':
-                if self.x-1 >= 0:
+                if self.x-1 > 0:
                     pixels = [(self.x-1,self.y),(self.x-1,self.y+29), (self.x-1,self.y+58), (self.x-1,self.y+87), (self.x-1,self.y+116)]
                     wall = False
                     for pixel in pixels:
@@ -312,7 +313,7 @@ class Character():
                     self.load[2] = '_Left.png'
                     self.load[1] = self.load[0]+self.load[2]
             elif self.way == 'right':
-                if self.x+1 <= self.screen.get_size()[0]-108:
+                if self.x+1 < self.screen.get_size()[0]-88:
                     pixels = [(self.x+1+88,self.y), (self.x+1+88,self.y+29),(self.x+1+88,self.y+58), (self.x+1+88,self.y+87), (self.x+1+88,self.y+116)]
                     wall = False
                     for pixel in pixels:
@@ -325,7 +326,7 @@ class Character():
                     self.load[2] = '_Right.png'
                     self.load[1] = self.load[0]+self.load[2]
             elif self.way == 'up':
-                if self.y-1 >= 0:
+                if self.y-1 > 0:
                     pixels = [(self.x,self.y-1), (self.x+44,self.y-1), (self.x+88,self.y-1)]
                     wall = False
                     for pixel in pixels:
@@ -443,21 +444,21 @@ class Lifebar(Character):
     """
     def set_position_life(self):
         # Check if the lifebar will still be inside the screen surface
-        if (0 > self.x-5 or self.x-5 > self.screen.get_size()[0]) or (0 > self.y-20 > self.screen.get_size()[1]):
+        if (0 > self.x-7 or self.x+94 > self.screen.get_size()[0]) or (0 > self.y-20 or self.y-10 > self.screen.get_size()[1]):
             self.path[0] = self.path[1]+"alpha.png"
             self.position_life = self.x_life, self.y_life = 0, 0
         # Check if the lifebar will not hit a wall from the top
-        elif self.screen.get_at((self.x-5, self.y-20)) == self.color_wall or self.screen.get_at((self.x+98, self.y-20)) == self.color_wall:
+        elif self.screen.get_at((self.x-7, self.y-20)) == self.color_wall or self.screen.get_at((self.x+94, self.y-20)) == self.color_wall:
             self.path[0] = self.path[1]+"alpha.png"
             self.position_life = self.x_life, self.y_life = 0, 0
         # Check if the lifebar will not hit a wall from the bottom
-        elif self.screen.get_at((self.x-5, self.y-10)) == self.color_wall or self.screen.get_at((self.x+98, self.y-10)) == self.color_wall:
+        elif self.screen.get_at((self.x-7, self.y-10)) == self.color_wall or self.screen.get_at((self.x+94, self.y-10)) == self.color_wall:
             self.path[0] = self.path[1]+"alpha.png"
             self.position_life = self.x_life, self.y_life = 0, 0
         # If everything is fine, blits the lifebar 10 pixel over the character (it is a 102 x 10 image)
-        elif self.screen.get_at((self.x-5, self.y-20)) != self.color_wall and self.screen.get_at((self.x+98, self.y-20)) != self.color_wall:
-                self.path[0] = self.path[1]+str(self.percentage)+".png"
-        self.position_life = self.x_life, self.y_life = self.x-5, self.y-20
+        else:
+            self.path[0] = self.path[1]+str(self.percentage)+".png"
+            self.position_life = self.x_life, self.y_life = self.x-7, self.y-20
 
     """
     Function that displays the image loaded in the previous function at

@@ -20,6 +20,9 @@ import os
 # counter : str, counter to avoid multi-clicks
 # font : dict, all the font needed for the different texts
 # color : dict, all the color needed for the different texts
+# dimensions : dict of dict, size of the buttons rectangle depending on the number of them in the menu
+# position : dict of dict, position of the text and the button depending on the dimmensions of the screen
+
 
 class Game_Start_Menu():
     """
@@ -27,11 +30,12 @@ class Game_Start_Menu():
     """
     def __init__(self):
         pygame.init()
-        user32 = ctypes.windll.user32
-        user32.SetProcessDPIAware()
-        self.size = self.weight, self.height = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+        # user32 = ctypes.windll.user32
+        # user32.SetProcessDPIAware()
+        self.size = self.weight, self.height = 1600, 900
+        #self.size = self.weight, self.height = 1920, 1080 #user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
         self.screen = pygame.display.set_mode((self.size), (pygame.FULLSCREEN))
-        self.background = pygame.image.load(os.path.join("Wizarding_Game","Image","start_menu","Hogwarts.png"))
+        self.background = pygame.image.load(os.path.join("Wizarding_Game","Image","start_menu","Background_"+str(self.weight)+"_"+str(self.height)+".png"))
         self.FPS = 60
         self.quit = False
         self._running = True
@@ -40,16 +44,81 @@ class Game_Start_Menu():
         self.language = 'francais'
         self.counter = 0
         self.font =\
-        {'Title':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","harryp__.ttf"), 200),
-        'Menu':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), 60),
-        'Option':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), 50)}
+        {'Title':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","harryp__.ttf"), int(self.height/5.4)),
+        'Menu':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), int(self.height/18)),
+        'Option':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), int(self.height/21.6))}
         self.color =\
          {'Title':(255,215,0),
          'Shadow':(0,0,0),
          'Even_Button':(120,120,120),
          'Odd_Button':(157,143,114),
          'Light_Odd_Button':(177,163,124),
-         'Light_Even_Button':(140,140,140)}
+         'Light_Even_Button':(140,140,140)
+         }
+        self.dimensions =\
+         {"Buttons":{
+         '3':(int(self.weight*0.157),int(self.height*0.139)),
+         '5':(int(self.weight*0.157),int(self.height*0.111)),
+         '5_exit':(int(self.weight*0.157),int(self.height*0.083))}
+         }
+        self.positions =\
+         {"Button":{'Menu':{"Play":(int(self.weight*0.401),int(self.height*0.361)),
+                            "Jouer":(int(self.weight*0.385),int(self.height*0.361)),
+                            "Options":(int(self.weight*0.375),int(self.height*0.519)),
+                            "Quit":(int(self.weight*0.401),int(self.height*0.722)),
+                            "Quitter":(int(self.weight*0.375),int(self.height*0.722))
+                           },
+                    "Option":{'Language':(int(self.weight*0.375), int(self.height*0.343)),
+                               'Langue':(int(self.weight*0.390), int(self.height*0.343)),
+                               'Video':(int(self.weight*0.396), int(self.height*0.481)),
+                               'Sound':(int(self.weight*0.401), int(self.height*0.611)),
+                               'Son':(int(self.weight*0.417), int(self.height*0.611)),
+                               'Key':(int(self.weight*0.411), int(self.height*0.713)),
+                               'Bindings':(int(self.weight*0.375), int(self.height*0.761)),
+                               'Controles':(int(self.weight*0.375), int(self.height*0.741)),
+                               'Exit':(int(self.weight*0.401), int(self.height*0.898)),
+                               'Retour':(int(self.weight*0.391), int(self.height*0.898))
+                              },
+                    "Language":{'English':(int(self.weight*0.380), int(self.height*0.361)),
+                                'Francais':(int(self.weight*0.375), int(self.height*0.519)),
+                                'Exit':(int(self.weight*0.401), int(self.height*0.731)),
+                                'Retour':(int(self.weight*0.380), int(self.height*0.731))
+                               },
+                    "Video":{'Full':(int(self.weight*0.390), int(self.height*0.324)),
+                             'Screen':(int(self.weight*0.390), int(self.height*0.381)),
+                             'Plein':(int(self.weight*0.390), int(self.height*0.324)),
+                             'Ecran':(int(self.weight*0.390), int(self.height*0.381)),
+                             'Window':(int(self.weight*0.375), int(self.height*0.519)),
+                             'Fenetre':(int(self.weight*0.375), int(self.height*0.519)),
+                             'Exit':(int(self.weight*0.401), int(self.height*0.731)),
+                             'Retour':(int(self.weight*0.380), int(self.height*0.731))
+                            },
+                    "Sound":None,
+                    "Key Bindings":None
+                    },
+         "Title":{'Title':(int(self.weight*0.239),int(self.height*0.111)),
+                  'Menu':{"Become_a":(int(self.weight*0.547),int(self.height*0.278)),
+                          "Wizard":(int(self.weight*0.555),int(self.height*0.324)),
+                          "Sorcier":(int(self.weight*0.573),int(self.height*0.324))
+                          }
+                 },
+         "Shadow":{'Title':int(self.weight*0.005),
+                   'Menu':int(self.weight*0.003),
+                   'Button_x':int(self.weight*0.010),
+                   'Button_y':int(self.height*0.009)
+                  },
+         "Shape":{'3_buttons':{"1rst":(int(self.weight*0.354),int(self.height*0.315)),
+                               "2nd":(int(self.weight*0.354),int(self.height*0.472)),
+                               "3rd":(int(self.weight*0.354),int(self.height*0.685))
+                              },
+                  '5_buttons':{"1rst":(int(self.weight*0.354),int(self.height*0.315)),
+                               "2nd":(int(self.weight*0.354),int(self.height*0.444)),
+                               "3rd":(int(self.weight*0.354),int(self.height*0.574)),
+                               "4th":(int(self.weight*0.354),int(self.height*0.704)),
+                               "5th":(int(self.weight*0.354),int(self.height*0.880))
+                              }
+                 }
+         }
 
     """
     Function that manages the events
@@ -131,11 +200,11 @@ class Game_Start_Menu():
                 self.counter += 1
             # Play button
             # Shadow of the button for a "3D" visual effect
-            Play = pygame.draw.rect(self.screen, self.color['Shadow'], (700,350,300,150))
+            Play = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["3_buttons"]['1rst'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["3_buttons"]['1rst'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
             # If the mouse is inside the button
-            if 680+300 > mouse[0] > 680 and 340+150 > mouse[1] > 340:
+            if self.positions["Shape"]["3_buttons"]['1rst'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['1rst'][0] and self.positions["Shape"]["3_buttons"]['1rst'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['1rst'][1]:
                 # Displays the button with a lighter color
-                Play = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,340,300,150))
+                Play = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["3_buttons"]['1rst'][0],self.positions["Shape"]["3_buttons"]['1rst'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
                 # User clicks on "Play"
                 if click[0]:
                     # Break the main loop
@@ -143,24 +212,24 @@ class Game_Start_Menu():
                     self.counter = 0
             else:
                 # Else display it with its normal color
-                Play = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,340,300,150))
+                Play = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["3_buttons"]['1rst'][0],self.positions["Shape"]["3_buttons"]['1rst'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
             # Options button
             # Same ...
-            Options = pygame.draw.rect(self.screen, self.color['Shadow'], (700,520,300,150))
+            Options = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["3_buttons"]['2nd'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["3_buttons"]['2nd'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
             # If the mouse is inside the button
-            if 680+300 > mouse[0] > 680 and 510+150 > mouse[1] > 510:
-                Options = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (680,510,300,150))
+            if self.positions["Shape"]["3_buttons"]['2nd'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['2nd'][0] and self.positions["Shape"]["3_buttons"]['2nd'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['2nd'][1]:
+                Options = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (self.positions["Shape"]["3_buttons"]['2nd'][0],self.positions["Shape"]["3_buttons"]['2nd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
                 # User clicks on "Option"
                 if click[0]:
                     self.menu = 'option'
                     self.counter = 0
             else:
-                Options = pygame.draw.rect(self.screen, self.color['Even_Button'], (680,510,300,150))
+                Options = pygame.draw.rect(self.screen, self.color['Even_Button'], (self.positions["Shape"]["3_buttons"]['2nd'][0],self.positions["Shape"]["3_buttons"]['2nd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
             # Quit button
-            Quit = pygame.draw.rect(self.screen, self.color['Shadow'], (700,750,300,150))
+            Quit = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["3_buttons"]['3rd'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["3_buttons"]['3rd'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
             # If the mouse is inside the button
-            if 680+300 > mouse[0] > 680 and 740+150 > mouse[1] > 740:
-                Quit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,740,300,150))
+            if self.positions["Shape"]["3_buttons"]['3rd'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['3rd'][0] and self.positions["Shape"]["3_buttons"]['3rd'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['3rd'][1]:
+                Quit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["3_buttons"]['3rd'][0],self.positions["Shape"]["3_buttons"]['3rd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
                 # User clicks on "Quit"
                 if click[0]:
                     # Break the main loop ad quit pygame
@@ -168,7 +237,7 @@ class Game_Start_Menu():
                     self._running = False
                     self.counter = 0
             else:
-                Quit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,740,300,150))
+                Quit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["3_buttons"]['3rd'][0],self.positions["Shape"]["3_buttons"]['3rd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
 
             # If the menu changes (user clicked on "option" for example)
             if self.menu != previous_menu:
@@ -188,58 +257,62 @@ class Game_Start_Menu():
                 click = [0,0,0]
                 self.counter += 1
             # Language button
-            Language = pygame.draw.rect(self.screen, self.color['Shadow'], (700,350,300,120))
+            Language = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["5_buttons"]['1rst'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["5_buttons"]['1rst'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
             # If the mouse is inside the button
-            if 680+300 > mouse[0] > 680 and 340+120 > mouse[1] > 340:
-                Language = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,340,300,120))
+            if self.positions["Shape"]["5_buttons"]['1rst'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["5_buttons"]['1rst'][0] and self.positions["Shape"]["5_buttons"]['1rst'][1]+self.dimensions["Buttons"]['5'][1] > mouse[1] > self.positions["Shape"]["5_buttons"]['1rst'][1]:
+                Language = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["5_buttons"]['1rst'][0],self.positions["Shape"]["5_buttons"]['1rst'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
                 # User click on "Language"
                 if click[0]:
                     self.menu = "language"
                     self.counter = 0
             else:
-                Language = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,340,300,120))
+                Language = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["5_buttons"]['1rst'][0],self.positions["Shape"]["5_buttons"]['1rst'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
+
             # Video button
-            Video = pygame.draw.rect(self.screen, self.color['Shadow'], (700,490,300,120))
+            Video = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["5_buttons"]['2nd'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["5_buttons"]['2nd'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
             # If the mouse is inside the button
-            if 680+300 > mouse[0] > 680 and 480+120 > mouse[1] > 480:
-                Video = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (680,480,300,120))
+            if self.positions["Shape"]["5_buttons"]['2nd'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["5_buttons"]['2nd'][0] and self.positions["Shape"]["5_buttons"]['2nd'][1]+self.dimensions["Buttons"]['5'][1] > mouse[1] > self.positions["Shape"]["5_buttons"]['2nd'][1]:
+                Video = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (self.positions["Shape"]["5_buttons"]['2nd'][0],self.positions["Shape"]["5_buttons"]['2nd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
                 # User click on "Video"
                 if click[0]:
                     self.menu = "video"
                     self.counter = 0
             else:
-                Video = pygame.draw.rect(self.screen, self.color['Even_Button'], (680,480,300,120))
+                Video = pygame.draw.rect(self.screen, self.color['Even_Button'], (self.positions["Shape"]["5_buttons"]['2nd'][0],self.positions["Shape"]["5_buttons"]['2nd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
+
             # Sound button
-            Sound = pygame.draw.rect(self.screen, self.color['Shadow'], (700,630,300,120))
+            Sound = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["5_buttons"]['3rd'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["5_buttons"]['3rd'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
             # If the mouse is inside the button
-            if 680+300 > mouse[0] > 680 and 620+120 > mouse[1] > 620:
-                Sound = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,620,300,120))
+            if self.positions["Shape"]["5_buttons"]['3rd'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["5_buttons"]['3rd'][0] and self.positions["Shape"]["5_buttons"]['3rd'][1]+self.dimensions["Buttons"]['5'][1] > mouse[1] > self.positions["Shape"]["5_buttons"]['3rd'][1]:
+                Sound = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["5_buttons"]['3rd'][0],self.positions["Shape"]["5_buttons"]['3rd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
                 # User click on "Sound"
                 if click[0]:
                     pass
             else:
-                Sound = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,620,300,120))
+                Sound = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["5_buttons"]['3rd'][0],self.positions["Shape"]["5_buttons"]['3rd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
+
             # Key Bindings button
-            KeyBindings = pygame.draw.rect(self.screen, self.color['Shadow'], (700,770,300,120))
+            KeyBindings = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["5_buttons"]['4th'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["5_buttons"]['4th'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
             # If the mouse is inside the button
-            if 680+300 > mouse[0] > 680 and 760+120 > mouse[1] > 760:
-                KeyBindings = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (680,760,300,120))
+            if self.positions["Shape"]["5_buttons"]['4th'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["5_buttons"]['4th'][0] and self.positions["Shape"]["5_buttons"]['4th'][1]+self.dimensions["Buttons"]['5'][1] > mouse[1] > self.positions["Shape"]["5_buttons"]['4th'][1]:
+                KeyBindings = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (self.positions["Shape"]["5_buttons"]['4th'][0],self.positions["Shape"]["5_buttons"]['4th'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
                 # User click on "Key Bindings"
                 if click[0]:
                     pass
             else:
-                KeyBindings = pygame.draw.rect(self.screen, self.color['Even_Button'], (680,760,300,120))
+                KeyBindings = pygame.draw.rect(self.screen, self.color['Even_Button'], (self.positions["Shape"]["5_buttons"]['4th'][0],self.positions["Shape"]["5_buttons"]['4th'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
+
             # Exit button (to main menu)
-            Exit = pygame.draw.rect(self.screen, self.color['Shadow'], (700,960,300,90))
+            Exit = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["5_buttons"]['5th'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["5_buttons"]['5th'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5_exit'][1]))
             # If the mouse is inside the button
-            if 680+300 > mouse[0] > 680 and 950+90 > mouse[1] > 950:
-                Exit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,950,300,90))
+            if self.positions["Shape"]["5_buttons"]['5th'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["5_buttons"]['5th'][0] and self.positions["Shape"]["5_buttons"]['5th'][1]+self.dimensions["Buttons"]['5_exit'][1] > mouse[1] > self.positions["Shape"]["5_buttons"]['5th'][1]:
+                Exit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["5_buttons"]['5th'][0],self.positions["Shape"]["5_buttons"]['5th'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5_exit'][1]))
                 # User click on "Exit"
                 if click[0]:
                     self.menu = 'menu'
                     self.counter = 0
             else:
-                Exit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,950,300,90))
+                Exit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["5_buttons"]['5th'][0],self.positions["Shape"]["5_buttons"]['5th'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5_exit'][1]))
             # If the menu changes (user clicked on "language" for example)
             if self.menu != previous_menu:
                 # It refreshesthe screen
@@ -259,36 +332,38 @@ class Game_Start_Menu():
                 click = [0,0,0]
                 self.counter += 1
             # English button
-            English = pygame.draw.rect(self.screen, self.color['Shadow'], (700,350,300,150))
+            English = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["5_buttons"]['1rst'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["3_buttons"]['1rst'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
             # If the mouse is inside the button
-            if 680+300 > mouse[0] > 680 and 340+150 > mouse[1] > 340:
-                English = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,340,300,150))
+            if self.positions["Shape"]["3_buttons"]['1rst'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['1rst'][0] and self.positions["Shape"]["3_buttons"]['1rst'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['1rst'][1]:
+                English = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["3_buttons"]['1rst'][0],self.positions["Shape"]["3_buttons"]['1rst'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
                 # User click on "English"
                 if click[0]:
                     self.language = 'english'
             else:
-                English = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,340,300,150))
+                English = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["3_buttons"]['1rst'][0],self.positions["Shape"]["3_buttons"]['1rst'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+
             # French button
-            Francais = pygame.draw.rect(self.screen, self.color['Shadow'],  (700,520,300,150))
+            Francais = pygame.draw.rect(self.screen, self.color['Shadow'],  (self.positions["Shape"]["3_buttons"]['2nd'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["3_buttons"]['2nd'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
             # If the mouse is inside the button
-            if 680+300 > mouse[0] > 680 and 510+150 > mouse[1] > 510:
-                Francais = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (680,510,300,150))
+            if self.positions["Shape"]["3_buttons"]['2nd'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['2nd'][0] and self.positions["Shape"]["3_buttons"]['2nd'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['2nd'][1]:
+                Francais = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (self.positions["Shape"]["3_buttons"]['2nd'][0],self.positions["Shape"]["3_buttons"]['2nd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
                 # User click on "Français"
                 if click[0]:
                     self.language = 'francais'
             else:
-                Francais = pygame.draw.rect(self.screen, self.color['Even_Button'], (680,510,300,150))
+                Francais = pygame.draw.rect(self.screen, self.color['Even_Button'], (self.positions["Shape"]["3_buttons"]['2nd'][0],self.positions["Shape"]["3_buttons"]['2nd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+
             # Exit button
-            Exit = pygame.draw.rect(self.screen, self.color['Shadow'], (700,750,300,150))
+            Exit = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["3_buttons"]['3rd'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["3_buttons"]['3rd'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
             # If the mouse is inside the button
-            if 680+300 > mouse[0] > 680 and 700+150 > mouse[1] > 700:
-                Exit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,740,300,150))
+            if self.positions["Shape"]["3_buttons"]['3rd'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['3rd'][0] and self.positions["Shape"]["3_buttons"]['3rd'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['3rd'][1]:
+                Exit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["3_buttons"]['3rd'][0],self.positions["Shape"]["3_buttons"]['3rd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
                 # User click on "Exit"
                 if click[0]:
                     self.menu = 'option'
                     self.counter = 0
             else:
-                Exit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,740,300,150))
+                Exit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["3_buttons"]['3rd'][0],self.positions["Shape"]["3_buttons"]['3rd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
 
             # If the menu changes (user clicked on "Exit" for example)
             if self.menu != previous_menu or self.language != previous_language:
@@ -308,38 +383,40 @@ class Game_Start_Menu():
                 click = [0,0,0]
                 self.counter += 1
             # English button
-            FullScreen = pygame.draw.rect(self.screen, self.color['Shadow'], (700,350,300,150))
+            FullScreen = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["5_buttons"]['1rst'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["5_buttons"]['1rst'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
             # If the mouse is inside the button
-            if 680+300 > mouse[0] > 680 and 340+150 > mouse[1] > 340:
-                FullScreen = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,340,300,150))
+            if self.positions["Shape"]["3_buttons"]['1rst'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['1rst'][0] and self.positions["Shape"]["3_buttons"]['1rst'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['1rst'][1]:
+                FullScreen = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["3_buttons"]['1rst'][0],self.positions["Shape"]["3_buttons"]['1rst'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
                 # User click on "Full screen"
                 if click[0]:
                     self.screen = pygame.display.set_mode((1920,1080), (pygame.FULLSCREEN))
                     self.screen.blit(self.background, (0,0))
             else:
-                FullScreen = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,340,300,150))
+                FullScreen = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["3_buttons"]['1rst'][0],self.positions["Shape"]["3_buttons"]['1rst'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+
             # French button
-            Window = pygame.draw.rect(self.screen, self.color['Shadow'],  (700,520,300,150))
+            Window = pygame.draw.rect(self.screen, self.color['Shadow'],  (self.positions["Shape"]["3_buttons"]['2nd'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["3_buttons"]['2nd'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
             # If the mouse is inside the button
-            if 680+300 > mouse[0] > 680 and 510+150 > mouse[1] > 510:
-                Window = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (680,510,300,150))
+            if self.positions["Shape"]["3_buttons"]['2nd'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['2nd'][0] and self.positions["Shape"]["3_buttons"]['2nd'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['2nd'][1]:
+                Window = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (self.positions["Shape"]["3_buttons"]['2nd'][0],self.positions["Shape"]["3_buttons"]['2nd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
                 # User click on "Window"
                 if click[0]:
                     self.screen = pygame.display.set_mode((1920,1080), (pygame.RESIZABLE))
                     self.screen.blit(self.background, (0,0))
             else:
-                Window = pygame.draw.rect(self.screen, self.color['Even_Button'], (680,510,300,150))
+                Window = pygame.draw.rect(self.screen, self.color['Even_Button'], (self.positions["Shape"]["3_buttons"]['2nd'][0],self.positions["Shape"]["3_buttons"]['2nd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+
             # Exit button
-            Exit = pygame.draw.rect(self.screen, self.color['Shadow'], (700,750,300,150))
+            Exit = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["3_buttons"]['3rd'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["3_buttons"]['3rd'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
             # If the mouse is inside the button
-            if 680+300 > mouse[0] > 680 and 700+150 > mouse[1] > 700:
-                Exit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,740,300,150))
+            if self.positions["Shape"]["3_buttons"]['3rd'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['3rd'][0] and self.positions["Shape"]["3_buttons"]['3rd'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['3rd'][1]:
+                Exit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["3_buttons"]['3rd'][0],self.positions["Shape"]["3_buttons"]['3rd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
                 # User click on "Exit"
                 if click[0]:
                     self.menu = 'option'
                     self.counter = 0
             else:
-                Exit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,740,300,150))
+                Exit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["3_buttons"]['3rd'][0],self.positions["Shape"]["3_buttons"]['3rd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
 
             # If the menu changes (user cliked on "Exit" for example )
             if self.menu != previous_menu:
@@ -357,116 +434,117 @@ class Game_Start_Menu():
             # Title
             # Displays "Wizarding Game" and "Become a Wizard"
             Wizarding_Game = self.font['Title'].render("Wizarding Game", True, self.color['Shadow']).convert_alpha()
-            self.screen.blit(Wizarding_Game, (460,120))
+            self.screen.blit(Wizarding_Game, (self.positions["Title"]['Title'][0]+self.positions["Shadow"]['Title'], self.positions["Title"]['Title'][1]))
             Wizarding_Game = self.font['Title'].render("Wizarding Game", True, self.color['Title']).convert_alpha()
-            self.screen.blit(Wizarding_Game, (450,120))
+            self.screen.blit(Wizarding_Game, self.positions["Title"]['Title'])
             Become_a = self.font['Menu'].render("Become a", True, self.color['Shadow']).convert_alpha()
-            self.screen.blit(Become_a, (1055,300))
+            self.screen.blit(Become_a, (self.positions['Title']["Menu"]['Become_a'][0]+self.positions["Shadow"]['Menu'], self.positions['Title']["Menu"]['Become_a'][1]))
             Become_a = self.font['Menu'].render("Become a", True, self.color['Title']).convert_alpha()
-            self.screen.blit(Become_a, (1050,300))
+            self.screen.blit(Become_a, self.positions['Title']["Menu"]['Become_a'])
             Wizard = self.font['Menu'].render("Wizard", True, self.color['Shadow']).convert_alpha()
-            self.screen.blit(Wizard, (1070,350))
+            self.screen.blit(Wizard, (self.positions['Title']["Menu"]['Wizard'][0]+self.positions["Shadow"]['Menu'], self.positions['Title']["Menu"]['Wizard'][1]))
             Wizard = self.font['Menu'].render("Wizard", True, self.color['Title']).convert_alpha()
-            self.screen.blit(Wizard, (1065,350))
+            self.screen.blit(Wizard, self.positions['Title']["Menu"]['Wizard'])
+
 
             # Buttons text
             # Menu's buttons
             if self.menu == 'menu':
                 Play = self.font['Menu'].render("Play", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Play, (770,390))
+                self.screen.blit(Play, self.positions["Button"]["Menu"]["Play"])
                 Options = self.font['Menu'].render("Options", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Options, (720,560))
+                self.screen.blit(Options, self.positions["Button"]["Menu"]["Options"])
                 Quit = self.font['Menu'].render("Quit", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Quit, (770,780))
+                self.screen.blit(Quit, self.positions["Button"]["Menu"]["Quit"])
             # Options's buttons
             elif self.menu == 'option':
                 Language = self.font['Option'].render("Language", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Language, (720,370))
+                self.screen.blit(Language, self.positions["Button"]['Option']['Language'])
                 Video = self.font['Option'].render("Video", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Video, (760,520))
+                self.screen.blit(Video, self.positions["Button"]['Option']['Video'])
                 Sound = self.font['Option'].render("Sound", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Sound, (770,660))
+                self.screen.blit(Sound, self.positions["Button"]['Option']['Sound'])
                 Key = self.font['Option'].render("Key", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Key, (790,770))
+                self.screen.blit(Key, self.positions["Button"]['Option']['Key'])
                 Bindings = self.font['Option'].render("Bindings", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Bindings, (720,770+Key.get_size()[1]))
+                self.screen.blit(Bindings, self.positions["Button"]['Option']['Bindings'])
                 Exit = self.font['Option'].render("Exit", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Exit, (770,970))
+                self.screen.blit(Exit, self.positions["Button"]['Option']['Exit'])
             # Language's buttons
             elif self.menu == 'language':
                 English = self.font['Menu'].render("English", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(English, (730,390))
+                self.screen.blit(English, self.positions["Button"]['Language']['English'])
                 Francais = self.font['Menu'].render("Francais", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Francais, (720,560))
+                self.screen.blit(Francais, self.positions["Button"]['Language']['Francais'])
                 Exit = self.font['Menu'].render("Exit", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Exit, (770,790))
+                self.screen.blit(Exit, self.positions["Button"]['Language']['Exit'])
             # Video's buttons
             elif self.menu == 'video':
                 Full = self.font['Menu'].render("Full", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Full, (750,350))
+                self.screen.blit(Full, self.positions["Button"]['Video']['Full'])
                 Screen = self.font['Menu'].render("Screen", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Screen, (750,350+Full.get_size()[1]))
+                self.screen.blit(Screen, self.positions["Button"]['Video']['Screen'])
                 Window = self.font['Menu'].render("Window", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Window, (720,560))
+                self.screen.blit(Window, self.positions["Button"]['Video']['Window'])
                 Exit = self.font['Menu'].render("Exit", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Exit, (770,790))
-
+                self.screen.blit(Exit, self.positions["Button"]['Video']['Exit'])
 
         elif self.language == 'francais':
             # Title
             # Displays "Wizarding Game" and "Devient un Sorcier"
             Wizarding_Game = self.font['Title'].render("Wizarding Game", True, self.color['Shadow']).convert_alpha()
-            self.screen.blit(Wizarding_Game, (460,120))
+            self.screen.blit(Wizarding_Game, (self.positions["Title"]['Title'][0]+self.positions["Shadow"]['Title'], self.positions["Title"]['Title'][1]))
             Wizarding_Game = self.font['Title'].render("Wizarding Game", True, self.color['Title']).convert_alpha()
-            self.screen.blit(Wizarding_Game, (450,120))
+            self.screen.blit(Wizarding_Game, self.positions["Title"]['Title'])
             Devient_un = self.font['Menu'].render("Devient un", True, self.color['Shadow']).convert_alpha()
-            self.screen.blit(Devient_un, (1055,300))
+            self.screen.blit(Devient_un,  (self.positions['Title']["Menu"]['Become_a'][0]+self.positions["Shadow"]['Menu'], self.positions['Title']["Menu"]['Become_a'][1]))
             Devient_un = self.font['Menu'].render("Devient un", True, self.color['Title']).convert_alpha()
-            self.screen.blit(Devient_un, (1050,300))
+            self.screen.blit(Devient_un, self.positions['Title']["Menu"]['Become_a'])
             Sorcier = self.font['Menu'].render("Sorcier", True, self.color['Shadow']).convert_alpha()
-            self.screen.blit(Sorcier, (1110,350))
+            self.screen.blit(Sorcier, (self.positions['Title']["Menu"]['Sorcier'][0]+self.positions["Shadow"]['Menu'], self.positions['Title']["Menu"]['Sorcier'][1]))
             Sorcier = self.font['Menu'].render("Sorcier", True, self.color['Title']).convert_alpha()
-            self.screen.blit(Sorcier, (1100,350))
+            self.screen.blit(Sorcier, self.positions['Title']["Menu"]['Sorcier'])
 
             # Button
             # Menu's buttons
             if self.menu == 'menu':
                 Jouer = self.font['Menu'].render("Jouer", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Jouer, (740,390))
+                self.screen.blit(Jouer, self.positions["Button"]['Menu']["Jouer"])
                 Options = self.font['Menu'].render("Options", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Options, (710,560))
+                self.screen.blit(Options, self.positions["Button"]['Menu']["Options"])
                 Quitter = self.font['Menu'].render("Quitter", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Quitter, (720,780))
+                self.screen.blit(Quitter, self.positions["Button"]["Menu"]["Quitter"])
+
             # Option's buttons
             elif self.menu == 'option':
                 Langue = self.font['Option'].render("Langue", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Langue, (750,370))
+                self.screen.blit(Langue, self.positions["Button"]['Option']['Langue'])
                 Video = self.font['Option'].render("Video", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Video, (760,520))
+                self.screen.blit(Video, self.positions["Button"]['Option']['Video'])
                 Son = self.font['Option'].render("Son", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Son, (800,660))
+                self.screen.blit(Son, self.positions["Button"]['Option']['Son'])
                 Controles = self.font['Option'].render("Controles", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Controles, (720,800))
+                self.screen.blit(Controles, self.positions["Button"]['Option']['Controles'])
                 Retour = self.font['Option'].render("Retour", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Retour, (750,970))
+                self.screen.blit(Retour, self.positions["Button"]['Option']['Retour'])
             # Language's buttons
             elif self.menu == 'language':
                 English = self.font['Menu'].render("English", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(English, (730,390))
+                self.screen.blit(English, self.positions["Button"]['Language']['English'])
                 Francais = self.font['Menu'].render("Francais", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Francais, (720,560))
+                self.screen.blit(Francais, self.positions["Button"]['Language']['Francais'])
                 Retour = self.font['Menu'].render("Retour", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Retour, (730,790))
+                self.screen.blit(Retour, self.positions["Button"]['Language']['Retour'])
             # Video's buttons
             elif self.menu == 'video':
                 Plein = self.font['Menu'].render("Plein", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Plein, (750,350))
+                self.screen.blit(Plein, self.positions["Button"]['Video']['Plein'])
                 Ecran = self.font['Menu'].render("Ecran", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Ecran, (750,350+Plein.get_size()[1]))
+                self.screen.blit(Ecran, self.positions["Button"]['Video']['Ecran'])
                 Fenetre = self.font['Menu'].render("Fenetre", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Fenetre, (720,560))
+                self.screen.blit(Fenetre, self.positions["Button"]['Video']['Fenetre'])
                 Retour = self.font['Menu'].render("Retour", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Retour, (730,790))
+                self.screen.blit(Retour, self.positions["Button"]['Video']['Retour'])
 
 
 # Class that manage the pause menu (when the player press 'escape').
@@ -487,6 +565,9 @@ class Game_Start_Menu():
 # escape : boolean, True if the user press escape when he is on the main menu, resumes the game
 # font : dict, all the font needed for the different texts
 # color : dict, all the color needed for the different texts
+# dimensions : dict of dict, size of the buttons rectangle depending on the number of them in the menu
+# position : dict of dict, position of the text and the button depending on the dimmensions of the screen
+
 class Game_Pause_Menu():
     """
     Constructor.
@@ -501,6 +582,7 @@ class Game_Pause_Menu():
         pygame.init()
         self.screen = screen
         self.background = background
+        self.weight, self.height = self.screen.get_size()
         self.FPS = 60
         self.quit = False
         self._running = True
@@ -510,16 +592,81 @@ class Game_Pause_Menu():
         self.counter = 0
         self.escape = False
         self.font =\
-        {'Title':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","harryp__.ttf"), 200),
-        'Menu':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), 60),
-        'Option':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), 50)}
+        {'Title':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","harryp__.ttf"), int(self.height/5.4)),
+        'Menu':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), int(self.height/18)),
+        'Option':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), int(self.height/21.6))}
         self.color =\
          {'Title':(255,215,0),
          'Shadow':(0,0,0),
          'Even_Button':(120,120,120),
          'Odd_Button':(157,143,114),
          'Light_Odd_Button':(177,163,124),
-         'Light_Even_Button':(140,140,140)}
+         'Light_Even_Button':(140,140,140)
+         }
+        self.dimensions =\
+         {"Buttons":{
+         '3':(int(self.weight*0.157),int(self.height*0.139)),
+         '5':(int(self.weight*0.157),int(self.height*0.111)),
+         '5_exit':(int(self.weight*0.157),int(self.height*0.083))}
+         }
+        self.positions =\
+         {"Button":{'Menu':{"Resume":(int(self.weight*0.370),int(self.height*0.361)),
+                            "Reprendre":(int(self.weight*0.354),int(self.height*0.361)),
+                            "Options":(int(self.weight*0.375),int(self.height*0.519)),
+                            "Quit":(int(self.weight*0.401),int(self.height*0.722)),
+                            "Quitter":(int(self.weight*0.375),int(self.height*0.722))
+                           },
+                    "Option":{'Language':(int(self.weight*0.375), int(self.height*0.343)),
+                               'Langue':(int(self.weight*0.390), int(self.height*0.343)),
+                               'Video':(int(self.weight*0.396), int(self.height*0.481)),
+                               'Sound':(int(self.weight*0.401), int(self.height*0.611)),
+                               'Son':(int(self.weight*0.417), int(self.height*0.611)),
+                               'Key':(int(self.weight*0.411), int(self.height*0.713)),
+                               'Bindings':(int(self.weight*0.375), int(self.height*0.761)),
+                               'Controles':(int(self.weight*0.375), int(self.height*0.741)),
+                               'Exit':(int(self.weight*0.401), int(self.height*0.898)),
+                               'Retour':(int(self.weight*0.391), int(self.height*0.898))
+                              },
+                    "Language":{'English':(int(self.weight*0.380), int(self.height*0.361)),
+                                'Francais':(int(self.weight*0.375), int(self.height*0.519)),
+                                'Exit':(int(self.weight*0.401), int(self.height*0.731)),
+                                'Retour':(int(self.weight*0.380), int(self.height*0.731))
+                               },
+                    "Video":{'Full':(int(self.weight*0.390), int(self.height*0.324)),
+                             'Screen':(int(self.weight*0.390), int(self.height*0.381)),
+                             'Plein':(int(self.weight*0.390), int(self.height*0.324)),
+                             'Ecran':(int(self.weight*0.390), int(self.height*0.381)),
+                             'Window':(int(self.weight*0.375), int(self.height*0.519)),
+                             'Fenetre':(int(self.weight*0.375), int(self.height*0.519)),
+                             'Exit':(int(self.weight*0.401), int(self.height*0.731)),
+                             'Retour':(int(self.weight*0.380), int(self.height*0.731))
+                            },
+                    "Sound":None,
+                    "Key Bindings":None
+                    },
+         "Title":{'Title':(int(self.weight*0.239),int(self.height*0.111)),
+                  'Menu':{"Become_a":(int(self.weight*0.547),int(self.height*0.278)),
+                          "Wizard":(int(self.weight*0.555),int(self.height*0.324)),
+                          "Sorcier":(int(self.weight*0.573),int(self.height*0.324))
+                          }
+                 },
+         "Shadow":{'Title':int(self.weight*0.005),
+                   'Menu':int(self.weight*0.003),
+                   'Button_x':int(self.weight*0.010),
+                   'Button_y':int(self.height*0.009)
+                  },
+         "Shape":{'3_buttons':{"1rst":(int(self.weight*0.354),int(self.height*0.315)),
+                               "2nd":(int(self.weight*0.354),int(self.height*0.472)),
+                               "3rd":(int(self.weight*0.354),int(self.height*0.685))
+                              },
+                  '5_buttons':{"1rst":(int(self.weight*0.354),int(self.height*0.315)),
+                               "2nd":(int(self.weight*0.354),int(self.height*0.444)),
+                               "3rd":(int(self.weight*0.354),int(self.height*0.574)),
+                               "4th":(int(self.weight*0.354),int(self.height*0.704)),
+                               "5th":(int(self.weight*0.354),int(self.height*0.880))
+                              }
+                 }
+         }
 
     """
     Function that manage the event
@@ -580,277 +727,360 @@ class Game_Pause_Menu():
         # Pause menu
         if self.menu == 'menu':
             previous_menu = self.menu
-            # Get the mouse position and if it clicks
+            # Gets the mouse position and if it clicks
             mouse = pygame.mouse.get_pos()
             click = pygame.mouse.get_pressed()
-            # self.counter put a delay between the switch
-            # of menu because otherwise, it clicks instantly
-            # on "Video" when we click on "Option"
-            if self.counter < 5:
+            # self.counter put a delay between the different
+            # menu switches because otherwise, it clicks instantly
+            # on "Quit" when we click on "Exit"
+            if self.counter < 10:
                 click = [0,0,0]
                 self.counter += 1
-            # Resume button
-            # Shadow of the button
-            Resume = pygame.draw.rect(self.screen, self.color['Shadow'], (680,350,320,150))
+            # Play button
+            # Shadow of the button for a "3D" visual effect
+            Resume = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["3_buttons"]['1rst'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["3_buttons"]['1rst'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
             # If the mouse is inside the button
-            if 660+320 > mouse[0] > 660 and 340+150 > mouse[1] > 340:
-                # Print it with a lighter color
-                Resume = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (660,340,320,150))
-                # User click on "Play"
+            if self.positions["Shape"]["3_buttons"]['1rst'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['1rst'][0] and self.positions["Shape"]["3_buttons"]['1rst'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['1rst'][1]:
+                # Displays the button with a lighter color
+                Resume = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["3_buttons"]['1rst'][0],self.positions["Shape"]["3_buttons"]['1rst'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+                # User clicks on "Play"
                 if click[0]:
-                    return False
+                    # Break the main loop
+                    self._running = False
+                    self.counter = 0
             else:
-                # Else display it normaly
-                Resume = pygame.draw.rect(self.screen, self.color['Odd_Button'], (660,340,320,150))
+                # Else display it with its normal color
+                Resume = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["3_buttons"]['1rst'][0],self.positions["Shape"]["3_buttons"]['1rst'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
             # Options button
             # Same ...
-            Options = pygame.draw.rect(self.screen, self.color['Shadow'], (680,520,320,150))
-            if 660+320 > mouse[0] > 660 and 510+150 > mouse[1] > 510:
-                Options = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (660,510,320,150))
-                # User click on "Option"
+            Options = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["3_buttons"]['2nd'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["3_buttons"]['2nd'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+            # If the mouse is inside the button
+            if self.positions["Shape"]["3_buttons"]['2nd'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['2nd'][0] and self.positions["Shape"]["3_buttons"]['2nd'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['2nd'][1]:
+                Options = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (self.positions["Shape"]["3_buttons"]['2nd'][0],self.positions["Shape"]["3_buttons"]['2nd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+                # User clicks on "Option"
                 if click[0]:
                     self.menu = 'option'
                     self.counter = 0
             else:
-                Options = pygame.draw.rect(self.screen, self.color['Even_Button'], (660,510,320,150))
-            # Quit to menu button
-            Quit = pygame.draw.rect(self.screen, self.color['Shadow'], (680,750,320,150))
-            if 660+320 > mouse[0] > 660 and 740+150 > mouse[1] > 740:
-                Quit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (660,740,320,150))
-                # User click on "Quit to menu"
+                Options = pygame.draw.rect(self.screen, self.color['Even_Button'], (self.positions["Shape"]["3_buttons"]['2nd'][0],self.positions["Shape"]["3_buttons"]['2nd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+            # Quit button
+            Quit = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["3_buttons"]['3rd'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["3_buttons"]['3rd'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+            # If the mouse is inside the button
+            if self.positions["Shape"]["3_buttons"]['3rd'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['3rd'][0] and self.positions["Shape"]["3_buttons"]['3rd'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['3rd'][1]:
+                Quit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["3_buttons"]['3rd'][0],self.positions["Shape"]["3_buttons"]['3rd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+                # User clicks on "Quit"
                 if click[0]:
+                    # Break the main loop ad quit pygame
                     self.quit = True
+                    self._running = False
                     self.counter = 0
             else:
-                Quit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (660,740,320,150))
+                Quit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["3_buttons"]['3rd'][0],self.positions["Shape"]["3_buttons"]['3rd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
 
-            # If the menu changes
+            # If the menu changes (user clicked on "option" for example)
             if self.menu != previous_menu:
+                # It refreshes the screen
                 self.screen.blit(self.background, (0,0))
-            if self.menu == 'pause':
-                self.menu = 'menu'
+
         # Options menu
         elif self.menu == 'option':
             previous_menu = self.menu
+            # Gets the mouse position and if it clicks
             mouse = pygame.mouse.get_pos()
             click = pygame.mouse.get_pressed()
-            # self.counter put a delay between the switch
-            # of menu because otherwise, it clicks instantly
-            # on "Video" when we click on "Option"
-            if self.counter < 5:
+            # self.counter put a delay between the different
+            # menu switches because otherwise, it clicks instantly
+            # on "Exit" and "Quit" when we click on "Exit"
+            if self.counter < 10:
                 click = [0,0,0]
                 self.counter += 1
-            Language = pygame.draw.rect(self.screen, self.color['Shadow'], (700,350,300,120))
-            if 680+300 > mouse[0] > 680 and 340+120 > mouse[1] > 340:
-                Language = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,340,300,120))
+            # Language button
+            Language = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["5_buttons"]['1rst'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["5_buttons"]['1rst'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
+            # If the mouse is inside the button
+            if self.positions["Shape"]["5_buttons"]['1rst'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["5_buttons"]['1rst'][0] and self.positions["Shape"]["5_buttons"]['1rst'][1]+self.dimensions["Buttons"]['5'][1] > mouse[1] > self.positions["Shape"]["5_buttons"]['1rst'][1]:
+                Language = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["5_buttons"]['1rst'][0],self.positions["Shape"]["5_buttons"]['1rst'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
                 # User click on "Language"
                 if click[0]:
                     self.menu = "language"
                     self.counter = 0
-
             else:
-                Language = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,340,300,120))
-            Video = pygame.draw.rect(self.screen, self.color['Shadow'], (700,490,300,120))
-            if 680+300 > mouse[0] > 680 and 480+120 > mouse[1] > 480:
-                Video = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (680,480,300,120))
+                Language = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["5_buttons"]['1rst'][0],self.positions["Shape"]["5_buttons"]['1rst'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
+
+            # Video button
+            Video = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["5_buttons"]['2nd'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["5_buttons"]['2nd'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
+            # If the mouse is inside the button
+            if self.positions["Shape"]["5_buttons"]['2nd'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["5_buttons"]['2nd'][0] and self.positions["Shape"]["5_buttons"]['2nd'][1]+self.dimensions["Buttons"]['5'][1] > mouse[1] > self.positions["Shape"]["5_buttons"]['2nd'][1]:
+                Video = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (self.positions["Shape"]["5_buttons"]['2nd'][0],self.positions["Shape"]["5_buttons"]['2nd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
                 # User click on "Video"
                 if click[0]:
                     self.menu = "video"
                     self.counter = 0
             else:
-                Video = pygame.draw.rect(self.screen, self.color['Even_Button'], (680,480,300,120))
-            Sound = pygame.draw.rect(self.screen, self.color['Shadow'], (700,630,300,120))
-            if 680+300 > mouse[0] > 680 and 620+120 > mouse[1] > 620:
-                Sound = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,620,300,120))
+                Video = pygame.draw.rect(self.screen, self.color['Even_Button'], (self.positions["Shape"]["5_buttons"]['2nd'][0],self.positions["Shape"]["5_buttons"]['2nd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
+
+            # Sound button
+            Sound = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["5_buttons"]['3rd'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["5_buttons"]['3rd'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
+            # If the mouse is inside the button
+            if self.positions["Shape"]["5_buttons"]['3rd'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["5_buttons"]['3rd'][0] and self.positions["Shape"]["5_buttons"]['3rd'][1]+self.dimensions["Buttons"]['5'][1] > mouse[1] > self.positions["Shape"]["5_buttons"]['3rd'][1]:
+                Sound = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["5_buttons"]['3rd'][0],self.positions["Shape"]["5_buttons"]['3rd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
                 # User click on "Sound"
                 if click[0]:
                     pass
             else:
-                Sound = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,620,300,120))
-            KeyBindings = pygame.draw.rect(self.screen, self.color['Shadow'], (700,770,300,120))
-            if 680+300 > mouse[0] > 680 and 760+120 > mouse[1] > 760:
-                KeyBindings = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (680,760,300,120))
+                Sound = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["5_buttons"]['3rd'][0],self.positions["Shape"]["5_buttons"]['3rd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
+
+            # Key Bindings button
+            KeyBindings = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["5_buttons"]['4th'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["5_buttons"]['4th'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
+            # If the mouse is inside the button
+            if self.positions["Shape"]["5_buttons"]['4th'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["5_buttons"]['4th'][0] and self.positions["Shape"]["5_buttons"]['4th'][1]+self.dimensions["Buttons"]['5'][1] > mouse[1] > self.positions["Shape"]["5_buttons"]['4th'][1]:
+                KeyBindings = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (self.positions["Shape"]["5_buttons"]['4th'][0],self.positions["Shape"]["5_buttons"]['4th'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
                 # User click on "Key Bindings"
                 if click[0]:
                     pass
             else:
-                KeyBindings = pygame.draw.rect(self.screen, self.color['Even_Button'], (680,760,300,120))
-            Exit = pygame.draw.rect(self.screen, self.color['Shadow'], (700,960,300,90))
-            if 680+300 > mouse[0] > 680 and 950+90 > mouse[1] > 950:
-                Exit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,950,300,90))
+                KeyBindings = pygame.draw.rect(self.screen, self.color['Even_Button'], (self.positions["Shape"]["5_buttons"]['4th'][0],self.positions["Shape"]["5_buttons"]['4th'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5'][1]))
+
+            # Exit button (to main menu)
+            Exit = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["5_buttons"]['5th'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["5_buttons"]['5th'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5_exit'][1]))
+            # If the mouse is inside the button
+            if self.positions["Shape"]["5_buttons"]['5th'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["5_buttons"]['5th'][0] and self.positions["Shape"]["5_buttons"]['5th'][1]+self.dimensions["Buttons"]['5_exit'][1] > mouse[1] > self.positions["Shape"]["5_buttons"]['5th'][1]:
+                Exit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["5_buttons"]['5th'][0],self.positions["Shape"]["5_buttons"]['5th'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5_exit'][1]))
                 # User click on "Exit"
                 if click[0]:
                     self.menu = 'menu'
                     self.counter = 0
             else:
-                Exit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,950,300,90))
-
+                Exit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["5_buttons"]['5th'][0],self.positions["Shape"]["5_buttons"]['5th'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['5_exit'][1]))
+            # If the menu changes (user clicked on "language" for example)
             if self.menu != previous_menu:
+                # It refreshesthe screen
                 self.screen.blit(self.background, (0,0))
 
         # Language menu
         elif self.menu == 'language':
             previous_menu = self.menu
             previous_language = self.language
+            # Gets the mouse position and if it clicks
             mouse = pygame.mouse.get_pos()
             click = pygame.mouse.get_pressed()
             # self.counter put a delay between the switch
             # of menu because otherwise, it clicks instantly
             # on "English" when we click on "Language"
-            if self.counter < 5:
+            if self.counter < 10:
                 click = [0,0,0]
                 self.counter += 1
             # English button
-            English = pygame.draw.rect(self.screen, self.color['Shadow'], (700,350,300,150))
-            if 680+300 > mouse[0] > 680 and 340+150 > mouse[1] > 340:
-                English = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,340,300,150))
+            English = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["5_buttons"]['1rst'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["3_buttons"]['1rst'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+            # If the mouse is inside the button
+            if self.positions["Shape"]["3_buttons"]['1rst'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['1rst'][0] and self.positions["Shape"]["3_buttons"]['1rst'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['1rst'][1]:
+                English = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["3_buttons"]['1rst'][0],self.positions["Shape"]["3_buttons"]['1rst'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
                 # User click on "English"
                 if click[0]:
                     self.language = 'english'
             else:
-                English = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,340,300,150))
+                English = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["3_buttons"]['1rst'][0],self.positions["Shape"]["3_buttons"]['1rst'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+
             # French button
-            Francais = pygame.draw.rect(self.screen, self.color['Shadow'],  (700,520,300,150))
-            if 680+300 > mouse[0] > 680 and 510+150 > mouse[1] > 510:
-                Francais = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (680,510,300,150))
+            Francais = pygame.draw.rect(self.screen, self.color['Shadow'],  (self.positions["Shape"]["3_buttons"]['2nd'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["3_buttons"]['2nd'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+            # If the mouse is inside the button
+            if self.positions["Shape"]["3_buttons"]['2nd'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['2nd'][0] and self.positions["Shape"]["3_buttons"]['2nd'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['2nd'][1]:
+                Francais = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (self.positions["Shape"]["3_buttons"]['2nd'][0],self.positions["Shape"]["3_buttons"]['2nd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
                 # User click on "Français"
                 if click[0]:
                     self.language = 'francais'
             else:
-                Francais = pygame.draw.rect(self.screen, self.color['Even_Button'], (680,510,300,150))
+                Francais = pygame.draw.rect(self.screen, self.color['Even_Button'], (self.positions["Shape"]["3_buttons"]['2nd'][0],self.positions["Shape"]["3_buttons"]['2nd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+
             # Exit button
-            Exit = pygame.draw.rect(self.screen, self.color['Shadow'], (700,750,300,150))
-            if 680+300 > mouse[0] > 680 and 700+150 > mouse[1] > 700:
-                Exit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,740,300,150))
+            Exit = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["3_buttons"]['3rd'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["3_buttons"]['3rd'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+            # If the mouse is inside the button
+            if self.positions["Shape"]["3_buttons"]['3rd'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['3rd'][0] and self.positions["Shape"]["3_buttons"]['3rd'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['3rd'][1]:
+                Exit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["3_buttons"]['3rd'][0],self.positions["Shape"]["3_buttons"]['3rd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
                 # User click on "Exit"
                 if click[0]:
                     self.menu = 'option'
                     self.counter = 0
             else:
-                Exit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,740,300,150))
+                Exit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["3_buttons"]['3rd'][0],self.positions["Shape"]["3_buttons"]['3rd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
 
-            # If the menu changes
+            # If the menu changes (user clicked on "Exit" for example)
             if self.menu != previous_menu or self.language != previous_language:
+                # It refreshes the screen
                 self.screen.blit(self.background, (0,0))
 
         # Video menu
         elif self.menu == 'video':
             previous_menu = self.menu
+            # Gets the mouse position and if it clicks
             mouse = pygame.mouse.get_pos()
             click = pygame.mouse.get_pressed()
             # self.counter put a delay between the switch
             # of menu because otherwise, it clicks instantly
             # on "Window" when we click on "Video"
-            if self.counter < 5:
+            if self.counter < 10:
                 click = [0,0,0]
                 self.counter += 1
             # English button
-            FullScreen = pygame.draw.rect(self.screen, self.color['Shadow'], (700,350,300,150))
-            if 680+300 > mouse[0] > 680 and 340+150 > mouse[1] > 340:
-                FullScreen = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,340,300,150))
+            FullScreen = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["5_buttons"]['1rst'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["5_buttons"]['1rst'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+            # If the mouse is inside the button
+            if self.positions["Shape"]["3_buttons"]['1rst'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['1rst'][0] and self.positions["Shape"]["3_buttons"]['1rst'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['1rst'][1]:
+                FullScreen = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["3_buttons"]['1rst'][0],self.positions["Shape"]["3_buttons"]['1rst'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
                 # User click on "Full screen"
                 if click[0]:
                     self.screen = pygame.display.set_mode((1920,1080), (pygame.FULLSCREEN))
                     self.screen.blit(self.background, (0,0))
             else:
-                FullScreen = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,340,300,150))
+                FullScreen = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["3_buttons"]['1rst'][0],self.positions["Shape"]["3_buttons"]['1rst'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+
             # French button
-            Window = pygame.draw.rect(self.screen, self.color['Shadow'],  (700,520,300,150))
-            if 680+300 > mouse[0] > 680 and 510+150 > mouse[1] > 510:
-                Window = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (680,510,300,150))
-                # User click on "Français"
+            Window = pygame.draw.rect(self.screen, self.color['Shadow'],  (self.positions["Shape"]["3_buttons"]['2nd'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["3_buttons"]['2nd'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+            # If the mouse is inside the button
+            if self.positions["Shape"]["3_buttons"]['2nd'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['2nd'][0] and self.positions["Shape"]["3_buttons"]['2nd'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['2nd'][1]:
+                Window = pygame.draw.rect(self.screen, self.color['Light_Even_Button'], (self.positions["Shape"]["3_buttons"]['2nd'][0],self.positions["Shape"]["3_buttons"]['2nd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+                # User click on "Window"
                 if click[0]:
                     self.screen = pygame.display.set_mode((1920,1080), (pygame.RESIZABLE))
                     self.screen.blit(self.background, (0,0))
             else:
-                Window = pygame.draw.rect(self.screen, self.color['Even_Button'], (680,510,300,150))
+                Window = pygame.draw.rect(self.screen, self.color['Even_Button'], (self.positions["Shape"]["3_buttons"]['2nd'][0],self.positions["Shape"]["3_buttons"]['2nd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+
             # Exit button
-            Exit = pygame.draw.rect(self.screen, self.color['Shadow'], (700,750,300,150))
-            if 680+300 > mouse[0] > 680 and 700+150 > mouse[1] > 700:
-                Exit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (680,740,300,150))
+            Exit = pygame.draw.rect(self.screen, self.color['Shadow'], (self.positions["Shape"]["3_buttons"]['3rd'][0]+self.positions["Shadow"]["Button_x"],self.positions["Shape"]["3_buttons"]['3rd'][1]+self.positions["Shadow"]["Button_y"],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
+            # If the mouse is inside the button
+            if self.positions["Shape"]["3_buttons"]['3rd'][0]+self.dimensions["Buttons"]['3'][0] > mouse[0] > self.positions["Shape"]["3_buttons"]['3rd'][0] and self.positions["Shape"]["3_buttons"]['3rd'][1]+self.dimensions["Buttons"]['3'][1] > mouse[1] > self.positions["Shape"]["3_buttons"]['3rd'][1]:
+                Exit = pygame.draw.rect(self.screen, self.color['Light_Odd_Button'], (self.positions["Shape"]["3_buttons"]['3rd'][0],self.positions["Shape"]["3_buttons"]['3rd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
                 # User click on "Exit"
                 if click[0]:
                     self.menu = 'option'
                     self.counter = 0
             else:
-                Exit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (680,740,300,150))
+                Exit = pygame.draw.rect(self.screen, self.color['Odd_Button'], (self.positions["Shape"]["3_buttons"]['3rd'][0],self.positions["Shape"]["3_buttons"]['3rd'][1],self.dimensions["Buttons"]['3'][0],self.dimensions["Buttons"]['3'][1]))
 
-            # If the menu changes
+            # If the menu changes (user cliked on "Exit" for example )
             if self.menu != previous_menu:
+                # It refreshes the screen
                 self.screen.blit(self.background, (0,0))
 
+
+    """
+    Function that write all the text on the start menu screen.
+    Write every title text 2 times to make a shadow.
+    Write buttons text.
+    Every text depends on the language chose by the user
+    """
     def text(self):
-        if self.language == "english":
-            font = {'Title':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","harryp__.ttf"), 200),'Menu':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), 60),'Option':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), 50)}
+        if self.language == 'english':
+            # Title
+            # Displays "Wizarding Game" and "Become a Wizard"
+            Wizarding_Game = self.font['Title'].render("Wizarding Game", True, self.color['Shadow']).convert_alpha()
+            self.screen.blit(Wizarding_Game, (self.positions["Title"]['Title'][0]+self.positions["Shadow"]['Title'], self.positions["Title"]['Title'][1]))
+            Wizarding_Game = self.font['Title'].render("Wizarding Game", True, self.color['Title']).convert_alpha()
+            self.screen.blit(Wizarding_Game, self.positions["Title"]['Title'])
+            Become_a = self.font['Menu'].render("Become a", True, self.color['Shadow']).convert_alpha()
+            self.screen.blit(Become_a, (self.positions['Title']["Menu"]['Become_a'][0]+self.positions["Shadow"]['Menu'], self.positions['Title']["Menu"]['Become_a'][1]))
+            Become_a = self.font['Menu'].render("Become a", True, self.color['Title']).convert_alpha()
+            self.screen.blit(Become_a, self.positions['Title']["Menu"]['Become_a'])
+            Wizard = self.font['Menu'].render("Wizard", True, self.color['Shadow']).convert_alpha()
+            self.screen.blit(Wizard, (self.positions['Title']["Menu"]['Wizard'][0]+self.positions["Shadow"]['Menu'], self.positions['Title']["Menu"]['Wizard'][1]))
+            Wizard = self.font['Menu'].render("Wizard", True, self.color['Title']).convert_alpha()
+            self.screen.blit(Wizard, self.positions['Title']["Menu"]['Wizard'])
+
+
+            # Buttons text
+            # Menu's buttons
             if self.menu == 'menu':
-                Resume = font['Menu'].render("Resume", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Resume, (710,390))
-                Options = font['Menu'].render("Options", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Options, (710,560))
-                Quit = font['Menu'].render("Quit", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Quit, (760,780))
+                Resume = self.font['Menu'].render("Resume", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Resume, self.positions["Button"]["Menu"]["Resume"])
+                Options = self.font['Menu'].render("Options", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Options, self.positions["Button"]["Menu"]["Options"])
+                Quit = self.font['Menu'].render("Quit", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Quit, self.positions["Button"]["Menu"]["Quit"])
+            # Options's buttons
             elif self.menu == 'option':
-                Language = font['Option'].render("Language", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Language, (720,370))
-                Video = font['Option'].render("Video", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Video, (760,520))
-                Sound = font['Option'].render("Sound", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Sound, (770,660))
-                Key = font['Option'].render("Key", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Key, (790,770))
-                Bindings = font['Option'].render("Bindings", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Bindings, (720,770+Key.get_size()[1]))
-                Exit = font['Option'].render("Exit", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Exit, (770,970))
+                Language = self.font['Option'].render("Language", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Language, self.positions["Button"]['Option']['Language'])
+                Video = self.font['Option'].render("Video", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Video, self.positions["Button"]['Option']['Video'])
+                Sound = self.font['Option'].render("Sound", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Sound, self.positions["Button"]['Option']['Sound'])
+                Key = self.font['Option'].render("Key", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Key, self.positions["Button"]['Option']['Key'])
+                Bindings = self.font['Option'].render("Bindings", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Bindings, self.positions["Button"]['Option']['Bindings'])
+                Exit = self.font['Option'].render("Exit", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Exit, self.positions["Button"]['Option']['Exit'])
+            # Language's buttons
             elif self.menu == 'language':
-                English = font['Menu'].render("English", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(English, (730,390))
-                Francais = font['Menu'].render("Francais", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Francais, (720,560))
-                Exit = font['Menu'].render("Exit", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Exit, (770,790))
+                English = self.font['Menu'].render("English", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(English, self.positions["Button"]['Language']['English'])
+                Francais = self.font['Menu'].render("Francais", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Francais, self.positions["Button"]['Language']['Francais'])
+                Exit = self.font['Menu'].render("Exit", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Exit, self.positions["Button"]['Language']['Exit'])
+            # Video's buttons
             elif self.menu == 'video':
-                Full = font['Menu'].render("Full", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Full, (750,350))
-                Screen = font['Menu'].render("Screen", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Screen, (750,350+Full.get_size()[1]))
-                Window = font['Menu'].render("Window", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Window, (720,560))
-                Exit = font['Menu'].render("Exit", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Exit, (770,790))
-        if self.language == "francais":
-            font = {'Title':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","harryp__.ttf"), 200),'Menu':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), 60),'Option':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), 50)}
+                Full = self.font['Menu'].render("Full", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Full, self.positions["Button"]['Video']['Full'])
+                Screen = self.font['Menu'].render("Screen", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Screen, self.positions["Button"]['Video']['Screen'])
+                Window = self.font['Menu'].render("Window", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Window, self.positions["Button"]['Video']['Window'])
+                Exit = self.font['Menu'].render("Exit", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Exit, self.positions["Button"]['Video']['Exit'])
+
+        elif self.language == 'francais':
+            # Title
+            # Displays "Wizarding Game" and "Devient un Sorcier"
+            Wizarding_Game = self.font['Title'].render("Wizarding Game", True, self.color['Shadow']).convert_alpha()
+            self.screen.blit(Wizarding_Game, (self.positions["Title"]['Title'][0]+self.positions["Shadow"]['Title'], self.positions["Title"]['Title'][1]))
+            Wizarding_Game = self.font['Title'].render("Wizarding Game", True, self.color['Title']).convert_alpha()
+            self.screen.blit(Wizarding_Game, self.positions["Title"]['Title'])
+            Devient_un = self.font['Menu'].render("Devient un", True, self.color['Shadow']).convert_alpha()
+            self.screen.blit(Devient_un,  (self.positions['Title']["Menu"]['Become_a'][0]+self.positions["Shadow"]['Menu'], self.positions['Title']["Menu"]['Become_a'][1]))
+            Devient_un = self.font['Menu'].render("Devient un", True, self.color['Title']).convert_alpha()
+            self.screen.blit(Devient_un, self.positions['Title']["Menu"]['Become_a'])
+            Sorcier = self.font['Menu'].render("Sorcier", True, self.color['Shadow']).convert_alpha()
+            self.screen.blit(Sorcier, (self.positions['Title']["Menu"]['Sorcier'][0]+self.positions["Shadow"]['Menu'], self.positions['Title']["Menu"]['Sorcier'][1]))
+            Sorcier = self.font['Menu'].render("Sorcier", True, self.color['Title']).convert_alpha()
+            self.screen.blit(Sorcier, self.positions['Title']["Menu"]['Sorcier'])
+
+            # Button
+            # Menu's buttons
             if self.menu == 'menu':
-                Reprendre = font['Menu'].render("Reprendre", True, self.color['Shadow'])#.convert_alpha()
-                self.screen.blit(Reprendre, (670,390))
-                Options = font['Menu'].render("Options", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Options, (710,560))
-                Quitter = font['Menu'].render("Quitter", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Quitter, (720,780))
+                Reprendre = self.font['Menu'].render("Reprendre", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Reprendre, self.positions["Button"]['Menu']["Reprendre"])
+                Options = self.font['Menu'].render("Options", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Options, self.positions["Button"]['Menu']["Options"])
+                Quitter = self.font['Menu'].render("Quitter", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Quitter, self.positions["Button"]["Menu"]["Quitter"])
+
+            # Option's buttons
             elif self.menu == 'option':
-                Langue = font['Option'].render("Langue", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Langue, (750,370))
-                Video = font['Option'].render("Video", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Video, (760,520))
-                Son = font['Option'].render("Son", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Son, (800,660))
-                Controles = font['Option'].render("Controles", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Controles, (720,800))
-                Retour = font['Option'].render("Retour", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Retour, (750,970))
+                Langue = self.font['Option'].render("Langue", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Langue, self.positions["Button"]['Option']['Langue'])
+                Video = self.font['Option'].render("Video", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Video, self.positions["Button"]['Option']['Video'])
+                Son = self.font['Option'].render("Son", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Son, self.positions["Button"]['Option']['Son'])
+                Controles = self.font['Option'].render("Controles", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Controles, self.positions["Button"]['Option']['Controles'])
+                Retour = self.font['Option'].render("Retour", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Retour, self.positions["Button"]['Option']['Retour'])
+            # Language's buttons
             elif self.menu == 'language':
-                English = font['Menu'].render("English", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(English, (730,390))
-                Francais = font['Menu'].render("Francais", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Francais, (720,560))
-                Retour = font['Menu'].render("Retour", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Retour, (730,790))
+                English = self.font['Menu'].render("English", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(English, self.positions["Button"]['Language']['English'])
+                Francais = self.font['Menu'].render("Francais", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Francais, self.positions["Button"]['Language']['Francais'])
+                Retour = self.font['Menu'].render("Retour", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Retour, self.positions["Button"]['Language']['Retour'])
+            # Video's buttons
             elif self.menu == 'video':
-                Plein = font['Menu'].render("Plein", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Plein, (750,350))
-                Ecran = font['Menu'].render("Ecran", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Ecran, (750,350+Plein.get_size()[1]))
-                Fenetre = font['Menu'].render("Fenetre", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Fenetre, (720,560))
-                Retour = font['Menu'].render("Retour", True, self.color['Shadow']).convert_alpha()
-                self.screen.blit(Retour, (730,790))
+                Plein = self.font['Menu'].render("Plein", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Plein, self.positions["Button"]['Video']['Plein'])
+                Ecran = self.font['Menu'].render("Ecran", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Ecran, self.positions["Button"]['Video']['Ecran'])
+                Fenetre = self.font['Menu'].render("Fenetre", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Fenetre, self.positions["Button"]['Video']['Fenetre'])
+                Retour = self.font['Menu'].render("Retour", True, self.color['Shadow']).convert_alpha()
+                self.screen.blit(Retour, self.positions["Button"]['Video']['Retour'])

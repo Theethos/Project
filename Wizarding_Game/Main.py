@@ -15,9 +15,10 @@ class App:
         self._running = True
         self.screen = None
         # Adapt the pygame widow to the monitor
-        user32 = ctypes.windll.user32
-        user32.SetProcessDPIAware()
-        self.size = self.weight, self.height = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+        # user32 = ctypes.windll.user32
+        # user32.SetProcessDPIAware()
+        self.size = self.weight, self.height = 1600, 900
+        #self.size = self.weight, self.height = 1920, 1080 #user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
         self.background = None
         self.FPS = 60
         self.text = [None, self.FPS]
@@ -34,9 +35,9 @@ class App:
         self.pause = False
         self.pause_background = None
         self.font =\
-        {'Title':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","harryp__.ttf"), 200),
-        'Menu':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), 60),
-        'Option':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), 50)}
+        {'Title':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","harryp__.ttf"), int(self.height/5.4)),
+        'Menu':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), int(self.height/18)),
+        'Option':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), int(self.height/21.6))}
 
     # Initialisation of App object
     def on_init(self):
@@ -225,6 +226,7 @@ class App:
                                     if character.spells.position_attack[0]+21 > other_character.hitbox[0] and character.spells.position_attack[0] < other_character.hitbox[0]+88 and character.spells.position_attack[1] > other_character.hitbox[1] and character.spells.position_attack[1]+7 < other_character.hitbox[1]+116:
                                         character.spells.hit_someone = True
                                         other_character.get_hit()
+
                     self.pause_menu.background = self.screen.copy()
                     if self.pause_menu.escape:
                         self.pause_menu.escape = False
