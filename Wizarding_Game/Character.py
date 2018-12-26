@@ -29,6 +29,7 @@ import os
 # timer_NPC : int, timer used for the moves of NPCs
 # distance : int, distance (in pixel) of a NPC's move
 # waitime : int, time between two moves of a NPC
+# zoom : float, size of the characters depending on the size of the screen
 
 class Character():
     """
@@ -57,17 +58,36 @@ class Character():
         self.background = background
         self.background_color = (20,20,20)
         self.position = self.x, self.y = coordinates
-        self.load = [load, load+'_Right.png','_Right.png', 'Right']
+        self.zoom = self.screen.get_size()[0]/1920
+        #self.load = [load, load+'_Right.png','_Right.png', 'Right']
+        self.orientation = 'Right'
         self.colorkey = colorkey
+        self.loads =\
+         {"Main":{'Left':pygame.transform.rotozoom(pygame.image.load(load+"_Left.png").convert(), 0, self.zoom),
+                  'Right':pygame.transform.rotozoom(pygame.image.load(load+"_Right.png").convert(), 0, self.zoom)
+                 },
+          "Dead":{'Left':pygame.transform.rotozoom(pygame.image.load(load+"_Left_Dead.png").convert(), 0, self.zoom),
+                  'Right':pygame.transform.rotozoom(pygame.image.load(load+"_Right_Dead.png").convert(), 0, self.zoom)
+                  },
+          "Hit":{'Left':pygame.transform.rotozoom(pygame.image.load(load+"_Left_Hit.png").convert(), 0, self.zoom),
+                 'Right':pygame.transform.rotozoom(pygame.image.load(load+"_Right_Hit.png").convert(), 0, self.zoom)
+                }
+         }
+        # Sets the background transparent
+        for state in self.loads:
+            for orientation in self.loads[state]:
+                self.loads[state][orientation].set_colorkey(self.colorkey)
+        self.load = self.loads["Main"]['Right']
+        self.image_size = self.load.get_size()
         self.dx, self.dy = 10, 10
         self.text = pygame.font.SysFont('mono', 60, bold=True)
         self.color_wall = (20,0,50)
-        self.lifebar = Lifebar(self.screen, self.position, self.color_wall, self.dx, self.dy)
+        self.lifebar = Lifebar(self.screen, self.position, self.color_wall, self.dx, self.dy, self.image_size, self.zoom)
         self.timer = 0
         self.alive = True
         self.side = side
-        self.spells = Spells(self.screen, self.background_color, self.side, self.x, self.y)
-        self.hitbox = (self.x, self.y, 88, 116)
+        self.spells = Spells(self.screen, self.background_color, self.side, self.x, self.y, self.zoom, self.image_size)
+        self.hitbox = None
         self.ways = ['left', 'right', 'up', 'down']
         self.way = None
         self.timer_NPC = 0
@@ -80,29 +100,26 @@ class Character():
     for a time both generated randomly
     """
     def draw_NPC(self):
-        # Generates a random way
         if self.timer_NPC == 0:
             self.way = self.ways[random.randint(0,3)]
             self.distance = random.randint(80,200)
-        # Moves the NPC in the way generated
+        # Moves the character
         self.motion_NPC(self.way)
-        # Display the NPC
+        # Display the character
         self.display()
-        # Update the hitbox position
-        self.hitbox = (self.x, self.y, 88, 116)
         # Update the position
         self.spells.position = self.spells.x, self.spells.y = self.x, self.y
         # Update the orientation
-        self.spells.orientation = self.load[3]
-        # Display the spell if one is cast (very unlikely)
+        self.spells.orientation = self.orientation
+        # Display the spell if one is cast
         self.spells.display()
         # Update lifebar position and display it
         self.lifebar.position = self.lifebar.x, self.lifebar.y = self.position
         self.lifebar.path_character = self.load
         self.lifebar.run_life()
         # Load the animation if the character is hit
-        if self.load[1] == self.load[0]+'_Hit.png':
-            self.load[1] = self.load[0]+self.load[2]
+        if self.load == self.loads["Hit"][self.orientation]:
+            self.load = self.loads["Main"][self.orientation]
         # Respawn the NPC if he is dead and if the timer is up
         if not(self.alive) and self.timer < 150:
             self.timer+=1
@@ -110,13 +127,10 @@ class Character():
             self.respawn()
             self.timer = 0
         self.timer_NPC += 1
-        # Stop the character when he moved the distance generated
-        if self.timer_NPC > self.distance:
+        if self.timer_NPC == self.distance:
             self.way = None
-            self.waitime = random.randint(200,400)
-            self.distance = 999999999
-        # Wait before moving again
-        if self.timer_NPC > self.distance+self.waitime:
+            self.waitime = random.randint(500,1000)
+        if self.timer_NPC == self.distance+self.waitime:
             self.timer_NPC = 0
 
     """
@@ -133,12 +147,10 @@ class Character():
         self.motion_keys(way)
         # Display the character
         self.display()
-        # Update the hitbox position
-        self.hitbox = (self.x, self.y, 88, 116)
         # Update the position
         self.spells.position = self.spells.x, self.spells.y = self.x, self.y
         # Update the orientation
-        self.spells.orientation = self.load[3]
+        self.spells.orientation = self.orientation
         # Display the spell if one is cast
         self.spells.display()
         # Update lifebar position and display it
@@ -146,8 +158,8 @@ class Character():
         self.lifebar.path_character = self.load
         self.lifebar.run_life()
         # Load the animation if the character is hit
-        if self.load[1] == self.load[0]+'_Hit.png':
-            self.load[1] = self.load[0]+self.load[2]
+        if self.load == self.loads["Hit"][self.orientation]:
+            self.load = self.loads["Main"][self.orientation]
         # Respawn the NPC if he is dead and if the timer is up
         if not(self.alive) and self.timer < 150:
             self.timer+=1
@@ -164,11 +176,9 @@ class Character():
     Function that loads character's image
     """
     def display(self):
-        image = pygame.image.load(self.load[1])
-        image.set_colorkey(self.colorkey)
-        image.convert_alpha()
-        self.screen.blit(image, (self.position))
-
+        self.screen.blit(self.load, (self.position))
+        # Update the hitbox position and size
+        self.hitbox = (self.x, self.y, self.load.get_size()[0], self.load.get_size()[1])
     """
     Function that moves the character toward the way generated with keyboard event
     For each way, the fonction does the same things, according the way.
@@ -183,7 +193,7 @@ class Character():
                 # Check if the character won't get out of the screen if it moves left
                 if self.x-self.dx > 0:
                     # List of pixels : the top-left one, the one third left one, the middle-left one, the two third left one, and the bottom-left one (all shifted by self.dx on the left)
-                    pixels = [(self.x-self.dx,self.y),(self.x-self.dx,self.y+29), (self.x-self.dx,self.y+58), (self.x-self.dx,self.y+87), (self.x-self.dx,self.y+116)]
+                    pixels = [(self.x-self.dx,self.y),(self.x-self.dx,self.y+int(self.image_size[1]/4)), (self.x-self.dx,self.y+int(self.image_size[1]/2)), (self.x-self.dx,self.y+int(3*(self.image_size[1]/4))), (self.x-self.dx,self.y+int(self.image_size[1]))]
                     wall = False
                     # If one of these pixels has the color of a wall, it means the character will hit a wall
                     for pixel in pixels:
@@ -195,15 +205,14 @@ class Character():
                 # If the character is casting a spell, it cannot turn over.
                 # Otherwise, it oriented itself toward the way
                 if not(self.spells.lock):
-                    self.load[3] = 'Left'
-                    self.load[2] = '_Left.png'
-                    self.load[1] = self.load[0]+self.load[2]
+                    self.orientation = 'Left'
+                    self.load = self.loads["Main"]['Left']
                 # Set way to None to make the character moves only one time by event
                 way = None
             elif way == 'right':
                 # Check if the character won't get out of the screen if it moves right, and ...
-                if self.x+self.dx < self.screen.get_size()[0]-88:
-                    pixels = [(self.x+self.dx+88,self.y), (self.x+self.dx+88,self.y+29),(self.x+self.dx+88,self.y+58), (self.x+self.dx+88,self.y+87), (self.x+self.dx+88,self.y+116)]
+                if self.x+self.dx < self.screen.get_size()[0]-self.image_size[0]:
+                    pixels = [(self.x+self.dx+self.image_size[0],self.y),(self.x+self.dx+self.image_size[0],self.y+int(self.image_size[1]/4)), (self.x+self.dx+self.image_size[0],self.y+int(self.image_size[1]/2)), (self.x+self.dx+self.image_size[0],self.y+int(3*(self.image_size[1]/4))), (self.x+self.dx+self.image_size[0],self.y+int(self.image_size[1]))]
                     wall = False
                     for pixel in pixels:
                         if self.screen.get_at(pixel) == self.color_wall:
@@ -211,14 +220,13 @@ class Character():
                     if not(wall):
                         self.x += self.dx
                 if not(self.spells.lock):
-                    self.load[3] = 'Right'
-                    self.load[2] = '_Right.png'
-                    self.load[1] = self.load[0]+self.load[2]
+                    self.orientation = 'Right'
+                    self.load = self.loads["Main"]['Right']
                 way = None
                 # Check if the character won't get out of the screen if it moves up, and ...
             elif way == 'up':
                 if self.y-self.dy > 0:
-                    pixels = [(self.x,self.y-self.dy), (self.x+44,self.y-self.dy), (self.x+88,self.y-self.dy)]
+                    pixels = [(self.x,self.y-self.dy), (self.x+int(self.image_size[0]/2),self.y-self.dy), (self.x+self.image_size[0],self.y-self.dy)]
                     wall = False
                     for pixel in pixels:
                         if self.screen.get_at(pixel) == self.color_wall:
@@ -228,8 +236,8 @@ class Character():
                 way = None
                 # Check if the character won't get out of the screen if it moves down, and ...
             elif way == 'down':
-                if self.y+self.dy < self.screen.get_size()[1]-116:
-                    pixels = [(self.x,self.y+self.dy+116), (self.x+44,self.y+self.dy+116), (self.x+88,self.y+self.dy+116)]
+                if self.y+self.dy < self.screen.get_size()[1]-self.image_size[1]:
+                    pixels = [(self.x,self.y+self.dy+self.image_size[1]), (self.x+int(self.image_size[0]/2),self.y+self.dy+self.image_size[1]), (self.x+self.image_size[0],self.y+self.dy+self.image_size[1])]
                     wall = False
                     for pixel in pixels:
                         if self.screen.get_at(pixel) == self.color_wall:
@@ -237,7 +245,7 @@ class Character():
                     if not(wall):
                         self.y += self.dy
                 way = None
-
+            self.position = self.x, self.y
     """
     Function that changes the Maze's levels in function of the blocks
     on which the character walks.
@@ -247,7 +255,7 @@ class Character():
     """
     def blocks(self, maze):
         # If the character walks on a next level block (red one)
-        if maze.background.get_at((self.x+44,self.y+87)) == (255,50,50):
+        if maze.background.get_at((self.x+int(self.image_size[1]/2),self.y+int(self.image_size[1]/2))) == (255,50,50):
             # Check if the current level is not the last one and, if so, blits the next one
             if maze.start[1]+1 < maze.max_level:
                 maze.start[1] +=1
@@ -258,14 +266,14 @@ class Character():
                 maze.start[0] = maze.levels[0]
             maze.start_position = maze.x, maze.y = self.x, self.y = maze.addlevel(maze.start[0])[5]
         # If the character walks on a random block (blue one)
-        elif maze.background.get_at((self.x+44,self.y+87)) == (0,0,200):
+        elif maze.background.get_at((self.x+int(self.image_size[1]/2),self.y+int(self.image_size[1]/2))) == (0,0,200):
             # Blits a random level
             maze.start[1] = random.randint(0,maze.max_level-1)
             maze.start[0] = maze.levels[maze.start[1]]
             maze.start_position = maze.x, maze.y = self.x, self.y = maze.addlevel(maze.start[0])[5]
             self.screen.blit(self.background, (0,0))
         # If the character walks on a end block (grey one)
-        elif maze.background.get_at((self.x+44,self.y+87)) == (100,100,100):
+        elif maze.background.get_at((self.x+int(self.image_size[1]/2),self.y+int(self.image_size[1]/2))) == (100,100,100):
             # Display "Congrats Screen"
             maze.background.fill((0,0,0))
             text = "GG le sang, t'es sorti."
@@ -276,7 +284,7 @@ class Character():
             # Return False to close the game window
             return False
         # If the character walks on a previous level block (magenta one)
-        elif maze.background.get_at((self.x+44,self.y+87)) == (255,50,255):
+        elif maze.background.get_at((self.x+int(self.image_size[1]/2),self.y+int(self.image_size[1]/2))) == (255,50,255):
             # Check if the current level is not the first one and, if so, blits the next one
             if maze.start[1]-1 >= 0:
                 maze.start[1] -=1
@@ -301,7 +309,7 @@ class Character():
         if self.alive:
             if self.way == 'left':
                 if self.x-1 > 0:
-                    pixels = [(self.x-1,self.y),(self.x-1,self.y+29), (self.x-1,self.y+58), (self.x-1,self.y+87), (self.x-1,self.y+116)]
+                    pixels = [(self.x-1,self.y),(self.x-1,self.y+int(self.image_size[1]/4)), (self.x-1,self.y+int(self.image_size[1]/2)), (self.x-1,self.y+int(3*(self.image_size[1]/4))), (self.x-1,self.y+int(self.image_size[1]))]
                     wall = False
                     for pixel in pixels:
                         if self.screen.get_at(pixel) == self.color_wall:
@@ -309,12 +317,11 @@ class Character():
                     if not(wall):
                         self.x -= 1
                 if not(self.spells.lock):
-                    self.load[3] = 'Left'
-                    self.load[2] = '_Left.png'
-                    self.load[1] = self.load[0]+self.load[2]
+                    self.orientation = 'Left'
+                    self.load = self.loads["Main"]['Left']
             elif self.way == 'right':
-                if self.x+1 < self.screen.get_size()[0]-88:
-                    pixels = [(self.x+1+88,self.y), (self.x+1+88,self.y+29),(self.x+1+88,self.y+58), (self.x+1+88,self.y+87), (self.x+1+88,self.y+116)]
+                if self.x+1 < self.screen.get_size()[0]-self.image_size[0]:
+                    pixels = [(self.x-1+self.image_size[0],self.y),(self.x-1+self.image_size[0],self.y+int(self.image_size[1]/4)), (self.x-1+self.image_size[0],self.y+int(self.image_size[1]/2)), (self.x-1+self.image_size[0],self.y+int(3*(self.image_size[1]/4))), (self.x-1+self.image_size[0],self.y+int(self.image_size[1]))]
                     wall = False
                     for pixel in pixels:
                         if self.screen.get_at(pixel) == self.color_wall:
@@ -322,12 +329,11 @@ class Character():
                     if not(wall):
                         self.x += 1
                 if not(self.spells.lock):
-                    self.load[3] = 'Right'
-                    self.load[2] = '_Right.png'
-                    self.load[1] = self.load[0]+self.load[2]
+                    self.orientation = 'Right'
+                    self.load = self.loads["Main"]['Right']
             elif self.way == 'up':
                 if self.y-1 > 0:
-                    pixels = [(self.x,self.y-1), (self.x+44,self.y-1), (self.x+88,self.y-1)]
+                    pixels = [(self.x,self.y-1), (self.x+int(self.image_size[0]/2),self.y-1), (self.x+self.image_size[0],self.y-1)]
                     wall = False
                     for pixel in pixels:
                         if self.screen.get_at(pixel) == self.color_wall:
@@ -335,29 +341,25 @@ class Character():
                     if not(wall):
                         self.y -= 1
             elif self.way == 'down':
-                if self.y+1 < self.screen.get_size()[1]-116:
-                    pixels = [(self.x,self.y+1+116), (self.x+44,self.y+1+116), (self.x+88,self.y+1+116)]
+                if self.y+1 < self.screen.get_size()[1]-self.image_size[1]:
+                    pixels = [(self.x,self.y+1+self.image_size[1]), (self.x+int(self.image_size[0]/2),self.y+1+self.image_size[1]), (self.x+self.image_size[0],self.y+1+self.image_size[1])]
                     wall = False
                     for pixel in pixels:
                         if self.screen.get_at(pixel) == self.color_wall:
                             wall = True
                     if not(wall):
                         self.y += 1
-
+            self.position = self.x, self.y
     """
     Function that his called when the lifepoint goes to 0. Display
     the death image of the character.
     """
     def death(self):
         # Blit death image of the character depending on its orientation
-        if self.load[2] == '_Right.png':
-            self.position = self.x, self.y = self.x-30, self.y
-            self.load[2] = '_Right_Dead.png'
-            self.load[1] = self.load[0]+self.load[2]
-        elif self.load[2] == '_Left.png':
-            self.position = self.x, self.y = self.x+20, self.y
-            self.load[2] = '_Left_Dead.png'
-            self.load[1] = self.load[0]+self.load[2]
+        if self.orientation == 'Right':
+            self.load = self.loads["Dead"]['Right']
+        elif self.orientation == 'Left':
+            self.load = self.loads["Dead"]['Right']
         self.alive = False
 
     """
@@ -366,18 +368,12 @@ class Character():
     """
     def respawn(self):
         self.alive = True
-        if self.load[2] == '_Left_Dead.png':
-            self.load[3] = 'Left'
-            self.load[2] == '_Left.png'
-            self.load[1] = self.load[0]+self.load[2]
+        if self.orientation == 'Left':
+            self.load = self.loads["Main"]['Left']
             self.lifebar.percentage = 100
-            self.motion_keys('left')
-        elif self.load[2] == '_Right_Dead.png':
-            self.load[3] = 'Right'
-            self.load[2] == '_Right.png'
-            self.load[1] = self.load[0]+self.load[2]
+        elif self.orientation == 'Right':
+            self.load = self.loads["Main"]['Right']
             self.lifebar.percentage = 100
-            self.motion_keys('right')
 
     """
     Function that display the 'hit' animation of the character when he is
@@ -385,7 +381,10 @@ class Character():
     """
     def get_hit(self):
         if not(self.spells.protected) and self.alive:
-            self.load[1] = self.load[0]+'_Hit.png'
+            if self.orientation == 'Left':
+                self.load = self.loads["Hit"]['Left']
+            elif self.orientation == 'Right':
+                self.load = self.loads["Hit"]['Right']
             if self.lifebar.percentage > 10:
                 self.lifebar.percentage -= 10
             elif self.lifebar.percentage <= 10:
@@ -425,13 +424,37 @@ class Lifebar(Character):
 
     :param dy: dy given by the character
     :type dy: int
+
+    :param image_size: size of the image of the character
+    :type image_size: tuple
     """
-    def __init__(self, screen, position, color_wall, dx, dy):
+    def __init__(self, screen, position, color_wall, dx, dy, image_size, zoom):
         self.screen = screen
         self.position = self.x, self.y = position
+        self.colorkey = (0,0,0)
+        self.image_size = image_size
         self.color_wall = color_wall
-        self.path = [os.path.join("Wizarding_Game\\Image\\120x120\\Lifebar\\100.png"), os.path.join("Wizarding_Game\\Image\\120x120\\Lifebar\\")]
-        self.image = pygame.image.load(self.path[0])
+        self.zoom = zoom
+        self.shift = int(7*self.zoom), int(20*self.zoom)
+        self.loads =\
+         {"100": pygame.transform.rotozoom(pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Lifebar","100.png")).convert(), 0, self.zoom),
+          "90": pygame.transform.rotozoom(pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Lifebar","90.png")).convert(), 0, self.zoom),
+          "80": pygame.transform.rotozoom(pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Lifebar","80.png")).convert(), 0, self.zoom),
+          "70": pygame.transform.rotozoom(pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Lifebar","70.png")).convert(), 0, self.zoom),
+          "60": pygame.transform.rotozoom(pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Lifebar","60.png")).convert(), 0, self.zoom),
+          "50": pygame.transform.rotozoom(pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Lifebar","50.png")).convert(), 0, self.zoom),
+          "40": pygame.transform.rotozoom(pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Lifebar","40.png")).convert(), 0, self.zoom),
+          "30": pygame.transform.rotozoom(pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Lifebar","30.png")).convert(), 0, self.zoom),
+          "20": pygame.transform.rotozoom(pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Lifebar","20.png")).convert(), 0, self.zoom),
+          "10": pygame.transform.rotozoom(pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Lifebar","10.png")).convert(), 0, self.zoom),
+          "0": pygame.transform.rotozoom(pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Lifebar","0.png")).convert(), 0, self.zoom),
+          "alpha": pygame.transform.rotozoom(pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Lifebar","alpha.png")).convert(), 0, self.zoom)
+         }
+        # Sets the background transparent
+        for lifepoint in self.loads:
+                self.loads[lifepoint].set_colorkey(self.colorkey)
+        self.load = self.loads["100"]
+        self.life_size = self.load.get_size()
         self.percentage = 100
         self.position_life = self.x_life, self.y_life = 0,0
         self.dx, self.dy = dx, dy
@@ -444,31 +467,27 @@ class Lifebar(Character):
     """
     def set_position_life(self):
         # Check if the lifebar will still be inside the screen surface
-        if (0 > self.x-7 or self.x+94 > self.screen.get_size()[0]) or (0 > self.y-20 or self.y-10 > self.screen.get_size()[1]):
-            self.path[0] = self.path[1]+"alpha.png"
+        if (0 > self.x-self.shift[0] or self.x+self.shift[0]+self.image_size[0] > self.screen.get_size()[0]) or (0 > self.y-self.shift[1]):
+            self.load = self.loads["alpha"]
             self.position_life = self.x_life, self.y_life = 0, 0
         # Check if the lifebar will not hit a wall from the top
-        elif self.screen.get_at((self.x-7, self.y-20)) == self.color_wall or self.screen.get_at((self.x+94, self.y-20)) == self.color_wall:
-            self.path[0] = self.path[1]+"alpha.png"
+        elif self.screen.get_at((self.x-self.shift[0], self.y-self.shift[1])) == self.color_wall or self.screen.get_at((self.x+self.shift[0]+self.image_size[0], self.y-self.shift[1])) == self.color_wall:
+            self.load = self.loads["alpha"]
             self.position_life = self.x_life, self.y_life = 0, 0
         # Check if the lifebar will not hit a wall from the bottom
-        elif self.screen.get_at((self.x-7, self.y-10)) == self.color_wall or self.screen.get_at((self.x+94, self.y-10)) == self.color_wall:
-            self.path[0] = self.path[1]+"alpha.png"
+        elif self.screen.get_at((self.x-self.shift[0], self.y-self.life_size[1])) == self.color_wall or self.screen.get_at((self.x+self.shift[0]+self.image_size[0], self.y-self.life_size[1])) == self.color_wall:
+            self.load = self.loads["alpha"]
             self.position_life = self.x_life, self.y_life = 0, 0
         # If everything is fine, blits the lifebar 10 pixel over the character (it is a 102 x 10 image)
         else:
-            self.path[0] = self.path[1]+str(self.percentage)+".png"
-            self.position_life = self.x_life, self.y_life = self.x-7, self.y-20
-
+            self.load = self.loads[str(self.percentage)]
+            self.position_life = self.x_life, self.y_life = self.x-self.shift[0], self.y-self.shift[1]
     """
     Function that displays the image loaded in the previous function at
     the position of the lifebar
     """
     def display(self):
-        self.image = pygame.image.load(self.path[0])
-        self.image.set_colorkey((0,0,0))
-        self.image.convert_alpha()
-        self.screen.blit(self.image, self.position_life)
+        self.screen.blit(self.load, (self.position_life))
 
     """
     Function that runs the two previous functions
@@ -533,7 +552,7 @@ class Spells(Character):
     :param y: position[1] of the character
     :type y: int
     """
-    def __init__(self, screen, background_color, side, x, y):
+    def __init__(self, screen, background_color, side, x, y, zoom, image_size):
         self.screen = screen
         self.background = pygame.Surface((self.screen.get_size())).convert()
         self.background_color = background_color
@@ -562,7 +581,30 @@ class Spells(Character):
         self.eraser.fill(self.background_color)
         self.protected = False
         self.hit_someone = False
+        self.zoom = zoom
+        self.image_size = image_size
+        self.shift =\
+         {"1":{'Left':{'Spell': ((-1)*int(72*self.zoom), int(42*self.zoom)),
+                       'Attack': (0, int(15*self.zoom))
+                      },
+               'Right':{'Spell': (int(72*self.zoom), int(42*self.zoom)),
+                        'Attack': (0, int(15*self.zoom))
+                       },
+               'Length_Attack': (int(21*self.zoom), int(7*self.zoom))
+              },
+          "2":{'Left':((-1)*int(72*self.zoom), int(6*self.zoom)),
+               'Right':(int(82*self.zoom), int(6*self.zoom))
 
+              },
+          "3":{'Left':{'Spell': (int(-72*self.zoom), int(42*self.zoom)),
+                        'Attack': ((-1)*int(30*self.zoom), int(6*self.zoom))
+                       },
+                'Right':{'Spell': (int(72*self.zoom), int(42*self.zoom)),
+                         'Attack': (int(30*self.zoom), int(6*self.zoom))
+                        },
+                'Length_Attack': (int(23*self.zoom), int(7*self.zoom))
+               }
+         }
         # Initialize the path
         self.path()
 
@@ -679,28 +721,30 @@ class Spells(Character):
             # If it is a damage spell
             if self.number == 1 or self.number == 3:
                 # It initializes the position of the spell and the attack
-                self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+42
+                self.position_spell = self.x_spell, self.y_spell = self.x+self.shift['1']['Left']['Spell'][0], self.y+self.shift['1']['Left']['Spell'][1]
                 # self.x_spell -21(length of the attack) + 8(empty area of the Seventh image), self.y_spell +15(wand's top position)
-                self.position_attack = self.x_spell-13, self.y_spell+15
+                self.position_attack = self.x_spell, self.y_spell+self.shift['1']['Left']['Attack'][1]
             # If it is a defensive spell
             elif self.number == 2:
                 # It only initializes the spell position
-                self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+6
+                self.position_spell = self.x_spell, self.y_spell = self.x+self.shift['2']['Left'][0], self.y+self.shift['2']['Left'][1]
             for image in self.path_spell['Left']:
                 try:
-                    animation.append(pygame.image.load(image))
+                    image_small = pygame.image.load(image).convert()
+                    animation.append(pygame.transform.rotozoom(image_small, 0, self.zoom))
                 except:
                     print("Error, can't find the file '"+image+"' \nPlease, make sure you wrote the right path.")
         elif self.orientation == 'Right':
             if self.number == 1 or self.number == 3:
-                self.position_spell = self.x_spell, self.y_spell = self.x+72, self.y+42
+                self.position_spell = self.x_spell, self.y_spell = self.x+self.shift['1']['Right']['Spell'][0], self.y+self.shift['1']['Right']['Spell'][1]
                 # self.x_spell +88(length of the character) - 8 or 10 (empty area of the Seventh image), self.y_spell +15(wand's top position)
-                self.position_attack = self.x_spell+78, self.y_spell+15
+                self.position_attack = self.x_spell, self.y_spell+self.shift['1']['Right']['Attack'][1]
             elif self.number == 2:
-                self.position_spell = self.x_spell, self.y_spell = self.x+82, self.y+6
+                self.position_spell = self.x_spell, self.y_spell = self.x+self.shift['2']['Right'][0], self.y+self.shift['2']['Right'][1]
             for image in self.path_spell['Right']:
                 try:
-                    animation.append(pygame.image.load(image))
+                    image_small = pygame.image.load(image).convert()
+                    animation.append(pygame.transform.rotozoom(image_small, 0, self.zoom))
                 except:
                     raise UserWarning("Error, can't find the file '"+image+"' \nPlease, make sure you wrote the right path.")
         # Set the images background transparent
@@ -715,7 +759,8 @@ class Spells(Character):
             # There are three image in both
             for image in self.path_spell['Both']:
                 try:
-                    animation_both.append(pygame.image.load(image))
+                    image_small = pygame.image.load(image)
+                    animation_both.append(pygame.transform.rotozoom(image_small.convert(), 0, self.zoom))
                 except:
                     raise UserWarning("Error, can't find the file '"+image+"' \nPlease, make sure you wrote the right path.")
             for image in range (len(animation_both)):
@@ -725,7 +770,8 @@ class Spells(Character):
         elif self.number == 2:
             # We only need the alpha image
             try:
-                animation_both.append(pygame.image.load(self.path_spell['Both'][-1]))
+                image_small = pygame.image.load(self.path_spell['Both'][-1])
+                animation_both.append(pygame.transform.rotozoom(image_small.convert(), 0, self.zoom))
             except:
                 raise UserWarning("Error, can't find the file '"+self.path_spell['Both'][-1]+"' \nPlease, make sure you wrote the right path.")
             animation_both[0].set_colorkey(self.color_key)
@@ -752,21 +798,15 @@ class Spells(Character):
             # If the attack animation is not being cast already
             if self.animation and self.index_animation <= len(self.animation)-6:
                 # It update the position of the upcomming attack depending on the orientation
-                if self.orientation == 'Left':
-                    self.position_attack = self.x_spell-13, self.y_spell+15
-                elif self.orientation == 'Right':
-                    self.position_attack = self.x_spell+78, self.y_spell+15 # self.x_spell +88(length of the character) - 8 or 10 (empty area of the Seventh image), self.y_spell +15(wand's top position)
+                self.position_attack = self.x_spell, self.y_spell+self.shift["1"][str(self.orientation)]['Attack'][1]
             # Beginning of the animation on the wand
             if self.running and self.index_animation < len(self.animation):
-                    # Update of the spell position
-                    if self.orientation == 'Left':
-                        self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+42
-                    elif self.orientation == 'Right':
-                        self.position_spell = self.x_spell, self.y_spell = self.x+72, self.y+42
-                    # It locks the possible rotation of the character
-                    self.lock = True
-                    mypicture = self.animation[self.index_animation]
-                    self.screen.blit(mypicture, self.position_spell)
+                # Update of the spell position
+                self.position_spell = self.x_spell, self.y_spell = self.x+self.shift["1"][str(self.orientation)]['Spell'][0], self.y+self.shift["1"][str(self.orientation)]['Spell'][1]
+                # It locks the possible rotation of the character
+                self.lock = True
+                mypicture = self.animation[self.index_animation]
+                self.screen.blit(mypicture, self.position_spell)
             # Beginning of the traveling animation (attack)
             if self.running and self.index_animation > len(self.animation)-6:
                 # First frame (the first and the last frame are different than the other)
@@ -776,30 +816,27 @@ class Spells(Character):
                         self.animation_progress += 1
                         # 42 = 2 times the length of the attack image (it blits two frame at the same time for remanence)
                         # Check if the spell we be displayed inside the screen
-                        if self.position_attack[0]-42 > 0:
+                        if self.position_attack[0]-2*self.shift["1"]['Length_Attack'][0] > 0:
                             # Displays the "Beginning_End" image
                             self.screen.blit(self.animation_both[0], self.position_attack)
                             # Updating position_attack
-                            self.position_attack = (self.position_attack[0]-21, self.position_attack[1])
+                            self.position_attack = (self.position_attack[0]-self.shift["1"]['Length_Attack'][0], self.position_attack[1])
                     # Other frame
                     elif self.animation_progress > 0:
                          # Displays the "Traveling" image
-                        if self.position_attack[0]-42 >= 0:
+                        if self.position_attack[0]-2*self.shift["1"]['Length_Attack'][0] >= 0:
                             self.screen.blit(self.animation_both[1], self.position_attack)
-                            self.position_attack = (self.position_attack[0]-21, self.position_attack[1])
+                            self.position_attack = (self.position_attack[0]-self.shift["1"]['Length_Attack'][0], self.position_attack[1])
                         # If it goes through this, it means it is the before-last frame of the animation
-                        elif self.position_attack[0]-21 > 0:
+                        elif self.position_attack[0]-self.shift["1"]['Length_Attack'][0] > 0:
                             # Then it blits the "Beginning_End" image
                             self.screen.blit(self.animation_both[0], self.position_attack)
                             # And blits self.surface to make the two last frame of the animation disappear from the screen
-                            self.screen.blit(self.cleanup, (self.position_attack[0]+42, self.position_attack[1]))
-                            self.screen.blit(self.cleanup, (self.position_attack[0]+21, self.position_attack[1]))
-                            self.position_attack = (self.position_attack[0]-21, self.position_attack[1])
+                            self.position_attack = (self.position_attack[0]-self.shift["1"]['Length_Attack'][0], self.position_attack[1])
                         # Last frame
                         else:
                             # Blits the "Alpha" image
                             self.screen.blit(self.animation_both[2], (0,0)) # Displays the "Alpha" image. End of animation
-                            self.screen.blit(self.cleanup, (self.position_attack[0]+21, self.position_attack[1]))
                             # Indicates that the animation is done
                             self.animation_progress = 'done'
                 # Same as left way except that - become + in coordinates
@@ -807,24 +844,20 @@ class Spells(Character):
                     # First frame
                     if self.animation_progress == 0:
                         self.animation_progress += 1
-                        if self.position_attack[0]+42 < self.screen.get_size()[0]:
+                        if self.position_attack[0]+2*self.shift["1"]['Length_Attack'][0] < self.screen.get_size()[0]:
                             self.screen.blit(self.animation_both[0], self.position_attack)
-                            self.position_attack = (self.position_attack[0]+21, self.position_attack[1])
+                            self.position_attack = (self.position_attack[0]+self.shift["1"]['Length_Attack'][0], self.position_attack[1])
                     # Other frame
                     elif self.animation_progress > 0 :
-                        if self.position_attack[0]+42 < self.screen.get_size()[0]:
+                        if self.position_attack[0]+2*self.shift["1"]['Length_Attack'][0] < self.screen.get_size()[0]:
                             self.screen.blit(self.animation_both[1], self.position_attack)
-                            self.screen.blit(self.cleanup, (self.position_attack[0]-42, self.position_attack[1]))
-                            self.position_attack = (self.position_attack[0]+21, self.position_attack[1])
-                        elif self.position_attack[0]+21 < self.screen.get_size()[0]:
+                            self.position_attack = (self.position_attack[0]+self.shift["1"]['Length_Attack'][0], self.position_attack[1])
+                        elif self.position_attack[0]+self.shift["1"]['Length_Attack'][0] < self.screen.get_size()[0]:
                             self.screen.blit(self.animation_both[0], self.position_attack)
-                            self.screen.blit(self.cleanup, (self.position_attack[0]-42, self.position_attack[1]))
-                            self.screen.blit(self.cleanup, (self.position_attack[0]-21, self.position_attack[1]))
-                            self.position_attack = (self.position_attack[0]+21, self.position_attack[1])
+                            self.position_attack = (self.position_attack[0]+self.shift["1"]['Length_Attack'][0], self.position_attack[1])
                         # Last frame
-                        elif self.position_attack[0]+21 >= self.screen.get_size()[0]:
+                        elif self.position_attack[0]+self.shift["1"]['Length_Attack'][0] >= self.screen.get_size()[0]:
                             self.screen.blit(self.animation_both[2], (0,0))
-                            self.screen.blit(self.cleanup, (self.position_attack[0]-21, self.position_attack[1]))
                             self.animation_progress = 'done'
             """
             If the time past since the last frame of the animation is superior
@@ -850,10 +883,7 @@ class Spells(Character):
         elif self.number == 2 and self.lock_spells[0] == False and self.lock_spells[2] == False and self.lock_spells[3] == False and self.lock_spells[4] == False and self.lock_spells[5] == False:
             if self.running and self.index_animation < len(self.animation):
                 # Update the position of the spell animation
-                if self.orientation == 'Left':
-                    self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+6
-                elif self.orientation == 'Right':
-                    self.position_spell = self.x_spell, self.y_spell = self.x+82, self.y+6
+                self.position_spell = self.x_spell, self.y_spell = self.x+self.shift['2'][str(self.orientation)][0], self.y+self.shift['2'][str(self.orientation)][1]
                 # If the animation is a little advanced
                 if self.index_animation == 3:
                     # Puts the protected state to True to annul the damage if the character is hit by a spell
@@ -895,39 +925,33 @@ class Spells(Character):
         elif self.number == 3 and self.lock_spells[0] == False and self.lock_spells[1] == False and self.lock_spells[3] == False and self.lock_spells[4] == False and self.lock_spells[5] == False:
             # Update the positions
             if self.animation and self.index_animation < len(self.animation)-2:
-                if self.orientation == 'Left':
-                    self.position_attack = self.x_spell-30, self.y_spell+6
-                elif self.orientation == 'Right':
-                    self.position_attack = self.x_spell+30, self.y_spell+6
+                self.position_attack = self.x_spell+self.shift['3'][str(self.orientation)]['Attack'][0], self.y_spell+self.shift['3'][str(self.orientation)]['Attack'][1]
             # Beginning of the wand's animation
             if self.running and self.index_animation < len(self.animation):
-                    if self.orientation == 'Left':
-                        self.position_spell = self.x_spell, self.y_spell = self.x-72, self.y+42
-                    elif self.orientation == 'Right':
-                        self.position_spell = self.x_spell, self.y_spell = self.x+72, self.y+42
-                    self.lock = True
-                    mypicture = self.animation[self.index_animation]
-                    self.screen.blit(mypicture, self.position_spell)
+                self.position_spell = self.x_spell, self.y_spell = self.x+self.shift['3'][str(self.orientation)]['Spell'][0], self.y+self.shift['3'][str(self.orientation)]['Spell'][1]
+                self.lock = True
+                mypicture = self.animation[self.index_animation]
+                self.screen.blit(mypicture, self.position_spell)
             # Beginning of the traveling part
             if self.running and self.index_animation >= len(self.animation)-2:
                 # 23 is the length of the attack image
                 if self.orientation == 'Left':
-                    if self.position_attack[0]-23 >= 0:
+                    if self.position_attack[0]-self.shift['3']['Length_Attack'][0] >= 0:
                         self.screen.blit(self.animation_both[1], self.position_attack) # Display Traveling
-                        self.screen.blit(self.cleanup, (self.position_attack[0]+23, self.position_attack[1]))
-                        self.position_attack = (self.position_attack[0]-23, self.position_attack[1])
-                    elif self.position_attack[0]-23 < 0:
+                        self.screen.blit(self.cleanup, (self.position_attack[0]+self.shift['3']['Length_Attack'][0], self.position_attack[1]))
+                        self.position_attack = (self.position_attack[0]-self.shift['3']['Length_Attack'][0], self.position_attack[1])
+                    elif self.position_attack[0]-self.shift['3']['Length_Attack'][0] < 0:
                         self.screen.blit(self.animation_both[2], (0,0)) # Displays the "Alpha" image. End of animation
-                        self.screen.blit(self.cleanup, (self.position_attack[0]+23, self.position_attack[1]))
+                        self.screen.blit(self.cleanup, (self.position_attack[0]+self.shift['3']['Length_Attack'][0], self.position_attack[1]))
                         self.animation_progress = 'done'
                 elif self.orientation == 'Right':
-                    if self.position_attack[0]+23 < self.screen.get_size()[0]:
+                    if self.position_attack[0]+self.shift['3']['Length_Attack'][0] < self.screen.get_size()[0]:
                         self.screen.blit(self.animation_both[1], self.position_attack) # Display Traveling
-                        self.screen.blit(self.cleanup, (self.position_attack[0]-23, self.position_attack[1]))
-                        self.position_attack = (self.position_attack[0]+23, self.position_attack[1])
-                    elif self.position_attack[0]+23 >= self.screen.get_size()[0]:
+                        self.screen.blit(self.cleanup, (self.position_attack[0]-self.shift['3']['Length_Attack'][0], self.position_attack[1]))
+                        self.position_attack = (self.position_attack[0]+self.shift['3']['Length_Attack'][0], self.position_attack[1])
+                    elif self.position_attack[0]+self.shift['3']['Length_Attack'][0] >= self.screen.get_size()[0]:
                         self.screen.blit(self.animation_both[2], (0,0)) # Displays the "Alpha" image. End of animation
-                        self.screen.blit(self.cleanup, (self.position_attack[0]-23, self.position_attack[1]))
+                        self.screen.blit(self.cleanup, (self.position_attack[0]-self.shift['3']['Length_Attack'][0], self.position_attack[1]))
                         self.animation_progress = 'done'
             # If the interval time between two frames is past
             if self.running and self.cycletime > self.interval:
