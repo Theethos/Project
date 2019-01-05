@@ -14,10 +14,11 @@ class App:
     def __init__(self):
         self._running = True
         self.screen = None
+        self.background = None
         # Adapt the pygame widow to the monitor
         # user32 = ctypes.windll.user32
         # user32.SetProcessDPIAware()
-        self.size = self.weight, self.height = 1280, 720
+        self.size = self.weight, self.height = None, None
         #self.size = self.weight, self.height = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
         self.background = None
         self.FPS = 60
@@ -34,21 +35,22 @@ class App:
         self.pause_menu = None
         self.pause = False
         self.pause_background = None
-        self.font =\
-        {'Title':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","harryp__.ttf"), int(self.height/5.4)),
-        'Menu':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), int(self.height/18)),
-        'Option':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), int(self.height/21.6))}
+        self.font = None
 
     # Initialisation of App object
     def on_init(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((self.size), (pygame.FULLSCREEN))
+        self.background = pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Tiles","1rst_Map.png"))
+        self.size = self.weight, self.height = self.background.get_size()
+        self.screen = pygame.display.set_mode((self.size), pygame.HWSURFACE)#, (pygame.FULLSCREEN))
         self.screen.set_colorkey((63,72,204))
-        self.background = pygame.Surface((self.size)).convert()
-        self.background.fill(self.background_color)
         self._running = True
         self.text[0] = pygame.font.SysFont('mono', 12, bold=True)
         self.pause_menu = Menu.Game_Pause_Menu(self.screen, self.background)
+        self.font =\
+        {'Title':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","harryp__.ttf"), int(self.height/5.4)),
+        'Menu':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), int(self.height/18)),
+        'Option':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), int(self.height/21.6))}
 
     # Event
     def on_event(self, event):
@@ -193,13 +195,13 @@ class App:
 
             # Character objects
             if self.menu.mode == 'singleplayer':
-                self.character[0] =  Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Albus_Dumbledore"), (63,72,204), (int(self.weight*0.260), int(self.height*0.278)), "light")
+                self.character[0] =  Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Albus_Dumbledore"), (63,72,204), Maze_.start_position, "light")
                 self.character[1] =  Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Harry_Potter"), (63,72,204), (int(self.weight*0.313), int(self.height*0.278)), "neutral")
                 self.character.append(Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Voldemort"), (63,72,204), (int(self.weight*0.260), int(self.height*0.556)), "darkness"))
             elif self.menu.mode == 'multiplayer':
-                self.character[0] =  Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Jules","Albus_Dumbledore"), (63,72,204), (int(self.weight*0.521), int(self.height*0.093)), "neutral")
-                self.character[1] =  Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Harry_Potter"), (63,72,204),  (int(self.weight*0.521), int(self.height*0.463)), "light")
-                self.character.append(Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Ronald_Weasley"), (63,72,204),  (int(self.weight*0.208), int(self.height*0.278)), "neutral"))
+                self.character[0] =  Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Jules","Albus_Dumbledore"), (63,72,204), Maze_.start_position, "neutral")
+                self.character[1] =  Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Harry_Potter"), (63,72,204),  Maze_.start_position, "light")
+                self.character.append(Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Ronald_Weasley"), (63,72,204),  (int(self.weight*0.208), int(self.height*0.056)), "neutral"))
                 self.character.append(Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Hermione_Granger"), (63,72,204),  (int(self.weight*0.260), int(self.height*0.556)), "darkness"))
 
 
@@ -220,7 +222,7 @@ class App:
                     pygame.display.set_caption("Wizarding Game"" : limit FPS to {}"
                                        " (now: {:.2f})".format(self.FPS,clock.get_fps()))
                     self.print_FPS_(int(clock.get_fps()))
-
+                    self.screen.blit(self.background, (0,0))
                     # Center of loop
                     # stop allows to close the pygame window when the maze is complete (only way I found to make it work)
                     if self.menu.mode == 'singleplayer':
@@ -250,7 +252,7 @@ class App:
                     self.pause = self.pause_menu.run_pause()
 
                 pygame.display.update()
-                Maze_.run_(stop)
+                #Maze_.run_(stop)
 
                 # Close the pygame window when the maze is complete
                 # Freeze the screen for 2 seconds to allow the reading of the ending screen
