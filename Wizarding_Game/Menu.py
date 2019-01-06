@@ -45,9 +45,9 @@ class Game_Start_Menu():
         self.counter = 0
         self.mode = None
         self.font =\
-        {'Title':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","harryp__.ttf"), int(self.height/5.4)),
-        'Menu':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), int(self.height/18)),
-        'Option':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), int(self.height/21.6))}
+        {'Title':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","harryp__.ttf"), min(int(self.height/5.4),int(self.weight/9.6))),
+        'Menu':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"),  min(int(self.height/18), int(self.weight/32))),
+        'Option':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), min(int(self.height/21.6), int(self.weight/38.4)))}
         self.color =\
          {'Title':(255,215,0),
          'Shadow':(0,0,0),
@@ -688,11 +688,10 @@ class Game_Pause_Menu():
         self.language = 'francais'
         self.counter = 0
         self.escape = False
-        print((self.height/5.4)/(self.weight/5.4), (self.height/18)/(self.weight/18), (self.height/21.6)/(self.weight/21.6))
         self.font =\
-        {'Title':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","harryp__.ttf"),int((self.height/5.4)/(self.weight/5.4))),
-        'Menu':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), int((self.height/18)/(self.weight/18))),
-        'Option':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), int((self.height/21.6)/(self.weight/21.6)))}
+        {'Title':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","harryp__.ttf"), min(int(self.height/5.4),int(self.weight/9.6))),
+        'Menu':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), min(int(self.height/18), int(self.weight/32))),
+        'Option':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), min(int(self.height/21.6), int(self.weight/38.4)))}
         self.color =\
          {'Title':(255,215,0),
          'Shadow':(0,0,0),

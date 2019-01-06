@@ -40,17 +40,13 @@ class App:
     # Initialisation of App object
     def on_init(self):
         pygame.init()
-        self.background = pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Tiles","1rst_Map.png"))
+        self.background = pygame.transform.rotozoom(pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Tiles","1rst_Map.png")),0, 1)
         self.size = self.weight, self.height = self.background.get_size()
-        self.screen = pygame.display.set_mode((self.size), pygame.HWSURFACE)#, (pygame.FULLSCREEN))
+        self.screen = pygame.display.set_mode((self.size),  (pygame.FULLSCREEN))
         self.screen.set_colorkey((63,72,204))
         self._running = True
         self.text[0] = pygame.font.SysFont('mono', 12, bold=True)
         self.pause_menu = Menu.Game_Pause_Menu(self.screen, self.background)
-        self.font =\
-        {'Title':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","harryp__.ttf"), int(self.height/5.4)),
-        'Menu':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), int(self.height/18)),
-        'Option':pygame.font.Font(os.path.join("Wizarding_Game","Image","start_menu","Police","PixieFont.ttf"), int(self.height/21.6))}
 
     # Event
     def on_event(self, event):
@@ -168,9 +164,6 @@ class App:
             self.text[0].size(self.text[1])
             surface = self.text[0].render(self.text[1], True, (0,255,0))
             self.screen.blit(surface, (0, 0))
-    # Render
-    def on_render(self):
-        pass
 
     # Closing
     def on_cleanup(self):
@@ -204,7 +197,6 @@ class App:
                 self.character.append(Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Ronald_Weasley"), (63,72,204),  (int(self.weight*0.208), int(self.height*0.056)), "neutral"))
                 self.character.append(Character.Character(self.screen, self.background, os.path.join("Wizarding_Game","Image","120x120","Characters","Hermione_Granger"), (63,72,204),  (int(self.weight*0.260), int(self.height*0.556)), "darkness"))
 
-
             # Main loop
             while (self._running) and not(self.menu.quit) and not(self.pause_menu.quit):
                 if not(self.pause):
@@ -223,17 +215,20 @@ class App:
                                        " (now: {:.2f})".format(self.FPS,clock.get_fps()))
                     self.print_FPS_(int(clock.get_fps()))
                     self.screen.blit(self.background, (0,0))
+
+                    self.screen.blit(pygame.transform.rotozoom(pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Sprites","Sprite_Harry_Potter_Animation1.png")), 0, 1), (250,250))
+
                     # Center of loop
                     # stop allows to close the pygame window when the maze is complete (only way I found to make it work)
                     if self.menu.mode == 'singleplayer':
-                        stop = self.character[2].draw_NPC()
-                        stop = self.character[1].draw_NPC()
-                        stop = self.character[0].draw_motion(self.key[1], Maze_)
+                        self.character[2].draw_NPC()
+                        self.character[1].draw_NPC()
+                        self.character[0].draw_motion(self.key[1], Maze_)
                     elif self.menu.mode == 'multiplayer':
-                        stop = self.character[3].draw_NPC()
-                        stop = self.character[2].draw_NPC()
-                        stop = self.character[1].draw_motion(self.key[2], Maze_)
-                        stop = self.character[0].draw_motion(self.key[1], Maze_)
+                        self.character[3].draw_NPC()
+                        self.character[2].draw_NPC()
+                        self.character[1].draw_motion(self.key[2], Maze_)
+                        self.character[0].draw_motion(self.key[1], Maze_)
 
                     # Managing damage with spells
                     for character in self.character:
@@ -254,11 +249,6 @@ class App:
                 pygame.display.update()
                 #Maze_.run_(stop)
 
-                # Close the pygame window when the maze is complete
-                # Freeze the screen for 2 seconds to allow the reading of the ending screen
-                if not(stop):
-                    time.sleep(2)
-                    break
             # Time played
             if playtime < 61:
                 print("You played : "+str(int(playtime))+" second(s)")
