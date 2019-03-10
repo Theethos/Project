@@ -7,11 +7,17 @@ using namespace std;
 
 int main()
 {
-    cout << "Debut" << endl;
+    cout << "\n=== Debut ===\n" << endl;
+
 	Character gordon("Gordon", MALE, DARK, SHORT);
+	Character ahbdekha("Ahbdekha", MALE, DARK, LONG);
+
 	gordon.introduce();
-	gordon.getLevel();
-	gordon.getLifePoints();
-    cout << "Fin" << endl;
+	ahbdekha.introduce();
+
+	gordon.hitWithWeapon(ahbdekha);
+	ahbdekha.getLifePoints();
+
+    cout << "\n=== Fin ===\n" << endl;
     return 0;
 }
