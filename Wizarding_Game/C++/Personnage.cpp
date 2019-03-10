@@ -1,17 +1,47 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ostream>
+#include <string>
 
-class Character():
-	def __init__(self, pseudo=None, race=None, origin=None, level=1, side=None, statute='Children'):
-		self.name = pseudo # /type string
-		self.race = race # [Human, Giant, Centaur, Goblin, Troll, Elf, Ghost] /class Race
-		self.origin = origin # [Muggle, Half-blood, Wizard] /type string
-		self.level = int(lvl) # 1 -> 50 /type int
-		self.side = side # [Darkness, Brightness] ? /type string
-		self.statute = statute # [Children, Teenager, Adult] /class Statute
-	def Creation(self):
-		pass
 
-class Race():
-	def __init__(self, class=None,):
-		self.spells = []
-		self.class = class # [Support, Tank, Dps] /type string
-		self.feature = []
+
+using namespace std;
+
+template <typename T>
+void echanger(T &a, T &b) {
+	T tmp = a;
+	a = b;
+	b = tmp;
+}
+
+template <typename T>
+void trier(vector <T> &tableau) {
+	int indice = 0;
+	int minimum;
+	int indice_minimum;
+	while (indice < tableau.size()){
+			minimum = tableau[indice];
+			indice_minimum = indice;
+			for (int i = indice; i < tableau.size(); i++){
+				if (tableau[i] < minimum){
+					minimum = tableau[i];
+					indice_minimum = i;
+				}
+			}
+			echanger(tableau[indice++], tableau[indice_minimum]);
+	}
+}
+int main()
+{
+	vector <char> x = {'a', 'z', 'h', 'r', 'y', 'e', 'j', 'e'};
+	for (int i = 0; i < x.size(); i++){
+		cout << x[i];
+	}
+	 cout << endl;
+	trier(x);
+
+	for (int i = 0; i < x.size(); i++){
+		cout << x[i];
+	}
+}

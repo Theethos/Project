@@ -40,9 +40,9 @@ class App:
     # Initialisation of App object
     def on_init(self):
         pygame.init()
-        self.background = pygame.transform.rotozoom(pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Tiles","1rst_Map.png")),0, 1)
+        self.background = pygame.transform.rotozoom(pygame.image.load(os.path.join("Wizarding_Game","Image","120x120","Maps","1rst_Map.png")),0, 1)
         self.size = self.weight, self.height = self.background.get_size()
-        self.screen = pygame.display.set_mode((self.size),  (pygame.FULLSCREEN))
+        self.screen = pygame.display.set_mode((self.size), pygame.DOUBLEBUF);
         self.screen.set_colorkey((63,72,204))
         self._running = True
         self.text[0] = pygame.font.SysFont('mono', 12, bold=True)
@@ -227,8 +227,8 @@ class App:
                     elif self.menu.mode == 'multiplayer':
                         self.character[3].draw_NPC()
                         self.character[2].draw_NPC()
-                        self.character[1].draw_motion(self.key[2], Maze_)
-                        self.character[0].draw_motion(self.key[1], Maze_)
+                        self.character[1].draw_motion(self.key[1], Maze_)
+                        self.character[0].draw_motion(self.key[2], Maze_)
 
                     # Managing damage with spells
                     for character in self.character:
