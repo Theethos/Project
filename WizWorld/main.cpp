@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "include/character.h"
-#include "include/constants_enumerations.h"
+#include "Include/character.h"
+#include "Include/constants_enumerations.h"
 
 using namespace std;
 
