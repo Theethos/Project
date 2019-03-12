@@ -18,7 +18,10 @@
     <ClInclude Include="..\Include\character.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\constants_enumerations.h">
+    <ClInclude Include="..\Include\inventory.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\item.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -27,6 +30,12 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="..\main.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\inventory.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\item.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

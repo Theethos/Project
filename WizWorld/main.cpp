@@ -7,17 +7,21 @@ using namespace std;
 
 int main()
 {
-    cout << "\n=== Debut ===\n" << endl;
+    cout << "\n=== Beginning ===\n" << endl;
 
-	Character gordon("Gordon", MALE, DARK, SHORT);
+
+	Character mickael;
 	Character ahbdekha("Ahbdekha", MALE, DARK, LONG);
 
-	gordon.introduce();
+	mickael.introduce();
 	ahbdekha.introduce();
 
-	gordon.hitWithWeapon(ahbdekha);
+	mickael.hitWithWeapon(ahbdekha);
 	ahbdekha.getLifePoints();
 
-    cout << "\n=== Fin ===\n" << endl;
+	char fin = 0;
+	cout << "\n=== Press any key + 'enter' to end the program" << endl;
+	cin >> fin;
+    cout << "\n=== End ===\n" << endl;
     return 0;
 }
