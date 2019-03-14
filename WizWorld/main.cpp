@@ -19,8 +19,8 @@ int main()
 	mickael.hitWithWeapon(ahbdekha);
 	ahbdekha.getLifePoints();
 
+	mickael.getInventory().showInventory();
     cout << "\n=== End ===\n" << endl;
-	cout << "\n=== Press 'enter' to end the program ===\n" << endl;
 	getchar();
     return 0;
 }
