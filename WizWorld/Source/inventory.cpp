@@ -1,9 +1,4 @@
-#include <iostream>
-#include <string>
-
-#include "../Include/inventory.h"
-#include "../Include/macros.h"
-
+#include "../Include/Inventory.h"
 
 /*
  * ==================================================
@@ -49,20 +44,11 @@ Inventory::Inventory(std::string primaryWeaponName, ItemCategories primaryWeapon
 /* Destructor */
 Inventory::~Inventory()
 {
-	if (this)
-	{
-		if (m_hand_1)
-			delete m_hand_1;
-		if (m_hand_2)
-			delete m_hand_2;
-		if (m_bag)
-			delete m_bag;
-		if (m_stuff)
-			delete m_stuff;
-	}
-	std::cout << "Detruit" << std::endl;
-} // If i "delete" anything, there are exceptions so i dont know if i should put anything
-
+	delete m_hand_1;
+	delete m_hand_2;
+	delete m_bag;
+	delete m_stuff;
+}
 /*=== Methods ===*/
 
 /* Returns FALSE if a slot is available in the bag and set @member[firstFreeIndex] if so. */

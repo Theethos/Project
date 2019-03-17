@@ -1,10 +1,10 @@
 /* Validate species : Human/Elf/Goblin --- Possible species : Centaur/Ghost/Giant/Trool or Troll/And all hybrid species */
 
-#ifndef CHARACTER_H
-#define CHARACTER_H
+#ifndef _CHARACTER_H_
+#define _CHARACTER_H_
 
-#include "inventory.h"
-#include "item.h"
+#include "Inventory.h"
+#include "Item.h"
 
  /*=== Enumerations ===*/
 
@@ -46,7 +46,7 @@ public:
 	Character();
     Character(std::string name, Sexe sexe, HairColor color, HairStyle style);
 	virtual ~Character();
-
+	//gne
     /*=== Methods ===*/
 
 	/* Displays informations about the character (@member[name], @member[level] and @member[lifePoints]) */
@@ -75,7 +75,7 @@ public:
 	/* Level */
 	int getLevel() const;
 	/* Inventory */
-	Inventory getInventory() const;
+	Inventory* getInventory();
 
 	/*=== Setters ===*/
 	
@@ -96,4 +96,4 @@ protected:
 	Inventory m_inventory;	
 };
 
-#endif // CHARACTER_H
+#endif // _CHARACTER_H_

@@ -13,33 +13,45 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Characters">
+      <UniqueIdentifier>{556ace7e-68bf-41d6-b670-2f77f77cee20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Items">
+      <UniqueIdentifier>{180a7b1d-d3ed-4123-b0f5-ee8577ecd3c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Include\character.h">
+    <ClInclude Include="..\Include\Weapon.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Macros_Includes.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\inventory.h">
+    <ClInclude Include="..\Include\Character.h">
+      <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Inventory.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\item.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\macros.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="..\Include\Item.h">
+      <Filter>Items</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Source\character.cpp">
+    <ClCompile Include="..\Source\Weapon.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Character.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Inventory.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\main.cpp">
+    <ClCompile Include="..\Main.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\inventory.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\item.cpp">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="..\Source\Item.cpp">
+      <Filter>Items</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

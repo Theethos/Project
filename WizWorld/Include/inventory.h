@@ -1,7 +1,9 @@
-#ifndef INVENTORY_H
-#define INVENTORY_H
+#ifndef _INVENTORY_H_
+#define _INVENTORY_H_
 
-#include "item.h"
+#include "Macros_Includes.h"
+#include "Item.h"
+#include "Weapon.h"
 
 /* 
  * ==================================================
@@ -68,4 +70,4 @@ private:
 	int m_firstFreeSlot;
 };
 
-#endif // !INVENTORY_H
+#endif // !_INVENTORY_H_

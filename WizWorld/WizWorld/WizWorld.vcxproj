@@ -19,16 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Include\character.h" />
-    <ClInclude Include="..\Include\inventory.h" />
-    <ClInclude Include="..\Include\item.h" />
-    <ClInclude Include="..\Include\macros.h" />
+    <ClInclude Include="..\Include\Character.h" />
+    <ClInclude Include="..\Include\Inventory.h" />
+    <ClInclude Include="..\Include\Item.h" />
+    <ClInclude Include="..\Include\Macros_Includes.h" />
+    <ClInclude Include="..\Include\Weapon.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\main.cpp" />
-    <ClCompile Include="..\Source\character.cpp" />
-    <ClCompile Include="..\Source\inventory.cpp" />
-    <ClCompile Include="..\Source\item.cpp" />
+    <ClCompile Include="..\Main.cpp" />
+    <ClCompile Include="..\Source\Character.cpp" />
+    <ClCompile Include="..\Source\Inventory.cpp" />
+    <ClCompile Include="..\Source\Item.cpp" />
+    <ClCompile Include="..\Source\Weapon.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

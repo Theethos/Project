@@ -1,8 +1,9 @@
-#include <iostream>
+#include "Include/Macros_Includes.h"
 
-#include "Include/character.h"
-#include "Include/inventory.h"
-#include "Include/item.h"
+#include "Include/Character.h"
+#include "Include/Inventory.h"
+#include "Include/Item.h"
+#include "Include/Weapon.h"
 
 int main()
 {
@@ -22,7 +23,7 @@ int main()
 
 	ahbdekha.displayInventory();
 
-	ahbdekha.getInventory().equipItem(&wand);
+	ahbdekha.getInventory()->equipItem(ahbdekha.getInventory()->getBag()[0]);
 
 	ahbdekha.displayInventory();
 

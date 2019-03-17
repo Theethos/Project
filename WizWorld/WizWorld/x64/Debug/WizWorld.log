@@ -1,6 +1,131 @@
-﻿  character.cpp
-  inventory.cpp
-  item.cpp
-  main.cpp
+﻿  Main.cpp
+  Character.cpp
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(20): error C2061: erreur de syntaxe : identificateur 'ItemCategories'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(28): error C2061: erreur de syntaxe : identificateur 'Item'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(30): error C2061: erreur de syntaxe : identificateur 'Item'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(32): error C2061: erreur de syntaxe : identificateur 'Item'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(37): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(37): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(37): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(39): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(39): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(39): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(41): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(41): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(41): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(43): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(43): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(43): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(50): error C2061: erreur de syntaxe : identificateur 'Item'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(52): error C2061: erreur de syntaxe : identificateur 'Weapon'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(54): error C2061: erreur de syntaxe : identificateur 'Weapon'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(56): error C2061: erreur de syntaxe : identificateur 'Item'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(60): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(60): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(60): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(62): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(62): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(62): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(64): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(64): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(64): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(68): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(68): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(68): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\source\character.cpp(60): error C2039: 'getWeapon_1' : n'est pas membre de 'Inventory'
+  c:\users\théo brichet\desktop\project\wizworld\include\item.h(9): note: voir la déclaration de 'Inventory'
+c:\users\théo brichet\desktop\project\wizworld\source\character.cpp(60): error C2039: 'getWeapon_2' : n'est pas membre de 'Inventory'
+  c:\users\théo brichet\desktop\project\wizworld\include\item.h(9): note: voir la déclaration de 'Inventory'
+c:\users\théo brichet\desktop\project\wizworld\source\character.cpp(68): error C2660: 'Inventory::setBag' : la fonction ne prend pas 1 arguments
+  c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(50): note: voir la déclaration de 'Inventory::setBag'
+c:\users\théo brichet\desktop\project\wizworld\source\character.cpp(73): error C2660: 'Inventory::equipItem' : la fonction ne prend pas 1 arguments
+  c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(28): note: voir la déclaration de 'Inventory::equipItem'
+c:\users\théo brichet\desktop\project\wizworld\source\character.cpp(81): error C2039: 'getBag' : n'est pas membre de 'Inventory'
+  c:\users\théo brichet\desktop\project\wizworld\include\item.h(9): note: voir la déclaration de 'Inventory'
+c:\users\théo brichet\desktop\project\wizworld\source\character.cpp(82): error C2039: 'getBag' : n'est pas membre de 'Inventory'
+  c:\users\théo brichet\desktop\project\wizworld\include\item.h(9): note: voir la déclaration de 'Inventory'
+c:\users\théo brichet\desktop\project\wizworld\source\character.cpp(89): error C2039: 'getBag' : n'est pas membre de 'Inventory'
+  c:\users\théo brichet\desktop\project\wizworld\include\item.h(9): note: voir la déclaration de 'Inventory'
+c:\users\théo brichet\desktop\project\wizworld\source\character.cpp(90): error C2039: 'getBag' : n'est pas membre de 'Inventory'
+  c:\users\théo brichet\desktop\project\wizworld\include\item.h(9): note: voir la déclaration de 'Inventory'
+c:\users\théo brichet\desktop\project\wizworld\source\character.cpp(97): error C2039: 'getStuff' : n'est pas membre de 'Inventory'
+  c:\users\théo brichet\desktop\project\wizworld\include\item.h(9): note: voir la déclaration de 'Inventory'
+c:\users\théo brichet\desktop\project\wizworld\source\character.cpp(98): error C2039: 'getStuff' : n'est pas membre de 'Inventory'
+  c:\users\théo brichet\desktop\project\wizworld\include\item.h(9): note: voir la déclaration de 'Inventory'
+c:\users\théo brichet\desktop\project\wizworld\source\character.cpp(105): error C2039: 'getStuff' : n'est pas membre de 'Inventory'
+  c:\users\théo brichet\desktop\project\wizworld\include\item.h(9): note: voir la déclaration de 'Inventory'
+c:\users\théo brichet\desktop\project\wizworld\source\character.cpp(106): error C2039: 'getStuff' : n'est pas membre de 'Inventory'
+  c:\users\théo brichet\desktop\project\wizworld\include\item.h(9): note: voir la déclaration de 'Inventory'
+c:\users\théo brichet\desktop\project\wizworld\source\character.cpp(111): error C2039: 'getWeapon_1' : n'est pas membre de 'Inventory'
+  c:\users\théo brichet\desktop\project\wizworld\include\item.h(9): note: voir la déclaration de 'Inventory'
+c:\users\théo brichet\desktop\project\wizworld\source\character.cpp(112): error C2039: 'getWeapon_1' : n'est pas membre de 'Inventory'
+  c:\users\théo brichet\desktop\project\wizworld\include\item.h(9): note: voir la déclaration de 'Inventory'
+c:\users\théo brichet\desktop\project\wizworld\source\character.cpp(115): error C2039: 'getWeapon_2' : n'est pas membre de 'Inventory'
+  c:\users\théo brichet\desktop\project\wizworld\include\item.h(9): note: voir la déclaration de 'Inventory'
+c:\users\théo brichet\desktop\project\wizworld\source\character.cpp(116): error C2039: 'getWeapon_2' : n'est pas membre de 'Inventory'
+  c:\users\théo brichet\desktop\project\wizworld\include\item.h(9): note: voir la déclaration de 'Inventory'
+  Inventory.cpp
+  Item.cpp
+c:\users\théo brichet\desktop\project\wizworld\include\weapon.h(15): error C2504: 'Item' : classe de base non définie
+c:\users\théo brichet\desktop\project\wizworld\include\weapon.h(20): error C2061: erreur de syntaxe : identificateur 'ItemCategories'
+c:\users\théo brichet\desktop\project\wizworld\include\weapon.h(31): error C2061: erreur de syntaxe : identificateur 'Inventory'
+c:\users\théo brichet\desktop\project\wizworld\include\weapon.h(42): error C3646: 'm_weaponCategory' : spécificateur de substitution inconnu
+c:\users\théo brichet\desktop\project\wizworld\include\weapon.h(42): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(20): error C2061: erreur de syntaxe : identificateur 'ItemCategories'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(28): error C2061: erreur de syntaxe : identificateur 'Item'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(30): error C2061: erreur de syntaxe : identificateur 'Item'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(32): error C2061: erreur de syntaxe : identificateur 'Item'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(41): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(41): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(41): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(43): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(43): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(43): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(50): error C2061: erreur de syntaxe : identificateur 'Item'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(56): error C2061: erreur de syntaxe : identificateur 'Item'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(64): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(64): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(64): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(68): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(68): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(68): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\source\item.cpp(38): error C2660: 'Inventory::setStuff' : la fonction ne prend pas 1 arguments
+  c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(56): note: voir la déclaration de 'Inventory::setStuff'
+  Weapon.cpp
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(20): error C2061: erreur de syntaxe : identificateur 'ItemCategories'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(28): error C2061: erreur de syntaxe : identificateur 'Item'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(30): error C2061: erreur de syntaxe : identificateur 'Item'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(32): error C2061: erreur de syntaxe : identificateur 'Item'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(37): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(37): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(37): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(39): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(39): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(39): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(41): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(41): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(41): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(43): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(43): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(43): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(50): error C2061: erreur de syntaxe : identificateur 'Item'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(52): error C2061: erreur de syntaxe : identificateur 'Weapon'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(54): error C2061: erreur de syntaxe : identificateur 'Weapon'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(56): error C2061: erreur de syntaxe : identificateur 'Item'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(60): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(60): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(60): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(62): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(62): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(62): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(64): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(64): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(64): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(68): error C2143: erreur de syntaxe : absence de ';' avant '*'
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(68): error C4430: spécificateur de type manquant - int est pris en compte par défaut. Remarque : C++ ne prend pas en charge int par défaut
+c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(68): error C2238: jetons inattendus avant ';'
+c:\users\théo brichet\desktop\project\wizworld\source\weapon.cpp(43): error C2660: 'Inventory::setWeapon_1' : la fonction ne prend pas 1 arguments
+  c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(52): note: voir la déclaration de 'Inventory::setWeapon_1'
+c:\users\théo brichet\desktop\project\wizworld\source\weapon.cpp(45): error C2660: 'Inventory::setWeapon_2' : la fonction ne prend pas 1 arguments
+  c:\users\théo brichet\desktop\project\wizworld\include\inventory.h(54): note: voir la déclaration de 'Inventory::setWeapon_2'
   Génération de code en cours...
-  WizWorld.vcxproj -> C:\Users\teto2\Documents\Git_Theetho\Project\WizWorld\x64\Debug\WizWorld.exe

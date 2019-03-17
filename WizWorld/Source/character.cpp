@@ -1,8 +1,7 @@
-#include <iostream>
-#include <string>
+#include "../Include/Macros_Includes.h"
+#include "../Include/Weapon.h"
 
-#include "../Include/character.h"
-#include "../Include/macros.h"
+#include "../Include/Character.h"
 
 /*
  * ==================================================
@@ -149,9 +148,10 @@ int Character::getLevel() const
 }
 
 /* Inventory */
-Inventory Character::getInventory() const
+Inventory* Character::getInventory()
 {
-	return m_inventory;
+
+	return &(this->m_inventory);
 }
 
 /*=== Setters ===*/
