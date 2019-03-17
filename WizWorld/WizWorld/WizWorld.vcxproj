@@ -22,6 +22,7 @@
     <ClInclude Include="..\Include\character.h" />
     <ClInclude Include="..\Include\inventory.h" />
     <ClInclude Include="..\Include\item.h" />
+    <ClInclude Include="..\Include\macros.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\main.cpp" />

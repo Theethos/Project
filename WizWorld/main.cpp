@@ -1,26 +1,37 @@
 #include <iostream>
 
 #include "Include/character.h"
-#include "Include/constants_enumerations.h"
-
-using namespace std;
+#include "Include/inventory.h"
+#include "Include/item.h"
 
 int main()
 {
-    cout << "\n=== Beginning ===\n" << endl;
+    std::cout << "\n=== Beginning ===\n" << std::endl;
 
-
-	Character mickael;
-	Character ahbdekha("Ahbdekha", MALE, DARK, LONG);
+	Character mickael = Character();
+	Character ahbdekha = Character("Ahbdekha", MALE, DARK, LONG);
 
 	mickael.introduce();
 	ahbdekha.introduce();
 
-	mickael.hitWithWeapon(ahbdekha);
-	ahbdekha.getLifePoints();
+	Weapon wand("Shiny Wand", PRIMARY_WEAPON, WAND, 30);
 
-	mickael.getInventory().showInventory();
-    cout << "\n=== End ===\n" << endl;
-	getchar();
-    return 0;
+	ahbdekha.displayInventory();
+
+	ahbdekha.pickUpItem(&wand);
+
+	ahbdekha.displayInventory();
+
+	ahbdekha.getInventory().equipItem(&wand);
+
+	ahbdekha.displayInventory();
+
+	ahbdekha.hitWithWeapon(mickael);
+	mickael.getLifePoints();
+	std::cout << std::endl;
+	
+	std::cout << "\n=== End ===\n" << std::endl;
+    
+	system("PAUSE");
+	return 0;
 }
