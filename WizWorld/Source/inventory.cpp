@@ -1,6 +1,7 @@
 #include "../Include/Macros_Includes.h"
 #include "../Include/Item.h"
 #include "../Include/Weapon.h"
+#include "../Include/Armor.h"
 
 #include "../Include/Inventory.h"
 
@@ -16,7 +17,7 @@ Inventory::Inventory() : m_hand_1(0), m_hand_2(0), m_bag(0), m_stuff(0), m_size(
 	m_hand_1 = new Weapon("Grandma's wand", PRIMARY_WEAPON, WAND, 10);
 	m_hand_2 = new Weapon("Wooden shield", SECONDARY_WEAPON, SHIELD, 5);
 
-	m_stuff = new Item*[(int)RING_2];
+	m_stuff = new Armor*[(int)RING_2];
 	m_bag = new Item*[m_size];
 
 	for (int i = 0; i < (int)RING_2; i++)
@@ -33,7 +34,7 @@ Inventory::Inventory(std::string primaryWeaponName, ItemCategories primaryWeapon
 	m_hand_1 = new Weapon(primaryWeaponName, primaryWeaponCategory, weaponCategory, primaryWeaponDamage);
 	m_hand_2 = new Weapon("Wooden shield", NO_ITEM, SHIELD, 5);
 
-	m_stuff = new Item*[(int)RING_2];
+	m_stuff = new Armor*[(int)RING_2];
 	m_bag = new Item*[m_size];
 
 	for (int i = 0; i < (int)RING_2; i++)
@@ -74,7 +75,7 @@ void Inventory::equipItem(Item * item)
 	item->equips(this);
 }
 
-void Inventory::removeItem(Item * item)
+void Inventory::removeBag(Item * item)
 {
 	for (int i = 0; i < m_size; i++)
 	{
@@ -100,6 +101,18 @@ void Inventory::removeStuff(Item * item)
 	}
 }
 
+int Inventory::isInBag(Item * item)
+{
+	for (int i = 0; i < m_size; i++)
+	{
+		if (m_bag[i] == item)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
 /*=== Getters ===*/
 
 /* Primary hand */
@@ -118,7 +131,7 @@ Item ** Inventory::getBag() const
 	return m_bag;
 }
 /* Stuff */
-Item ** Inventory::getStuff() const
+Armor ** Inventory::getStuff() const
 {
 	return m_stuff;
 }
@@ -145,59 +158,62 @@ void Inventory::setBag(Item * item)
 /* Equips @param[weapon] in primary hand */
 void Inventory::setWeapon_1(Weapon * weapon)
 {	
-	if (m_hand_1)
+	if (m_hand_1->getCategory() == NO_ITEM)
 	{
-		if (m_hand_1->getCategory() == NO_ITEM)
-		{
-			m_hand_1 = weapon;
-			removeItem(weapon);
-		}
-		else
-		{
-			/*Weapon *tmp = m_hand_1;
-			m_hand_1 = weapon;
-			weapon = tmp;*/
-			SWAP_POINTERS(m_hand_1, weapon);
-		}
+		*m_hand_1 = *weapon;
 	}
 	else
 	{
-		m_hand_1 = weapon;
+		int index = isInBag(weapon);
+		if (index >= 0)
+		{
+			SWAP_VALUE(m_hand_1, weapon);
+		}
 	}
 }
 /* Equips @param[weapon] in secondary hand */
 void Inventory::setWeapon_2(Weapon * weapon)
 {
-	if (m_hand_2)
+	if (m_hand_2->getCategory() == NO_ITEM)
 	{
-		if (m_hand_2 && m_hand_2->getCategory() == NO_ITEM)
-		{
-			m_hand_2 = weapon;
-			removeItem(weapon);
-		}
-		else
-		{
-			SWAP_POINTERS(m_hand_2, weapon);
-		}
+		*m_hand_2 = *weapon;
 	}
 	else
 	{
-		m_hand_2 = weapon;
+		int index = isInBag(weapon);
+		if (index >= 0)
+		{
+			SWAP_VALUE(m_hand_2, weapon);
+		}
 	}
 }
 /* Equips @param[item] */
-void Inventory::setStuff(Item *item)
+void Inventory::setStuff(Armor *armor)
 {
-	if (!m_stuff[item->getCategory()])
+	if (m_stuff[armor->getArmorCategory()])
 	{
-		m_stuff[item->getCategory()] = item;
+		if (m_stuff[armor->getArmorCategory()]->getCategory() == NO_ITEM)
+		{
+			*m_stuff[armor->getArmorCategory()] = *armor;
+		}
+		else
+		{
+			int index = isInBag(armor);
+			if (index >= 0)
+			{
+				SWAP_VALUE(m_stuff[armor->getArmorCategory()], armor);
+			}
+		}
 	}
 	else
 	{
-		Item *tmp = m_stuff[item->getCategory()];
-		m_stuff[item->getCategory()] = item;
-		if (tmp->getCategory() != NO_ITEM)
-			m_stuff[item->getCategory()] = tmp;
+		m_stuff[armor->getArmorCategory()] = armor;
+		int index = isInBag(armor);
+		if (index >= 0)
+		{
+			m_bag[index] = nullptr;
+		}
+
 	}
 }
 

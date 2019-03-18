@@ -10,7 +10,6 @@
  */
 
 /* Constructors */
-
 Item::Item() : m_name("NULL"), m_category(NO_ITEM)
 {}
 Item::Item(std::string name, ItemCategories category) : m_name(name), m_category(category)
@@ -35,10 +34,10 @@ Item & Item::operator=(const Item & item)
 
 	return *this;
 }
-
+/* Equips @this */
 void Item::equips(Inventory *inventory)
 {
-	inventory->setStuff(this);
+	inventory->setStuff((Armor*)this);
 }
 
 /*=== Getters ===*/
@@ -53,7 +52,7 @@ ItemCategories Item::getCategory() const
 {
 	return m_category;
 }
-
+/* Category (string not enum [for display]) */
 std::string Item::showCategory() const
 {
 	switch (m_category)
@@ -61,44 +60,14 @@ std::string Item::showCategory() const
 	case NO_ITEM:
 		return "None";
 		break;
-	case HAT:
-		return "Hat";
+	case ARMOR:
+		return "Armor";
 		break;
-	case CLOAK:
-		return "Cloak";
+	case PRIMARY_WEAPON:
+		return "Primary Weapon";
 		break;
-	case CHEST:
-		return "Chest";
-		break;
-	case BELT:
-		return "Belt";
-		break;
-	case PANTS:
-		return "Pants";
-		break;
-	case BOOTS:
-		return "Boots";
-		break;
-	case GLOVE_1:
-		return "Gloves";
-		break;
-	case GLOVE_2:
-		return "Gloves";
-		break;
-	case NECKLESS:
-		return "Neckless";
-		break;
-	case EARING_1:
-		return "Earings";
-		break;
-	case EARING_2:
-		return "Earings";
-		break;
-	case RING_1:
-		return "Ring";
-		break;
-	case RING_2:
-		return "Ring";
+	case SECONDARY_WEAPON:
+		return "Secondary Weapon";
 		break;
 	default:
 		return "None";

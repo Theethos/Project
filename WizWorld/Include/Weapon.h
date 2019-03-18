@@ -23,13 +23,16 @@ public:
 
 	/*=== Methods ===*/
 
-	/* Equips an item */
+	/* Equips @this */
 	virtual void equips(Inventory *inventory);
 
 	/*=== Getters ===*/
 
 	/* Damage */
 	int getDamage() const;
+	/* WeaponCategory */
+	virtual WeaponCategories getWeaponCategory() const;
+	/* WeaponCategory (string not enum [for display]) */
 	virtual std::string showCategory() const;
 
 private:

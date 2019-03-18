@@ -7,10 +7,10 @@
 class Inventory;
 
 /*=== Enumerations ===*/
-					// Items																										 // Weapons
-enum ItemCategories { NO_ITEM, HAT, CLOAK, CHEST, BELT, PANTS, BOOTS, GLOVE_1, GLOVE_2, NECKLESS, EARING_1, EARING_2, RING_1, RING_2, PRIMARY_WEAPON, SECONDARY_WEAPON };
-enum WeaponCategories { NO_WEAPON, WAND, STAFF, MAGIC_RING, SHIELD };
 
+enum ItemCategories { NO_ITEM, ARMOR, PRIMARY_WEAPON, SECONDARY_WEAPON };
+enum WeaponCategories { NO_WEAPON, WAND, STAFF, MAGIC_RING, SHIELD };
+enum ArmorCategories { HAT, CLOAK, CHEST, BELT, PANTS, BOOTS, GLOVE_1, GLOVE_2, NECKLESS, EARING_1, EARING_2, RING_1, RING_2, NO_ARMOR };
 /*
  * ==================================================
  * ================= Class Item =====================
@@ -33,7 +33,7 @@ public:
 
 	/*=== Methods ===*/
 
-	/* Equips an item */
+	/* Equips @this */
 	virtual void equips(Inventory *inventory);
 
 	/*=== Getters ===*/
@@ -41,7 +41,7 @@ public:
 	/* Name */
 	virtual std::string getName() const;
 	/* Category */
-	ItemCategories getCategory() const;
+	virtual ItemCategories getCategory() const;
 	/* Category (string not enum [for display]) */
 	virtual std::string showCategory() const;
 

@@ -4,8 +4,10 @@
 /*=== Avoid mutual inclusions ===*/
 class Item;
 class Weapon;
+class Armor;
 enum ItemCategories;
 enum WeaponCategories;
+enum ArmorCategories;
 
 /* 
  * ==================================================
@@ -29,9 +31,11 @@ public:
 	/* Equips @param[item] (item or weapon) */
 	void equipItem(Item *item);
 	/* Removes @param[item] of the @member[bag] */
-	void removeItem(Item *item);
+	void removeBag(Item *item);
 	/* Removes @param[item] of the @member[stuff] */
 	void removeStuff(Item *item);
+	/* Check if @param[item] is in @member[bag] and if so returns its index in the bag */
+	int isInBag(Item *item);
 
 	/*=== Getters ===*/
 
@@ -42,7 +46,7 @@ public:
 	/* Bag */
 	Item** getBag() const;
 	/* Stuff*/
-	Item** getStuff() const;
+	Armor** getStuff() const;
 	/* Size */
 	int getSize() const;
 
@@ -55,7 +59,7 @@ public:
 	/* Equips @param[weapon] in secondary hand */
 	void setWeapon_2(Weapon *weapon);
 	/* Equips @param[item] */
-	void setStuff(Item *item);
+	void setStuff(Armor *armor);
 
 private:
 	/* Weapon in primary hand  */
@@ -63,7 +67,7 @@ private:
 	/* Weapon in secondary hand */
 	Weapon *m_hand_2;
 	/* Items equiped by the character */
-	Item **m_stuff;
+	Armor **m_stuff;
 	/* Number of slots in the @member[bag] */
 	int m_size;
 	/* Item carryed by the character */

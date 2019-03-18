@@ -26,8 +26,7 @@ Weapon::Weapon(const Weapon & weapon)
 }
 /* Destructors */
 Weapon:: ~Weapon()
-{
-}
+{}
 
 /*=== Operator overload ===*/
 
@@ -40,7 +39,7 @@ Weapon & Weapon::operator=(const Weapon &weapon)
 
 	return *this;
 }
-
+/* Equips @this */
 void Weapon::equips(Inventory *inventory)
 {
 	if (this->m_category == PRIMARY_WEAPON)
@@ -56,7 +55,12 @@ int Weapon::getDamage() const
 {
 	return m_damage;
 }
-
+/* WeaponCategory */
+WeaponCategories Weapon::getWeaponCategory() const
+{
+	return m_weaponCategory;
+}
+/* WeaponCategory (string not enum [for display]) */
 std::string Weapon::showCategory() const
 {
 	switch (m_weaponCategory)

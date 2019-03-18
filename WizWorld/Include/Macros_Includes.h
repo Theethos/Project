@@ -18,7 +18,8 @@
 
 #define GENDER(sexe, maleAction, femaleAction) ((sexe == MALE) ? maleAction : femaleAction)
 #define PLURAL(x, plural, singular) ((x>1) ? plural : singular)
-#define WHICH_WEAPON(x, y, ifX, ifY) ((x>y) ? ifX : ifY)
+#define MIN(x, y, ifX, ifY) ((x<y) ? ifX : ifY)
+#define MAX(x, y, ifX, ifY) ((x>y) ? ifX : ifY)
 
 /*
  * ==================================================
@@ -32,6 +33,13 @@ void SWAP_POINTERS(T* x, T* y)
 	T *tmp = x;
 	x = y;
 	y = tmp;
+}
+template<typename T>
+void SWAP_VALUE(T* x, T* y)
+{
+	T tmp = *x;
+	*x = *y;
+	*y = tmp;
 }
 
 #endif // !_MACROS_INCLUDES_H_

@@ -19,6 +19,9 @@
     <Filter Include="Items">
       <UniqueIdentifier>{180a7b1d-d3ed-4123-b0f5-ee8577ecd3c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inventory">
+      <UniqueIdentifier>{ba3ce6b2-d318-45ad-b241-23e1e62d4c2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Weapon.h">
@@ -30,11 +33,14 @@
     <ClInclude Include="..\Include\Character.h">
       <Filter>Characters</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Inventory.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\Item.h">
       <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Armor.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Inventory.h">
+      <Filter>Inventory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -44,14 +50,22 @@
     <ClCompile Include="..\Source\Character.cpp">
       <Filter>Characters</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Inventory.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\Main.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Item.cpp">
       <Filter>Items</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Armor.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Inventory.cpp">
+      <Filter>Inventory</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Items_STATS.txt">
+      <Filter>Fichiers de ressources</Filter>
+    </Text>
   </ItemGroup>
 </Project>

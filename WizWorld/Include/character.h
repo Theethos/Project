@@ -17,18 +17,18 @@ enum HairStyle { SHORT, LONG };
 
 /*=== Structures ===*/
 
-struct LifePoints
+struct HealthPoints
 {
-	int currentLifePoints;
-	int levelLifePoints;
-	int characteristicLifePoint;
-	int equipmentLifePoints;
+	long currentHealthPoints;
+	long levelHealthPoints;
+	long characteristicHealthPoint;
+	long equipmentHealthPoints;
 };
 struct Level
 {
 	int level;
-	int currentLevelEXP;
-	int nextLevelEXP;
+	long long currentLevelEXP;
+	long long nextLevelEXP;
 };
 struct Hair
 {
@@ -52,10 +52,10 @@ public:
 	//gne
     /*=== Methods ===*/
 
-	/* Displays informations about the character (@member[name], @member[level] and @member[lifePoints]) */
+	/* Displays informations about the character (@member[name], @member[level] and @member[healthPoints]) */
 	void introduce() const;
 	/* Adds @param[EXPValue] to @member[level] */
-	void gainEXP(int EXPValue);
+	void gainEXP(long long EXPValue);
 	/* Remove @param[damageValue] to @member[lifPoints] */
 	void receiveDamage(int damageValue);
 	/* Attacks @param[target] with the primary weapon */
@@ -73,8 +73,8 @@ public:
 	std::string getName() const;
 	/* Sexe */
 	Sexe getSexe() const;
-	/* LifePoints*/
-	int getLifePoints() const;
+	/* HealthPoints*/
+	int getHealthPoints() const;
 	/* Level */
 	int getLevel() const;
 	/* Inventory */
@@ -95,7 +95,7 @@ protected:
     Sexe m_sexe;
 	Hair m_hair;
     Level m_level;
-    LifePoints m_lifePoints;
+    HealthPoints m_healthPoints;
 	Inventory m_inventory;	
 };
 
