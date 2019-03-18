@@ -1,3 +1,7 @@
+#include "../Include/Macros_Includes.h"
+#include "../Include/Item.h"
+#include "../Include/Weapon.h"
+
 #include "../Include/Inventory.h"
 
 /*
@@ -9,8 +13,8 @@
 /* Constructors */
 Inventory::Inventory() : m_hand_1(0), m_hand_2(0), m_bag(0), m_stuff(0), m_size(15), m_firstFreeSlot(0)
 {
-	m_hand_1 = new Weapon("Grandma's wand", NO_ITEM, WAND, 10);
-	m_hand_2 = new Weapon("Wooden shield", NO_ITEM, SHIELD, 5);
+	m_hand_1 = new Weapon("Grandma's wand", PRIMARY_WEAPON, WAND, 10);
+	m_hand_2 = new Weapon("Wooden shield", SECONDARY_WEAPON, SHIELD, 5);
 
 	m_stuff = new Item*[(int)RING_2];
 	m_bag = new Item*[m_size];
@@ -67,10 +71,7 @@ bool Inventory::isFull()
 
 void Inventory::equipItem(Item * item)
 {
-	if (item->getCategory() != PRIMARY_WEAPON && item->getCategory() != SECONDARY_WEAPON)
-		item->equips(this);
-	else // Its a weapon
-		item->equips(this);
+	item->equips(this);
 }
 
 void Inventory::removeItem(Item * item)
@@ -148,13 +149,15 @@ void Inventory::setWeapon_1(Weapon * weapon)
 	{
 		if (m_hand_1->getCategory() == NO_ITEM)
 		{
-			*m_hand_1 = *weapon;
+			m_hand_1 = weapon;
 			removeItem(weapon);
 		}
 		else
 		{
-			*m_hand_1 = *weapon;
-			removeStuff(weapon);
+			/*Weapon *tmp = m_hand_1;
+			m_hand_1 = weapon;
+			weapon = tmp;*/
+			SWAP_POINTERS(m_hand_1, weapon);
 		}
 	}
 	else
@@ -169,13 +172,12 @@ void Inventory::setWeapon_2(Weapon * weapon)
 	{
 		if (m_hand_2 && m_hand_2->getCategory() == NO_ITEM)
 		{
-			*m_hand_2 = *weapon;
+			m_hand_2 = weapon;
 			removeItem(weapon);
 		}
 		else
 		{
-			*m_hand_2 = *weapon;
-			removeStuff(weapon);
+			SWAP_POINTERS(m_hand_2, weapon);
 		}
 	}
 	else
@@ -192,9 +194,10 @@ void Inventory::setStuff(Item *item)
 	}
 	else
 	{
-		Item tmp(*item);
-		*item = *m_stuff[item->getCategory()];
-		*m_stuff[item->getCategory()] = tmp;
+		Item *tmp = m_stuff[item->getCategory()];
+		m_stuff[item->getCategory()] = item;
+		if (tmp->getCategory() != NO_ITEM)
+			m_stuff[item->getCategory()] = tmp;
 	}
 }
 

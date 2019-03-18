@@ -1,3 +1,7 @@
+#include "../Include/Macros_Includes.h"
+#include "../Include/Item.h"
+#include "../Include/Inventory.h"
+
 #include "../Include/Weapon.h"
 
 /*

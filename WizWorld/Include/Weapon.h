@@ -1,10 +1,6 @@
 #ifndef _WEAPON_H_
 #define _WEAPON_H_
 
-#include "Macros_Includes.h"
-#include "Item.h"
-#include "Inventory.h"
-
 /*
  * ==================================================
  * ================ Class Weapon ====================

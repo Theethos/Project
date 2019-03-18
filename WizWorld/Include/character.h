@@ -4,7 +4,10 @@
 #define _CHARACTER_H_
 
 #include "Inventory.h"
-#include "Item.h"
+
+/*=== Avoid mutual inclusions ===*/
+class Item;
+enum ItemCategories;
 
  /*=== Enumerations ===*/
 

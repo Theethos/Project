@@ -3,10 +3,8 @@
 #ifndef _ITEM_H_
 #define _ITEM_H_
 
-#include "Macros_Includes.h"
-#include "Inventory.h"
-
-class Inventory; // Avoid multiple-inclusion
+/*=== Avoid mutual inclusions ===*/
+class Inventory;
 
 /*=== Enumerations ===*/
 					// Items																										 // Weapons

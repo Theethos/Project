@@ -1,9 +1,11 @@
 #ifndef _INVENTORY_H_
 #define _INVENTORY_H_
 
-#include "Macros_Includes.h"
-#include "Item.h"
-#include "Weapon.h"
+/*=== Avoid mutual inclusions ===*/
+class Item;
+class Weapon;
+enum ItemCategories;
+enum WeaponCategories;
 
 /* 
  * ==================================================

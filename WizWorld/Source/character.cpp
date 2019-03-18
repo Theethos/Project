@@ -1,5 +1,7 @@
 #include "../Include/Macros_Includes.h"
+#include "../Include/Item.h"
 #include "../Include/Weapon.h"
+#include "../Include/Inventory.h"
 
 #include "../Include/Character.h"
 
@@ -150,7 +152,6 @@ int Character::getLevel() const
 /* Inventory */
 Inventory* Character::getInventory()
 {
-
 	return &(this->m_inventory);
 }
 
