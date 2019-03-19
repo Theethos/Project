@@ -1,7 +1,4 @@
 #include "../Include/Macros_Includes.h"
-#include "../Include/Item.h"
-#include "../Include/Weapon.h"
-#include "../Include/Armor.h"
 
 #include "../Include/Inventory.h"
 
@@ -68,11 +65,6 @@ bool Inventory::isFull()
 		}
 	}
 	return true;
-}
-
-void Inventory::equipItem(Item * item)
-{
-	item->equips(this);
 }
 
 void Inventory::removeBag(Item * item)

@@ -1,6 +1,5 @@
 #include "../Include/Macros_Includes.h"
 #include "../Include/Item.h"
-#include "../Include/Inventory.h"
 
 #include "../Include/Armor.h"
 
@@ -37,11 +36,8 @@ Armor & Armor::operator=(const Armor & armor)
 
 	return *this;
 }
-/* Equips @this */
-void Armor::equips(Inventory * inventory)
-{
-	inventory->setStuff(this);
-}
+/*=== Getters ===*/
+
 /* ArmorCategory */
 ArmorCategories Armor::getArmorCategory() const
 {

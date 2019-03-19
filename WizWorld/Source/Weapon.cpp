@@ -1,6 +1,5 @@
 #include "../Include/Macros_Includes.h"
-#include "../Include/Item.h"
-#include "../Include/Inventory.h"
+#include "../Include/Item.h" // Mother class
 
 #include "../Include/Weapon.h"
 
@@ -38,14 +37,6 @@ Weapon & Weapon::operator=(const Weapon &weapon)
 	m_weaponCategory = weapon.m_weaponCategory;
 
 	return *this;
-}
-/* Equips @this */
-void Weapon::equips(Inventory *inventory)
-{
-	if (this->m_category == PRIMARY_WEAPON)
-		inventory->setWeapon_1(this);
-	else // SECONDARY_WEAPON
-		inventory->setWeapon_2(this);
 }
 
 /*=== Getters ===*/

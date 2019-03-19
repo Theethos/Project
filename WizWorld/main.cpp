@@ -1,14 +1,30 @@
-#include "Include/Macros_Includes.h"
+#define _REQUIRE_SFML_
+	#include "Include/Macros_Includes.h"
+#undef _REQUIRE_SFML_
 
 #include "Include/Character.h"
-#include "Include/Inventory.h"
-#include "Include/Item.h"
-#include "Include/Weapon.h"
-#include "Include/Armor.h"
+#include "Include/Game.h"
 
 int main()
-{
-    std::cout << "\n=== Beginning ===\n" << std::endl;
+{	
+	
+	/*
+	 * ==================================================
+	 * ================ SFML display ====================
+	 * ==================================================
+	 */
+
+	Game game;
+
+	game.run();
+
+	/*
+	 * ==================================================
+	 * ================ Terminal display ================
+	 * ==================================================
+	 */
+
+	std::cout << "\n=== Beginning ===\n" << std::endl;
 
 	Character mickael = Character();
 	Character ahbdekha = Character("Ahbdekha", MALE, DARK, LONG);
@@ -23,7 +39,7 @@ int main()
 	Weapon shield("Mighty shield", SECONDARY_WEAPON, SHIELD, 10);
 	Armor chest("Bright chest", ARMOR, CHEST);
 	Armor helmet("Coconut helmet", ARMOR, HAT);
-	
+
 	ahbdekha.displayInventory();
 	std::cout << "=================" << std::endl << std::endl;
 
@@ -51,12 +67,14 @@ int main()
 	mickael.getHealthPoints();
 	std::cout << "=================" << std::endl << std::endl;
 
-	mickael.gainEXP(5148376331); // 5 148 376 331 max EXP;
+	mickael.gainEXP(450); // 5 148 376 331 max EXP;
 	std::cout << std::endl << "=================" << std::endl << std::endl;
 
 	std::cout << std::endl;
 	std::cout << "\n=== End ===\n" << std::endl;
-    
+
 	system("PAUSE");
+
 	return 0;
 }
+

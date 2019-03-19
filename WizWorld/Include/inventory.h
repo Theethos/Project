@@ -1,13 +1,9 @@
 #ifndef _INVENTORY_H_
 #define _INVENTORY_H_
 
-/*=== Avoid mutual inclusions ===*/
-class Item;
-class Weapon;
-class Armor;
-enum ItemCategories;
-enum WeaponCategories;
-enum ArmorCategories;
+#include "Item.h"
+#include "Weapon.h"
+#include "Armor.h"
 
 /* 
  * ==================================================
@@ -28,14 +24,12 @@ public:
 
 	/* Returns FALSE if a slot is available in the bag and set @member[firstFreeIndex] if so. */
 	bool isFull();
-	/* Equips @param[item] (item or weapon) */
-	void equipItem(Item *item);
+	/* Check if @param[item] is in @member[bag] and if so returns its index in the bag */
+	int isInBag(Item *item);
 	/* Removes @param[item] of the @member[bag] */
 	void removeBag(Item *item);
 	/* Removes @param[item] of the @member[stuff] */
 	void removeStuff(Item *item);
-	/* Check if @param[item] is in @member[bag] and if so returns its index in the bag */
-	int isInBag(Item *item);
 
 	/*=== Getters ===*/
 

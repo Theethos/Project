@@ -3,14 +3,6 @@
 #ifndef _ITEM_H_
 #define _ITEM_H_
 
-/*=== Avoid mutual inclusions ===*/
-class Inventory;
-
-/*=== Enumerations ===*/
-
-enum ItemCategories { NO_ITEM, ARMOR, PRIMARY_WEAPON, SECONDARY_WEAPON };
-enum WeaponCategories { NO_WEAPON, WAND, STAFF, MAGIC_RING, SHIELD };
-enum ArmorCategories { HAT, CLOAK, CHEST, BELT, PANTS, BOOTS, GLOVE_1, GLOVE_2, NECKLESS, EARING_1, EARING_2, RING_1, RING_2, NO_ARMOR };
 /*
  * ==================================================
  * ================= Class Item =====================
@@ -30,11 +22,6 @@ public:
 	/*=== Operator overload ===*/
 
 	Item &operator=(const Item &item);
-
-	/*=== Methods ===*/
-
-	/* Equips @this */
-	virtual void equips(Inventory *inventory);
 
 	/*=== Getters ===*/
 	

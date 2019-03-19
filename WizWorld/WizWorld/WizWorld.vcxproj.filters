@@ -13,54 +13,72 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Characters">
-      <UniqueIdentifier>{556ace7e-68bf-41d6-b670-2f77f77cee20}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Items">
-      <UniqueIdentifier>{180a7b1d-d3ed-4123-b0f5-ee8577ecd3c4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Inventory">
       <UniqueIdentifier>{ba3ce6b2-d318-45ad-b241-23e1e62d4c2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{1bc571da-8dec-4601-b438-d3fdcf63d874}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character">
+      <UniqueIdentifier>{556ace7e-68bf-41d6-b670-2f77f77cee20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Item">
+      <UniqueIdentifier>{180a7b1d-d3ed-4123-b0f5-ee8577ecd3c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="State">
+      <UniqueIdentifier>{30f87cdc-106c-4adc-8fe1-b63f14279421}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Weapon.h">
-      <Filter>Items</Filter>
+      <Filter>Item</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Macros_Includes.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Character.h">
-      <Filter>Characters</Filter>
+      <Filter>Character</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Item.h">
-      <Filter>Items</Filter>
+      <Filter>Item</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Armor.h">
-      <Filter>Items</Filter>
+      <Filter>Item</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Inventory.h">
       <Filter>Inventory</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Game.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\State.h">
+      <Filter>State</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Weapon.cpp">
-      <Filter>Items</Filter>
+      <Filter>Item</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Character.cpp">
-      <Filter>Characters</Filter>
+      <Filter>Character</Filter>
     </ClCompile>
     <ClCompile Include="..\Main.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Item.cpp">
-      <Filter>Items</Filter>
+      <Filter>Item</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Armor.cpp">
-      <Filter>Items</Filter>
+      <Filter>Item</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Inventory.cpp">
       <Filter>Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Game.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\State.cpp">
+      <Filter>State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

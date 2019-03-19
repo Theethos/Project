@@ -21,11 +21,6 @@ public:
 
 	Armor &operator=(const Armor &armor);
 
-	/*=== Methods ===*/
-
-	/* Equips @this */
-	virtual void equips(Inventory *inventory);
-
 	/*=== Getters ===*/
 
 	/* ArmorCategory */

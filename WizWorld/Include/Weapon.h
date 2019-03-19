@@ -21,11 +21,6 @@ public:
 
 	Weapon &operator=(const Weapon &weapon);
 
-	/*=== Methods ===*/
-
-	/* Equips @this */
-	virtual void equips(Inventory *inventory);
-
 	/*=== Getters ===*/
 
 	/* Damage */

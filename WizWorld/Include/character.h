@@ -7,13 +7,10 @@
 
 /*=== Avoid mutual inclusions ===*/
 class Item;
-enum ItemCategories;
 
  /*=== Enumerations ===*/
 
-enum Sexe { MALE, FEMALE };
-enum HairColor { BLOND, DARK, BROWN, RED, BLUE, GREEN };
-enum HairStyle { SHORT, LONG };
+
 
 /*=== Structures ===*/
 

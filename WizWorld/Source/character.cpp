@@ -1,8 +1,4 @@
 #include "../Include/Macros_Includes.h"
-#include "../Include/Item.h"
-#include "../Include/Weapon.h"
-#include "../Include/Armor.h"
-#include "../Include/Inventory.h"
 
 #include "../Include/Character.h"
 
@@ -82,7 +78,12 @@ void Character::pickUpItem(Item * item)
 void Character::equipItem(Item * item)
 {
 	std::cout << m_name << " equips \"" << item->getName() << "\"." << std::endl;
-	m_inventory.equipItem(item);
+	if (item->getCategory() == PRIMARY_WEAPON)
+		m_inventory.setWeapon_1((Weapon*)item);
+	else if (item->getCategory() == SECONDARY_WEAPON)
+		m_inventory.setWeapon_2((Weapon*)item);
+	else
+		m_inventory.setStuff((Armor*)item);
 }
 
 void Character::displayInventory() const
