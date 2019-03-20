@@ -127,7 +127,7 @@ Armor ** Inventory::getStuff() const
 {
 	return m_stuff;
 }
-
+/* Size */
 int Inventory::getSize() const
 {
 	return this->m_size;

@@ -11,11 +11,9 @@
 
  /* Constructors */
 Weapon::Weapon() : Item(), m_weaponCategory(NO_WEAPON), m_damage(0)
-{
-}
+{}
 Weapon::Weapon(std::string name, ItemCategories category, WeaponCategories weaponCategory, int damage) : Item(name, category), m_weaponCategory(weaponCategory), m_damage(damage)
-{
-}
+{}
 Weapon::Weapon(const Weapon & weapon)
 {
 	m_category = weapon.m_category;

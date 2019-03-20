@@ -3,20 +3,28 @@
 #undef _REQUIRE_SFML_
 #include "../Include/Game.h"
 
-
 /*
  * ==================================================
  * =================== Class Game ===================
  * ==================================================
  */
 
-Game::Game()
+Game::Game() : m_dt(0.0)
 {
 	initializeWindow();
+	initializeKeys();
+	initializeStates();
 }
 
 Game::~Game()
-{}
+{
+	/* Delete the stack */
+	while (!m_states.empty())
+	{
+		delete m_states.top();
+		m_states.pop();
+	}
+}
 
 /* It is the main fonction (this is where the magic happens) */
 void Game::run()
@@ -24,19 +32,39 @@ void Game::run()
 	/* Main loop */
 	while (m_window.isOpen())
 	{
-		this->update();
-		this->render();
+		// Update @member[dt] to know how long it takes to do the entire loop
+		updateDt();
+		update();
+		render();
+		//std::cout << m_dt << std::endl; // To see the during between each loop
 	}
 }
 
 void Game::update()
 {
 	updateEvents();
+	// Updates from state
+	if (!m_states.empty())
+	{
+		m_states.top()->update(m_dt);
+		if (m_states.top()->getQuit())
+		{
+			delete m_states.top();
+			m_states.pop();
+		}
+	}
+	else
+	{
+		m_window.close();
+	}
 }
 
 void Game::render()
 {
 	m_window.clear();
+	// Renders from state
+	if (!m_states.empty())
+		m_states.top()->render(m_window);
 
 	m_window.display();
 }
@@ -72,6 +100,19 @@ void Game::initializeWindow()
 	m_window.setVerticalSyncEnabled(vertical_sync_enabled);
 }
 
+void Game::initializeStates()
+{
+	m_states.push(new GameState(&m_window, &m_keys));
+}
+
+void Game::initializeKeys()
+{
+	m_keys.emplace("Z", sf::Keyboard::Key::Z);
+	m_keys.emplace("Q", sf::Keyboard::Key::Q);
+	m_keys.emplace("S", sf::Keyboard::Key::S);
+	m_keys.emplace("D", sf::Keyboard::Key::D);
+}
+
 void Game::updateEvents()
 {
 	while (m_window.pollEvent(m_event))
@@ -79,13 +120,11 @@ void Game::updateEvents()
 		/* User closed the window */
 		if (m_event.type == sf::Event::Closed)
 			m_window.close();
-		/* User pressed a key */
-		if ((m_event.type == sf::Event::KeyPressed))
-		{
-			/* 'Escape' */
-			if (m_event.key.code == sf::Keyboard::Escape)
-				m_window.close();
-		}
 	}
+}
+
+void Game::updateDt()
+{
+	m_dt = m_clock.restart().asSeconds();
 }
 

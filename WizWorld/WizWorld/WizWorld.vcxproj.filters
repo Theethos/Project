@@ -19,14 +19,14 @@
     <Filter Include="Game">
       <UniqueIdentifier>{1bc571da-8dec-4601-b438-d3fdcf63d874}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Character">
-      <UniqueIdentifier>{556ace7e-68bf-41d6-b670-2f77f77cee20}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Item">
       <UniqueIdentifier>{180a7b1d-d3ed-4123-b0f5-ee8577ecd3c4}</UniqueIdentifier>
     </Filter>
     <Filter Include="State">
       <UniqueIdentifier>{30f87cdc-106c-4adc-8fe1-b63f14279421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{556ace7e-68bf-41d6-b670-2f77f77cee20}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -37,7 +37,7 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Character.h">
-      <Filter>Character</Filter>
+      <Filter>Entity</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Item.h">
       <Filter>Item</Filter>
@@ -51,8 +51,14 @@
     <ClInclude Include="..\Include\Game.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\State.h">
+    <ClInclude Include="..\Include\States.h">
       <Filter>State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\GameState.h">
+      <Filter>State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Entity.h">
+      <Filter>Entity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -60,7 +66,7 @@
       <Filter>Item</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Character.cpp">
-      <Filter>Character</Filter>
+      <Filter>Entity</Filter>
     </ClCompile>
     <ClCompile Include="..\Main.cpp">
       <Filter>Fichiers sources</Filter>
@@ -77,8 +83,14 @@
     <ClCompile Include="..\Source\Game.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\State.cpp">
+    <ClCompile Include="..\Source\States.cpp">
       <Filter>State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\GameState.cpp">
+      <Filter>State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Entity.cpp">
+      <Filter>Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

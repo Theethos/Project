@@ -21,21 +21,25 @@
   <ItemGroup>
     <ClInclude Include="..\Include\Armor.h" />
     <ClInclude Include="..\Include\Character.h" />
+    <ClInclude Include="..\Include\Entity.h" />
     <ClInclude Include="..\Include\Game.h" />
+    <ClInclude Include="..\Include\GameState.h" />
     <ClInclude Include="..\Include\Inventory.h" />
     <ClInclude Include="..\Include\Item.h" />
     <ClInclude Include="..\Include\Macros_Includes.h" />
-    <ClInclude Include="..\Include\State.h" />
+    <ClInclude Include="..\Include\States.h" />
     <ClInclude Include="..\Include\Weapon.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Main.cpp" />
     <ClCompile Include="..\Source\Armor.cpp" />
     <ClCompile Include="..\Source\Character.cpp" />
+    <ClCompile Include="..\Source\Entity.cpp" />
     <ClCompile Include="..\Source\Game.cpp" />
+    <ClCompile Include="..\Source\GameState.cpp" />
     <ClCompile Include="..\Source\Inventory.cpp" />
     <ClCompile Include="..\Source\Item.cpp" />
-    <ClCompile Include="..\Source\State.cpp" />
+    <ClCompile Include="..\Source\States.cpp" />
     <ClCompile Include="..\Source\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
