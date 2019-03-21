@@ -1,6 +1,6 @@
 #include "../Include/Entity.h"
 
-Entity::Entity() : m_speed(100.f)
+Entity::Entity() : m_speed(200.f)
 {
 	m_shape.setSize(sf::Vector2f(50.f, 50.f));
 }
@@ -22,7 +22,7 @@ void Entity::update(const float & dt)
 {
 }
 
-void Entity::render(sf::RenderTarget & target)
+void Entity::render(sf::RenderTarget* target)
 {
-	target.draw(m_shape);
+	target->draw(m_shape);
 }

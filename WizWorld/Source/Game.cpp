@@ -1,5 +1,5 @@
 #define _REQUIRE_SFML_
-	#include "../Include/Macros_Includes.h"
+	#include "../Include/Macro_Include.h"
 #undef _REQUIRE_SFML_
 #include "../Include/Game.h"
 
@@ -52,6 +52,12 @@ void Game::update()
 			delete m_states.top();
 			m_states.pop();
 		}
+		else if (m_states.top()->getAdd())
+		{
+			State *newState = m_states.top()->getAdd();
+			m_states.top()->resetAdd();
+			m_states.push(newState);
+		}
 	}
 	else
 	{
@@ -64,7 +70,7 @@ void Game::render()
 	m_window.clear();
 	// Renders from state
 	if (!m_states.empty())
-		m_states.top()->render(m_window);
+		m_states.top()->render(&m_window);
 
 	m_window.display();
 }
@@ -77,7 +83,7 @@ void Game::render()
 */
 void Game::initializeWindow()
 {
-	std::ifstream window_config("../External/Config/window.cfg");
+	std::ifstream config_file("../External/Config/window.cfg");
 
 	/* Window attributes */
 	std::string title("None");
@@ -85,15 +91,15 @@ void Game::initializeWindow()
 	unsigned fps = 120;
 	bool vertical_sync_enabled = false;
 
-	if (window_config.is_open())
+	if (config_file.is_open())
 	{
-		std::getline(window_config, title);
-		window_config >> video_mode.width >> video_mode.height;
-		window_config >> fps;
-		window_config >> vertical_sync_enabled;
+		std::getline(config_file, title);
+		config_file >> video_mode.width >> video_mode.height;
+		config_file >> fps;
+		config_file >> vertical_sync_enabled;
 	}
 
-	window_config.close();
+	config_file.close();
 
 	m_window.create(video_mode, title);
 	m_window.setFramerateLimit(fps);
@@ -104,13 +110,25 @@ void Game::initializeStates()
 {
 	m_states.push(new GameState(&m_window, &m_keys));
 }
-
+/* Initializes @member[keys] with the parameters in the files "game_keys.cfg"
+   Format :
+		Key_Name SFML_Key_Value
+*/
 void Game::initializeKeys()
 {
-	m_keys.emplace("Z", sf::Keyboard::Key::Z);
-	m_keys.emplace("Q", sf::Keyboard::Key::Q);
-	m_keys.emplace("S", sf::Keyboard::Key::S);
-	m_keys.emplace("D", sf::Keyboard::Key::D);
+	std::ifstream config_file("../External/Config/game_keys.cfg");
+
+	if (config_file.is_open())
+	{
+		std::string key = "";
+		int key_value = 0;
+		while (config_file >> key >> key_value)
+		{
+			m_keys[key] = key_value;
+		}
+	}
+
+	config_file.close();
 }
 
 void Game::updateEvents()

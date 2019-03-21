@@ -2,6 +2,7 @@
 #define _GAME_H_
 
 #include "GameState.h"
+#include "MainMenuState.h"
 
 class Game
 {
@@ -37,8 +38,6 @@ private:
 	void initializeStates();
 	/* Initializes @member[keys] */
 	void initializeKeys();
-	/* Initalizes @member[actions] */
-	void initializeActions();
 };
 
 #endif // !_GAME_H_

@@ -1,6 +1,2 @@
-﻿  Main.cpp
-  Game.cpp
-  GameState.cpp
-  States.cpp
-  Génération de code en cours...
+﻿  MainMenuState.cpp
   WizWorld.vcxproj -> C:\Users\Théo Brichet\Desktop\Project\WizWorld\x64\Debug\WizWorld.exe

@@ -2,7 +2,7 @@
 #define _ENTITY_H_
 
 #define _REQUIRE_SFML_
-	#include "Macros_Includes.h"
+	#include "Macro_Include.h"
 #undef _REQUIRE_SFML_
 
 class Entity
@@ -15,7 +15,7 @@ public:
 	virtual void move(const float& dt, const float x_motion, const float y_motion);
 
 	virtual void update(const float &dt);
-	virtual void render(sf::RenderTarget & target);
+	virtual void render(sf::RenderTarget* target);
 
 protected:
 	sf::RectangleShape m_shape;

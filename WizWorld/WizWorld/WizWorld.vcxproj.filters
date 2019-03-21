@@ -28,13 +28,13 @@
     <Filter Include="Entity">
       <UniqueIdentifier>{556ace7e-68bf-41d6-b670-2f77f77cee20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Button">
+      <UniqueIdentifier>{6cbce9fc-9867-45a1-bd5b-b46d55f5519d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Weapon.h">
       <Filter>Item</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\Macros_Includes.h">
-      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Character.h">
       <Filter>Entity</Filter>
@@ -51,14 +51,23 @@
     <ClInclude Include="..\Include\Game.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\States.h">
-      <Filter>State</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\GameState.h">
       <Filter>State</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Entity.h">
       <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\MainMenuState.h">
+      <Filter>State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\State.h">
+      <Filter>State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Macro_Include.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Button.h">
+      <Filter>Button</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -83,18 +92,24 @@
     <ClCompile Include="..\Source\Game.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\States.cpp">
-      <Filter>State</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\GameState.cpp">
       <Filter>State</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Entity.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\MainMenuState.cpp">
+      <Filter>State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\State.cpp">
+      <Filter>State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Button.cpp">
+      <Filter>Button</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Items_STATS.txt">
+    <Text Include="Item_STATS.txt">
       <Filter>Fichiers de ressources</Filter>
     </Text>
   </ItemGroup>

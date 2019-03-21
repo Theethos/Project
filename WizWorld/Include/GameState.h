@@ -1,7 +1,7 @@
 #ifndef _GAME_STATE_H_
 #define _GAME_STATE_H_
 
-#include "States.h"
+#include "MainMenuState.h"
 #include "Entity.h"
 
 /*
@@ -18,12 +18,12 @@ public:
 
 	virtual void handleInput(const float &dt);
 	virtual void update(const float &dt);
-	virtual void render(sf::RenderTarget & target);
+	virtual void render(sf::RenderTarget* target);
 	virtual void initializeActions();
 
 
 private:
-	Entity m_player;
+	Entity m_player;	
 };
 
 #endif // !_GAME_STATE_H_

@@ -1,5 +1,5 @@
 #define _REQUIRE_SFML_
-	#include "Include/Macros_Includes.h"
+	#include "Include/Macro_Include.h"
 #undef _REQUIRE_SFML_
 
 #include "Include/Character.h"
@@ -70,7 +70,6 @@ int main()
 	mickael.gainEXP(450); // 5 148 376 331 max EXP;
 	std::cout << std::endl << "=================" << std::endl << std::endl;
 
-	std::cout << std::endl;
 	std::cout << "\n=== End ===\n" << std::endl;
 
 	system("PAUSE");
