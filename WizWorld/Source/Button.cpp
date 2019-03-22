@@ -20,9 +20,8 @@ Button::Button(float x, float y, float w, float h, std::string text, sf::Font *f
 	m_text.setString(text);
 	m_text.setFillColor(m_textColor);
 	m_text.setCharacterSize(m_textSize);
-
-	m_text.setPosition(sf::Vector2f(m_shape.getSize().x / 2.f - m_text.getGlobalBounds().width / 2.f,
-									m_shape.getSize().y / 2.f - m_text.getGlobalBounds().height / 2.f
+	m_text.setPosition(sf::Vector2f(m_shape.getSize().x + (m_shape.getGlobalBounds().width / 2.f - m_text.getGlobalBounds().width / 2.f),
+									m_shape.getSize().y + (m_shape.getGlobalBounds().width / 2.f - m_text.getGlobalBounds().height / 2.f)
 	));
 }
 

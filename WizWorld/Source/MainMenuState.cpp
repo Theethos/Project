@@ -10,6 +10,7 @@ MainMenuState::MainMenuState(sf::RenderWindow *window, std::map < std::string, i
 {
 	initializeFonts();
 	initializeActions();
+	initializeButtons();
 	m_background.setSize(sf::Vector2f(window->getSize()));
 	m_background.setFillColor(sf::Color::Red);
 }
@@ -27,6 +28,7 @@ void MainMenuState::handleInput(const float &dt)
 void MainMenuState::update(const float& dt)
 {
 	updateMousePositions();
+	std::cout << m_mousePosView.x << " " << m_mousePosView.y << std::endl;
 	handleInput(dt);
 	for (int i = 0; i < m_buttonText.size(); i++)
 	{
@@ -111,6 +113,7 @@ void MainMenuState::initializeButtons()
 
 		for (int i = 0; i < m_buttonText.size(); i++)
 		{
+			config_file.getline();
 			config_file >> x >> y >> w >> h >> text;
 
 			config_file >> r >> g >> b >> a;
@@ -124,6 +127,7 @@ void MainMenuState::initializeButtons()
 
 			config_file >> r >> g >> b >> a >> textSize;
 			textColor.r = r; textColor.g = g; textColor.b = b, textColor.a = a;
+
 
 			m_buttons[i] = new Button(x, y, w, h, text, &m_font, idleColor, hoverColor, activeColor, textColor, textSize);
 		}
