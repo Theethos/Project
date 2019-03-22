@@ -1,4 +1,10 @@
-﻿  Button.cpp
+﻿  Main.cpp
+  Game.cpp
+  GameState.cpp
   MainMenuState.cpp
+c:\users\théo brichet\desktop\project\wizworld\source\mainmenustate.cpp(123): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
+c:\users\théo brichet\desktop\project\wizworld\source\mainmenustate.cpp(126): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
+c:\users\théo brichet\desktop\project\wizworld\source\mainmenustate.cpp(130): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
+c:\users\théo brichet\desktop\project\wizworld\source\mainmenustate.cpp(133): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
   Génération de code en cours...
-  WizWorld.vcxproj -> C:\Users\teto2\Documents\Git_Theetho\Project\WizWorld\x64\Debug\WizWorld.exe
+  WizWorld.vcxproj -> C:\Users\Théo Brichet\Desktop\Project\WizWorld\x64\Debug\WizWorld.exe

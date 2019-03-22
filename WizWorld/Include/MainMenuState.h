@@ -2,7 +2,9 @@
 #define _MAIN_MENU_STATE_H
 
 #include "State.h"
+#include "GameState.h"
 #include "Button.h"
+#include <cstdlib>
 
 
 /*

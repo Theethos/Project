@@ -12,12 +12,16 @@ MainMenuState::MainMenuState(sf::RenderWindow *window, std::map < std::string, i
 	initializeActions();
 	initializeButtons();
 	m_background.setSize(sf::Vector2f(window->getSize()));
-	m_background.setFillColor(sf::Color::Red);
+	m_background.setFillColor(sf::Color::Black);
 }
 
 MainMenuState::~MainMenuState()
 {
-
+	for (int i = 0; i < m_buttonText.size(); i++)
+	{
+		delete m_buttons[i];
+	}
+	delete[] m_buttons;
 }
 
 void MainMenuState::handleInput(const float &dt)
@@ -28,11 +32,19 @@ void MainMenuState::handleInput(const float &dt)
 void MainMenuState::update(const float& dt)
 {
 	updateMousePositions();
-	std::cout << m_mousePosView.x << " " << m_mousePosView.y << std::endl;
 	handleInput(dt);
 	for (int i = 0; i < m_buttonText.size(); i++)
 	{
 		m_buttons[i]->update(m_mousePosView);
+		if (m_buttons[i]->getPressed())
+		{
+			if (i == m_buttonText["QUIT"])
+				m_quit = true;
+			else if (i == m_buttonText["PLAY"])
+			{ 
+				m_add = new GameState(m_window, m_keys);
+			}
+		}
 	}
 }
 
@@ -58,33 +70,7 @@ void MainMenuState::addState(State * state)
 */
 void MainMenuState::initializeActions()
 {
-	std::ifstream config_file("../External/Config/game_actions.cfg");
-
-	if (config_file.is_open())
-	{
-		std::string action = "";
-		std::string key = "";
-		while (config_file >> action >> key)
-		{
-			m_actions[action] = m_keys->at(key);
-		}
-	}
-
-	config_file.close();
-	m_actions["END_STATE"] = sf::Keyboard::Key::B;
-
-}
-
-void MainMenuState::initializeFonts()
-{
-	if (!m_font.loadFromFile("../External/Fonts/harryp__.ttf"))
-	{
-		throw("Error in 'MainMenuState' : Could not load font");
-	}
-}
-
-void MainMenuState::initializeButtons()
-{
+	/* Get the different actions of buttons (Play, Quit, ... ) */
 	std::ifstream config_file("../External/Config/main_menu_buttons_actions.cfg");
 
 	if (config_file.is_open())
@@ -98,37 +84,102 @@ void MainMenuState::initializeButtons()
 	}
 
 	config_file.close();
+}
 
+void MainMenuState::initializeFonts()
+{
+	if (!m_font.loadFromFile("../External/Fonts/harryp__.ttf"))
+	{
+		throw("Error in 'MainMenuState' : Could not load font");
+	}
+}
+
+void MainMenuState::initializeButtons()
+{
+	/* Initializes all buttons */
 	m_buttons = new Button*[m_buttonText.size()];
 
-	config_file.open("../External/Config/main_menu_buttons.cfg");
+	std::ifstream config_file("../External/Config/main_menu_buttons.cfg");
 
 	if (config_file.is_open())
 	{
-		float x, y, w, h;
-		std::string text;
-		unsigned int r = 0, g = 0, b = 0, a = 0;
-		sf::Color idleColor, hoverColor, activeColor, textColor;
-		int textSize;
+		/* Line in the file */
+		std::string line = "";
+		/* Coordinates and size of the button */
+		float x = 0.0, y = 0.0, w = 0.0, h = 0.0;
+		/* Text on the button */
+		std::string text = "";
+		/* Colors of the button */
+		int r = 0, g = 0, b = 0, a = 255;
+		sf::Color idleColor = sf::Color::White, hoverColor = sf::Color::White, activeColor = sf::Color::White, textColor = sf::Color::White;
+		/* Size of the text on the button */
+		int textSize = 12;
 
+		/* For each buttons of this state */
 		for (int i = 0; i < m_buttonText.size(); i++)
 		{
-			config_file.getline();
-			config_file >> x >> y >> w >> h >> text;
+			/* Get coordinates*/
+			std::getline(config_file, line, ' ');
+			x = std::atoi(line.c_str());
 
-			config_file >> r >> g >> b >> a;
-			idleColor.r = r; idleColor.g = g; idleColor.b = b, idleColor.a = a;
+			std::getline(config_file, line, ' ');
+			y = std::atoi(line.c_str());
 
-			config_file >> r >> g >> b >> a;
-			hoverColor.r = r; hoverColor.g = g; hoverColor.b = b, hoverColor.a = a;
+			/* Get size */
+			std::getline(config_file, line, ' ');
+			w = std::atoi(line.c_str());
 
-			config_file >> r >> g >> b >> a;
-			activeColor.r = r; activeColor.g = g; activeColor.b = b, activeColor.a = a;
+			std::getline(config_file, line, ' ');
+			h = std::atoi(line.c_str());
+			
+			/* Get text */
+			std::getline(config_file, text, ' ');
 
-			config_file >> r >> g >> b >> a >> textSize;
-			textColor.r = r; textColor.g = g; textColor.b = b, textColor.a = a;
+			/* Get Idle_Color */
+			std::getline(config_file, line, ' ');
+			idleColor.r = std::atoi(line.c_str());
 
+			std::getline(config_file, line, ' ');
+			idleColor.g = std::atoi(line.c_str());
 
+			std::getline(config_file, line, ' ');
+			idleColor.b = std::atoi(line.c_str());
+
+			/* Get Hover_Color */
+			std::getline(config_file, line, ' ');
+			hoverColor.r = std::atoi(line.c_str());
+
+			std::getline(config_file, line, ' ');
+			hoverColor.g = std::atoi(line.c_str());
+
+			std::getline(config_file, line, ' ');
+			hoverColor.b = std::atoi(line.c_str());
+
+			/* Get Active_Color */
+			std::getline(config_file, line, ' ');
+			activeColor.r = std::atoi(line.c_str());
+
+			std::getline(config_file, line, ' ');
+			activeColor.g = std::atoi(line.c_str());
+
+			std::getline(config_file, line, ' ');
+			activeColor.b = std::atoi(line.c_str());
+
+			/* Get Text_Color */
+			std::getline(config_file, line, ' ');
+			textColor.r = std::atoi(line.c_str());
+
+			std::getline(config_file, line, ' ');
+			textColor.g = std::atoi(line.c_str());
+
+			std::getline(config_file, line, ' ');
+			textColor.b = std::atoi(line.c_str());
+
+			/* Get Text_size */
+			std::getline(config_file, line, '\n');
+			textSize = std::atoi(line.c_str());
+
+			/* Create the button */
 			m_buttons[i] = new Button(x, y, w, h, text, &m_font, idleColor, hoverColor, activeColor, textColor, textSize);
 		}
 	}

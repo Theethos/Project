@@ -108,7 +108,8 @@ void Game::initializeWindow()
 
 void Game::initializeStates()
 {
-	m_states.push(new GameState(&m_window, &m_keys));
+	//m_states.push(new GameState(&m_window, &m_keys));
+	m_states.push(new MainMenuState(&m_window, &m_keys));
 }
 /* Initializes @member[keys] with the parameters in the files "game_keys.cfg"
    Format :
