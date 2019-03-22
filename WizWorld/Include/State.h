@@ -47,7 +47,7 @@ protected:
 	/* Mouse positions */
 	sf::Vector2i m_mousePosScreen;
 	sf::Vector2i m_mousePosWindow;
-	sf::Vector2f m_mousPosView;
+	sf::Vector2f m_mousePosView;
 };
 
 #endif // !_STATE_H_

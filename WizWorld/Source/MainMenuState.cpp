@@ -30,7 +30,7 @@ void MainMenuState::update(const float& dt)
 	handleInput(dt);
 	for (int i = 0; i < m_buttonText.size(); i++)
 	{
-		m_buttons[i]->update((sf::Vector2f)m_mousePosScreen);
+		m_buttons[i]->update(m_mousePosView);
 	}
 }
 
@@ -105,7 +105,7 @@ void MainMenuState::initializeButtons()
 	{
 		float x, y, w, h;
 		std::string text;
-		unsigned int r = 0, g = 0, b = 0;
+		unsigned int r = 0, g = 0, b = 0, a = 0;
 		sf::Color idleColor, hoverColor, activeColor, textColor;
 		int textSize;
 
@@ -113,17 +113,17 @@ void MainMenuState::initializeButtons()
 		{
 			config_file >> x >> y >> w >> h >> text;
 
-			config_file >> r >> g >> b;
-			idleColor.r = r; idleColor.g = g; idleColor.b = b;
+			config_file >> r >> g >> b >> a;
+			idleColor.r = r; idleColor.g = g; idleColor.b = b, idleColor.a = a;
 
-			config_file >> r >> g >> b;
-			hoverColor.r = r; hoverColor.g = g; hoverColor.b = b;
+			config_file >> r >> g >> b >> a;
+			hoverColor.r = r; hoverColor.g = g; hoverColor.b = b, hoverColor.a = a;
 
-			config_file >> r >> g >> b;
-			activeColor.r = r; activeColor.g = g; activeColor.b = b;
+			config_file >> r >> g >> b >> a;
+			activeColor.r = r; activeColor.g = g; activeColor.b = b, activeColor.a = a;
 
-			config_file >> r >> g >> b >> textSize;
-			textColor.r = r; textColor.g = g; textColor.b = b;
+			config_file >> r >> g >> b >> a >> textSize;
+			textColor.r = r; textColor.g = g; textColor.b = b, textColor.a = a;
 
 			m_buttons[i] = new Button(x, y, w, h, text, &m_font, idleColor, hoverColor, activeColor, textColor, textSize);
 		}

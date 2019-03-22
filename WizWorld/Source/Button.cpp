@@ -52,7 +52,11 @@ void Button::update(const sf::Vector2f mousePos)
 void Button::render(sf::RenderTarget * target)
 {
 	if (target)
+	{
 		target->draw(m_shape);
+		target->draw(m_text);
+	}
+		
 }
 
 bool Button::getPressed() const

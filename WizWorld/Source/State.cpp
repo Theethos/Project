@@ -8,7 +8,7 @@
 
 State::State(sf::RenderWindow* window, std::map < std::string, int> *keys) 
 	: m_window(window), m_quit(false), m_keys(keys), m_add(nullptr),
-	  m_mousePosScreen(0,0), m_mousePosWindow(0,0), m_mousPosView(0,0)
+	  m_mousePosScreen(0,0), m_mousePosWindow(0,0), m_mousePosView(0,0)
 {}
 
 State::~State()
@@ -26,7 +26,7 @@ void State::updateMousePositions()
 {
 	m_mousePosScreen = sf::Mouse::getPosition();
 	m_mousePosWindow = sf::Mouse::getPosition(*m_window);
-	m_mousPosView = m_window->mapPixelToCoords(m_mousePosWindow);
+	m_mousePosView = m_window->mapPixelToCoords(m_mousePosWindow);
 }
 
 void State::addState(State * state)
