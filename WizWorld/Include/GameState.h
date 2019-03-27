@@ -1,7 +1,7 @@
 #ifndef _GAME_STATE_H_
 #define _GAME_STATE_H_
 
-#include "MainMenuState.h"
+#include "State.h"
 #include "Entity.h"
 
 /*
@@ -13,14 +13,13 @@
 class GameState : public State
 {
 public:
-	GameState(sf::RenderWindow *window, std::map < std::string, int> *keys);
+	GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states);
 	virtual ~GameState();
 
-	virtual void handleInput(const float &dt);
-	virtual void update(const float &dt);
+	virtual void handleInput(const double &dt);
+	virtual void update(const double &dt);
 	virtual void render(sf::RenderTarget* target);
 	virtual void initializeActions();
-
 
 private:
 	Entity m_player;	

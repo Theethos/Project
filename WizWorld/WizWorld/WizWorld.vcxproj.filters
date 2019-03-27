@@ -57,9 +57,6 @@
     <ClInclude Include="..\Include\Entity.h">
       <Filter>Entity</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\MainMenuState.h">
-      <Filter>State</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\State.h">
       <Filter>State</Filter>
     </ClInclude>
@@ -68,6 +65,9 @@
     </ClInclude>
     <ClInclude Include="..\Include\Button.h">
       <Filter>Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\MenuState.h">
+      <Filter>State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -98,14 +98,14 @@
     <ClCompile Include="..\Source\Entity.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\MainMenuState.cpp">
-      <Filter>State</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\State.cpp">
       <Filter>State</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Button.cpp">
       <Filter>Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\MenuState.cpp">
+      <Filter>State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

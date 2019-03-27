@@ -9,7 +9,7 @@
  * ==================================================
  */
 
-Game::Game() : m_dt(0.0)
+Game::Game() : m_dt(0.0), m_fullscreen(false)
 {
 	initializeWindow();
 	initializeKeys();
@@ -52,12 +52,6 @@ void Game::update()
 			delete m_states.top();
 			m_states.pop();
 		}
-		else if (m_states.top()->getAdd())
-		{
-			State *newState = m_states.top()->getAdd();
-			m_states.top()->resetAdd();
-			m_states.push(newState);
-		}
 	}
 	else
 	{
@@ -78,6 +72,7 @@ void Game::render()
    Format :
 		Title
 		Width height
+		FullScreen
 		FPS
 		Vertical synchronisation enabled 
 */
@@ -87,7 +82,7 @@ void Game::initializeWindow()
 
 	/* Window attributes */
 	std::string title("None");
-	sf::VideoMode video_mode(800, 600);
+	sf::VideoMode video_mode(sf::VideoMode::getDesktopMode());
 	unsigned fps = 120;
 	bool vertical_sync_enabled = false;
 
@@ -95,21 +90,23 @@ void Game::initializeWindow()
 	{
 		std::getline(config_file, title);
 		config_file >> video_mode.width >> video_mode.height;
+		config_file >> m_fullscreen;
 		config_file >> fps;
 		config_file >> vertical_sync_enabled;
 	}
 
 	config_file.close();
-
-	m_window.create(video_mode, title);
+	if (m_fullscreen)
+		m_window.create(video_mode, title, sf::Style::Fullscreen);
+	else
+		m_window.create(video_mode, title);
 	m_window.setFramerateLimit(fps);
 	m_window.setVerticalSyncEnabled(vertical_sync_enabled);
 }
 
 void Game::initializeStates()
 {
-	//m_states.push(new GameState(&m_window, &m_keys));
-	m_states.push(new MainMenuState(&m_window, &m_keys));
+	m_states.push(new MenuState(&m_window, &m_keys, &m_states, "../External/Config/main_menu_buttons.cfg"));
 }
 /* Initializes @member[keys] with the parameters in the files "game_keys.cfg"
    Format :

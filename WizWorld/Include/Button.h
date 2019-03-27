@@ -14,9 +14,9 @@
 class Button
 {
 public:
-	Button(float x, float y, float w, float h, std::string text, sf::Font *font, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor,
+	Button(double x, double y, double w, double h, std::string text, sf::Font *font, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor,
 		sf::Color textColor = sf::Color::White, int textSize = 12);
-	~Button();
+	virtual ~Button();
 
 	virtual void update(const sf::Vector2f mousePos);
 	virtual void render(sf::RenderTarget* target);

@@ -28,7 +28,7 @@
     <ClInclude Include="..\Include\Inventory.h" />
     <ClInclude Include="..\Include\Item.h" />
     <ClInclude Include="..\Include\Macro_Include.h" />
-    <ClInclude Include="..\Include\MainMenuState.h" />
+    <ClInclude Include="..\Include\MenuState.h" />
     <ClInclude Include="..\Include\State.h" />
     <ClInclude Include="..\Include\Weapon.h" />
   </ItemGroup>
@@ -42,7 +42,7 @@
     <ClCompile Include="..\Source\GameState.cpp" />
     <ClCompile Include="..\Source\Inventory.cpp" />
     <ClCompile Include="..\Source\Item.cpp" />
-    <ClCompile Include="..\Source\MainMenuState.cpp" />
+    <ClCompile Include="..\Source\MenuState.cpp" />
     <ClCompile Include="..\Source\State.cpp" />
     <ClCompile Include="..\Source\Weapon.cpp" />
   </ItemGroup>

@@ -2,7 +2,7 @@
 #define _GAME_H_
 
 #include "GameState.h"
-#include "MainMenuState.h"
+#include "MenuState.h"
 
 class Game
 {
@@ -16,12 +16,13 @@ public:
 private:
 	/*=== Attributes ===*/
 	sf::RenderWindow m_window;
+	bool m_fullscreen;
 	sf::Event m_event;
 	std::stack<State*> m_states;
 	/* Clock*/
 	sf::Clock m_clock;
 	/* Delta time, time between 2 frames */
-	float m_dt;
+	double m_dt;
 	/* Keys that Game uses */
 	std::map<std::string, int> m_keys;
 

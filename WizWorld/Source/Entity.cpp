@@ -5,7 +5,7 @@ Entity::Entity() : m_speed(200.f)
 	m_shape.setSize(sf::Vector2f(50.f, 50.f));
 }
 
-Entity::Entity(float speed, float x_shape, float y_shape) : m_speed(speed)
+Entity::Entity(double speed, double x_shape, double y_shape) : m_speed(speed)
 {
 	m_shape.setSize(sf::Vector2f(x_shape, y_shape));
 }
@@ -13,12 +13,12 @@ Entity::Entity(float speed, float x_shape, float y_shape) : m_speed(speed)
 Entity::~Entity()
 {}
 
-void Entity::move(const float& dt, const float x_motion, const float y_motion)
+void Entity::move(const double& dt, const double x_motion, const double y_motion)
 {
 	m_shape.move(x_motion * dt * m_speed, y_motion * dt * m_speed);
 }
 
-void Entity::update(const float & dt)
+void Entity::update(const double & dt)
 {
 }
 

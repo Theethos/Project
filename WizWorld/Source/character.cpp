@@ -35,15 +35,15 @@ void Character::gainEXP(long long EXPValue)
 	{
 		if (m_level.level < 50) // Level max is 50 (== 5 148 376 331 EXP)
 		{
-			std::cout << m_name << " levels up ! " << GENDER(m_sexe, "He", "Her") << " is now level " << m_level.level;
 			m_level.level += 1;
+			std::cout << m_name << " levels up ! " << GENDER(m_sexe, "He", "She") << " is now level " << m_level.level;
 			m_level.nextLevelEXP += (long long)(m_level.nextLevelEXP * 0.405); // Each level, characters need 1.5 more EXP to level up
 			m_healthPoints.levelHealthPoints += 50; // Each level, characters gains 50 "native" HP
 			std::cout << " (" << MIN(m_level.currentLevelEXP, m_level.nextLevelEXP, m_level.currentLevelEXP, m_level.nextLevelEXP) << "/" << m_level.nextLevelEXP << ")" << std::endl;
 		}
 		else // Amount of EXP already at max
 		{
-			std::cout << m_name << " levels up ! " << GENDER(m_sexe, "He", "Her") << " is now level " << m_level.level;
+			std::cout << m_name << " is already level " << m_level.level;
 			m_level.currentLevelEXP = m_level.nextLevelEXP;
 			std::cout << " (" << m_level.currentLevelEXP << "/" << m_level.nextLevelEXP << ")" << std::endl;
 			break;
@@ -63,6 +63,7 @@ void Character::receiveDamage(int damageValue)
 /* Attacks @param[target] with the primary weapon */
 void Character::hitWithWeapon(Character &target) const
 {
+	/* Uses the weapon with the max damage value */
 	Weapon *weapon = MAX(m_inventory.getWeapon_1()->getDamage(), m_inventory.getWeapon_2()->getDamage(), m_inventory.getWeapon_1(), m_inventory.getWeapon_2());
 	std::cout << m_name << " hits " << target.m_name << " with " << GENDER(m_sexe, "his ", "her ") << weapon->getName() << "." << std::endl;
 
@@ -79,11 +80,11 @@ void Character::equipItem(Item * item)
 {
 	std::cout << m_name << " equips \"" << item->getName() << "\"." << std::endl;
 	if (item->getCategory() == PRIMARY_WEAPON)
-		m_inventory.setWeapon_1((Weapon*)item);
+		m_inventory.setWeapon_1(dynamic_cast<Weapon*>(item));
 	else if (item->getCategory() == SECONDARY_WEAPON)
-		m_inventory.setWeapon_2((Weapon*)item);
+		m_inventory.setWeapon_2(dynamic_cast<Weapon*>(item));
 	else
-		m_inventory.setStuff((Armor*)item);
+		m_inventory.setStuff(dynamic_cast<Armor*>(item));
 }
 
 void Character::displayInventory() const

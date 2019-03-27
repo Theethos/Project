@@ -1,4 +1,5 @@
 #include "../Include/GameState.h"
+#include "../Include/MenuState.h"
 
 /*
  * ==================================================
@@ -6,7 +7,7 @@
  * ==================================================
  */
 
-GameState::GameState(sf::RenderWindow *window, std::map < std::string, int> *keys) : State(window, keys), m_player()
+GameState::GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states) : State(window, keys, states), m_player()
 {
 	initializeActions();
 }
@@ -16,10 +17,8 @@ GameState::~GameState()
 
 }
 
-void GameState::handleInput(const float &dt)
+void GameState::handleInput(const double &dt)
 {
-	checkForQuit(dt);
-
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(m_actions["MOVE_UP"])))
 		m_player.move(dt, 0.f, -1.f);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(m_actions["MOVE_DOWN"])))
@@ -30,12 +29,11 @@ void GameState::handleInput(const float &dt)
 		m_player.move(dt, 1.f, 0.f);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(m_actions["MENU"])))
 	{
-		if(!m_add)
-			addState(new MainMenuState(m_window, m_keys));
+		m_states->push(new MenuState(m_window, m_keys, m_states, "../External/Config/pause_menu_buttons.cfg"));
 	}
 }
 
-void GameState::update(const float& dt)
+void GameState::update(const double& dt)
 {
 	updateMousePositions();
 	handleInput(dt);
