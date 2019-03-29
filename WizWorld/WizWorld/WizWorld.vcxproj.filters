@@ -31,6 +31,9 @@
     <Filter Include="Button">
       <UniqueIdentifier>{6cbce9fc-9867-45a1-bd5b-b46d55f5519d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{83395c0f-5095-49fa-9eb1-1db27d8ed77f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Weapon.h">
@@ -69,6 +72,12 @@
     <ClInclude Include="..\Include\MenuState.h">
       <Filter>State</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Player.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\MovementComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Weapon.cpp">
@@ -106,6 +115,12 @@
     </ClCompile>
     <ClCompile Include="..\Source\MenuState.cpp">
       <Filter>State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Player.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\MovementComponent.cpp">
+      <Filter>Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

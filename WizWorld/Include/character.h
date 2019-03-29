@@ -8,10 +8,6 @@
 /*=== Avoid mutual inclusions ===*/
 class Item;
 
- /*=== Enumerations ===*/
-
-
-
 /*=== Structures ===*/
 
 struct HealthPoints

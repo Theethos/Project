@@ -2,7 +2,7 @@
 #define _GAME_STATE_H_
 
 #include "State.h"
-#include "Entity.h"
+#include "Player.h"
 
 /*
  * ==================================================
@@ -20,9 +20,11 @@ public:
 	virtual void update(const double &dt);
 	virtual void render(sf::RenderTarget* target);
 	virtual void initializeActions();
+	virtual void initializeTextures();
 
 private:
-	Entity m_player;	
+	Player *m_player;	
+	std::map<std::string, sf::Texture> m_textures;
 };
 
 #endif // !_GAME_STATE_H_

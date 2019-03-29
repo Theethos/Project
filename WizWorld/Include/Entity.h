@@ -8,8 +8,7 @@
 class Entity
 {
 public:
-	Entity();
-	Entity(double speed, double x_shape, double y_shape);
+	Entity(double speed, sf::Texture *texture);
 	virtual ~Entity();
 	/* Move the entity; x and y are in {-1, 0, 1} */
 	virtual void move(const double& dt, const double x_motion, const double y_motion);
@@ -17,8 +16,11 @@ public:
 	virtual void update(const double &dt);
 	virtual void render(sf::RenderTarget* target);
 
+	void createSprite(sf::Texture *texture);
+
 protected:
-	sf::RectangleShape m_shape;
+	sf::Sprite *m_sprite;
+	sf::Texture *m_texture;
 	double m_speed;
 };
 

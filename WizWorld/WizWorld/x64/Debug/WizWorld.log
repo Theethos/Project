@@ -1,21 +1,2 @@
-﻿  MenuState.cpp
-c:\users\théo brichet\desktop\project\wizworld\source\menustate.cpp(128): warning C4244: 'initialisation' : conversion de 'T' en 'float', perte possible de données
-          with
-          [
-              T=unsigned int
-          ]
-c:\users\théo brichet\desktop\project\wizworld\source\menustate.cpp(216): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
-c:\users\théo brichet\desktop\project\wizworld\source\menustate.cpp(219): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
-c:\users\théo brichet\desktop\project\wizworld\source\menustate.cpp(233): warning C4244: 'initialisation' : conversion de 'T' en 'float', perte possible de données
-          with
-          [
-              T=unsigned int
-          ]
-c:\users\théo brichet\desktop\project\wizworld\source\menustate.cpp(265): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
-c:\users\théo brichet\desktop\project\wizworld\source\menustate.cpp(269): warning C4244: 'argument' : conversion de 'float' en 'unsigned int', perte possible de données
-c:\users\théo brichet\desktop\project\wizworld\source\menustate.cpp(271): warning C4244: 'argument' : conversion de 'double' en 'T', perte possible de données
-          with
-          [
-              T=float
-          ]
+﻿  GameState.cpp
   WizWorld.vcxproj -> C:\Users\Théo Brichet\Desktop\Project\WizWorld\x64\Debug\WizWorld.exe

@@ -29,8 +29,10 @@
     <ClInclude Include="..\Include\Item.h" />
     <ClInclude Include="..\Include\Macro_Include.h" />
     <ClInclude Include="..\Include\MenuState.h" />
+    <ClInclude Include="..\Include\Player.h" />
     <ClInclude Include="..\Include\State.h" />
     <ClInclude Include="..\Include\Weapon.h" />
+    <ClInclude Include="..\Source\MovementComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Main.cpp" />
@@ -43,6 +45,8 @@
     <ClCompile Include="..\Source\Inventory.cpp" />
     <ClCompile Include="..\Source\Item.cpp" />
     <ClCompile Include="..\Source\MenuState.cpp" />
+    <ClCompile Include="..\Source\MovementComponent.cpp" />
+    <ClCompile Include="..\Source\Player.cpp" />
     <ClCompile Include="..\Source\State.cpp" />
     <ClCompile Include="..\Source\Weapon.cpp" />
   </ItemGroup>
