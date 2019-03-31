@@ -1,17 +1,11 @@
 #include "../Include/Macro_Include.h"
 #include "../Include/Item.h"
-
 #include "../Include/Armor.h"
 
-/*
- * ==================================================
- * ================ Class Armor =====================
- * ==================================================
- */
-
 /* Constructors */
-Armor::Armor() : Item(), m_armorCategory(NO_ARMOR)
+Armor::Armor() : Item(), m_armorCategory(ArmorCategories::NO_ARMOR)
 {}
+
 Armor::Armor(std::string name, ItemCategories category, ArmorCategories armorCategory) : Item(name, category), m_armorCategory(armorCategory)
 {}
 
@@ -21,13 +15,11 @@ Armor::Armor(const Armor & armor)
 	m_category = armor.m_category;
 	m_armorCategory = armor.m_armorCategory;
 }
+
 /* Destructor */
 Armor::~Armor()
 {}
 
-/*=== Operator overload ===*/
-
-/* operator '=' */
 Armor & Armor::operator=(const Armor & armor)
 {
 	m_name = armor.m_name;
@@ -36,58 +28,57 @@ Armor & Armor::operator=(const Armor & armor)
 
 	return *this;
 }
-/*=== Getters ===*/
-
-/* ArmorCategory */
+/* Getters */
 ArmorCategories Armor::getArmorCategory() const
 {
 	return m_armorCategory;
 }
+
 /* ArmorCategory (string not enum [for display]) */
 std::string Armor::showCategory() const
 {
 	switch (m_armorCategory)
 	{
-		case NO_ARMOR:
+		case ArmorCategories::NO_ARMOR:
 			return "None";
 			break;
-		case HAT:
+		case ArmorCategories::HAT:
 			return "Hat";
 			break;
-		case CLOAK:
+		case ArmorCategories::CLOAK:
 			return "Cloak";
 			break;
-		case CHEST:
+		case ArmorCategories::CHEST:
 			return "Chest";
 			break;
-		case BELT:
+		case ArmorCategories::BELT:
 			return "Belt";
 			break;
-		case PANTS:
+		case ArmorCategories::PANTS:
 			return "Pants";
 			break;
-		case BOOTS:
+		case ArmorCategories::BOOTS:
 			return "Boots";
 			break;
-		case GLOVE_1:
+		case ArmorCategories::GLOVE_1:
 			return "Gloves";
 			break;
-		case GLOVE_2:
+		case ArmorCategories::GLOVE_2:
 			return "Gloves";
 			break;
-		case NECKLESS:
+		case ArmorCategories::NECKLESS:
 			return "Neckless";
 			break;
-		case EARING_1:
+		case ArmorCategories::EARING_1:
 			return "Earings";
 			break;
-		case EARING_2:
+		case ArmorCategories::EARING_2:
 			return "Earings";
 			break;
-		case RING_1:
+		case ArmorCategories::RING_1:
 			return "Ring";
 			break;
-		case RING_2:
+		case ArmorCategories::RING_2:
 			return "Ring";
 			break;
 		default:

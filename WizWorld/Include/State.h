@@ -7,20 +7,14 @@
 
 #include <stack>
 
-/*
- * ==================================================
- * =================== Class State ==================
- * ==================================================
- */
-
 class State
 {
 public:
 	State(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states);
 	virtual ~State();
 
-	virtual void handleInput(const double &dt) = 0;
-	virtual void update(const double &dt) = 0;
+	virtual void handleInput(const float &dt) = 0;
+	virtual void update(const float &dt) = 0;
 	virtual void render(sf::RenderTarget* target = nullptr) = 0;
 
 	virtual void updateMousePositions();

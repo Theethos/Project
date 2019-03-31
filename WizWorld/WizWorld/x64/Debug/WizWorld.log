@@ -1,2 +1,39 @@
-﻿  GameState.cpp
-  WizWorld.vcxproj -> C:\Users\Théo Brichet\Desktop\Project\WizWorld\x64\Debug\WizWorld.exe
+﻿  Main.cpp
+  AnimationComponent.cpp
+  Armor.cpp
+  Button.cpp
+c:\users\teto2\documents\git_theetho\project\wizworld\source\button.cpp(26): warning C4244: 'argument' : conversion de 'double' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+  Character.cpp
+c:\users\teto2\documents\git_theetho\project\wizworld\source\character.cpp(126): warning C4804: '<' : utilisation risquée du type 'bool' dans l'opération
+c:\users\teto2\documents\git_theetho\project\wizworld\source\character.cpp(151): warning C4804: '<' : utilisation risquée du type 'bool' dans l'opération
+  Entity.cpp
+  Game.cpp
+  GameState.cpp
+  Inventory.cpp
+  Item.cpp
+  MenuState.cpp
+c:\users\teto2\documents\git_theetho\project\wizworld\source\menustate.cpp(119): warning C4244: 'initialisation' : conversion de 'T' en 'float', perte possible de données
+          with
+          [
+              T=unsigned int
+          ]
+c:\users\teto2\documents\git_theetho\project\wizworld\source\menustate.cpp(210): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+c:\users\teto2\documents\git_theetho\project\wizworld\source\menustate.cpp(224): warning C4244: 'initialisation' : conversion de 'T' en 'float', perte possible de données
+          with
+          [
+              T=unsigned int
+          ]
+c:\users\teto2\documents\git_theetho\project\wizworld\source\menustate.cpp(256): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+c:\users\teto2\documents\git_theetho\project\wizworld\source\menustate.cpp(260): warning C4244: 'argument' : conversion de 'float' en 'unsigned int', perte possible de données
+  MovementComponent.cpp
+  Player.cpp
+  State.cpp
+  Weapon.cpp
+  Génération de code en cours...
+c:\users\teto2\documents\git_theetho\project\wizworld\source\entity.cpp(84): warning C4715: 'Entity::getMovement' : les chemins de contrôle ne retournent pas tous une valeur
+c:\users\teto2\documents\git_theetho\project\wizworld\source\entity.cpp(90): warning C4715: 'Entity::getAnimation' : les chemins de contrôle ne retournent pas tous une valeur
+  WizWorld.vcxproj -> C:\Users\teto2\Documents\Git_Theetho\Project\WizWorld\x64\Debug\WizWorld.exe

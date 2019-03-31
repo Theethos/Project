@@ -75,7 +75,10 @@
     <ClInclude Include="..\Include\Player.h">
       <Filter>Entity</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\MovementComponent.h">
+    <ClInclude Include="..\Include\MovementComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\AnimationComponent.h">
       <Filter>Component</Filter>
     </ClInclude>
   </ItemGroup>
@@ -120,6 +123,9 @@
       <Filter>Entity</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\MovementComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\AnimationComponent.cpp">
       <Filter>Component</Filter>
     </ClCompile>
   </ItemGroup>

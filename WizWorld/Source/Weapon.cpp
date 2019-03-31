@@ -1,19 +1,14 @@
 #include "../Include/Macro_Include.h"
 #include "../Include/Item.h" // Mother class
-
 #include "../Include/Weapon.h"
 
-/*
- * ==================================================
- * ================ Class Weapon ====================
- * ==================================================
- */
-
- /* Constructors */
-Weapon::Weapon() : Item(), m_weaponCategory(NO_WEAPON), m_damage(0)
+/* Constructors */
+Weapon::Weapon() : Item(), m_weaponCategory(WeaponCategories::NO_WEAPON), m_damage(0)
 {}
+
 Weapon::Weapon(std::string name, ItemCategories category, WeaponCategories weaponCategory, int damage) : Item(name, category), m_weaponCategory(weaponCategory), m_damage(damage)
 {}
+
 Weapon::Weapon(const Weapon & weapon)
 {
 	m_category = weapon.m_category;
@@ -21,11 +16,10 @@ Weapon::Weapon(const Weapon & weapon)
 	m_damage = weapon.m_damage;
 	m_weaponCategory = weapon.m_weaponCategory;
 }
+
 /* Destructors */
 Weapon:: ~Weapon()
 {}
-
-/*=== Operator overload ===*/
 
 Weapon & Weapon::operator=(const Weapon &weapon)
 {
@@ -37,36 +31,35 @@ Weapon & Weapon::operator=(const Weapon &weapon)
 	return *this;
 }
 
-/*=== Getters ===*/
-
-/* Damage */
+/* Getters */
 int Weapon::getDamage() const
 {
 	return m_damage;
 }
-/* WeaponCategory */
+
 WeaponCategories Weapon::getWeaponCategory() const
 {
 	return m_weaponCategory;
 }
+
 /* WeaponCategory (string not enum [for display]) */
 std::string Weapon::showCategory() const
 {
 	switch (m_weaponCategory)
 	{
-	case NO_WEAPON:
+	case WeaponCategories::NO_WEAPON:
 		return "None";
 		break;
-	case WAND:
+	case WeaponCategories::WAND:
 		return "Wand";
 		break;
-	case STAFF:
+	case WeaponCategories::STAFF:
 		return "Staff";
 		break;
-	case MAGIC_RING:
+	case WeaponCategories::MAGIC_RING:
 		return "Magic ring";
 		break;
-	case SHIELD:
+	case WeaponCategories::SHIELD:
 		return "Shield";
 		break;
 	default:

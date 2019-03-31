@@ -5,16 +5,18 @@
 
 #include "Inventory.h"
 
-/*=== Avoid mutual inclusions ===*/
+/* Avoid mutual inclusions */
 class Item;
 
-/*=== Structures ===*/
-
+/* Structures */
 struct HealthPoints
 {
 	long currentHealthPoints;
+	// Player gains HP every level
 	long levelHealthPoints;
+	// HP gained with characteristics
 	long characteristicHealthPoint;
+	// HP gained with stuff
 	long equipmentHealthPoints;
 };
 struct Level
@@ -29,57 +31,34 @@ struct Hair
 	HairStyle style;
 };
  
-/*
- * ==================================================
- * ================= Class Character ================
- * ==================================================
- */
+
 class Character
 {
 public:
-	/*=== Constructors/Destructor ===*/
-
 	Character();
     Character(std::string name, Sexe sexe, HairColor color, HairStyle style);
 	virtual ~Character();
-	//gne
-    /*=== Methods ===*/
 
 	/* Displays informations about the character (@member[name], @member[level] and @member[healthPoints]) */
 	void introduce() const;
-	/* Adds @param[EXPValue] to @member[level] */
+
 	void gainEXP(long long EXPValue);
-	/* Remove @param[damageValue] to @member[lifPoints] */
 	void receiveDamage(int damageValue);
-	/* Attacks @param[target] with the primary weapon */
 	void hitWithWeapon(Character &target) const;
-	/* Puts @param[item] in @member[inventory] if it is not full */
 	void pickUpItem(Item *item);
-	/* Equips @param[item] */
 	void equipItem(Item *item);
-	/* Displays all items equiped and carryed by the character */
 	void displayInventory() const;
 
-	/*=== Getters ===*/
-
-	/* Name */
+	/* Getters */
 	std::string getName() const;
-	/* Sexe */
 	Sexe getSexe() const;
-	/* HealthPoints*/
 	int getHealthPoints() const;
-	/* Level */
 	int getLevel() const;
-	/* Inventory */
 	Inventory* getInventory();
 
-	/*=== Setters ===*/
-	
-	/* Name*/
+	/* Setters */
 	void setName(std::string name);
-	/* Sexe */
 	void setSexe(Sexe sexe);
-	/* Hair */
 	void setHair(HairColor color, HairStyle style);
 
 protected:

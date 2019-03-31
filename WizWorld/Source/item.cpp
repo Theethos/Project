@@ -1,18 +1,13 @@
 #include "../Include/Macro_Include.h"
-
 #include "../Include/Item.h"
 
-/*
- * ==================================================
- * ================= Class Item =====================
- * ==================================================
- */
-
 /* Constructors */
-Item::Item() : m_name("NULL"), m_category(NO_ITEM)
+Item::Item() : m_name("NULL"), m_category(ItemCategories::NO_ITEM)
 {}
+
 Item::Item(std::string name, ItemCategories category) : m_name(name), m_category(category)
 {}
+
 Item::Item(const Item & item)
 {
 	m_category = item.m_category;
@@ -23,9 +18,6 @@ Item::Item(const Item & item)
 Item::~Item()
 {}
 
-/*=== Operator overload ===*/
-
-/* operator '=' */
 Item & Item::operator=(const Item & item)
 {
 	m_category = item.m_category;
@@ -34,33 +26,32 @@ Item & Item::operator=(const Item & item)
 	return *this;
 }
 
-/*=== Getters ===*/
-
-/* Name */
+/* Getters */
 std::string Item::getName() const
 {
 	return m_name;
 }
-/* Category */
+
 ItemCategories Item::getCategory() const
 {
 	return m_category;
 }
+
 /* Category (string not enum [for display]) */
 std::string Item::showCategory() const
 {
 	switch (m_category)
 	{
-	case NO_ITEM:
+	case ItemCategories::NO_ITEM:
 		return "None";
 		break;
-	case ARMOR:
+	case ItemCategories::ARMOR:
 		return "Armor";
 		break;
-	case PRIMARY_WEAPON:
+	case ItemCategories::PRIMARY_WEAPON:
 		return "Primary Weapon";
 		break;
-	case SECONDARY_WEAPON:
+	case ItemCategories::SECONDARY_WEAPON:
 		return "Secondary Weapon";
 		break;
 	default:

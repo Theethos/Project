@@ -17,8 +17,8 @@ public:
 	MenuState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, std::string configFile);
 	virtual ~MenuState();
 
-	void handleInput(const double &dt);
-	void update(const double &dt);
+	void handleInput(const float &dt);
+	void update(const float &dt);
 	void updateButtons();
 	void render(sf::RenderTarget* target = nullptr);
 	void renderButtons(sf::RenderTarget* target = nullptr);

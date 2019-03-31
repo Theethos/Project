@@ -1,16 +1,18 @@
 #include "../Include/Button.h"
 
-/*
- * ==================================================
- * ================== Class Button ==================
- * ==================================================
- */
-
-Button::Button(double x, double y, double w, double h, std::string text, sf::Font *font, sf::Color idleColor, sf::Color hoverColor,
-																	 sf::Color activeColor, sf::Color textColor, int textSize
-)
-	: m_font(font), m_idleColor(idleColor), m_hoverColor(hoverColor), m_activeColor(activeColor), m_textColor(textColor),
-	  m_textSize(textSize), m_pressed(false)
+/*	Constructor */
+/*	Parameters : 
+	- x, y -> position
+	- w, h -> size
+	- text, text_size and font -> text on the button 
+	- idle_color -> main color 
+	- hover_color -> color when the mouse is over the button 
+	- active_color -> color when we click on the button */
+Button::Button(float x, float y, float w, float h, std::string text,
+			   sf::Font *font, sf::Color idleColor, sf::Color hoverColor,
+			   sf::Color activeColor, sf::Color textColor, int textSize)
+ : m_font(font), m_idleColor(idleColor), m_hoverColor(hoverColor), m_activeColor(activeColor),
+   m_textColor(textColor), m_textSize(textSize), m_pressed(false)
 {
 	m_shape.setSize(sf::Vector2f(w, h));
 	m_shape.setPosition(sf::Vector2f(x, y));
@@ -25,19 +27,26 @@ Button::Button(double x, double y, double w, double h, std::string text, sf::Fon
 	));
 }
 
+/* Destructor */
 Button::~Button()
 {}
 
+/* Functions */
 void Button::update(const sf::Vector2f mousePos)
 {
+	/* Set button to idle_color */
 	m_shape.setFillColor(m_idleColor);
+	/* If the mouse is over the button */
 	if (m_shape.getGlobalBounds().contains(mousePos))
 	{
+		/* If it is clicked */
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
+			/* Set to active_color */
 			m_shape.setFillColor(m_activeColor);
 			m_pressed = true;
 		}
+		/* Else set it to hover_color */
 		else
 		{
 			m_shape.setFillColor(m_hoverColor);

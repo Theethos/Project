@@ -7,9 +7,11 @@
 class Player : public Entity
 {
 public:
-	Player(double speed, double x_pos, double y_pos, sf::Texture *texture);
+	Player(float maxVelocity, float x_pos, float y_pos);
 	virtual ~Player();
 
+	void iniatializeAnimationComponent();
+	void update(const float &dt);
 };
 
 #endif //!_PLAYER_H_

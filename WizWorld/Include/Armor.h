@@ -10,23 +10,16 @@
 class Armor : public Item
 {
 public:
-	/*=== Constructors/Destructor ===*/
-
 	Armor();
 	Armor(std::string name, ItemCategories category, ArmorCategories weaponCategory);
 	Armor(const Armor &armor);
 	virtual ~Armor();
 
-	/*=== Operator overload ===*/
-
 	Armor &operator=(const Armor &armor);
 
-	/*=== Getters ===*/
-
-	/* ArmorCategory */
-	virtual ArmorCategories getArmorCategory() const;
-	/* ArmorCategory (string not enum [for display]) */
-	virtual std::string showCategory() const;
+	/* Getters */
+	ArmorCategories getArmorCategory() const;
+	std::string showCategory() const;
 
 private:
 	ArmorCategories m_armorCategory;

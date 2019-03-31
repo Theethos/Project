@@ -37,10 +37,10 @@ MenuState::~MenuState()
 	}
 }
 
-void MenuState::handleInput(const double &dt)
+void MenuState::handleInput(const float &dt)
 {}
 
-void MenuState::update(const double& dt)
+void MenuState::update(const float& dt)
 {
 	updateMousePositions();
 	
@@ -77,14 +77,7 @@ void MenuState::updateButtons()
 				m_states->push(new MenuState(m_window, m_keys, m_states, "../External/Config/main_menu_buttons.cfg"));
 			}
 			else if (it.first == "SETTINGS")
-			{
-				if (m_window->getSize() == sf::Vector2u(1280, 720))
-					m_window->setSize(sf::Vector2u(1920, 1080));
-				else if (m_window->getSize() == sf::Vector2u(1920, 1080))
-					m_window->setSize(sf::Vector2u(1600, 900));
-				else
-					m_window->setSize(sf::Vector2u(1280, 720));
-			}
+			{}
 		}
 	}
 }
@@ -134,7 +127,7 @@ void MenuState::initializeButtons()
 		/* Line in the file */
 		std::string line = "";
 		/* Coordinates and size of the button */
-		double x = 0.0, y = 0.0, w = 0.0, h = 0.0;
+		float x = 0.0, y = 0.0, w = 0.0, h = 0.0;
 		/* Text on the button */
 		std::string text = "";
 		/* Colors of the button */
@@ -154,17 +147,17 @@ void MenuState::initializeButtons()
 
 			/* Get coordinates*/
 			std::getline(config_file, line, ' ');
-			x = std::atof(line.c_str())*x_window;
+			x = static_cast<float>(std::atof(line.c_str())*x_window);
 
 			std::getline(config_file, line, ' ');
-			y = std::atof(line.c_str())*y_window;
+			y = static_cast<float>(std::atof(line.c_str())*y_window);
 
 			/* Get size */
 			std::getline(config_file, line, ' ');
-			w = std::atof(line.c_str())*x_window;
+			w = static_cast<float>(std::atof(line.c_str())*x_window);
 
 			std::getline(config_file, line, ' ');
-			h = std::atof(line.c_str())*y_window;
+			h = static_cast<float>(std::atof(line.c_str())*y_window);
 			
 			/* Get text */
 			std::getline(config_file, text, '-');
@@ -211,14 +204,14 @@ void MenuState::initializeButtons()
 
 			/* Get Text_size */
 			std::getline(config_file, line, '\n');
-			textSize = std::atof(line.c_str())*x_window;
+			textSize = (static_cast<float>(std::atof(line.c_str())*x_window));
 
 			/* Create the button */
 			m_buttons[action] = new Button(x, y, w, h, text, &m_font, idle_color, hover_color, active_color, text_color, textSize);
 			i++;
 		}
+		config_file.close();
 	}
-	config_file.close();
 }
 /* Initializes @member[title] with the FIRST line in the files ""@member[configFile]"
    Format :
@@ -234,7 +227,7 @@ void MenuState::initializeTitle()
 
 	if (config_file.is_open())
 	{
-		double x, y;
+		float x, y;
 		float text_size;
 		std::string title, line = "";
 		sf::Color text_color;
@@ -243,10 +236,10 @@ void MenuState::initializeTitle()
 		m_numberOfButtons = std::atoi(line.c_str());
 
 		std::getline(config_file, line, ' ');
-		x = std::atof(line.c_str())*x_window;
+		x = static_cast<float>(std::atof(line.c_str())*x_window);
 
 		std::getline(config_file, line, ' ');
-		y = std::atof(line.c_str())*y_window;
+		y = static_cast<float>(std::atof(line.c_str())*y_window);
 
 		std::getline(config_file, title, '-');
 
@@ -267,6 +260,7 @@ void MenuState::initializeTitle()
 		m_title.setCharacterSize(text_size);
 		m_title.setString(title);
 		m_title.setPosition(sf::Vector2f(x, y));
+		
+		config_file.close();
 	}
-	config_file.close();
 }

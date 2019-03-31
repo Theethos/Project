@@ -27,7 +27,7 @@ int main()
 	std::cout << "\n=== Beginning ===\n" << std::endl;
 
 	Character mickael = Character();
-	Character ahbdekha = Character("Ahbdekha", MALE, DARK, LONG);
+	Character ahbdekha = Character("Ahbdekha", Sexe::MALE, HairColor::DARK, HairStyle::LONG);
 
 	mickael.introduce();
 	ahbdekha.introduce();
@@ -35,10 +35,10 @@ int main()
 	std::cout << std::endl;
 	std::cout << "=================" << std::endl << std::endl;
 
-	Weapon wand("Shiny wand", PRIMARY_WEAPON, WAND, 30);
-	Weapon shield("Mighty shield", SECONDARY_WEAPON, SHIELD, 10);
-	Armor chest("Bright chest", ARMOR, CHEST);
-	Armor helmet("Coconut helmet", ARMOR, HAT);
+	Weapon wand("Shiny wand", ItemCategories::PRIMARY_WEAPON, WeaponCategories::WAND, 30);
+	Weapon shield("Mighty shield", ItemCategories::SECONDARY_WEAPON, WeaponCategories::SHIELD, 10);
+	Armor chest("Bright chest", ItemCategories::ARMOR, ArmorCategories::CHEST);
+	Armor helmet("Coconut helmet", ItemCategories::ARMOR, ArmorCategories::HAT);
 
 	ahbdekha.displayInventory();
 	std::cout << "=================" << std::endl << std::endl;

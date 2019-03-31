@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Include\AnimationComponent.h" />
     <ClInclude Include="..\Include\Armor.h" />
     <ClInclude Include="..\Include\Button.h" />
     <ClInclude Include="..\Include\Character.h" />
@@ -29,13 +30,14 @@
     <ClInclude Include="..\Include\Item.h" />
     <ClInclude Include="..\Include\Macro_Include.h" />
     <ClInclude Include="..\Include\MenuState.h" />
+    <ClInclude Include="..\Include\MovementComponent.h" />
     <ClInclude Include="..\Include\Player.h" />
     <ClInclude Include="..\Include\State.h" />
     <ClInclude Include="..\Include\Weapon.h" />
-    <ClInclude Include="..\Source\MovementComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Main.cpp" />
+    <ClCompile Include="..\Source\AnimationComponent.cpp" />
     <ClCompile Include="..\Source\Armor.cpp" />
     <ClCompile Include="..\Source\Button.cpp" />
     <ClCompile Include="..\Source\Character.cpp" />
