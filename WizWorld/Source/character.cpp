@@ -123,7 +123,7 @@ void Character::displayInventory() const
 		{
 			std::cout << m_inventory.getBag()[i]->showCategory();
 
-			for (int j = 0; j < (m_inventory.getBag()[i]->getName().size() - m_inventory.getBag()[i]->showCategory().size() > 0) ? (m_inventory.getBag()[i]->getName().size() - m_inventory.getBag()[i]->showCategory().size()) : 0; j++)
+			for (int j = 0; j < m_inventory.getBag()[i]->getName().size() - m_inventory.getBag()[i]->showCategory().size(); j++)
 			{
 				std::cout << " ";
 			}
@@ -148,7 +148,7 @@ void Character::displayInventory() const
 		if (m_inventory.getStuff()[i] != nullptr)
 		{
 			std::cout << m_inventory.getStuff()[i]->showCategory();
-			for (int j = 0; j < (m_inventory.getStuff()[i]->getName().size() - m_inventory.getStuff()[i]->showCategory().size() > 0) ? (m_inventory.getStuff()[i]->getName().size() - m_inventory.getStuff()[i]->showCategory().size()) : 0; j++)
+			for (int j = 0; j < m_inventory.getStuff()[i]->getName().size() - m_inventory.getStuff()[i]->showCategory().size(); j++)
 			{
 				std::cout << " ";
 			}

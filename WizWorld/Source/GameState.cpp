@@ -21,23 +21,15 @@ GameState::~GameState()
 
 void GameState::handleInput(const float &dt)
 {
-	/* Move the character in the direction given by input. Reset the animation if the key is realesed */
+	/* Move the character in the direction given by input */
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(m_actions["MOVE_UP"])))
 		m_player->move(dt, 0.f, -1.f);
-	else
-		m_player->getAnimation()->resetAnimation("MOVE_UP");
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(m_actions["MOVE_DOWN"])))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(m_actions["MOVE_DOWN"])))
 		m_player->move(dt, 0.f, 1.f);
-	else
-		m_player->getAnimation()->resetAnimation("MOVE_DOWN");
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(m_actions["MOVE_LEFT"])))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(m_actions["MOVE_LEFT"])))
 		m_player->move(dt, -1.f, 0.f);
-	else
-		m_player->getAnimation()->resetAnimation("MOVE_LEFT");
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(m_actions["MOVE_RIGHT"])))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(m_actions["MOVE_RIGHT"])))
 		m_player->move(dt, 1.f, 0.f);
-	else
-		m_player->getAnimation()->resetAnimation("MOVE_RIGHT");
 	/* Open pause menu "escape" is pressed */
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(m_actions["MENU"])))
 	{

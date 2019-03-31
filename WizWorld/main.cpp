@@ -24,7 +24,7 @@ int main()
 	 * ==================================================
 	 */
 
-	std::cout << "\n=== Beginning ===\n" << std::endl;
+	/*std::cout << "\n=== Beginning ===\n" << std::endl;
 
 	Character mickael = Character();
 	Character ahbdekha = Character("Ahbdekha", Sexe::MALE, HairColor::DARK, HairStyle::LONG);
@@ -72,7 +72,7 @@ int main()
 
 	std::cout << "\n=== End ===\n" << std::endl;
 
-	system("PAUSE");
+	system("PAUSE");*/
 
 	return 0;
 }

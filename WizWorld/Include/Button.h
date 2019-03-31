@@ -33,6 +33,7 @@ private:
 	sf::Color m_activeColor;
 
 	bool m_pressed;
+	bool m_click;
 };
 
 #endif // !_BUTTON_H_
