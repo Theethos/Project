@@ -26,6 +26,7 @@
     <ClInclude Include="..\Include\Entity.h" />
     <ClInclude Include="..\Include\Game.h" />
     <ClInclude Include="..\Include\GameState.h" />
+    <ClInclude Include="..\Include\HitboxComponent.h" />
     <ClInclude Include="..\Include\Inventory.h" />
     <ClInclude Include="..\Include\Item.h" />
     <ClInclude Include="..\Include\Macro_Include.h" />
@@ -44,6 +45,7 @@
     <ClCompile Include="..\Source\Entity.cpp" />
     <ClCompile Include="..\Source\Game.cpp" />
     <ClCompile Include="..\Source\GameState.cpp" />
+    <ClCompile Include="..\Source\HitboxComponent.cpp" />
     <ClCompile Include="..\Source\Inventory.cpp" />
     <ClCompile Include="..\Source\Item.cpp" />
     <ClCompile Include="..\Source\MenuState.cpp" />

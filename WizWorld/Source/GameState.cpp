@@ -35,9 +35,9 @@ void GameState::update(const float& dt)
 {
 	updateMousePositions();
 
-	m_player->update(dt);
-
 	handleInput(dt);
+
+	m_player->update(dt);
 }
 
 void GameState::render(sf::RenderTarget* target)

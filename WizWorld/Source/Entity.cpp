@@ -3,7 +3,7 @@
 
 /* Constructor */
 // If the entity needs a sprite, to move or to have animations, it needs to use the initializers to create them
-Entity::Entity() : m_sprite(nullptr), m_movement(nullptr), m_animation(nullptr)
+Entity::Entity() : m_sprite(nullptr), m_movement(nullptr), m_animation(nullptr), m_hitbox(nullptr)
 {}
 
 Entity::~Entity()
@@ -25,12 +25,12 @@ void Entity::move(const float& dt, const float x_motion, const float y_motion)
 				if (m_movement->getVelocity().x < 0)
 				{
 					m_animation->setSide(AnimationSide::LEFT);
-					m_animation->playAnimation(dt, "MOVE_LEFT");
+					m_animation->playAnimation(m_movement->getVelocity().x, dt, "MOVE_LEFT");
 				}
 				else if (m_movement->getVelocity().x > 0)
 				{
 					m_animation->setSide(AnimationSide::RIGHT);
-					m_animation->playAnimation(dt, "MOVE_RIGHT");
+					m_animation->playAnimation(m_movement->getVelocity().x, dt, "MOVE_RIGHT");
 				}
 			}
 			else
@@ -38,12 +38,12 @@ void Entity::move(const float& dt, const float x_motion, const float y_motion)
 				if (m_movement->getVelocity().y < 0)
 				{
 					m_animation->setSide(AnimationSide::UP);
-					m_animation->playAnimation(dt, "MOVE_UP");
+					m_animation->playAnimation(m_movement->getVelocity().y, dt, "MOVE_UP");
 				}
 				else if (m_movement->getVelocity().y > 0)
 				{
 					m_animation->setSide(AnimationSide::DOWN);
-					m_animation->playAnimation(dt, "MOVE_DOWN");
+					m_animation->playAnimation(m_movement->getVelocity().y, dt, "MOVE_DOWN");
 				}
 			}
 		}
@@ -53,13 +53,18 @@ void Entity::move(const float& dt, const float x_motion, const float y_motion)
 void Entity::render(sf::RenderTarget* target)
 {
 	if (m_sprite)
+	{
 		target->draw(*m_sprite);
+		m_hitbox->render(target);
+	}
 }
 
 /* Initializers (if an entity use one of these initializers, it needs to delete what it has created in its OWN destructor */
 void Entity::createSprite()
 {
 	m_sprite = new sf::Sprite();
+	m_hitbox = new HitboxComponent(m_sprite, 64, 64);
+
 }
 
 void Entity::iniatializeAnimationComponent()
@@ -70,6 +75,7 @@ void Entity::iniatializeAnimationComponent()
 /* Has to be overloaded because each entity has its textures */
 void Entity::initializeTextures()
 {}
+
 
 void Entity::initializeMovementComponent(float maxVelocity, float acceleration, float deceleration)
 {

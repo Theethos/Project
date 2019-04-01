@@ -1,6 +1,7 @@
 #ifndef _ENTITY_H_
 #define _ENTITY_H_
 
+#include "HitboxComponent.h"
 #include "MovementComponent.h"
 #include "AnimationComponent.h"
 
@@ -18,7 +19,7 @@ public:
 	void initializeMovementComponent(float maxVelocity, float acceleration, float deceleration);
 	virtual void iniatializeAnimationComponent();
 	virtual void initializeTextures();
-	
+
 	/* Getters */
 	MovementComponent *getMovement() const;
 	AnimationComponent *getAnimation() const;
@@ -28,7 +29,7 @@ protected:
 	std::map<std::string, sf::Texture> m_textures;
 	MovementComponent *m_movement;
 	AnimationComponent *m_animation;
-	
+	HitboxComponent *m_hitbox;
 };
 
 #endif //!_ENTITY_H_

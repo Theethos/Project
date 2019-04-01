@@ -43,11 +43,17 @@ private:
 			m_currentRect = sf::IntRect(0, 0, width/numberOfTextures, height);
 		}
 
-		void update(const float &dt)
+		void play(const float & velocity, const float &dt)
 		{
 			// Update timer if is it not paused
 			if (!m_pause)
-				m_timer += dt;
+			{
+				// Plays the animation faster if the entity's velocity is greater than 1
+				if (std::abs(velocity) < 1)
+					m_timer += dt;
+				else
+					m_timer += dt * std::abs(velocity);
+			}
 			// If their has been enough time since the last frame
 			if (m_timer >= m_animationTimer)
 			{
@@ -89,7 +95,7 @@ public:
 
 	void addAnimation(const std::string key, sf::Texture *textureSheet, int numberOfTextures, int width, int height, float animationTimer = 0.5);
 
-	void playAnimation(const float & dt, const std::string animation);
+	void playAnimation(const float & velocity, const float & dt, const std::string animation);
 	void pauseAnimation(const std::string animation);
 	void resetAnimation(const std::string animation);
 

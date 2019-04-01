@@ -81,6 +81,9 @@
     <ClInclude Include="..\Include\AnimationComponent.h">
       <Filter>Component</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\HitboxComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Weapon.cpp">
@@ -126,6 +129,9 @@
       <Filter>Component</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\AnimationComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\HitboxComponent.cpp">
       <Filter>Component</Filter>
     </ClCompile>
   </ItemGroup>

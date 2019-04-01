@@ -23,9 +23,9 @@ void AnimationComponent::addAnimation(const std::string key, sf::Texture * textu
 	m_animation[key].initialize(textureSheet, m_associatedSprite, numberOfTextures, animationTimer, width, height);
 }
 
-void AnimationComponent::playAnimation(const float & dt, const std::string animation)
+void AnimationComponent::playAnimation(const float & velocity, const float & dt, const std::string animation)
 {
-	m_animation[animation].update(dt);
+	m_animation[animation].play(velocity, dt);
 }
 
 void AnimationComponent::pauseAnimation(const std::string animation)

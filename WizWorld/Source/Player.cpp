@@ -5,15 +5,13 @@ Player::Player(float maxVelocity, float x_pos, float y_pos) : Entity()
 {
 	/* Initializers */
 	createSprite();
+	m_sprite->setPosition(sf::Vector2f(x_pos, y_pos));
 
 	initializeTextures();
 	initializeMovementComponent(maxVelocity, 10.f, 9.f);
 	iniatializeAnimationComponent();
-	
-	m_sprite->setPosition(sf::Vector2f(x_pos, y_pos));
-
 	// Set the sprite texture to IDLE_DOWN at the beginning
-	m_animation->playAnimation(0, "IDLE_DOWN");
+	m_animation->playAnimation(1, 0, "IDLE_DOWN");
 }
 
 /* Destructor */
@@ -22,6 +20,7 @@ Player::~Player()
 	delete m_sprite;
 	delete m_movement;
 	delete m_animation;
+	delete m_hitbox;
 }
 
 /* Overload of superclass function */
@@ -57,8 +56,10 @@ void Player::update(const float & dt)
 {
 	if (m_sprite && m_movement)
 	{
-		// Calls the decelatating phase
+		// Calls the decelerating phase
 		m_movement->update(dt, m_sprite);
+		// Update hitbox
+		m_hitbox->update();
 		if (m_animation)
 		{
 			// Sets the accurate texture depending on the sprite orientation
@@ -66,16 +67,16 @@ void Player::update(const float & dt)
 			switch (m_animation->getSide())
 			{
 				case AnimationSide::LEFT:
-					m_animation->playAnimation(dt, "IDLE_LEFT");
+					m_animation->playAnimation(m_movement->getVelocity().x, dt, "IDLE_LEFT");
 					break;
 				case AnimationSide::RIGHT:
-					m_animation->playAnimation(dt, "IDLE_RIGHT");
+					m_animation->playAnimation(m_movement->getVelocity().x, dt, "IDLE_RIGHT");
 					break;
 				case AnimationSide::UP:
-					m_animation->playAnimation(dt, "IDLE_UP");
+					m_animation->playAnimation(m_movement->getVelocity().y, dt, "IDLE_UP");
 					break;
 				case AnimationSide::DOWN:
-					m_animation->playAnimation(dt, "IDLE_DOWN");
+					m_animation->playAnimation(m_movement->getVelocity().y, dt, "IDLE_DOWN");
 					break;
 				default:
 					break;
