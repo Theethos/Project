@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Fichiers sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Fichiers de ressources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Inventory">
+      <UniqueIdentifier>{ba3ce6b2-d318-45ad-b241-23e1e62d4c2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{1bc571da-8dec-4601-b438-d3fdcf63d874}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Item">
+      <UniqueIdentifier>{180a7b1d-d3ed-4123-b0f5-ee8577ecd3c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="State">
+      <UniqueIdentifier>{30f87cdc-106c-4adc-8fe1-b63f14279421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{556ace7e-68bf-41d6-b670-2f77f77cee20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Button">
+      <UniqueIdentifier>{6cbce9fc-9867-45a1-bd5b-b46d55f5519d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{83395c0f-5095-49fa-9eb1-1db27d8ed77f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Include\Weapon.h">
+      <Filter>Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Character.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Item.h">
+      <Filter>Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Armor.h">
+      <Filter>Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Inventory.h">
+      <Filter>Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Game.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\GameState.h">
+      <Filter>State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Entity.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\State.h">
+      <Filter>State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Macro_Include.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Button.h">
+      <Filter>Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\MenuState.h">
+      <Filter>State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Player.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\MovementComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\AnimationComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Weapon.cpp">
+      <Filter>Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Character.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Main.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Item.cpp">
+      <Filter>Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Armor.cpp">
+      <Filter>Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Inventory.cpp">
+      <Filter>Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Game.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\GameState.cpp">
+      <Filter>State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Entity.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\State.cpp">
+      <Filter>State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Button.cpp">
+      <Filter>Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\MenuState.cpp">
+      <Filter>State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Player.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\MovementComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\AnimationComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Item_STATS.txt">
+      <Filter>Fichiers de ressources</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
