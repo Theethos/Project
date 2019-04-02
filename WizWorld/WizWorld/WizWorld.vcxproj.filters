@@ -34,6 +34,9 @@
     <Filter Include="Component">
       <UniqueIdentifier>{83395c0f-5095-49fa-9eb1-1db27d8ed77f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tiles">
+      <UniqueIdentifier>{abe9f394-e5a1-4826-8f4a-3b55dda9700b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Weapon.h">
@@ -133,6 +136,12 @@
     </ClCompile>
     <ClCompile Include="..\Source\HitboxComponent.cpp">
       <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Include\Tile.h">
+      <Filter>Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Tile.cpp">
+      <Filter>Tiles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
