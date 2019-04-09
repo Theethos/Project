@@ -3,17 +3,17 @@
 #include "../Include/Armor.h"
 
 /* Constructors */
-Armor::Armor() : Item(), m_armorCategory(ArmorCategories::NO_ARMOR)
+Armor::Armor() : Item(), armorCategory(ArmorCategories::NO_ARMOR)
 {}
 
-Armor::Armor(std::string name, ItemCategories category, ArmorCategories armorCategory) : Item(name, category), m_armorCategory(armorCategory)
+Armor::Armor(std::string name, ItemCategories category, ArmorCategories armorCategory) : Item(name, category), armorCategory(armorCategory)
 {}
 
 Armor::Armor(const Armor & armor)
 {
-	m_name = armor.m_name;
-	m_category = armor.m_category;
-	m_armorCategory = armor.m_armorCategory;
+	this->name = armor.name;
+	this->category = armor.category;
+	this->armorCategory = armor.armorCategory;
 }
 
 /* Destructor */
@@ -22,22 +22,22 @@ Armor::~Armor()
 
 Armor & Armor::operator=(const Armor & armor)
 {
-	m_name = armor.m_name;
-	m_category = armor.m_category;
-	m_armorCategory = armor.m_armorCategory;
+	this->name = armor.name;
+	this->category = armor.category;
+	this->armorCategory = armor.armorCategory;
 
 	return *this;
 }
 /* Getters */
 ArmorCategories Armor::getArmorCategory() const
 {
-	return m_armorCategory;
+	return this->armorCategory;
 }
 
 /* ArmorCategory (string not enum [for display]) */
 std::string Armor::showCategory() const
 {
-	switch (m_armorCategory)
+	switch (this->armorCategory)
 	{
 		case ArmorCategories::NO_ARMOR:
 			return "None";

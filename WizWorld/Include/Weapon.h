@@ -17,8 +17,8 @@ public:
 	virtual std::string showCategory() const;
 
 private:
-	int m_damage;
-	WeaponCategories m_weaponCategory;
+	int damage;
+	WeaponCategories weaponCategory;
 };
 
 #endif // !_WEAPON_H_

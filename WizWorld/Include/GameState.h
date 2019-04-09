@@ -4,11 +4,6 @@
 #include "State.h"
 #include "Player.h"
 
-/*
- * ==================================================
- * ================= Class GameState ================
- * ==================================================
- */
 
 class GameState : public State
 {
@@ -19,11 +14,11 @@ public:
 	virtual void handleInput(const float &dt);
 	virtual void update(const float &dt);
 	virtual void render(sf::RenderTarget* target);
-	virtual void initializeActions();
+	virtual void initActions();
 
 private:
-	Player *m_player;	
-	std::map<std::string, sf::Texture> m_textures;
+	Player *player;	
+	std::map<std::string, sf::Texture> textures;
 };
 
 #endif // !_GAME_STATE_H_

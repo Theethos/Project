@@ -3,12 +3,12 @@
 
 
 /* Constructors */
-Character::Character() : m_name("Mickael"), m_sexe(Sexe::MALE), m_hair{ HairColor::DARK, HairStyle::SHORT }, m_level{ 1, 0, 300 }, m_healthPoints{ 100, 100, 0, 0 }, m_inventory()
+Character::Character() : name("Mickael"), sexe(Sexe::MALE), hair{ HairColor::DARK, HairStyle::SHORT }, level{ 1, 0, 300 }, healthPoints{ 100, 100, 0, 0 }, inventory()
 {}
 
 Character::Character(std::string name, Sexe sexe, HairColor color, HairStyle style)
-					: m_name(name), m_sexe(sexe), m_hair{ color, style }, m_level{ 1, 0, 300 }, 
-					  m_healthPoints{ 100, 100, 0, 0 }, m_inventory()
+					: name(name), sexe(sexe), hair{ color, style }, level{ 1, 0, 300 }, 
+					  healthPoints{ 100, 100, 0, 0 }, inventory()
 {}
 
 /* Destructor */
@@ -18,38 +18,38 @@ Character::~Character()
 /* Displays informations about the character */
 void Character::introduce() const
 {
-	std::cout << "Hello, my name is " << m_name << ". I am level " << m_level.level << " and I have " << m_healthPoints.currentHealthPoints << "/" << m_healthPoints.characteristicHealthPoint + m_healthPoints.equipmentHealthPoints + m_healthPoints.levelHealthPoints << " health points." << std::endl;
+	std::cout << "Hello, my name is " << this->name << ". I am level " << this->level.level << " and I have " << this->healthPoints.currentHealthPoints << "/" << this->healthPoints.characteristicHealthPoint + this->healthPoints.equipmentHealthPoints + this->healthPoints.levelHealthPoints << " health points." << std::endl;
 }
 
 /* Adds EXPValue to the character's current EXP */
 void Character::gainEXP(long long EXPValue)
 {
-	std::cout << m_name << " gains " << std::to_string(EXPValue) << " EXP! " << GENDER(m_sexe, "His", "Her") << " current EXP : " << m_level.currentLevelEXP << "/" << m_level.nextLevelEXP << "." << std::endl << std::endl;
+	std::cout << this->name << " gains " << std::to_string(EXPValue) << " EXP! " << GENDER(this->sexe, "His", "Her") << " current EXP : " << this->level.currentLevelEXP << "/" << this->level.nextLevelEXP << "." << std::endl << std::endl;
 	
-	m_level.currentLevelEXP += EXPValue;
-	while (m_level.currentLevelEXP >= m_level.nextLevelEXP)
+	this->level.currentLevelEXP += EXPValue;
+	while (this->level.currentLevelEXP >= this->level.nextLevelEXP)
 	{
-		if (m_level.level < 50) // Level max is 50 (== 5 148 376 331 EXP)
+		if (this->level.level < 50) // Level max is 50 (== 5 148 376 331 EXP)
 		{
-			m_level.level += 1;
+			this->level.level += 1;
 			
-			std::cout << m_name << " levels up ! " << GENDER(m_sexe, "He", "She") << " is now level " << m_level.level;
+			std::cout << this->name << " levels up ! " << GENDER(this->sexe, "He", "She") << " is now level " << this->level.level;
 			
 			// Each level, characters need 0.405 more EXP to level up
-			m_level.nextLevelEXP += (long long)(m_level.nextLevelEXP * 0.405); 
+			this->level.nextLevelEXP += (long long)(this->level.nextLevelEXP * 0.405); 
 			// Each level, characters gain 50 "native" HP
-			m_healthPoints.levelHealthPoints += 50; 
+			this->healthPoints.levelHealthPoints += 50; 
 			
-			std::cout << " (" << MIN(m_level.currentLevelEXP, m_level.nextLevelEXP, m_level.currentLevelEXP, m_level.nextLevelEXP) << "/" << m_level.nextLevelEXP << ")" << std::endl;
+			std::cout << " (" << MIN(this->level.currentLevelEXP, this->level.nextLevelEXP, this->level.currentLevelEXP, this->level.nextLevelEXP) << "/" << this->level.nextLevelEXP << ")" << std::endl;
 		}
 		// Amount of EXP already at max
 		else 
 		{
-			std::cout << m_name << " is already level " << m_level.level;
+			std::cout << this->name << " is already level " << this->level.level;
 			
-			m_level.currentLevelEXP = m_level.nextLevelEXP;
+			this->level.currentLevelEXP = this->level.nextLevelEXP;
 			
-			std::cout << " (" << m_level.currentLevelEXP << "/" << m_level.nextLevelEXP << ")" << std::endl;
+			std::cout << " (" << this->level.currentLevelEXP << "/" << this->level.nextLevelEXP << ")" << std::endl;
 			// Goes out the while loop
 			break;
 		}
@@ -59,13 +59,13 @@ void Character::gainEXP(long long EXPValue)
 /* Removes DamageValue to the character's health points */
 void Character::receiveDamage(int damageValue)
 {
-	std::cout << m_name << " loses " << damageValue << " health points." << std::endl;
+	std::cout << this->name << " loses " << damageValue << " health points." << std::endl;
 	
-	m_healthPoints.currentHealthPoints -= damageValue;
+	this->healthPoints.currentHealthPoints -= damageValue;
 	// Check that HPs dont go below 0
-	if (m_healthPoints.currentHealthPoints < 0)
+	if (this->healthPoints.currentHealthPoints < 0)
 	{
-		m_healthPoints.currentHealthPoints = 0;
+		this->healthPoints.currentHealthPoints = 0;
 	}
 }
 
@@ -73,8 +73,8 @@ void Character::receiveDamage(int damageValue)
 void Character::hitWithWeapon(Character &target) const
 {
 	// Select the best weapon 
-	Weapon *weapon = MAX(m_inventory.getWeapon_1()->getDamage(), m_inventory.getWeapon_2()->getDamage(), m_inventory.getWeapon_1(), m_inventory.getWeapon_2());
-	std::cout << m_name << " hits " << target.m_name << " with " << GENDER(m_sexe, "his ", "her ") << weapon->getName() << "." << std::endl;
+	Weapon *weapon = MAX(this->inventory.getWeapon_1()->getDamage(), this->inventory.getWeapon_2()->getDamage(), this->inventory.getWeapon_1(), this->inventory.getWeapon_2());
+	std::cout << this->name << " hits " << target.name << " with " << GENDER(this->sexe, "his ", "her ") << weapon->getName() << "." << std::endl;
 
 	target.receiveDamage(weapon->getDamage());
 }
@@ -82,34 +82,34 @@ void Character::hitWithWeapon(Character &target) const
 /* Puts an item in the character's inventory if it is not full */
 void Character::pickUpItem(Item * item)
 {
-	std::cout << m_name << " picks up \"" << item->getName() << "\"." << std::endl;
+	std::cout << this->name << " picks up \"" << item->getName() << "\"." << std::endl;
 	
-	m_inventory.setBag(item);
+	this->inventory.setBag(item);
 }
 
 /* Equips an item depending on its category */
 void Character::equipItem(Item * item)
 {
-	std::cout << m_name << " equips \"" << item->getName() << "\"." << std::endl;
+	std::cout << this->name << " equips \"" << item->getName() << "\"." << std::endl;
 	
 	if (item->getCategory() == ItemCategories::PRIMARY_WEAPON)
-		m_inventory.setWeapon_1(dynamic_cast<Weapon*>(item));
+		this->inventory.setWeapon_1(dynamic_cast<Weapon*>(item));
 	else if (item->getCategory() == ItemCategories::SECONDARY_WEAPON)
-		m_inventory.setWeapon_2(dynamic_cast<Weapon*>(item));
+		this->inventory.setWeapon_2(dynamic_cast<Weapon*>(item));
 	else
-		m_inventory.setStuff(dynamic_cast<Armor*>(item));
+		this->inventory.setStuff(dynamic_cast<Armor*>(item));
 }
 
 /* DEBUG FUNCTION : just display what is inside the character's inventory */
 void Character::displayInventory() const
 {
-	std::cout << m_name << "'s inventory : " << std::endl << std::endl << "Bag : [";
+	std::cout << this->name << "'s inventory : " << std::endl << std::endl << "Bag : [";
 
 	// Display items in bag 
-	for (int i = 0; i < m_inventory.getSize(); i++)
+	for (int i = 0; i < this->inventory.getSize(); i++)
 	{
-		if (m_inventory.getBag()[i])
-			std::cout << m_inventory.getBag()[i]->getName() << "//";
+		if (this->inventory.getBag()[i])
+			std::cout << this->inventory.getBag()[i]->getName() << "//";
 		else
 			std::cout << "..." << "//";
 	}
@@ -117,13 +117,13 @@ void Character::displayInventory() const
 	std::cout << "]" << std::endl << "      [";
 
 	// Display the item's category
-	for (int i = 0; i < m_inventory.getSize(); i++)
+	for (int i = 0; i < this->inventory.getSize(); i++)
 	{
-		if (m_inventory.getBag()[i] != nullptr)
+		if (this->inventory.getBag()[i] != nullptr)
 		{
-			std::cout << m_inventory.getBag()[i]->showCategory();
+			std::cout << this->inventory.getBag()[i]->showCategory();
 
-			for (int j = 0; j < m_inventory.getBag()[i]->getName().size() - m_inventory.getBag()[i]->showCategory().size(); j++)
+			for (int j = 0; j < this->inventory.getBag()[i]->getName().size() - this->inventory.getBag()[i]->showCategory().size(); j++)
 			{
 				std::cout << " ";
 			}
@@ -137,18 +137,18 @@ void Character::displayInventory() const
 	
 	for (int i = 0; i < static_cast<int>(ArmorCategories::RING_2); i++)
 	{
-		if (m_inventory.getStuff()[i] != nullptr)
-			std::cout << m_inventory.getStuff()[i]->getName() << "//";
+		if (this->inventory.getStuff()[i] != nullptr)
+			std::cout << this->inventory.getStuff()[i]->getName() << "//";
 		else
 			std::cout << "..." << "//";
 	}
 	std::cout << "]" << std::endl << "        [";
 	for (int i = 0; i < static_cast<int>(ArmorCategories::RING_2); i++)
 	{
-		if (m_inventory.getStuff()[i] != nullptr)
+		if (this->inventory.getStuff()[i] != nullptr)
 		{
-			std::cout << m_inventory.getStuff()[i]->showCategory();
-			for (int j = 0; j < m_inventory.getStuff()[i]->getName().size() - m_inventory.getStuff()[i]->showCategory().size(); j++)
+			std::cout << this->inventory.getStuff()[i]->showCategory();
+			for (int j = 0; j < this->inventory.getStuff()[i]->getName().size() - this->inventory.getStuff()[i]->showCategory().size(); j++)
 			{
 				std::cout << " ";
 			}
@@ -158,62 +158,62 @@ void Character::displayInventory() const
 			std::cout << "..." << "//";
 	}
 	std::cout << "]" << std::endl << std::endl << "Weapon : - Primary weapon : ";
-	if (m_inventory.getWeapon_1() != nullptr)
-		std::cout << m_inventory.getWeapon_1()->getName() << " (" << m_inventory.getWeapon_1()->showCategory() << ", " << m_inventory.getWeapon_1()->getDamage() << PLURAL(m_inventory.getWeapon_1()->getDamage(), " damages)", " damage)") << std::endl;
+	if (this->inventory.getWeapon_1() != nullptr)
+		std::cout << this->inventory.getWeapon_1()->getName() << " (" << this->inventory.getWeapon_1()->showCategory() << ", " << this->inventory.getWeapon_1()->getDamage() << PLURAL(this->inventory.getWeapon_1()->getDamage(), " damages)", " damage)") << std::endl;
 	else
 		std::cout << " None" << std::endl;
-	if (m_inventory.getWeapon_2() != nullptr)
-		std::cout << "         - Secondary weapon : " << m_inventory.getWeapon_2()->getName() << " (" << m_inventory.getWeapon_2()->showCategory() << ", " << m_inventory.getWeapon_2()->getDamage() << PLURAL(m_inventory.getWeapon_2()->getDamage(), " damages)", " damage)") << std::endl << std::endl;
+	if (this->inventory.getWeapon_2() != nullptr)
+		std::cout << "         - Secondary weapon : " << this->inventory.getWeapon_2()->getName() << " (" << this->inventory.getWeapon_2()->showCategory() << ", " << this->inventory.getWeapon_2()->getDamage() << PLURAL(this->inventory.getWeapon_2()->getDamage(), " damages)", " damage)") << std::endl << std::endl;
 	else
 		std::cout << " None" << std::endl << std::endl;
 }
 
 std::string Character::getName() const
 {
-	std::cout << "Your character is called " << m_name << std::endl;
-	return m_name;
+	std::cout << "Your character is called " << this->name << std::endl;
+	return this->name;
 }
 
 Sexe Character::getSexe() const
 {
-	std::cout << m_name << " is a ";
-	std::cout << GENDER(m_sexe, "man ", "woman ") << std::endl;
-	return m_sexe;
+	std::cout << this->name << " is a ";
+	std::cout << GENDER(this->sexe, "man ", "woman ") << std::endl;
+	return this->sexe;
 }
 
 int Character::getHealthPoints() const
 {
-	std::cout << m_name << " has " << m_healthPoints.currentHealthPoints << "/" << m_healthPoints.characteristicHealthPoint + m_healthPoints.equipmentHealthPoints + m_healthPoints.levelHealthPoints << " health points." << std::endl;
-	return m_healthPoints.currentHealthPoints;
+	std::cout << this->name << " has " << this->healthPoints.currentHealthPoints << "/" << this->healthPoints.characteristicHealthPoint + this->healthPoints.equipmentHealthPoints + this->healthPoints.levelHealthPoints << " health points." << std::endl;
+	return this->healthPoints.currentHealthPoints;
 }
 
 int Character::getLevel() const
 {
-	std::cout << m_name << " is level " << m_level.level << ". ";
-	std::cout << GENDER(m_sexe, "his", "her") << "experience is " << m_level.currentLevelEXP << "/" << m_level.nextLevelEXP << std::endl;
-	return m_level.level;
+	std::cout << this->name << " is level " << this->level.level << ". ";
+	std::cout << GENDER(this->sexe, "his", "her") << "experience is " << this->level.currentLevelEXP << "/" << this->level.nextLevelEXP << std::endl;
+	return this->level.level;
 }
 
 Inventory* Character::getInventory()
 {
-	return &(this->m_inventory);
+	return &(this->inventory);
 }
 
 void Character::setName(std::string name)
 {
-	std::cout << m_name << " will be called " << name << " from now." << std::endl;
-	m_name = name;
+	std::cout << this->name << " will be called " << name << " from now." << std::endl;
+	this->name = name;
 }
 
 void Character::setSexe(Sexe sexe)
 {
-	std::cout << m_name << " is now a ";
-	std::cout << GENDER(m_sexe, "man ", "woman ") << std::endl;
-	m_sexe = sexe;
+	std::cout << this->name << " is now a ";
+	std::cout << GENDER(this->sexe, "man ", "woman ") << std::endl;
+	this->sexe = sexe;
 }
 
 void Character::setHair(HairColor color, HairStyle style)
 {
-	m_hair.color = color;
-	m_hair.style = style;
+	this->hair.color = color;
+	this->hair.style = style;
 }

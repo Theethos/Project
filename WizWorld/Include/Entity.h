@@ -16,20 +16,20 @@ public:
 	virtual void render(sf::RenderTarget* target);
 
 	void createSprite();
-	void initializeMovementComponent(float maxVelocity, float acceleration, float deceleration);
+	void initMovementComponent(float maxVelocity, float acceleration, float deceleration);
 	virtual void iniatializeAnimationComponent();
-	virtual void initializeTextures();
+	virtual void initTextures();
 
 	/* Getters */
 	MovementComponent *getMovement() const;
 	AnimationComponent *getAnimation() const;
 
 protected:
-	sf::Sprite *m_sprite;
-	std::map<std::string, sf::Texture> m_textures;
-	MovementComponent *m_movement;
-	AnimationComponent *m_animation;
-	HitboxComponent *m_hitbox;
+	sf::Sprite *sprite;
+	std::map<std::string, sf::Texture> textures;
+	MovementComponent *movement;
+	AnimationComponent *animation;
+	HitboxComponent *hitbox;
 };
 
 #endif //!_ENTITY_H_

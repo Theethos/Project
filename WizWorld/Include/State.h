@@ -24,19 +24,19 @@ public:
 	const bool& getQuit() const;
 
 protected:
-	sf::RenderWindow *m_window;
+	sf::RenderWindow *window;
 	/* If the state wants to quit */
-	bool m_quit;
+	bool quit;
 	/* Supported keys */
-	std::map < std::string, int> *m_keys;
+	std::map < std::string, int> *keys;
 	/* Actions associated to those keys */
-	std::map < std::string, int> m_actions;
+	std::map < std::string, int> actions;
 	/* Mouse positions */
-	sf::Vector2i m_mousePosScreen;
-	sf::Vector2i m_mousePosWindow;
-	sf::Vector2f m_mousePosView;
+	sf::Vector2i mousePosScreen;
+	sf::Vector2i mousePosWindow;
+	sf::Vector2f mousePosView;
 	/* Pointer to the stack of States */
-	std::stack<State*>* m_states;
+	std::stack<State*>* states;
 };
 
 #endif // !_STATE_H_

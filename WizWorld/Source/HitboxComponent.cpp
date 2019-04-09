@@ -1,13 +1,13 @@
 #include "../Include/HitboxComponent.h"
 
-HitboxComponent::HitboxComponent(sf::Sprite *sprite, const float width, const float height) : m_sprite(sprite)
+HitboxComponent::HitboxComponent(sf::Sprite *sprite, const float width, const float height) : sprite(sprite)
 {
-	m_hitbox.setPosition(m_sprite->getPosition());
-	m_hitbox.setSize(sf::Vector2f(width, height));
+	this->hitbox.setPosition(this->sprite->getPosition());
+	this->hitbox.setSize(sf::Vector2f(width, height));
 
-	m_hitbox.setFillColor(sf::Color::Transparent);
-	m_hitbox.setOutlineThickness(1.f);
-	m_hitbox.setOutlineColor(sf::Color::Red);
+	this->hitbox.setFillColor(sf::Color::Transparent);
+	this->hitbox.setOutlineThickness(1.f);
+	this->hitbox.setOutlineColor(sf::Color::Red);
 }
 
 HitboxComponent::~HitboxComponent()
@@ -15,15 +15,15 @@ HitboxComponent::~HitboxComponent()
 
 void HitboxComponent::update()
 {
-	m_hitbox.setPosition(m_sprite->getPosition());
+	this->hitbox.setPosition(this->sprite->getPosition());
 }
 
 void HitboxComponent::render(sf::RenderTarget * target) const
 {
-	target->draw(m_hitbox);
+	target->draw(this->hitbox);
 }
 
 bool HitboxComponent::checkCollision(const sf::FloatRect & rect)
 {
-	return m_hitbox.getGlobalBounds().intersects(rect);
+	return this->hitbox.getGlobalBounds().intersects(rect);
 }

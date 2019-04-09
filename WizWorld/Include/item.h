@@ -19,8 +19,8 @@ public:
 	virtual std::string showCategory() const;
 
 protected:
-	std::string m_name;
-	ItemCategories m_category;
+	std::string name;
+	ItemCategories category;
 };
 
 #endif // !_ITEM_H_

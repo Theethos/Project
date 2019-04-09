@@ -16,8 +16,8 @@ public:
 
 	bool checkCollision(const sf::FloatRect &rect);
 private:
-	sf::RectangleShape m_hitbox;
-	sf::Sprite *m_sprite;
+	sf::RectangleShape hitbox;
+	sf::Sprite *sprite;
 };
 
 #endif // !_HITBOX_COMPONENT_H_

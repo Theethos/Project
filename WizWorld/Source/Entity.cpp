@@ -2,8 +2,8 @@
 
 
 /* Constructor */
-// If the entity needs a sprite, to move or to have animations, it needs to use the initializers to create them
-Entity::Entity() : m_sprite(nullptr), m_movement(nullptr), m_animation(nullptr), m_hitbox(nullptr)
+// If the entity needs a sprite, to move or to have animations, it needs to use the initrs to create them
+Entity::Entity() : sprite(nullptr), movement(nullptr), animation(nullptr), hitbox(nullptr)
 {}
 
 Entity::~Entity()
@@ -13,37 +13,37 @@ Entity::~Entity()
 	Play animation if it has a animation_component */
 void Entity::move(const float& dt, const float x_motion, const float y_motion)
 {
-	if (m_sprite && m_movement)
+	if (this->sprite && this->movement)
 	{
-		m_movement->move(dt, x_motion, y_motion);
-		m_sprite->move(m_movement->getVelocity());
+		this->movement->move(dt, x_motion, y_motion);
+		this->sprite->move(this->movement->getVelocity());
 		// An entity with animation needs to define those four moves
-		if (m_animation)
+		if (this->animation)
 		{
-			if (m_movement->getVelocity().y == 0)
+			if (this->movement->getVelocity().y == 0)
 			{
-				if (m_movement->getVelocity().x < 0)
+				if (this->movement->getVelocity().x < 0)
 				{
-					m_animation->setSide(AnimationSide::LEFT);
-					m_animation->playAnimation(m_movement->getVelocity().x, dt, "MOVE_LEFT");
+					this->animation->setSide(AnimationSide::LEFT);
+					this->animation->playAnimation(this->movement->getVelocity().x, dt, "MOVE_LEFT");
 				}
-				else if (m_movement->getVelocity().x > 0)
+				else if (this->movement->getVelocity().x > 0)
 				{
-					m_animation->setSide(AnimationSide::RIGHT);
-					m_animation->playAnimation(m_movement->getVelocity().x, dt, "MOVE_RIGHT");
+					this->animation->setSide(AnimationSide::RIGHT);
+					this->animation->playAnimation(this->movement->getVelocity().x, dt, "MOVE_RIGHT");
 				}
 			}
 			else
 			{
-				if (m_movement->getVelocity().y < 0)
+				if (this->movement->getVelocity().y < 0)
 				{
-					m_animation->setSide(AnimationSide::UP);
-					m_animation->playAnimation(m_movement->getVelocity().y, dt, "MOVE_UP");
+					this->animation->setSide(AnimationSide::UP);
+					this->animation->playAnimation(this->movement->getVelocity().y, dt, "MOVE_UP");
 				}
-				else if (m_movement->getVelocity().y > 0)
+				else if (this->movement->getVelocity().y > 0)
 				{
-					m_animation->setSide(AnimationSide::DOWN);
-					m_animation->playAnimation(m_movement->getVelocity().y, dt, "MOVE_DOWN");
+					this->animation->setSide(AnimationSide::DOWN);
+					this->animation->playAnimation(this->movement->getVelocity().y, dt, "MOVE_DOWN");
 				}
 			}
 		}
@@ -52,45 +52,45 @@ void Entity::move(const float& dt, const float x_motion, const float y_motion)
 
 void Entity::render(sf::RenderTarget* target)
 {
-	if (m_sprite)
+	if (this->sprite)
 	{
-		target->draw(*m_sprite);
-		m_hitbox->render(target);
+		target->draw(*this->sprite);
+		this->hitbox->render(target);
 	}
 }
 
-/* Initializers (if an entity use one of these initializers, it needs to delete what it has created in its OWN destructor */
+/* Initializers (if an entity use one of these initrs, it needs to delete what it has created in its OWN destructor */
 void Entity::createSprite()
 {
-	m_sprite = new sf::Sprite();
-	m_hitbox = new HitboxComponent(m_sprite, 64, 64);
+	this->sprite = new sf::Sprite();
+	this->hitbox = new HitboxComponent(this->sprite, 64, 64);
 
 }
 
 void Entity::iniatializeAnimationComponent()
 {
-	m_animation = new AnimationComponent(m_sprite);
+	this->animation = new AnimationComponent(this->sprite);
 }
 
 /* Has to be overloaded because each entity has its textures */
-void Entity::initializeTextures()
+void Entity::initTextures()
 {}
 
 
-void Entity::initializeMovementComponent(float maxVelocity, float acceleration, float deceleration)
+void Entity::initMovementComponent(float maxVelocity, float acceleration, float deceleration)
 {
-	m_movement = new MovementComponent(maxVelocity, acceleration, deceleration);
+	this->movement = new MovementComponent(maxVelocity, acceleration, deceleration);
 }
 
 /* Getters */
 MovementComponent * Entity::getMovement() const
 {
-	if (m_movement)
-		return m_movement;
+	if (this->movement)
+		return this->movement;
 }
 
 AnimationComponent * Entity::getAnimation() const
 {
-	if (m_animation)
-		return m_animation;
+	if (this->animation)
+		return this->animation;
 }

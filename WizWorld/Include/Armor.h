@@ -1,12 +1,6 @@
 #ifndef _ARMOR_H_
 #define _ARMOR_H_
 
-/*
- * ==================================================
- * ================ Class Armor =====================
- * ==================================================
- */
-
 class Armor : public Item
 {
 public:
@@ -22,7 +16,7 @@ public:
 	std::string showCategory() const;
 
 private:
-	ArmorCategories m_armorCategory;
+	ArmorCategories armorCategory;
 };
 
 #endif // !_ARMOR_H_

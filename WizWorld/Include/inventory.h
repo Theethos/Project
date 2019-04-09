@@ -32,17 +32,17 @@ public:
 
 private:
 	// Weapon in primary hand
-	Weapon *m_hand_1;
+	Weapon *hand_1;
 	// Weapon in secondary hand
-	Weapon *m_hand_2;
+	Weapon *hand_2;
 	// Items equiped by the character
-	Armor **m_stuff;
+	Armor **stuff;
 	// Number of slots in the bag
-	int m_size;
+	int size;
 	// Item carryed by the character
-	Item **m_bag;
+	Item **bag;
 	// First slot available in the bag
-	int m_firstFreeSlot;
+	int firstFreeSlot;
 };
 
 #endif // !_INVENTORY_H_

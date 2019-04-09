@@ -14,19 +14,19 @@ public:
 	void run();
 
 private:
-	sf::RenderWindow m_window;
-	bool m_fullscreen;
+	sf::RenderWindow window;
+	bool fullscreen;
 
-	sf::Event m_event;
+	sf::Event event;
 
-	std::stack<State*> m_states;
+	std::stack<State*> states;
 
-	sf::Clock m_clock;
+	sf::Clock clock;
 	/* Delta time, time between 2 frames */
-	float m_dt;
+	float dt;
 
 	/* Keys that Game uses */
-	std::map<std::string, int> m_keys;
+	std::map<std::string, int> keys;
 
 
 	/* Private functions */
@@ -35,9 +35,9 @@ private:
 	void updateEvents();
 	void updateDt();
 	void render();
-	void initializeWindow();
-	void initializeStates();
-	void initializeKeys();
+	void initWindow();
+	void initStates();
+	void initKeys();
 };
 
 #endif // !_GAME_H_

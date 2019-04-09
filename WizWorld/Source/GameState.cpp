@@ -4,30 +4,30 @@
 
 GameState::GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states) : State(window, keys, states)
 {
-	initializeActions();
-	m_player = new Player(2.f, 0.0, 0.0);
+	initActions();
+	this->player = new Player(2.f, 0.0, 0.0);
 }
 
 GameState::~GameState()
 {
-	delete m_player;
+	delete this->player;
 }
 
 void GameState::handleInput(const float &dt)
 {
 	/* Move the character in the direction given by input */
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(m_actions["MOVE_UP"])))
-		m_player->move(dt, 0.f, -1.f);
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(m_actions["MOVE_DOWN"])))
-		m_player->move(dt, 0.f, 1.f);
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(m_actions["MOVE_LEFT"])))
-		m_player->move(dt, -1.f, 0.f);
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(m_actions["MOVE_RIGHT"])))
-		m_player->move(dt, 1.f, 0.f);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_UP"])))
+		this->player->move(dt, 0.f, -1.f);
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_DOWN"])))
+		this->player->move(dt, 0.f, 1.f);
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_LEFT"])))
+		this->player->move(dt, -1.f, 0.f);
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_RIGHT"])))
+		this->player->move(dt, 1.f, 0.f);
 	/* Open pause menu "escape" is pressed */
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(m_actions["MENU"])))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MENU"])))
 	{
-		m_states->push(new MenuState(m_window, m_keys, m_states, "../External/Config/pause_menu_buttons.cfg"));
+		this->states->push(new MenuState(this->window, this->keys, this->states, "../External/Config/pause_menu_buttons.cfg", Menu::PAUSE_MENU));
 	}
 }
 
@@ -37,22 +37,22 @@ void GameState::update(const float& dt)
 
 	handleInput(dt);
 
-	m_player->update(dt);
+	this->player->update(dt);
 }
 
 void GameState::render(sf::RenderTarget* target)
 {
 	if (!target)
-		target = m_window;
+		target = this->window;
 
-	m_player->render(target);
+	this->player->render(target);
 }
 
 /* Initializes @member[actions] with the parameters in the files "game_actions.cfg"
    Format :
 		Action_Name Key_Name
 */
-void GameState::initializeActions()
+void GameState::initActions()
 {
 	std::ifstream config_file("../External/Config/game_actions.cfg");
 
@@ -62,7 +62,7 @@ void GameState::initializeActions()
 		std::string key = "";
 		while (config_file >> action >> key)
 		{
-			m_actions[action] = m_keys->at(key);
+			this->actions[action] = this->keys->at(key);
 		}
 		config_file.close();
 	}

@@ -13,27 +13,31 @@ public:
 		   sf::Color activeColor, sf::Color textColor, int textSize);
 	virtual ~Button();
 
-	virtual void update(const sf::Vector2f mousePos);
-	virtual void render(sf::RenderTarget* target);
+	void update(const sf::Vector2f mousePos);
+	void render(sf::RenderTarget* target);
+	void activate();
+	void deactivate();
 
 	/* Getter */
 	bool getPressed() const;
+	bool getActivated() const;
 
 private:
 	/* Shape of the button (area) */
-	sf::RectangleShape m_shape;
+	sf::RectangleShape shape;
 	
-	sf::Font *m_font;
-	sf::Text m_text;
-	sf::Color m_textColor;
-	int m_textSize;
+	sf::Font *font;
+	sf::Text text;
+	sf::Color textColor;
+	int textSize;
 
-	sf::Color m_idleColor;
-	sf::Color m_hoverColor;
-	sf::Color m_activeColor;
+	sf::Color idleColor;
+	sf::Color hoverColor;
+	sf::Color activeColor;
 
-	bool m_pressed;
-	bool m_click;
+	bool pressed;
+	bool click;
+	bool activated;
 };
 
 #endif // !_BUTTON_H_

@@ -63,12 +63,12 @@ public:
 
 protected:
 
-    std::string m_name;
-    Sexe m_sexe;
-	Hair m_hair;
-    Level m_level;
-    HealthPoints m_healthPoints;
-	Inventory m_inventory;	
+    std::string name;
+    Sexe sexe;
+	Hair hair;
+    Level level;
+    HealthPoints healthPoints;
+	Inventory inventory;	
 };
 
 #endif // _CHARACTER_H_

@@ -87,6 +87,9 @@
     <ClInclude Include="..\Include\HitboxComponent.h">
       <Filter>Component</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\ChooseCharacterState.h">
+      <Filter>State</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Weapon.cpp">
@@ -137,11 +140,14 @@
     <ClCompile Include="..\Source\HitboxComponent.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="..\Include\Tile.h">
+    <ClCompile Include="..\Source\TileMap.cpp">
       <Filter>Tiles</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Tile.cpp">
+    <ClCompile Include="..\Include\TileMap.h">
       <Filter>Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\ChooseCharacterState.cpp">
+      <Filter>State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

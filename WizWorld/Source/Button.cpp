@@ -11,62 +11,62 @@
 Button::Button(float x, float y, float w, float h, std::string text,
 	sf::Font *font, sf::Color idleColor, sf::Color hoverColor,
 	sf::Color activeColor, sf::Color textColor, int textSize)
-	: m_font(font), m_idleColor(idleColor), m_hoverColor(hoverColor), m_activeColor(activeColor),
-	m_textColor(textColor), m_textSize(textSize), m_pressed(false), m_click(false)
+	: font(font), idleColor(idleColor), hoverColor(hoverColor), activeColor(activeColor),
+	textColor(textColor), textSize(textSize), pressed(false), click(false), activated(false)
 {
-	m_shape.setSize(sf::Vector2f(w, h));
-	m_shape.setPosition(sf::Vector2f(x, y));
-	m_shape.setFillColor(m_idleColor);
+	this->shape.setSize(sf::Vector2f(w, h));
+	this->shape.setPosition(sf::Vector2f(x, y));
+	this->shape.setFillColor(this->idleColor);
 
-	m_text.setFont(*m_font);
-	m_text.setString(text);
-	m_text.setFillColor(m_textColor);
-	m_text.setCharacterSize(m_textSize);
-	m_text.setPosition(sf::Vector2f(m_shape.getPosition().x + (m_shape.getGlobalBounds().width / 2.f - m_text.getGlobalBounds().width / 2.f),
-									m_shape.getPosition().y + (m_shape.getGlobalBounds().height / 2.f - m_text.getGlobalBounds().height / 1.35)
+	this->text.setFont(*this->font);
+	this->text.setString(text);
+	this->text.setFillColor(this->textColor);
+	this->text.setCharacterSize(this->textSize);
+	this->text.setPosition(sf::Vector2f(this->shape.getPosition().x + (this->shape.getGlobalBounds().width / 2.f - this->text.getGlobalBounds().width / 2.f),
+									this->shape.getPosition().y + (this->shape.getGlobalBounds().height / 2.f - this->text.getGlobalBounds().height / 1.35)
 	));
 }
 
 /* Destructor */
 Button::~Button()
 {}
-
+	
 /* Functions */
 void Button::update(const sf::Vector2f mousePos)
 {
 	/* Set button to idle_color */
-	m_shape.setFillColor(m_idleColor);
+	this->shape.setFillColor(this->idleColor);
 	/* If the mouse is over the button */
-	if (m_shape.getGlobalBounds().contains(mousePos))
+	if (this->shape.getGlobalBounds().contains(mousePos))
 	{
 		/* If the user clicks over the button */
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			m_click = true;
+			this->click = true;
 		}
 		/* When user released the click and he is still over the button (simulate mouse button up event) */
-		else if (sf::Event::MouseButtonReleased && m_click)
+		else if (sf::Event::MouseButtonReleased && this->click)
 		{
 			/* Set to active_color */
-			m_shape.setFillColor(m_activeColor);
-			m_pressed = true;
-			m_click = false;
+			this->shape.setFillColor(this->activeColor);
+			this->pressed = true;
+			this->click = false;
 		}
 		/* Else set it to hover_color */
 		else
 		{
-			m_shape.setFillColor(m_hoverColor);
-			if (m_pressed)
-				m_pressed = false;
+			this->shape.setFillColor(this->hoverColor);
+			if (this->pressed)
+				this->pressed = false;
 		}
 	}
 	/* Else, if user clicked on the button but is not over it anymore */
 	else
 	{
 		// Reset the click (because it means the user didn't want to click on this button
-		if (m_click)
+		if (this->click)
 		{
-			m_click = false;
+			this->click = false;
 		}
 	}
 }
@@ -75,12 +75,50 @@ void Button::render(sf::RenderTarget * target)
 {
 	if (target)
 	{
-		target->draw(m_shape);
-		target->draw(m_text);
+		target->draw(this->shape);
+		target->draw(this->text);
 	}		
+}
+
+void Button::activate()
+{
+	if (!this->activated)
+	{
+		this->activated = true;
+		this->shape.setOutlineThickness(4);
+		this->shape.setOutlineColor(sf::Color::White);
+		this->idleColor.r -= 50.0;
+		this->idleColor.g -= 50.0;
+		this->idleColor.b -= 50.0;
+		this->hoverColor.r -= 50.0;
+		this->hoverColor.g -= 50.0;
+		this->hoverColor.b -= 50.0;
+	}
+
+}
+
+void Button::deactivate()
+{
+	if (this->activated)
+	{
+		this->activated = false;
+		this->shape.setOutlineThickness(0);
+		this->shape.setOutlineColor(sf::Color::Transparent);
+		this->idleColor.r += 50.0;
+		this->idleColor.g += 50.0;
+		this->idleColor.b += 50.0;
+		this->hoverColor.r += 50.0;
+		this->hoverColor.g += 50.0;
+		this->hoverColor.b += 50.0;
+	}
 }
 
 bool Button::getPressed() const
 {
-	return m_pressed;
+	return this->pressed;
+}
+
+bool Button::getActivated() const
+{
+	return this->activated;
 }

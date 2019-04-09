@@ -20,13 +20,13 @@ public:
 
 private:
 	// Maximum "speed"
-	float m_maxVelocity;
+	float maxVelocity;
 
-	float m_acceleration;
-	float m_deceleration;
+	float acceleration;
+	float deceleration;
 	
 	// Current "speed"
-	sf::Vector2f m_velocity;
+	sf::Vector2f velocity;
 
 };
 

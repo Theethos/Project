@@ -4,21 +4,21 @@
 #include "../Include/Game.h"
 
 /* Constructor */
-Game::Game() : m_dt(0.0), m_fullscreen(false)
+Game::Game() : dt(0.0), fullscreen(false)
 {
-	initializeWindow();
-	initializeKeys();
-	initializeStates();
+	initWindow();
+	initKeys();
+	initStates();
 }
 
 /* Destructor */
 Game::~Game()
 {
 	// Delete the states stack
-	while (!m_states.empty())
+	while (!this->states.empty())
 	{
-		delete m_states.top();
-		m_states.pop();
+		delete this->states.top();
+		this->states.pop();
 	}
 }
 
@@ -26,7 +26,7 @@ Game::~Game()
 void Game::run()
 {
 	/* Main loop */
-	while (m_window.isOpen())
+	while (this->window.isOpen())
 	{
 		// Update delta_time to know how long it takes to do the entire loop
 		updateDt();
@@ -41,32 +41,32 @@ void Game::update()
 	updateEvents();
 
 	// Updates from top state
-	if (!m_states.empty())
+	if (!this->states.empty())
 	{
-		m_states.top()->update(m_dt);
+		this->states.top()->update(this->dt);
 		// Pops the state it is finished/closed 
-		if (m_states.top()->getQuit())
+		if (this->states.top()->getQuit())
 		{
-			delete m_states.top();
-			m_states.pop();
+			delete this->states.top();
+			this->states.pop();
 		}
 	}
 	// There is no more states
 	else
 	{
-		m_window.close();
+		this->window.close();
 	}
 }
 
 void Game::render()
 {
-	m_window.clear();
+	this->window.clear();
 
 	// Renders from state
-	if (!m_states.empty())
-		m_states.top()->render(&m_window);
+	if (!this->states.empty())
+		this->states.top()->render(&this->window);
 
-	m_window.display();
+	this->window.display();
 }
 
 /* Initializes the window with the parameters in the file "window.cfg" 
@@ -77,7 +77,7 @@ void Game::render()
 		FPS
 		Vertical synchronisation enabled 
 */
-void Game::initializeWindow()
+void Game::initWindow()
 {
 	std::ifstream config_file("../External/Config/window.cfg");
 
@@ -91,32 +91,32 @@ void Game::initializeWindow()
 	{
 		std::getline(config_file, title);
 		config_file >> video_mode.width >> video_mode.height;
-		config_file >> m_fullscreen;
+		config_file >> this->fullscreen;
 		config_file >> fps;
 		config_file >> vertical_sync_enabled;
 		
 		config_file.close();
 	}
 
-	if (m_fullscreen)
-		m_window.create(video_mode, title, sf::Style::Fullscreen);
+	if (this->fullscreen)
+		this->window.create(video_mode, title, sf::Style::Fullscreen);
 	else
-		m_window.create(video_mode, title);
+		this->window.create(video_mode, title);
 
-	m_window.setFramerateLimit(fps);
-	m_window.setVerticalSyncEnabled(vertical_sync_enabled);
+	this->window.setFramerateLimit(fps);
+	this->window.setVerticalSyncEnabled(vertical_sync_enabled);
 }
 
-void Game::initializeStates()
+void Game::initStates()
 {
-	m_states.push(new MenuState(&m_window, &m_keys, &m_states, "../External/Config/main_menu_buttons.cfg"));
+	this->states.push(new MenuState(&this->window, &this->keys, &this->states, "../External/Config/main_menu_buttons.cfg", Menu::MAIN_MENU));
 }
 
 /* Initializes @member[keys] with the parameters in the files "game_keys.cfg"
    Format :
 		Key_Name SFML_Key_Value
 */
-void Game::initializeKeys()
+void Game::initKeys()
 {
 	std::ifstream config_file("../External/Config/game_keys.cfg");
 
@@ -126,7 +126,7 @@ void Game::initializeKeys()
 		int key_value = 0;
 		while (config_file >> key >> key_value)
 		{
-			m_keys[key] = key_value;
+			this->keys[key] = key_value;
 		}
 	}
 
@@ -135,16 +135,16 @@ void Game::initializeKeys()
 
 void Game::updateEvents()
 {
-	while (m_window.pollEvent(m_event))
+	while (this->window.pollEvent(this->event))
 	{
 		// User closed the window
-		if (m_event.type == sf::Event::Closed)
-			m_window.close();
+		if (this->event.type == sf::Event::Closed)
+			this->window.close();
 	}
 }
 
 void Game::updateDt()
 {
-	m_dt = m_clock.restart().asSeconds();
+	this->dt = this->clock.restart().asSeconds();
 }
 

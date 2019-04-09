@@ -1,49 +1,44 @@
 #include "../Include/AnimationComponent.h"
 
 /* Constructor */
-AnimationComponent::AnimationComponent(sf::Sprite *sprite) : m_associatedSprite(sprite), m_side(AnimationSide::DOWN)
+AnimationComponent::AnimationComponent(sf::Sprite *sprite) : associatedSprite(sprite), side(AnimationSide::DOWN)
 {}
 
 /* Destructor */
 AnimationComponent::~AnimationComponent()
 {
-	for (auto &it : m_animation)
+	for (auto &it : this->animation)
 	{
 		// Delete all texture sheet
-		delete it.second.m_textureSheet;
-		it.second.m_textureSheet = nullptr;
+		delete it.second.textureSheet;
+		it.second.textureSheet = nullptr;
 	}
-	m_animation.clear();
+	this->animation.clear();
 }
 
 /* Functions */
 void AnimationComponent::addAnimation(const std::string key, sf::Texture * textureSheet, int numberOfTextures, int width, int height, float animationTimer)
 {
 	// Create and set a new animation with a "key"
-	m_animation[key].initialize(textureSheet, m_associatedSprite, numberOfTextures, animationTimer, width, height);
+	this->animation[key].init(textureSheet, this->associatedSprite, numberOfTextures, animationTimer, width, height);
 }
 
 void AnimationComponent::playAnimation(const float & velocity, const float & dt, const std::string animation)
 {
-	m_animation[animation].play(velocity, dt);
-}
-
-void AnimationComponent::pauseAnimation(const std::string animation)
-{
-	m_animation[animation].pause();
+	this->animation[animation].play(velocity, dt);
 }
 
 void AnimationComponent::resetAnimation(const std::string animation)
 {
-	m_animation[animation].reset();
+	this->animation[animation].reset();
 }
 
 void AnimationComponent::setSide(const AnimationSide side)
 {
-	m_side = side;
+	this->side = side;
 }
 
 AnimationSide AnimationComponent::getSide() const
 {
-	return m_side;
+	return this->side;
 }
