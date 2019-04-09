@@ -55,7 +55,6 @@ void Entity::render(sf::RenderTarget* target)
 	if (this->sprite)
 	{
 		target->draw(*this->sprite);
-		this->hitbox->render(target);
 	}
 }
 

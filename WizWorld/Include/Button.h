@@ -21,6 +21,7 @@ public:
 	/* Getter */
 	bool getPressed() const;
 	bool getActivated() const;
+	sf::Vector2f getPosition() const;
 
 private:
 	/* Shape of the button (area) */

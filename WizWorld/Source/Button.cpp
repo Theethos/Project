@@ -122,3 +122,8 @@ bool Button::getActivated() const
 {
 	return this->activated;
 }
+
+sf::Vector2f Button::getPosition() const
+{
+	return this->shape.getPosition();
+}

@@ -25,7 +25,7 @@ Player::~Player()
 /* Overload of superclass function */
 void Player::iniatializeAnimationComponent()
 {
-	// Calls the superclass initr
+	// Calls the superclass init
 	Entity::iniatializeAnimationComponent();
 
 	/*	Loads the textures from a file

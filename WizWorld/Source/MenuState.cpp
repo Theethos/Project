@@ -25,7 +25,14 @@ MenuState::MenuState(sf::RenderWindow *window, std::map < std::string, int> *key
 	if (currentMenu == Menu::CHARACTER_MENU)
 	{
 		initSprites();
+		this->SpriteAnimation->playAnimation(1, 0.001, "WARRIOR_LEFT_MALE");
+		this->SpriteAnimation->playAnimation(1, 0.001, "WARRIOR_DOWN_MALE");
+		this->buttons["WARRIOR"]->activate();
+		this->buttons["MALE"]->activate();
+		this->currentClassButton = this->buttons["WARRIOR"];
+		this->currentSpriteAnimation = "WARRIOR";
 	}
+
 }
 
 MenuState::~MenuState()
@@ -39,9 +46,9 @@ MenuState::~MenuState()
 	{
 		delete this->menuSprite;
 	}
-	if (this->currentSpriteAnimation)
+	if (this->SpriteAnimation)
 	{
-		delete this->currentSpriteAnimation;
+		delete this->SpriteAnimation;
 	}
 
 }
@@ -99,21 +106,12 @@ void MenuState::updateButtons()
 			else if (it.first == "WARRIOR" || it.first == "MAGICIAN" || it.first == "HEALER" || it.first == "NINJA" || it.first == "RANGER")
 			{
 				it.second->activate();
+				this->currentSpriteAnimation = it.first;
 				if (this->currentClassButton && this->currentClassButton != it.second)
 				{
 					this->currentClassButton->deactivate();
 				}
 				this->currentClassButton = it.second;
-				if (this->buttons["MALE"]->getActivated())
-				{
-					this->currentSpriteAnimation->playAnimation(1, 0.001, it.first + "_LEFT_MALE");
-					this->currentSpriteAnimation->playAnimation(1, 0.001, it.first + "_DOWN_MALE");
-				}
-				else if (this->buttons["FEMALE"]->getActivated())
-				{
-					this->currentSpriteAnimation->playAnimation(1, 0.001, it.first + "_LEFT_FEMALE");
-					this->currentSpriteAnimation->playAnimation(1, 0.001, it.first + "_DOWN_FEMALE");
-				}
 			}
 			else if (it.first == "GO")
 			{
@@ -134,6 +132,24 @@ void MenuState::render(sf::RenderTarget* target)
 	
 	if (this->menuSprite)
 	{
+		sf::Vector2f sprite_position;
+		int sprite_index = 0;
+		if (this->buttons["MALE"]->getActivated())
+		{
+			sprite_position = sf::Vector2f(this->buttons["MALE"]->getPosition().x, this->buttons[currentSpriteAnimation]->getPosition().y);
+			for (auto &it : menuSprite)
+			{
+				it.second->setPosition(sprite_position);
+				this->SpriteAnimation[sprite_index]->playAnimation(1, 0.005, currentSpriteAnimation + "_" + it.first + "_MALE");
+			}
+		}
+		else if (this->buttons["FEMALE"]->getActivated())
+		{
+			sprite_position = sf::Vector2f(this->buttons["FEMALE"]->getPosition().x, this->buttons[currentSpriteAnimation]->getPosition().y);
+			this->menuSprite->setPosition(sprite_position);
+			this->SpriteAnimation->playAnimation(1, 0.005, currentSpriteAnimation + "_LEFT_FEMALE");
+			this->SpriteAnimation->playAnimation(1, 0.005, currentSpriteAnimation + "_DOWN_FEMALE");
+		}
 		target->draw(*this->menuSprite);
 	}
 }
@@ -312,18 +328,30 @@ void MenuState::initTitle()
 
 void MenuState::initSprites()
 {
+	//this->menuSprite["UP"] = new sf::Sprite();
+	this->menuSprite["DOWN"] = new sf::Sprite();
+	this->menuSprite["LEFT"] = new sf::Sprite();
+	//this->menuSprite["RIGHT"] = new sf::Sprite();
+
+	for (auto &it : this->menuSprite)
+	{
+		it.second->setScale(4, 4);
+	}
+}
+void MenuState::initAnimations()
+{
 	std::ifstream config_file("../External/Config/sprites_menu_character.cfg");
 
 	if (config_file.is_open())
 	{
-		this->menuSprite = new sf::Sprite();
+		this->initSprites();
 
-		menuSprite->setPosition(sf::Vector2f(150, 250));
-		
-		this->currentSpriteAnimation = new AnimationComponent(menuSprite);
+		this->SpriteAnimation[0] = new AnimationComponent(menuSprite["DOWN"]);
+		this->SpriteAnimation[1] = new AnimationComponent(menuSprite["LEFT"]);
 		std::string key, path;
 		int number_of_textures, width, height;
 		float animation_timer;
+		int index_sprite = 0;
 
 		while (config_file >> key >> path >> number_of_textures >> width >> height >> animation_timer)
 		{
@@ -331,7 +359,15 @@ void MenuState::initSprites()
 			sf::Texture *texture_sheet = new sf::Texture;
 			texture_sheet->loadFromFile(path);
 			// Add it to the animation component
-			this->currentSpriteAnimation->addAnimation(key, texture_sheet, number_of_textures, width, height, animation_timer);
+			this->SpriteAnimation[index_sprite]->addAnimation(key, texture_sheet, number_of_textures, width, height, animation_timer);
+			if (index_sprite)
+			{
+				index_sprite = 0;
+			}
+			else
+			{
+				index_sprite = 1;
+			}
 		}
 		config_file.close();
 	}

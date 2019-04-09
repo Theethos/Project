@@ -18,11 +18,12 @@ public:
 	void updateButtons();
 	void render(sf::RenderTarget* target = nullptr);
 	void renderButtons(sf::RenderTarget* target = nullptr);
-	
+
 	void initFonts();
 	void initButtons();
 	void initTitle();
 	void initSprites();
+	void initAnimations();
 
 private:
 	Menu currentMenu;
@@ -36,8 +37,9 @@ private:
 	// The button that is activated in the "choose character" menu
 	Button *currentClassButton;
 	// The sprite's animation that has to be displayed in the "choose character" menu
-	AnimationComponent* currentSpriteAnimation;
-	sf::Sprite* menuSprite;
+	AnimationComponent* SpriteAnimation[2];
+	std::string currentSpriteAnimation;
+	std::map<std::string, sf::Sprite*> menuSprite;
 
 };
 
