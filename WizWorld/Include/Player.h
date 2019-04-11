@@ -11,6 +11,9 @@ public:
 
 	void iniatializeAnimationComponent(std::string config_file);
 	void update(const float &dt);
+
+	// Getters
+	sf::Sprite* getSprite() const;
 };
 
 #endif //!_PLAYER_H_

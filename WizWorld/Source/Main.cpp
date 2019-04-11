@@ -1,7 +1,7 @@
-#include "Include/Precompiled_Header.h"
-#include "Include/Macros.h"
-#include "Include/Character.h"
-#include "Include/Game.h"
+#include "Precompiled_Header.h"
+#include "../Include/Macros.h"
+#include "../Include/Character.h"
+#include "../Include/Game.h"
 
 int main()
 {	

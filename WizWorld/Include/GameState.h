@@ -3,6 +3,7 @@
 
 #include "State.h"
 #include "Player.h"
+#include "Map.h"
 
 class GameState : public State
 {
@@ -14,10 +15,13 @@ public:
 	virtual void update(const float &dt);
 	virtual void render(sf::RenderTarget* target);
 	virtual void initActions();
+	void checkOutOfMap();
+
 
 private:
 	Player *player;	
-	std::map<std::string, sf::Texture> textures;
+	Map *map;
+	sf::View playerView;
 };
 
 #endif // !_GAME_STATE_H_

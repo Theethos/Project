@@ -34,7 +34,7 @@
     <Filter Include="Component">
       <UniqueIdentifier>{83395c0f-5095-49fa-9eb1-1db27d8ed77f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tiles">
+    <Filter Include="Tiles/Map">
       <UniqueIdentifier>{abe9f394-e5a1-4826-8f4a-3b55dda9700b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -87,8 +87,14 @@
     <ClInclude Include="..\Include\Macros.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Precompiled_Header.h">
+    <ClInclude Include="..\Source\Precompiled_Header.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\TileMap.h">
+      <Filter>Tiles/Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Map.h">
+      <Filter>Tiles/Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -97,9 +103,6 @@
     </ClCompile>
     <ClCompile Include="..\Source\Character.cpp">
       <Filter>Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Main.cpp">
-      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Item.cpp">
       <Filter>Item</Filter>
@@ -140,14 +143,17 @@
     <ClCompile Include="..\Source\HitboxComponent.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\TileMap.cpp">
-      <Filter>Tiles</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Include\TileMap.h">
-      <Filter>Tiles</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Precompiled_Header.cpp">
       <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Main.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\TilesMap.cpp">
+      <Filter>Tiles/Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Map.cpp">
+      <Filter>Tiles/Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

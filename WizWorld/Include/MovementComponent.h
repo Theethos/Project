@@ -5,10 +5,14 @@ class MovementComponent
 {
 public:
 	MovementComponent(float maxVelocity, float acceleration, float deceleration);
+	MovementComponent(const MovementComponent &other);
 	virtual ~MovementComponent();
 
 	void move(const float & dt, const float dir_x, const float dir_y);
 	void update(const float & dt, sf::Sprite *sprite);
+
+	// Operators
+	MovementComponent operator=(const MovementComponent &other);
 
 	/* Getters */
 	const sf::Vector2f &getVelocity() const;

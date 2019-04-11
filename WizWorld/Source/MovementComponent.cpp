@@ -1,4 +1,4 @@
-#include "../Include/Precompiled_Header.h"
+#include "Precompiled_Header.h"
 #include "../Include/Macros.h"
 #include "../Include/MovementComponent.h"
 
@@ -6,6 +6,14 @@
 MovementComponent::MovementComponent(float maxVelocity, float acceleration, float deceleration)
 	: maxVelocity(maxVelocity), velocity({0,0}), acceleration(acceleration), deceleration(deceleration)
 {}
+
+MovementComponent::MovementComponent(const MovementComponent & other)
+{
+	this->maxVelocity = other.maxVelocity;
+	this->acceleration = other.acceleration;
+	this->deceleration = other.deceleration;
+	this->velocity = other.velocity;
+}
 
 /* Destructor */
 MovementComponent::~MovementComponent()
@@ -82,6 +90,16 @@ void MovementComponent::update(const float & dt, sf::Sprite *sprite)
 	}
 	// Finaly move the sprite with the correct velocity
 	sprite->move(this->velocity);
+}
+
+MovementComponent MovementComponent::operator=(const MovementComponent & other)
+{
+	this->maxVelocity = other.maxVelocity;
+	this->acceleration = other.acceleration;
+	this->deceleration = other.deceleration;
+	this->velocity = other.velocity;
+
+	return *this;
 }
 
 const sf::Vector2f & MovementComponent::getVelocity() const

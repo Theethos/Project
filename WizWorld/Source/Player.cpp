@@ -1,4 +1,4 @@
-#include "../Include/Precompiled_Header.h"
+#include "Precompiled_Header.h"
 #include "../Include/Macros.h"
 #include "../Include/Player.h"
 
@@ -9,6 +9,7 @@ Player::Player(float maxVelocity, float x_pos, float y_pos, std::string config_f
 	createSprite();
 	this->sprite->setPosition(sf::Vector2f(x_pos, y_pos));
 	this->sprite->setScale(sprite_scale, sprite_scale);
+
 	initMovementComponent(maxVelocity, 10.f, 9.f);
 	iniatializeAnimationComponent(config_file);
 	// Set the sprite texture to IDLE_DOWN at the beginning
@@ -84,5 +85,10 @@ void Player::update(const float & dt)
 			}
 		}
 	}
+}
+
+sf::Sprite * Player::getSprite() const
+{
+	return this->sprite;
 }
 
