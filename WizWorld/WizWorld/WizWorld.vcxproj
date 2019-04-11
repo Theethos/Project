@@ -23,17 +23,17 @@
     <ClInclude Include="..\Include\Armor.h" />
     <ClInclude Include="..\Include\Button.h" />
     <ClInclude Include="..\Include\Character.h" />
-    <ClInclude Include="..\Include\ChooseCharacterState.h" />
     <ClInclude Include="..\Include\Entity.h" />
     <ClInclude Include="..\Include\Game.h" />
     <ClInclude Include="..\Include\GameState.h" />
     <ClInclude Include="..\Include\HitboxComponent.h" />
     <ClInclude Include="..\Include\Inventory.h" />
     <ClInclude Include="..\Include\Item.h" />
-    <ClInclude Include="..\Include\Macro_Include.h" />
+    <ClInclude Include="..\Include\Macros.h" />
     <ClInclude Include="..\Include\MenuState.h" />
     <ClInclude Include="..\Include\MovementComponent.h" />
     <ClInclude Include="..\Include\Player.h" />
+    <ClInclude Include="..\Include\Precompiled_Header.h" />
     <ClInclude Include="..\Include\State.h" />
     <ClInclude Include="..\Include\Weapon.h" />
   </ItemGroup>
@@ -44,7 +44,6 @@
     <ClCompile Include="..\Source\Armor.cpp" />
     <ClCompile Include="..\Source\Button.cpp" />
     <ClCompile Include="..\Source\Character.cpp" />
-    <ClCompile Include="..\Source\ChooseCharacterState.cpp" />
     <ClCompile Include="..\Source\Entity.cpp" />
     <ClCompile Include="..\Source\Game.cpp" />
     <ClCompile Include="..\Source\GameState.cpp" />
@@ -54,6 +53,12 @@
     <ClCompile Include="..\Source\MenuState.cpp" />
     <ClCompile Include="..\Source\MovementComponent.cpp" />
     <ClCompile Include="..\Source\Player.cpp" />
+    <ClCompile Include="..\Source\Precompiled_Header.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Precompiled_Header.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Precompiled_Header.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="..\Source\State.cpp" />
     <ClCompile Include="..\Source\TileMap.cpp" />
     <ClCompile Include="..\Source\Weapon.cpp" />
@@ -128,6 +133,8 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)\External\SFML_64bits\SFML-2.5.1 - 64 bits\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled_Header.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)\External\SFML_64bits\SFML-2.5.1 - 64 bits\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -157,6 +164,8 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)\External\SFML_64bits\SFML-2.5.1 - 64 bits\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled_Header.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

@@ -1,7 +1,5 @@
-#define _REQUIRE_SFML_
-	#include "Include/Macro_Include.h"
-#undef _REQUIRE_SFML_
-
+#include "Include/Precompiled_Header.h"
+#include "Include/Macros.h"
 #include "Include/Character.h"
 #include "Include/Game.h"
 

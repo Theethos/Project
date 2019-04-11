@@ -1,10 +1,6 @@
 #ifndef _HITBOX_COMPONENT_H_
 #define _HITBOX_COMPONENT_H_
 
-#define _REQUIRE_SFML_
-	#include "Macro_Include.h"
-#undef _REQUIRE_SFML_
-
 class HitboxComponent
 {
 public:

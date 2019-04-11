@@ -1,13 +1,6 @@
 #ifndef _ANIMATION_COMPONENT_H_
 #define _ANIMATION_COMPONENT_H_
 
-#define _REQUIRE_SFML_
-	#include "Macro_Include.h"
-#undef _REQUIRE_SFML_
-
-/* Enum to describe the orientation of a sprite */
-enum class AnimationSide {LEFT, RIGHT, DOWN, UP};
-
 class AnimationComponent
 {
 private:
@@ -75,6 +68,19 @@ private:
 			this->currentRect.left = 0;
 			this->timer = 0;
 		}
+		// Set the texture to the first of the sprite sheet -> idle
+		void idle(const float &dt)
+		{
+			this->timer += dt;
+
+			if (this->timer >= this->animationTimer)
+			{
+				this->sprite->setTexture(*this->textureSheet, true);
+				this->sprite->setTextureRect(sf::IntRect(this->currentRect.width, 0, this->currentRect.width, this->currentRect.height));
+				// Reset timer
+				this->timer = 0;
+			}
+		}
 	};
 
 public:
@@ -85,18 +91,20 @@ public:
 
 	void playAnimation(const float & velocity, const float & dt, const std::string animation);
 	void resetAnimation(const std::string animation);
+	void idleAnimation(const float &dt, const std::string animation);
 
 	/* Getter */
 	AnimationSide getSide() const;
+	sf::Texture* getTexture(std::string animation);
 
 	/* Setter */
 	void setSide(const AnimationSide side);
+	sf::Sprite *associatedSprite;
 
 private:
 	// Map of animation
 	std::map<std::string, Animation> animation;
 	// Sprite on which to play the animation
-	sf::Sprite *associatedSprite;
 	// Orientation of this sprite (to play the right animation)
 	AnimationSide side;
 };

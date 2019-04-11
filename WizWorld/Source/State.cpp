@@ -1,3 +1,5 @@
+#include "../Include/Precompiled_Header.h"
+#include "../Include/Macros.h"
 #include "../Include/State.h"
 
 State::State(sf::RenderWindow* window, std::map < std::string, int> *keys, std::stack<State*>* states)

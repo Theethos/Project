@@ -1,10 +1,8 @@
 #ifndef TILE_MAP_H
 #define TILE_MAP_H
 
-#include <vector>
-#define _REQUIRE_SFML_
-	#include "Macro_Include.h"
-#undef _REQUIRE_SFML_
+#include "../Include/Precompiled_Header.h"
+#include "../Include/Macros.h"
 
 class TileMap
 {

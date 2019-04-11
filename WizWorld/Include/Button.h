@@ -1,10 +1,6 @@
 #ifndef _BUTTON_H_
 #define _BUTTON_H_
 
-#define _REQUIRE_SFML_
-	#include "Macro_Include.h"
-#undef _REQUIRE_SFML_
-
 class Button
 {
 public:
@@ -22,6 +18,7 @@ public:
 	bool getPressed() const;
 	bool getActivated() const;
 	sf::Vector2f getPosition() const;
+	sf::Vector2f getSize() const;	
 
 private:
 	/* Shape of the button (area) */

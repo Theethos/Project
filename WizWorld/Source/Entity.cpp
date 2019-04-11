@@ -1,3 +1,5 @@
+#include "../Include/Precompiled_Header.h"
+#include "../Include/Macros.h"
 #include "../Include/Entity.h"
 
 

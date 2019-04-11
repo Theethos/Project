@@ -3,10 +3,7 @@
 #ifndef _CHARACTER_H_
 #define _CHARACTER_H_
 
-#include "Inventory.h"
-
-/* Avoid mutual inclusions */
-class Item;
+#include "../Include/Inventory.h"
 
 /* Structures */
 struct HealthPoints

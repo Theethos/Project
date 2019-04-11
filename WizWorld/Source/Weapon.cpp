@@ -1,5 +1,6 @@
-#include "../Include/Macro_Include.h"
-#include "../Include/Item.h" // Mother class
+#include "../Include/Precompiled_Header.h"
+#include "../Include/Macros.h"
+#include "../Include/Item.h"
 #include "../Include/Weapon.h"
 
 /* Constructors */

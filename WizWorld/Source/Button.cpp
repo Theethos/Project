@@ -1,3 +1,5 @@
+#include "../Include/Precompiled_Header.h"
+#include "../Include/Macros.h"
 #include "../Include/Button.h"
 
 /*	Constructor
@@ -126,4 +128,9 @@ bool Button::getActivated() const
 sf::Vector2f Button::getPosition() const
 {
 	return this->shape.getPosition();
+}
+
+sf::Vector2f Button::getSize() const
+{
+	return this->shape.getSize();
 }

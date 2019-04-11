@@ -1,21 +1,5 @@
-#ifndef _MACROS_INCLUDES_H_
-#define _MACROS_INCLUDES_H_
-
-/*
- * ==================================================
- * ================== Includes ======================
- * ==================================================
- */
-
-#include <iostream>
-#include <fstream>
-#include <string>
-
-#ifdef _REQUIRE_SFML_
-	#include "SFML/Graphics.hpp"
-	#include "SFML/Window.hpp"
-#endif // _REQUIRE_SFML_
-
+#ifndef _MACROS_H_
+#define _MACROS_H_
 
 /*
  * ==================================================
@@ -63,5 +47,5 @@ enum class ArmorCategories { HAT, CLOAK, CHEST, BELT, PANTS, BOOTS, GLOVE_1, GLO
 enum class Sexe { MALE, FEMALE };
 enum class HairColor { BLOND, DARK, BROWN, RED, BLUE, GREEN };
 enum class HairStyle { SHORT, LONG };
-
-#endif // !_MACROS_INCLUDES_H_
+enum class AnimationSide { LEFT, RIGHT, DOWN, UP };
+#endif // !_MACROS_H_

@@ -1,11 +1,7 @@
 #ifndef _STATE_H_
 #define _STATE_H_
 
-#define _REQUIRE_SFML_
-	#include "Macro_Include.h"
-#undef _REQUIRE_SFML_
 
-#include <stack>
 
 class State
 {

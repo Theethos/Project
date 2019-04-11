@@ -66,9 +66,6 @@
     <ClInclude Include="..\Include\State.h">
       <Filter>State</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Macro_Include.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\Button.h">
       <Filter>Button</Filter>
     </ClInclude>
@@ -87,8 +84,11 @@
     <ClInclude Include="..\Include\HitboxComponent.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\ChooseCharacterState.h">
-      <Filter>State</Filter>
+    <ClInclude Include="..\Include\Macros.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Precompiled_Header.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -146,8 +146,8 @@
     <ClCompile Include="..\Include\TileMap.h">
       <Filter>Tiles</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\ChooseCharacterState.cpp">
-      <Filter>State</Filter>
+    <ClCompile Include="..\Source\Precompiled_Header.cpp">
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

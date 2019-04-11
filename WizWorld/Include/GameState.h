@@ -4,11 +4,10 @@
 #include "State.h"
 #include "Player.h"
 
-
 class GameState : public State
 {
 public:
-	GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states);
+	GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, std::string config_file, int sprite_scale);
 	virtual ~GameState();
 
 	virtual void handleInput(const float &dt);

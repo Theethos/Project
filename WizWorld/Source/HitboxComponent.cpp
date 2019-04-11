@@ -1,3 +1,5 @@
+#include "../Include/Precompiled_Header.h"
+#include "../Include/Macros.h"
 #include "../Include/HitboxComponent.h"
 
 HitboxComponent::HitboxComponent(sf::Sprite *sprite, const float width, const float height) : sprite(sprite)

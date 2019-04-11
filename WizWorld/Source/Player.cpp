@@ -1,16 +1,18 @@
+#include "../Include/Precompiled_Header.h"
+#include "../Include/Macros.h"
 #include "../Include/Player.h"
 
 /* Constructor */
-Player::Player(float maxVelocity, float x_pos, float y_pos) : Entity()
+Player::Player(float maxVelocity, float x_pos, float y_pos, std::string config_file, int sprite_scale) : Entity()
 {
 	/* Initializers */
 	createSprite();
 	this->sprite->setPosition(sf::Vector2f(x_pos, y_pos));
-
+	this->sprite->setScale(sprite_scale, sprite_scale);
 	initMovementComponent(maxVelocity, 10.f, 9.f);
-	iniatializeAnimationComponent();
+	iniatializeAnimationComponent(config_file);
 	// Set the sprite texture to IDLE_DOWN at the beginning
-	this->animation->playAnimation(1, 0, "IDLE_DOWN");
+	this->animation->idleAnimation(0.05, "MOVE_DOWN");
 }
 
 /* Destructor */
@@ -23,7 +25,7 @@ Player::~Player()
 }
 
 /* Overload of superclass function */
-void Player::iniatializeAnimationComponent()
+void Player::iniatializeAnimationComponent(std::string file_path)
 {
 	// Calls the superclass init
 	Entity::iniatializeAnimationComponent();
@@ -31,7 +33,7 @@ void Player::iniatializeAnimationComponent()
 	/*	Loads the textures from a file
 		Format : 
 			key  path  number_of_frames_in_the_animation  width_of_the_texture_sheet  height  time_between_two_frames */
-	std::ifstream config_file("../External/Config/player_sprites_sheet.cfg");
+	std::ifstream config_file(file_path);
 
 	if (config_file.is_open())
 	{
@@ -66,16 +68,16 @@ void Player::update(const float & dt)
 			switch (this->animation->getSide())
 			{
 				case AnimationSide::LEFT:
-					this->animation->playAnimation(this->movement->getVelocity().x, dt, "IDLE_LEFT");
+					this->animation->idleAnimation(0.005, "MOVE_LEFT");
 					break;
 				case AnimationSide::RIGHT:
-					this->animation->playAnimation(this->movement->getVelocity().x, dt, "IDLE_RIGHT");
+					this->animation->idleAnimation(0.005, "MOVE_RIGHT");
 					break;
 				case AnimationSide::UP:
-					this->animation->playAnimation(this->movement->getVelocity().y, dt, "IDLE_UP");
+					this->animation->idleAnimation(0.005, "MOVE_UP");
 					break;
 				case AnimationSide::DOWN:
-					this->animation->playAnimation(this->movement->getVelocity().y, dt, "IDLE_DOWN");
+					this->animation->idleAnimation(0.005, "MOVE_DOWN");
 					break;
 				default:
 					break;

@@ -1,11 +1,9 @@
+#include "../Include/Precompiled_Header.h"
+#include "../Include/Macros.h"
 #include "../Include/MenuState.h"
 
-#include <cstdlib>
-#include <string>
-#include "../Include/ChooseCharacterState.h"
-
-MenuState::MenuState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, std::string configFile, Menu currentMenu)
-	: State(window, keys, states), numberOfButtons(0), configFile(configFile), currentClassButton(nullptr), currentMenu(currentMenu)
+MenuState::MenuState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, std::string configFile, Menu menuType)
+	: State(window, keys, states), numberOfButtons(0), configFile(configFile), selectedButton(nullptr), menuType(menuType)
 {
 	initFonts();
 	initTitle();
@@ -22,34 +20,33 @@ MenuState::MenuState(sf::RenderWindow *window, std::map < std::string, int> *key
 		this->background.setFillColor(sf::Color::Black);
 	}
 
-	if (currentMenu == Menu::CHARACTER_MENU)
+	if (menuType == Menu::CHARACTER_MENU)
 	{
 		initSprites();
 		initAnimations();
-		this->spriteAnimation[0]->playAnimation(1, 0.005, "WARRIOR_LEFT_MALE");
-		this->spriteAnimation[1]->playAnimation(1, 0.005, "WARRIOR_DOWN_MALE");
-		this->buttons["WARRIOR"]->activate();
-		this->buttons["MALE"]->activate();
-		this->currentClassButton = this->buttons["WARRIOR"];
-		this->currentspriteAnimation = "WARRIOR";
+		// Initialize the sprites background
+		sf::Color bgColor = sf::Color::Black;
+		bgColor.a = 128;
+		this->spritesBackground.setFillColor(bgColor);
+		this->spritesBackground.setPosition(sf::Vector2f(this->buttons["MALE"]->getPosition().x, this->buttons["WARRIOR"]->getPosition().y - 5 * this->spriteScale));
+		this->spritesBackground.setSize(sf::Vector2f(this->buttons["FEMALE"]->getPosition().x + this->buttons["FEMALE"]->getSize().x - this->buttons["MALE"]->getPosition().x,
+													 this->buttons["RANGER"]->getPosition().y + this->buttons["RANGER"]->getSize().y - this->buttons["WARRIOR"]->getPosition().y + 15 * this->spriteScale));
 	}
-
 }
 
 MenuState::~MenuState()
 {
-	
 	for (auto &it : this->buttons)
 	{
 		delete it.second;
 	}
-	for (auto &it : this->menuSprite)
+	for (auto &it : this->sprites)
 	{
 		delete it.second;
 	}
-	for (auto &it : this->spriteAnimation)
+	for (auto &it : this->spritesAnimation)
 	{
-		delete it;
+		delete it.second;
 	}
 
 }
@@ -92,7 +89,8 @@ void MenuState::updateButtons()
 				this->states->push(new MenuState(this->window, this->keys, this->states, "../External/Config/main_menu_buttons.cfg", Menu::MAIN_MENU));
 			}
 			else if (it.first == "SETTINGS")
-			{}
+			{
+			}
 			/* Choose Character Menu */
 			else if (it.first == "MALE")
 			{
@@ -107,16 +105,23 @@ void MenuState::updateButtons()
 			else if (it.first == "WARRIOR" || it.first == "MAGICIAN" || it.first == "HEALER" || it.first == "NINJA" || it.first == "RANGER")
 			{
 				it.second->activate();
-				this->currentspriteAnimation = it.first;
-				if (this->currentClassButton && this->currentClassButton != it.second)
+				this->selectedClass = it.first;
+				if (this->selectedButton && this->selectedButton != it.second)
 				{
-					this->currentClassButton->deactivate();
+					this->selectedButton->deactivate();
 				}
-				this->currentClassButton = it.second;
+				this->selectedButton = it.second;
 			}
 			else if (it.first == "GO")
 			{
-				this->states->push(new GameState(this->window, this->keys, this->states));
+				std::string path_to_sprite = "";
+				if (this->buttons["MALE"]->getActivated())
+				{
+					path_to_sprite = "../External/Config/Character_Class/" + this->selectedClass + "_MALE.cfg";
+				}
+				else if (this->buttons["FEMALE"]->getActivated())
+					path_to_sprite = "../External/Config/Character_Class/"+ this->selectedClass + "_FEMALE.cfg";
+				this->states->push(new GameState(this->window, this->keys, this->states, path_to_sprite, this->spriteScale));
 			}
 		}
 	}
@@ -129,37 +134,12 @@ void MenuState::render(sf::RenderTarget* target)
 
 	target->draw(this->background);
 	target->draw(this->title);
-	renderButtons(target);
+	this->renderButtons(target);
 	
-	if (this->currentMenu == Menu::CHARACTER_MENU)
+	if (this->menuType == Menu::CHARACTER_MENU)
 	{
-		sf::Vector2f sprite_position;
-		int sprite_index = 0;
-		if (this->buttons["MALE"]->getActivated())
-		{
-			sprite_position = sf::Vector2f(this->buttons["MALE"]->getPosition().x, this->buttons[currentspriteAnimation]->getPosition().y);
-			for (auto &it : menuSprite)
-			{
-				std::cout << currentspriteAnimation + "_" + it.first + "_MALE" << "\n";
-				it.second->setPosition(sprite_position);
-				this->spriteAnimation[sprite_index++]->playAnimation(1, 0.005, currentspriteAnimation + "_" + it.first + "_MALE");
-				sprite_position.x += 30;
-			}
-		}
-		else if (this->buttons["FEMALE"]->getActivated())
-		{
-			sprite_position = sf::Vector2f(this->buttons["FEMALE"]->getPosition().x, this->buttons[currentspriteAnimation]->getPosition().y);
-			for (auto &it : menuSprite)
-			{
-				it.second->setPosition(sprite_position);
-				this->spriteAnimation[sprite_index++]->playAnimation(1, 0.005, currentspriteAnimation + "_" + it.first + "_MALE");
-				sprite_position.x += 30;
-			}
-		}
-		for (auto &it : menuSprite)
-		{
-			target->draw(*it.second);
-		}
+		target->draw(this->spritesBackground);
+		this->renderSprites(target);
 	}
 }
 
@@ -171,6 +151,43 @@ void MenuState::renderButtons(sf::RenderTarget * target)
 	}
 }
 
+void MenuState::renderSprites(sf::RenderTarget * target)
+{
+	sf::Vector2f sprite_position;
+	// if user selected "male"
+	if (this->buttons["MALE"]->getActivated())
+	{
+		// Set the position of the sprite on the left (the first one)
+		sprite_position = sf::Vector2f(this->buttons["MALE"]->getPosition().x + 10 * this->spriteScale, this->buttons[selectedClass]->getPosition().y);
+		// For each sprite
+		for (auto &it : sprites)
+		{
+			// Update its position
+			it.second->setPosition(sprite_position);
+			// Play the right animation
+			this->spritesAnimation[it.first]->playAnimation(1, 0.005, selectedClass + "_" + it.first + "_MALE");
+			// Update the position of the next sprite
+			sprite_position.x += 20 * this->spriteScale;
+		}
+	}
+	// Same if user selects "female"
+	else if (this->buttons["FEMALE"]->getActivated())
+	{
+		sprite_position = sf::Vector2f(this->buttons["FEMALE"]->getPosition().x + 10 * this->spriteScale, this->buttons[selectedClass]->getPosition().y);
+		for (auto &it : sprites)
+		{
+			it.second->setPosition(sprite_position);
+			this->spritesAnimation[it.first]->playAnimation(1, 0.005, selectedClass + "_" + it.first + "_FEMALE");
+			sprite_position.x += 20 * this->spriteScale;
+		}
+	}
+	// Draw all the sprites
+	for (auto &it : sprites)
+	{
+		target->draw(*it.second);
+	}
+}
+
 void MenuState::initFonts()
 {
 	if (!this->font.loadFromFile("../External/Fonts/harryp__.ttf"))
@@ -178,7 +195,7 @@ void MenuState::initFonts()
 		throw("Error in 'MenuState' : Could not load font");
 	}
 }
-/* Initializes @member[buttons] with the parameters in the files "@member[configFile]"
+/* Initializes @member[buttons] with the parameters in the file "@member[configFile]"
    Format :
 		*** First line for title ***
 		Name x y w h "Text"- r1 g1 b1 r2 b2 g2 r3 g3 b3 rText gText bText textSize 
@@ -283,9 +300,9 @@ void MenuState::initButtons()
 		config_file.close();
 	}
 }
-/* Initializes @member[title] with the FIRST line in the files ""@member[configFile]"
+/* Initializes @member[title] with the FIRST line in the file ""@member[configFile]"
    Format :
-		number_of_buttons x y "Title"- r g b textSize/ <-- end the line with '/'
+		number_of_buttons x y Title'-' r g b textSize/ <-- end the line with '/'
 		*** Other lines ***
 		* x y in percentage of the window size
 */
@@ -334,19 +351,24 @@ void MenuState::initTitle()
 		config_file.close();
 	}
 }
-
+/* Initializes @member[Sprites] and the sprite_scale depending on the screen size */
 void MenuState::initSprites()
 {
-	//this->menuSprite["UP"] = new sf::Sprite();
-	this->menuSprite["LEFT"] = new sf::Sprite();
-	this->menuSprite["DOWN"] = new sf::Sprite();
-	//this->menuSprite["RIGHT"] = new sf::Sprite();
+	this->sprites["LEFT"] = new sf::Sprite();
+	this->sprites["DOWN"] = new sf::Sprite();
+	this->sprites["UP"] = new sf::Sprite();
+	this->sprites["RIGHT"] = new sf::Sprite();
 
-	for (auto &it : this->menuSprite)
+	this->spriteScale = this->window->getSize().y / 270; // Equals to 4 in 1920 x 1080
+	for (auto &it : this->sprites)
 	{
-		it.second->setScale(4, 4);
+		it.second->setScale(this->spriteScale, this->spriteScale);
 	}
 }
+/* Initializes @member[title] with the the parameters in the file "@member[configFile]"
+   Format :
+		animation_component animation_key texture_sheet_path number_of_textures width height animation_timer
+*/
 void MenuState::initAnimations()
 {
 	std::ifstream config_file("../External/Config/sprites_menu_character.cfg");
@@ -354,30 +376,30 @@ void MenuState::initAnimations()
 	if (config_file.is_open())
 	{
 		// Creating Animation for each sprite
-		for (auto &it : menuSprite)
+		for (auto &it : sprites)
 		{
-			this->spriteAnimation.push_back(new AnimationComponent(it.second));
+			this->spritesAnimation[it.first] = new AnimationComponent(it.second);
 		}
 
-		std::string key, path;
+		std::string animation_component, animation_key, texture_sheet_path;
 		int number_of_textures, width, height;
 		float animation_timer;
-		int index_sprite = 0;
 
-		while (config_file >> key >> path >> number_of_textures >> width >> height >> animation_timer)
+		while (config_file >> animation_component >> animation_key >> texture_sheet_path >> number_of_textures >> width >> height >> animation_timer)
 		{
-			std::cout << " " << key << " " << path << " " << number_of_textures << " " << width << " " << height << " " << animation_timer << std::endl;
 			// Loads appropriate texture
 			sf::Texture *texture_sheet = new sf::Texture;
-			texture_sheet->loadFromFile(path);
+			texture_sheet->loadFromFile(texture_sheet_path);
 			// Add it to the animation component
-			this->spriteAnimation[index_sprite]->addAnimation(key, texture_sheet, number_of_textures, width, height, animation_timer);
-			if (index_sprite++)
-			{
-				index_sprite = 0;
-			}
+			this->spritesAnimation[animation_component]->addAnimation(animation_key, texture_sheet, number_of_textures, width, height, animation_timer);
 		}
-		config_file.close();
-	}
 
+		config_file.close();
+
+		// Display the warrior male by default
+		this->buttons["WARRIOR"]->activate();
+		this->buttons["MALE"]->activate();
+		this->selectedButton = this->buttons["WARRIOR"];
+		this->selectedClass = "WARRIOR";
+	}
 }

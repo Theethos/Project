@@ -1,11 +1,13 @@
+#include "../Include/Precompiled_Header.h"
+#include "../Include/Macros.h"
 #include "../Include/GameState.h"
 #include "../Include/MenuState.h"
 
 
-GameState::GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states) : State(window, keys, states)
+GameState::GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, std::string config_file, int sprite_scale) : State(window, keys, states)
 {
 	initActions();
-	this->player = new Player(2.f, 0.0, 0.0);
+	this->player = new Player(2.f, 0.0, 0.0, config_file, sprite_scale);
 }
 
 GameState::~GameState()
@@ -36,7 +38,7 @@ void GameState::update(const float& dt)
 	updateMousePositions();
 
 	handleInput(dt);
-
+	
 	this->player->update(dt);
 }
 
