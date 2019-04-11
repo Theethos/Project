@@ -37,8 +37,8 @@ private:
 	// The button that is activated in the "choose character" menu
 	Button *currentClassButton;
 	// The sprite's animation that has to be displayed in the "choose character" menu
-	AnimationComponent* SpriteAnimation[2];
-	std::string currentSpriteAnimation;
+	std::vector<AnimationComponent*> spriteAnimation;
+	std::string currentspriteAnimation;
 	std::map<std::string, sf::Sprite*> menuSprite;
 
 };

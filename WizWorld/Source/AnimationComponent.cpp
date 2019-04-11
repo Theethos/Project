@@ -20,11 +20,13 @@ AnimationComponent::~AnimationComponent()
 void AnimationComponent::addAnimation(const std::string key, sf::Texture * textureSheet, int numberOfTextures, int width, int height, float animationTimer)
 {
 	// Create and set a new animation with a "key"
+	//std::cout << textureSheet << std::endl;
 	this->animation[key].init(textureSheet, this->associatedSprite, numberOfTextures, animationTimer, width, height);
 }
 
 void AnimationComponent::playAnimation(const float & velocity, const float & dt, const std::string animation)
 {
+	std::cout << animation << std::endl;
 	this->animation[animation].play(velocity, dt);
 }
 

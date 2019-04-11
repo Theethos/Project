@@ -5,7 +5,7 @@
 #include "../Include/ChooseCharacterState.h"
 
 MenuState::MenuState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, std::string configFile, Menu currentMenu)
-	: State(window, keys, states), numberOfButtons(0), configFile(configFile), currentClassButton(nullptr), currentMenu(currentMenu), menuSprite(nullptr)
+	: State(window, keys, states), numberOfButtons(0), configFile(configFile), currentClassButton(nullptr), currentMenu(currentMenu)
 {
 	initFonts();
 	initTitle();
@@ -25,12 +25,13 @@ MenuState::MenuState(sf::RenderWindow *window, std::map < std::string, int> *key
 	if (currentMenu == Menu::CHARACTER_MENU)
 	{
 		initSprites();
-		this->SpriteAnimation->playAnimation(1, 0.001, "WARRIOR_LEFT_MALE");
-		this->SpriteAnimation->playAnimation(1, 0.001, "WARRIOR_DOWN_MALE");
+		initAnimations();
+		this->spriteAnimation[0]->playAnimation(1, 0.005, "WARRIOR_LEFT_MALE");
+		this->spriteAnimation[1]->playAnimation(1, 0.005, "WARRIOR_DOWN_MALE");
 		this->buttons["WARRIOR"]->activate();
 		this->buttons["MALE"]->activate();
 		this->currentClassButton = this->buttons["WARRIOR"];
-		this->currentSpriteAnimation = "WARRIOR";
+		this->currentspriteAnimation = "WARRIOR";
 	}
 
 }
@@ -42,13 +43,13 @@ MenuState::~MenuState()
 	{
 		delete it.second;
 	}
-	if (this->menuSprite)
+	for (auto &it : this->menuSprite)
 	{
-		delete this->menuSprite;
+		delete it.second;
 	}
-	if (this->SpriteAnimation)
+	for (auto &it : this->spriteAnimation)
 	{
-		delete this->SpriteAnimation;
+		delete it;
 	}
 
 }
@@ -106,7 +107,7 @@ void MenuState::updateButtons()
 			else if (it.first == "WARRIOR" || it.first == "MAGICIAN" || it.first == "HEALER" || it.first == "NINJA" || it.first == "RANGER")
 			{
 				it.second->activate();
-				this->currentSpriteAnimation = it.first;
+				this->currentspriteAnimation = it.first;
 				if (this->currentClassButton && this->currentClassButton != it.second)
 				{
 					this->currentClassButton->deactivate();
@@ -130,27 +131,35 @@ void MenuState::render(sf::RenderTarget* target)
 	target->draw(this->title);
 	renderButtons(target);
 	
-	if (this->menuSprite)
+	if (this->currentMenu == Menu::CHARACTER_MENU)
 	{
 		sf::Vector2f sprite_position;
 		int sprite_index = 0;
 		if (this->buttons["MALE"]->getActivated())
 		{
-			sprite_position = sf::Vector2f(this->buttons["MALE"]->getPosition().x, this->buttons[currentSpriteAnimation]->getPosition().y);
+			sprite_position = sf::Vector2f(this->buttons["MALE"]->getPosition().x, this->buttons[currentspriteAnimation]->getPosition().y);
 			for (auto &it : menuSprite)
 			{
+				std::cout << currentspriteAnimation + "_" + it.first + "_MALE" << "\n";
 				it.second->setPosition(sprite_position);
-				this->SpriteAnimation[sprite_index]->playAnimation(1, 0.005, currentSpriteAnimation + "_" + it.first + "_MALE");
+				this->spriteAnimation[sprite_index++]->playAnimation(1, 0.005, currentspriteAnimation + "_" + it.first + "_MALE");
+				sprite_position.x += 30;
 			}
 		}
 		else if (this->buttons["FEMALE"]->getActivated())
 		{
-			sprite_position = sf::Vector2f(this->buttons["FEMALE"]->getPosition().x, this->buttons[currentSpriteAnimation]->getPosition().y);
-			this->menuSprite->setPosition(sprite_position);
-			this->SpriteAnimation->playAnimation(1, 0.005, currentSpriteAnimation + "_LEFT_FEMALE");
-			this->SpriteAnimation->playAnimation(1, 0.005, currentSpriteAnimation + "_DOWN_FEMALE");
+			sprite_position = sf::Vector2f(this->buttons["FEMALE"]->getPosition().x, this->buttons[currentspriteAnimation]->getPosition().y);
+			for (auto &it : menuSprite)
+			{
+				it.second->setPosition(sprite_position);
+				this->spriteAnimation[sprite_index++]->playAnimation(1, 0.005, currentspriteAnimation + "_" + it.first + "_MALE");
+				sprite_position.x += 30;
+			}
 		}
-		target->draw(*this->menuSprite);
+		for (auto &it : menuSprite)
+		{
+			target->draw(*it.second);
+		}
 	}
 }
 
@@ -329,8 +338,8 @@ void MenuState::initTitle()
 void MenuState::initSprites()
 {
 	//this->menuSprite["UP"] = new sf::Sprite();
-	this->menuSprite["DOWN"] = new sf::Sprite();
 	this->menuSprite["LEFT"] = new sf::Sprite();
+	this->menuSprite["DOWN"] = new sf::Sprite();
 	//this->menuSprite["RIGHT"] = new sf::Sprite();
 
 	for (auto &it : this->menuSprite)
@@ -344,10 +353,12 @@ void MenuState::initAnimations()
 
 	if (config_file.is_open())
 	{
-		this->initSprites();
+		// Creating Animation for each sprite
+		for (auto &it : menuSprite)
+		{
+			this->spriteAnimation.push_back(new AnimationComponent(it.second));
+		}
 
-		this->SpriteAnimation[0] = new AnimationComponent(menuSprite["DOWN"]);
-		this->SpriteAnimation[1] = new AnimationComponent(menuSprite["LEFT"]);
 		std::string key, path;
 		int number_of_textures, width, height;
 		float animation_timer;
@@ -355,18 +366,15 @@ void MenuState::initAnimations()
 
 		while (config_file >> key >> path >> number_of_textures >> width >> height >> animation_timer)
 		{
+			std::cout << " " << key << " " << path << " " << number_of_textures << " " << width << " " << height << " " << animation_timer << std::endl;
 			// Loads appropriate texture
 			sf::Texture *texture_sheet = new sf::Texture;
 			texture_sheet->loadFromFile(path);
 			// Add it to the animation component
-			this->SpriteAnimation[index_sprite]->addAnimation(key, texture_sheet, number_of_textures, width, height, animation_timer);
-			if (index_sprite)
+			this->spriteAnimation[index_sprite]->addAnimation(key, texture_sheet, number_of_textures, width, height, animation_timer);
+			if (index_sprite++)
 			{
 				index_sprite = 0;
-			}
-			else
-			{
-				index_sprite = 1;
 			}
 		}
 		config_file.close();
