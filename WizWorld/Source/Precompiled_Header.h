@@ -1,6 +1,12 @@
 #ifndef PRECOMPILED_HEADER_H
 #define PRECOMPILED_HEADER_H
 
+// SFML
+#include "SFML/Graphics.hpp"
+#include "SFML/Window.hpp"
+#include "SFML/Audio.hpp"
+#include "SFML/Network.hpp"
+
 // Standard
 #include <iostream>
 #include <fstream>
@@ -10,11 +16,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <windows.h>
 
-// SFML
-#include "SFML/Graphics.hpp"
-#include "SFML/Window.hpp"
-#include "SFML/Audio.hpp"
-#include "SFML/Network.hpp"
 
 #endif // !PRECOMPILED_HEADER_H

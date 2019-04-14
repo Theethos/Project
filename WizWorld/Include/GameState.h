@@ -8,7 +8,8 @@
 class GameState : public State
 {
 public:
-	GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, WhichState state, std::string config_file, int sprite_scale);
+	GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, WhichState state,
+		std::string config_file, int sprite_scale, std::string player_name, sf::Font* player_name_font);
 	virtual ~GameState();
 
 	void handleInput(const float &dt);

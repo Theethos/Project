@@ -3,7 +3,6 @@
 
 #include "../Include/Button.h"
 
-
 class ButtonText : public Button
 {
 public:
@@ -28,7 +27,8 @@ private:
 	sf::Text textEnteredToRender;
 	std::string textEntered;
 	sf::Thread thread;
-	bool threaded;
+	sf::Mutex mutex;
+	bool threadIsRunning;
 	bool blinking;
 	int maxSize;
 	sf::Color backgroundColor;

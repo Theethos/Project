@@ -139,7 +139,10 @@ void Game::updateEvents()
 	{
 		// User closed the window
 		if (this->event.type == sf::Event::Closed)
+		{
 			this->window.close();
+			break;
+		}
 	}
 }
 

@@ -4,21 +4,16 @@
 #include "../Include/MenuState.h"
 
 
-GameState::GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, WhichState state, std::string config_file, int sprite_scale)
+GameState::GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, WhichState state, std::string config_file, int sprite_scale, std::string player_name, sf::Font* player_name_font)
 	: State(window, keys, states, state)
 {
 	initActions();
-	this->player = new Player(1.5f, 0.0, 0.0, config_file, sprite_scale);
+	this->player = new Player(1.5f, 0.0, 0.0, config_file, player_name, player_name_font, sprite_scale);
 	this->map = new Map("../External/Images/Map/Floors_GBA/Courtyard.png", sprite_scale);
 
 	this->playerView.setSize(this->window->getSize().x, this->window->getSize().y);
 	this->playerView.setCenter(this->window->getSize().x / 2, this->window->getSize().y / 2);
 	this->player->getSprite()->setPosition(this->playerView.getCenter());
-
-	if (this->music.openFromFile(""))
-	{
-		this->music.play();
-	}
 }
 
 GameState::~GameState()

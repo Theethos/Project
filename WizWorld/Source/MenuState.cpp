@@ -129,7 +129,7 @@ void MenuState::updateButtons()
 			else if (it.first == "GO")
 			{
 				// Passing the right sprite animations
-				std::string path_to_sprite = "";
+				std::string path_to_sprite;
 				if (this->buttons["MALE"]->getActivated())
 				{
 					path_to_sprite = "../External/Config/Character_Class/" + this->selectedClass + "_MALE.cfg";
@@ -150,8 +150,9 @@ void MenuState::updateButtons()
 				}
 				else
 				{
-					this->states->push(new GameState(this->window, this->keys, this->states, WhichState::GAME_STATE, path_to_sprite, this->spriteScale));
+					this->states->push(new GameState(this->window, this->keys, this->states, WhichState::GAME_STATE, path_to_sprite, this->spriteScale, button->getTextEntered(), &this->font["ALL"]));
 				}
+
 				this->buttons["PSEUDO"]->deactivate();
 			}
 			else if (it.first == "PSEUDO")
@@ -184,13 +185,10 @@ void MenuState::updateCursor()
 			this->window->setMouseCursor(cursor);
 			this->window->setMouseCursorVisible(true);
 			
-			sf::Event event;
-			while (this->window->pollEvent(event))
+
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 			{
-				if (event.type == sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-				{
-					this->buttons["PSEUDO"]->deactivate();
-				}
+				this->buttons["PSEUDO"]->deactivate();
 			}
 		}
 	}
@@ -263,7 +261,7 @@ void MenuState::initFonts()
 	{
 		throw("Error in 'MenuState' : Could not load \"harryp__.ttf\" font");
 	}
-	if (!this->font["BUTTONS"].loadFromFile("../External/Fonts/PixieFont.ttf"))
+	if (!this->font["ALL"].loadFromFile("../External/Fonts/PixieFont.ttf"))
 	{
 		throw("Error in 'MenuState' : Could not load \"PixieFont.ttf\" font");
 	}
@@ -365,10 +363,10 @@ void MenuState::initButtons()
 			switch (button_type)
 			{
 			case 0:
-				this->buttons[action] = new Button(x, y, w, h, text, &this->font["BUTTONS"], idle_color, hover_color, active_color, textSize);
+				this->buttons[action] = new Button(x, y, w, h, text, &this->font["ALL"], idle_color, hover_color, active_color, textSize);
 				break;
 			case 1:
-				this->buttons[action] = new ButtonText(x, y, w, h, text, &this->font["BUTTONS"], idle_color, hover_color, active_color, textSize, this->window);
+				this->buttons[action] = new ButtonText(x, y, w, h, text, &this->font["ALL"], idle_color, hover_color, active_color, textSize, this->window);
 				break;
 			default:
 				break;

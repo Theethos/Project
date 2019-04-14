@@ -3,7 +3,7 @@
 #include "../Include/Player.h"
 
 /* Constructor */
-Player::Player(float maxVelocity, float x_pos, float y_pos, std::string config_file, int sprite_scale) : Entity()
+Player::Player(float maxVelocity, float x_pos, float y_pos, std::string config_file, std::string name, sf::Font* font, int sprite_scale) : Entity(), name(name), font(font)
 {
 	/* Initializers */
 	createSprite();
@@ -12,6 +12,7 @@ Player::Player(float maxVelocity, float x_pos, float y_pos, std::string config_f
 
 	initMovementComponent(maxVelocity, 10.f, 9.f);
 	iniatializeAnimationComponent(config_file);
+	initName();
 	// Set the sprite texture to IDLE_DOWN at the beginning
 	this->animation->idleAnimation(0.05, "MOVE_DOWN");
 }
@@ -84,6 +85,23 @@ void Player::update(const float & dt)
 					break;
 			}
 		}
+		this->nameRendered.setPosition(this->sprite->getPosition() - sf::Vector2f((this->nameRendered.getGlobalBounds().width - this->sprite->getGlobalBounds().width) / 2, 3 * this->sprite->getScale().x + this->nameRendered.getGlobalBounds().height));
+	}
+}
+
+void Player::render(sf::RenderTarget * target)
+{
+	Entity::render(target);
+	target->draw(this->nameRendered);
+}
+
+void Player::initName()
+{
+	if (this->font->loadFromFile("../External/Fonts/PixieFont.ttf"))
+	{
+		this->nameRendered.setFont(*this->font);
+		this->nameRendered.setFillColor(sf::Color::Black);
+		this->nameRendered.setString(this->name);
 	}
 }
 

@@ -6,7 +6,7 @@ ButtonText::ButtonText(float x, float y, float w, float h, std::string text,
 	sf::Font *font, sf::Color idleColor, sf::Color hoverColor,
 	sf::Color activeColor, int textSize, sf::Window* window)
 	: Button(x, y, w, h, text, font, idleColor, hoverColor, activeColor, textSize), textEntered(""),
-	window(window), thread(&ButtonText::captureText, this), threaded(false), blinking(false), maxSize(12)
+	window(window), thread(&ButtonText::captureText, this), blinking(false), threadIsRunning(false), maxSize(12)
 {
 	this->textEnteredToRender.setString(this->textEntered);
 	this->textEnteredToRender.setFont(*this->font);
@@ -30,9 +30,9 @@ void ButtonText::update(const sf::Vector2f mousePos)
 {
 	Button::update(mousePos);
 
-	if (this->activated && this->textEntered.size() < this->maxSize && !this->threaded)
+	if (this->activated && this->textEntered.size() < this->maxSize && !this->threadIsRunning)
 	{
-		this->threaded = true;
+		this->threadIsRunning = true,
 		this->thread.launch();
 	}
 	else if (this->activated && this->textEntered.size() == this->maxSize)
@@ -86,6 +86,7 @@ void ButtonText::addChar(char character)
 {
 	this->textEntered += character;
 	this->textEnteredToRender.setString(this->textEntered);
+	Sleep(150);
 }
 
 void ButtonText::removeChar()
@@ -94,22 +95,19 @@ void ButtonText::removeChar()
 	{
 		this->textEntered.pop_back();
 		this->textEnteredToRender.setString(this->textEntered);
+		Sleep(150);
 	}
 }
 
 void ButtonText::captureText()
 {
-	std::string textEntered;
-	sf::Event event;
+	/*sf::Event event;
 	this->window->pollEvent(event);
-	while (event.type != sf::Event::TextEntered && this->activated)
+	while (event.type != sf::Event::TextEntered) // && this->activated) 
 	{
 		this->window->pollEvent(event);
-		/*while*/ if (event.type == sf::Event::TextEntered)
+		if (event.type == sf::Event::TextEntered)
 		{
-			/*{
-				this->window->pollEvent(event);
-			}*/
 			if (event.text.unicode >= 'A' && event.text.unicode <= 'z' || sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 			{
 				this->addChar(event.text.unicode);
@@ -118,10 +116,239 @@ void ButtonText::captureText()
 			{
 				this->removeChar();
 			}
+			break;
+		}
+	}*/
+	/*	I can't use pollEvent because otherwise it may crash with the Game function "updateEvent"
+		and I have to use a thread in order to keep the game moving when the user enters its text */
+		// Testing MAJ letter
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
+	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		{
+			this->addChar('A');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
+		{
+			this->addChar('B');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
+		{
+			this->addChar('C');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		{
+			this->addChar('D');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+		{
+			this->addChar('E');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+		{
+			this->addChar('F');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
+		{
+			this->addChar('G');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::H))
+		{
+			this->addChar('H');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::I))
+		{
+			this->addChar('I');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::J))
+		{
+			this->addChar('J');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+		{
+			this->addChar('K');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+		{
+			this->addChar('L');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+		{
+			this->addChar('M');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::N))
+		{
+			this->addChar('N');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
+		{
+			this->addChar('O');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+		{
+			this->addChar('P');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+		{
+			this->addChar('Q');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+		{
+			this->addChar('R');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		{
+			this->addChar('S');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::T))
+		{
+			this->addChar('T');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::U))
+		{
+			this->addChar('U');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::V))
+		{
+			this->addChar('V');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+		{
+			this->addChar('W');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+		{
+			this->addChar('X');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y))
+		{
+			this->addChar('Y');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+		{
+			this->addChar('Z');
+		}
+	}
+	// Backspace
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
+	{
+		this->removeChar();
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		this->addChar(' ');
+	}
+	// NORMALE letter
+	else
+	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		{
+			this->addChar('a');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
+		{
+			this->addChar('b');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
+		{
+			this->addChar('c');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		{
+			this->addChar('d');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+		{
+			this->addChar('e');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+		{
+			this->addChar('f');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
+		{
+			this->addChar('g');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::H))
+		{
+			this->addChar('h');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::I))
+		{
+			this->addChar('i');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::J))
+		{
+			this->addChar('j');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+		{
+			this->addChar('k');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+		{
+			this->addChar('l');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+		{
+			this->addChar('m');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::N))
+		{
+			this->addChar('n');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
+		{
+			this->addChar('o');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+		{
+			this->addChar('p');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+		{
+			this->addChar('q');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+		{
+			this->addChar('r');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		{
+			this->addChar('s');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::T))
+		{
+			this->addChar('t');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::U))
+		{
+			this->addChar('u');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::V))
+		{
+			this->addChar('v');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+		{
+			this->addChar('w');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+		{
+			this->addChar('x');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y))
+		{
+			this->addChar('y');
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+		{
+			this->addChar('z');
 		}
 	}
 
-	this->threaded = false;
+	this->threadIsRunning = false;
+	this->mutex.unlock();
 }
 
 void ButtonText::blink()
