@@ -22,6 +22,7 @@
     <ClInclude Include="..\Include\AnimationComponent.h" />
     <ClInclude Include="..\Include\Armor.h" />
     <ClInclude Include="..\Include\Button.h" />
+    <ClInclude Include="..\Include\ButtonText.h" />
     <ClInclude Include="..\Include\Character.h" />
     <ClInclude Include="..\Include\Entity.h" />
     <ClInclude Include="..\Include\Game.h" />
@@ -33,6 +34,7 @@
     <ClInclude Include="..\Include\Map.h" />
     <ClInclude Include="..\Include\MenuState.h" />
     <ClInclude Include="..\Include\MovementComponent.h" />
+    <ClInclude Include="..\Include\MusicComponent.h" />
     <ClInclude Include="..\Include\Player.h" />
     <ClInclude Include="..\Include\State.h" />
     <ClInclude Include="..\Include\TileMap.h" />
@@ -43,6 +45,7 @@
     <ClCompile Include="..\Source\AnimationComponent.cpp" />
     <ClCompile Include="..\Source\Armor.cpp" />
     <ClCompile Include="..\Source\Button.cpp" />
+    <ClCompile Include="..\Source\ButtonText.cpp" />
     <ClCompile Include="..\Source\Character.cpp" />
     <ClCompile Include="..\Source\Entity.cpp" />
     <ClCompile Include="..\Source\Game.cpp" />
@@ -54,6 +57,7 @@
     <ClCompile Include="..\Source\Map.cpp" />
     <ClCompile Include="..\Source\MenuState.cpp" />
     <ClCompile Include="..\Source\MovementComponent.cpp" />
+    <ClCompile Include="..\Source\MusicComponent.cpp" />
     <ClCompile Include="..\Source\Player.cpp" />
     <ClCompile Include="..\Source\Precompiled_Header.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

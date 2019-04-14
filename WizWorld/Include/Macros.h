@@ -48,4 +48,6 @@ enum class Sexe { MALE, FEMALE };
 enum class HairColor { BLOND, DARK, BROWN, RED, BLUE, GREEN };
 enum class HairStyle { SHORT, LONG };
 enum class AnimationSide { LEFT, RIGHT, DOWN, UP };
+enum class Menu { NONE, MAIN_MENU, PAUSE_MENU, CHARACTER_MENU };
+enum class WhichState { NONE, GAME_STATE, MENU_STATE };
 #endif // !_MACROS_H_

@@ -42,3 +42,13 @@ sf::Vector2f Map::getPosition() const
 {
 	return this->map.getPosition();
 }
+
+const sf::RectangleShape& Map::getShape() const
+{
+	return this->map;
+}
+
+const int & Map::getScale() const
+{
+	return this->scale;
+}

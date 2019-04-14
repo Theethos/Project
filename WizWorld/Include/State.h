@@ -6,7 +6,7 @@
 class State
 {
 public:
-	State(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states);
+	State(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, WhichState state);
 	virtual ~State();
 
 	virtual void handleInput(const float &dt) = 0;
@@ -15,11 +15,12 @@ public:
 
 	virtual void updateMousePositions();
 
-	/*=== Getters ===*/
-
-	const bool& getQuit() const;
+	// Getters
+	virtual const bool& getQuit() const;
+	virtual const WhichState& getState() const;
 
 protected:
+	WhichState state;
 	sf::RenderWindow *window;
 	/* If the state wants to quit */
 	bool quit;

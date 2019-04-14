@@ -2,8 +2,8 @@
 #include "../Include/Macros.h"
 #include "../Include/MenuState.h"
 
-MenuState::MenuState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, std::string configFile, Menu menuType)
-	: State(window, keys, states), numberOfButtons(0), configFile(configFile), selectedButton(nullptr), menuType(menuType)
+MenuState::MenuState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, WhichState state, std::string configFile, Menu menuType)
+	: State(window, keys, states, state), numberOfButtons(0), configFile(configFile), selectedButton(nullptr), menuType(menuType)
 {
 	initFonts();
 	initTitle();
@@ -20,7 +20,7 @@ MenuState::MenuState(sf::RenderWindow *window, std::map < std::string, int> *key
 		this->background.setFillColor(sf::Color::Black);
 	}
 
-	if (menuType == Menu::CHARACTER_MENU)
+	if (this->menuType == Menu::CHARACTER_MENU)
 	{
 		initSprites();
 		initAnimations();
@@ -56,11 +56,13 @@ void MenuState::handleInput(const float &dt)
 
 void MenuState::update(const float& dt)
 {
-	updateMousePositions();
+	this->updateMousePositions();
 	
-	handleInput(dt);
+	this->handleInput(dt);
 	
-	updateButtons();
+	this->updateButtons();
+
+	this->updateCursor();
 }
 
 void MenuState::updateButtons()
@@ -71,9 +73,10 @@ void MenuState::updateButtons()
 		if (it.second->getPressed())
 		{
 			/* Main Menu */
-			if (it.first == "PLAY")
+			if (it.first == "NEW_GAME")
 			{
-				this->states->push(new MenuState(this->window, this->keys, this->states, "../External/Config/choose_character.cfg", Menu::CHARACTER_MENU));
+				it.second->setPressed(false);
+				this->states->push(new MenuState(this->window, this->keys, this->states, WhichState::MENU_STATE, "../External/Config/choose_character_buttons.cfg", Menu::CHARACTER_MENU));
 			}
 			else if (it.first == "QUIT")
 			{
@@ -86,7 +89,15 @@ void MenuState::updateButtons()
 			}
 			else if (it.first == "MAIN_MENU")
 			{
-				this->states->push(new MenuState(this->window, this->keys, this->states, "../External/Config/main_menu_buttons.cfg", Menu::MAIN_MENU));
+				if (this->menuType == Menu::CHARACTER_MENU)
+				{
+					this->quit = true;
+				}
+				else
+				{
+					it.second->setPressed(false);
+					this->states->push(new MenuState(this->window, this->keys, this->states, WhichState::MENU_STATE, "../External/Config/main_menu_buttons.cfg", Menu::MAIN_MENU));
+				}
 			}
 			else if (it.first == "SETTINGS")
 			{
@@ -96,11 +107,13 @@ void MenuState::updateButtons()
 			{
 				it.second->activate();
 				this->buttons["FEMALE"]->deactivate();
+				this->buttons["PSEUDO"]->deactivate();
 			}
 			else if (it.first == "FEMALE")
 			{
 				it.second->activate();
 				this->buttons["MALE"]->deactivate();
+				this->buttons["PSEUDO"]->deactivate();
 			}
 			else if (it.first == "WARRIOR" || it.first == "MAGICIAN" || it.first == "HEALER" || it.first == "NINJA" || it.first == "RANGER")
 			{
@@ -111,17 +124,73 @@ void MenuState::updateButtons()
 					this->selectedButton->deactivate();
 				}
 				this->selectedButton = it.second;
+				this->buttons["PSEUDO"]->deactivate();
 			}
 			else if (it.first == "GO")
 			{
+				// Passing the right sprite animations
 				std::string path_to_sprite = "";
 				if (this->buttons["MALE"]->getActivated())
 				{
 					path_to_sprite = "../External/Config/Character_Class/" + this->selectedClass + "_MALE.cfg";
 				}
 				else if (this->buttons["FEMALE"]->getActivated())
+				{
 					path_to_sprite = "../External/Config/Character_Class/"+ this->selectedClass + "_FEMALE.cfg";
-				this->states->push(new GameState(this->window, this->keys, this->states, path_to_sprite, this->spriteScale));
+				}
+
+				// Reset the button
+				it.second->setPressed(false);
+
+				// Checking if the player chose a pseudo
+				ButtonText* button = static_cast<ButtonText*>(this->buttons["PSEUDO"]);
+				if (button->getTextEntered() == "")
+				{
+					button->blink();
+				}
+				else
+				{
+					this->states->push(new GameState(this->window, this->keys, this->states, WhichState::GAME_STATE, path_to_sprite, this->spriteScale));
+				}
+				this->buttons["PSEUDO"]->deactivate();
+			}
+			else if (it.first == "PSEUDO")
+			{
+				it.second->activate();
+			}
+		}
+	}
+}
+
+void MenuState::updateCursor()
+{
+	if (this->buttons.count("PSEUDO"))
+	{
+		if (this->buttons["PSEUDO"]->getHovered())
+		{
+			if (this->buttons["PSEUDO"]->getActivated())
+			{
+				this->window->setMouseCursorVisible(false);
+			}
+			else
+			{
+				this->cursor.loadFromSystem(sf::Cursor::Text);
+				this->window->setMouseCursor(cursor);
+			}
+		}
+		else
+		{
+			this->cursor.loadFromSystem(sf::Cursor::Arrow);
+			this->window->setMouseCursor(cursor);
+			this->window->setMouseCursorVisible(true);
+			
+			sf::Event event;
+			while (this->window->pollEvent(event))
+			{
+				if (event.type == sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+				{
+					this->buttons["PSEUDO"]->deactivate();
+				}
 			}
 		}
 	}
@@ -158,7 +227,7 @@ void MenuState::renderSprites(sf::RenderTarget * target)
 	if (this->buttons["MALE"]->getActivated())
 	{
 		// Set the position of the sprite on the left (the first one)
-		sprite_position = sf::Vector2f(this->buttons["MALE"]->getPosition().x + 10 * this->spriteScale, this->buttons[selectedClass]->getPosition().y);
+		sprite_position = sf::Vector2f(this->buttons["MALE"]->getPosition().x, this->buttons[selectedClass]->getPosition().y);
 		// For each sprite
 		for (auto &it : sprites)
 		{
@@ -173,7 +242,7 @@ void MenuState::renderSprites(sf::RenderTarget * target)
 	// Same if user selects "female"
 	else if (this->buttons["FEMALE"]->getActivated())
 	{
-		sprite_position = sf::Vector2f(this->buttons["FEMALE"]->getPosition().x + 10 * this->spriteScale, this->buttons[selectedClass]->getPosition().y);
+		sprite_position = sf::Vector2f(this->buttons["FEMALE"]->getPosition().x, this->buttons[selectedClass]->getPosition().y);
 		for (auto &it : sprites)
 		{
 			it.second->setPosition(sprite_position);
@@ -190,9 +259,13 @@ void MenuState::renderSprites(sf::RenderTarget * target)
 
 void MenuState::initFonts()
 {
-	if (!this->font.loadFromFile("../External/Fonts/harryp__.ttf"))
+	if (!this->font["TITLE"].loadFromFile("../External/Fonts/harryp__.ttf"))
 	{
-		throw("Error in 'MenuState' : Could not load font");
+		throw("Error in 'MenuState' : Could not load \"harryp__.ttf\" font");
+	}
+	if (!this->font["BUTTONS"].loadFromFile("../External/Fonts/PixieFont.ttf"))
+	{
+		throw("Error in 'MenuState' : Could not load \"PixieFont.ttf\" font");
 	}
 }
 /* Initializes @member[buttons] with the parameters in the file "@member[configFile]"
@@ -209,6 +282,7 @@ void MenuState::initButtons()
 		if (config_file.is_open())
 	{
 		int i = 0;
+		int button_type = 0;
 		/* Action of the button */
 		std::string action = "";
 		/* Line in the file */
@@ -219,7 +293,7 @@ void MenuState::initButtons()
 		std::string text = "";
 		/* Colors of the button */
 		int a = 255;
-		sf::Color idle_color = sf::Color::White, hover_color = sf::Color::White, active_color = sf::Color::White, text_color = sf::Color::White;
+		sf::Color idle_color = sf::Color::White, hover_color = sf::Color::White, active_color = sf::Color::White;
 		/* Size of the text on the button */
 		float textSize = 12.0;
 
@@ -229,6 +303,10 @@ void MenuState::initButtons()
 		/* For each buttons of this state */
 		while(i < this->numberOfButtons)
 		{
+			/* Get button_type */
+			std::getline(config_file, line, ' ');
+			button_type = static_cast<int>(std::atoi(line.c_str()));
+
 			/* Get action */
 			std::getline(config_file, action, ' ');
 
@@ -279,22 +357,22 @@ void MenuState::initButtons()
 			std::getline(config_file, line, ' ');
 			active_color.b = std::atoi(line.c_str());
 
-			/* Get Text_Color */
-			std::getline(config_file, line, ' ');
-			text_color.r = std::atoi(line.c_str());
-
-			std::getline(config_file, line, ' ');
-			text_color.g = std::atoi(line.c_str());
-
-			std::getline(config_file, line, ' ');
-			text_color.b = std::atoi(line.c_str());
-
 			/* Get Text_size */
 			std::getline(config_file, line, '\n');
 			textSize = (static_cast<float>(std::atof(line.c_str())*x_window));
 
 			/* Create the button */
-			this->buttons[action] = new Button(x, y, w, h, text, &this->font, idle_color, hover_color, active_color, text_color, textSize);
+			switch (button_type)
+			{
+			case 0:
+				this->buttons[action] = new Button(x, y, w, h, text, &this->font["BUTTONS"], idle_color, hover_color, active_color, textSize);
+				break;
+			case 1:
+				this->buttons[action] = new ButtonText(x, y, w, h, text, &this->font["BUTTONS"], idle_color, hover_color, active_color, textSize, this->window);
+				break;
+			default:
+				break;
+			}
 			i++;
 		}
 		config_file.close();
@@ -342,7 +420,7 @@ void MenuState::initTitle()
 		std::getline(config_file, line, ' ');
 		text_size = std::atof(line.c_str())*x_window;
 
-		this->title.setFont(this->font);
+		this->title.setFont(this->font["TITLE"]);
 		this->title.setFillColor(text_color);
 		this->title.setCharacterSize(text_size);
 		this->title.setString(title);
@@ -402,4 +480,9 @@ void MenuState::initAnimations()
 		this->selectedButton = this->buttons["WARRIOR"];
 		this->selectedClass = "WARRIOR";
 	}
+}
+
+const Menu & MenuState::getMenuType() const
+{
+	return this->menuType;
 }

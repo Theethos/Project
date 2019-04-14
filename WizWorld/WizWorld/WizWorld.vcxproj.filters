@@ -96,6 +96,12 @@
     <ClInclude Include="..\Include\Map.h">
       <Filter>Tiles/Map</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\MusicComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\ButtonText.h">
+      <Filter>Button</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Weapon.cpp">
@@ -154,6 +160,12 @@
     </ClCompile>
     <ClCompile Include="..\Source\Map.cpp">
       <Filter>Tiles/Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\MusicComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\ButtonText.cpp">
+      <Filter>Button</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

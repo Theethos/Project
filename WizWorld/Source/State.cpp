@@ -2,9 +2,9 @@
 #include "../Include/Macros.h"
 #include "../Include/State.h"
 
-State::State(sf::RenderWindow* window, std::map < std::string, int> *keys, std::stack<State*>* states)
+State::State(sf::RenderWindow* window, std::map < std::string, int> *keys, std::stack<State*>* states, WhichState state)
 	: window(window), quit(false), keys(keys), mousePosScreen(0, 0),
-	  mousePosWindow(0, 0), mousePosView(0, 0), states(states)
+	  mousePosWindow(0, 0), mousePosView(0, 0), states(states), state(state)
 {}
 
 State::~State()
@@ -22,3 +22,7 @@ const bool& State::getQuit() const
 	return this->quit;
 }
 
+const WhichState & State::getState() const
+{
+	return this->state;
+}

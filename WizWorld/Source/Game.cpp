@@ -3,7 +3,7 @@
 #include "../Include/Game.h"
 
 /* Constructor */
-Game::Game() : dt(0.0), fullscreen(false)
+Game::Game() : dt(0.0), fullscreen(false), music("../External/Config/music.cfg")
 {
 	initWindow();
 	initKeys();
@@ -28,16 +28,16 @@ void Game::run()
 	while (this->window.isOpen())
 	{
 		// Update delta_time to know how long it takes to do the entire loop
-		updateDt();
-		update();
-		render();
+		this->updateDt();
+		this->update();
+		this->render();
 	}
 }
 
 void Game::update()
 {
 	// Check if user close the window
-	updateEvents();
+	this->updateEvents();
 
 	// Updates from top state
 	if (!this->states.empty())
@@ -49,6 +49,7 @@ void Game::update()
 			delete this->states.top();
 			this->states.pop();
 		}
+		this->updateMusic(this->dt);
 	}
 	// There is no more states
 	else
@@ -108,7 +109,7 @@ void Game::initWindow()
 
 void Game::initStates()
 {
-	this->states.push(new MenuState(&this->window, &this->keys, &this->states, "../External/Config/main_menu_buttons.cfg", Menu::MAIN_MENU));
+	this->states.push(new MenuState(&this->window, &this->keys, &this->states, WhichState::MENU_STATE, "../External/Config/main_menu_buttons.cfg", Menu::MAIN_MENU));
 }
 
 /* Initializes @member[keys] with the parameters in the files "game_keys.cfg"
@@ -139,6 +140,31 @@ void Game::updateEvents()
 		// User closed the window
 		if (this->event.type == sf::Event::Closed)
 			this->window.close();
+	}
+}
+
+void Game::updateMusic(const float & dt)
+{
+	if (this->states.top()->getState() == WhichState::MENU_STATE)
+	{
+		MenuState* menu = static_cast<MenuState*>(this->states.top());
+		if (menu->getMenuType() == Menu::PAUSE_MENU)
+		{
+			this->music.pause("GAME");
+			this->music.play(dt, "PAUSE_MENU");
+		}
+		else
+		{
+			this->music.stop("PAUSE_MENU");
+			this->music.stop("GAME");
+			this->music.play(dt, "MENU");
+		}
+	}
+	else if (this->states.top()->getState() == WhichState::GAME_STATE)
+	{
+		this->music.stop("PAUSE_MENU");
+		this->music.stop("MENU");
+		this->music.play(dt, "GAME");
 	}
 }
 

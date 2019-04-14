@@ -2,15 +2,13 @@
 #define _MENU_STATE_H_
 
 #include "GameState.h"
-#include "Button.h"
+#include "ButtonText.h"
 #include "AnimationComponent.h"
-
-enum class Menu {NONE, MAIN_MENU, PAUSE_MENU, CHARACTER_MENU};
 
 class MenuState : public State
 {
 public:
-	MenuState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*> *states, std::string configFile, Menu menuType);
+	MenuState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*> *states, WhichState state, std::string configFile, Menu menuType);
 	virtual ~MenuState();
 
 
@@ -21,19 +19,22 @@ public:
 	void renderButtons(sf::RenderTarget* target);
 	void renderSprites(sf::RenderTarget* target);
 
-	void useSelectedSprite();
-
 	void initFonts();
 	void initButtons();
 	void initTitle();
 	void initSprites();
 	void initAnimations();
 
+	void updateCursor();
+
+	// Getters
+	const Menu & getMenuType() const;
+
 private:
 	Menu menuType;
 	sf::RectangleShape background;
 	sf::Texture backgroundTexture;
-	sf::Font font;
+	std::map<std::string,sf::Font> font;
 	std::map<std::string, Button*> buttons;
 	int numberOfButtons;
 	sf::Text title;
@@ -50,8 +51,7 @@ private:
 	int spriteScale;
 	// Background behind the sprites to help vizualize them
 	sf::RectangleShape spritesBackground;
-
-
+	sf::Cursor cursor;
 };
 
 #endif // !_MENU_STATE_H_

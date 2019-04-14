@@ -13,6 +13,8 @@ public:
 	// Getters
 	sf::Vector2f getSize() const;
 	sf::Vector2f getPosition() const;
+	const sf::RectangleShape & getShape() const;
+	const int & getScale() const;
 
 private:
 	sf::RectangleShape map;
