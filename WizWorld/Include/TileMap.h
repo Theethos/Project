@@ -4,7 +4,9 @@
 class TileMap
 {
 public:
+	// Constructor
 	TileMap();
+	// Destructor
 	virtual ~TileMap();
 
 private:

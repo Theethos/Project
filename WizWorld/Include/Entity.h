@@ -8,19 +8,19 @@
 class Entity
 {
 public:
+	// Constructor
 	Entity();
+	// Destructor
 	virtual ~Entity();
-	virtual void move(const float& dt, const float x_motion, const float y_motion);
 
-	virtual void update(const float &dt) = 0;
-	virtual void render(sf::RenderTarget* target);
+	// Virtual functions
+	virtual void Update(const float &dt) = 0;
+	
+	// Functions
+	virtual void Move(const float& dt, const float x_motion, const float y_motion);
+	virtual void Render(sf::RenderTarget* target);
 
-	void createSprite();
-	void initMovementComponent(float maxVelocity, float acceleration, float deceleration);
-	virtual void iniatializeAnimationComponent();
-	virtual void initTextures();
-
-	/* Getters */
+	// Getters
 	MovementComponent *getMovement() const;
 	AnimationComponent *getAnimation() const;
 
@@ -30,6 +30,12 @@ protected:
 	MovementComponent *movement;
 	AnimationComponent *animation;
 	HitboxComponent *hitbox;
+	
+	// Private functions
+	virtual void InitSprite();
+	virtual void InitMovementComponent(float maxVelocity, float acceleration, float deceleration);
+	virtual void InitAnimationComponent();
+	virtual void InitTextures();
 };
 
 #endif //!_ENTITY_H_

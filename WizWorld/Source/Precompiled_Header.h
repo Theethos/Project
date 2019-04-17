@@ -6,6 +6,7 @@
 #include "SFML/Window.hpp"
 #include "SFML/Audio.hpp"
 #include "SFML/Network.hpp"
+#include "SFML/System.hpp"
 
 // Standard
 #include <iostream>
@@ -16,7 +17,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
-#include <windows.h>
+#include <math.h>
 
 
 #endif // !PRECOMPILED_HEADER_H

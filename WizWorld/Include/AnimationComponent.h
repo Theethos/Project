@@ -4,11 +4,10 @@
 class AnimationComponent
 {
 private:
-	/* Private struct that stores one animation */
+	// Private struct that stores one animation
 	struct Animation
 	{
 		sf::Texture *textureSheet;
-		// Associated sprite
 		sf::Sprite *sprite;
 		// Area of the texture sheet that will be rendered
 		sf::IntRect currentRect;
@@ -19,13 +18,19 @@ private:
 		// Time spend between last call to this animation
 		float timer;
 
-		/* Constructor */
-		Animation() : textureSheet(nullptr), sprite(nullptr), currentRect(0, 0, 0, 0), numberOfTextures(0), animationTimer(0),
-			timer(0)
+		// Constructor
+		Animation() :
+		textureSheet(nullptr), 
+		sprite(nullptr),
+		currentRect(0, 0, 0, 0), 
+		numberOfTextures(0), 
+		animationTimer(0),
+		timer(0)
 		{}
 
-		/* Initializes the animation during "addAnimation()" in the AnimationComponent class */
-		void init(sf::Texture *textureSheet, sf::Sprite *sprite, int numberOfTextures, float animationTimer, int width, int height)
+		// Functions
+		// Initializes the animation during "AddAnimation()" in the AnimationComponent class
+		void Init(sf::Texture *textureSheet, sf::Sprite *sprite, int numberOfTextures, float animationTimer, int width, int height)
 		{
 			this->textureSheet = textureSheet;
 			this->sprite = sprite;
@@ -34,42 +39,42 @@ private:
 			this->currentRect = sf::IntRect(0, 0, width/numberOfTextures, height);
 		}
 
-		void play(const float & velocity, const float &dt)
+		void Play(const float & velocity, const float &dt)
 		{
-			// Update the timer
+			// Updates the timer
 			// Plays the animation faster if the entity's velocity is greater than 1
 			if (std::abs(velocity) < 1)
 				this->timer += dt;
 			else
 				this->timer += dt * std::abs(velocity);
-			// If their has been enough time since the last frame
+			// If there has been enough time since the last frame
 			if (this->timer >= this->animationTimer)
 			{
-				// Update sprite's texture
+				// Updates sprite's texture
 				this->sprite->setTexture(*this->textureSheet, true);
 				this->sprite->setTextureRect(this->currentRect);
 				
-				// Reset timer
+				// Resets timer
 				this->timer = 0;
 
-				// Moving on to the next frame of the animation
+				// Moves on to the next frame of the animation
 				this->currentRect.left += this->currentRect.width;
 
 				// And if it was the last one, it goes back to first frame
 				if (this->currentRect.left == this->currentRect.width * this->numberOfTextures)
 				{
-					reset();
+					Reset();
 				}
 			}
 		}
-		// Reset the animation
-		void reset()
+		
+		void Reset()
 		{
 			this->currentRect.left = 0;
 			this->timer = 0;
 		}
 		// Set the texture to the first of the sprite sheet -> idle
-		void idle(const float &dt)
+		void Idle(const float &dt)
 		{
 			this->timer += dt;
 
@@ -84,27 +89,29 @@ private:
 	};
 
 public:
+	// Constructor
 	AnimationComponent(sf::Sprite *sprite);
+	// Destructor
 	virtual ~AnimationComponent();
 
-	void addAnimation(const std::string key, sf::Texture *textureSheet, int numberOfTextures, int width, int height, float animationTimer = 0.5);
+	// Functions
+	void AddAnimation(const std::string key, sf::Texture *textureSheet, int numberOfTextures, int width, int height, float animationTimer = 0.5);
+	void PlayAnimation(const float & velocity, const float & dt, const std::string animation);
+	void ResetAnimation(const std::string animation);
+	void IdleAnimation(const float &dt, const std::string animation);
 
-	void playAnimation(const float & velocity, const float & dt, const std::string animation);
-	void resetAnimation(const std::string animation);
-	void idleAnimation(const float &dt, const std::string animation);
-
-	/* Getter */
+	// Getters
 	AnimationSide getSide() const;
 	sf::Texture* getTexture(std::string animation);
 
-	/* Setter */
+	// Setter
 	void setSide(const AnimationSide side);
-	sf::Sprite *associatedSprite;
 
 private:
 	// Map of animation
 	std::map<std::string, Animation> animation;
 	// Sprite on which to play the animation
+	sf::Sprite *associatedSprite;
 	// Orientation of this sprite (to play the right animation)
 	AnimationSide side;
 };

@@ -4,17 +4,18 @@
 class Button
 {
 public:
-	Button(float x, float y, float w, float h, std::string text,
-		   sf::Font *font, sf::Color idleColor, sf::Color hoverColor,
-		   sf::Color activeColor, int textSize);
+	// Construtor
+	Button(float x, float y, float w, float h, std::string text, sf::Font *font, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor, int textSize);
+	// Destructor
 	virtual ~Button();
 
-	virtual void update(const sf::Vector2f mousePos);
-	virtual void render(sf::RenderTarget* target);
-	virtual void activate();
-	virtual void deactivate();
+	// Functions
+	virtual void Update(const sf::Vector2f mousePos);
+	virtual void Render(sf::RenderTarget* target);
+	virtual void Activate();
+	virtual void Deactivate();
 
-	/* Getter */
+	// Getters
 	bool getPressed() const;
 	bool getActivated() const;
 	bool getHovered() const;
@@ -25,19 +26,22 @@ public:
 	void setPressed(bool pressed);
 
 protected:
-	/* Shape of the button (area) */
+	// Shape of the button
 	sf::RectangleShape shape;
 	
+	// Text of the button
 	sf::Font *font;
 	sf::Text text;
 	int textSize;
-
+	
+	// Colors of the button
 	sf::Color idleColor;
 	sf::Color hoverColor;
 	sf::Color activeColor;
 
+	// States of the button
 	bool pressed;
-	bool click;
+	bool clicked;
 	bool activated;
 	bool hovered;
 };

@@ -2,11 +2,12 @@
 #include "../Include/Macros.h"
 #include "../Include/MusicComponent.h"
 
+// Constructor
 MusicComponent::MusicComponent(std::string path) : isPlaying(nullptr), waitingBeforePlay(2.5)
 {
-	this->initMusics(path);
+	this->InitMusics(path);
 }
-
+// Destructor
 MusicComponent::~MusicComponent()
 {
 	for (auto &it : this->musics)
@@ -15,7 +16,8 @@ MusicComponent::~MusicComponent()
 	}
 }
 
-void MusicComponent::initMusics(std::string path)
+// Functions
+void MusicComponent::InitMusics(std::string path)
 {
 	std::ifstream config_file(path);
 
@@ -34,39 +36,49 @@ void MusicComponent::initMusics(std::string path)
 	}
 }
 
-void MusicComponent::play(const float &dt, std::string music_key)
+void MusicComponent::Play(const float &dt, std::string music_key)
 { 
 	if (this->musics.count(music_key))
 	{
+		// Updates the timer
 		this->musics[music_key].second += dt;
-	}
-	if (this->musics.count(music_key) && this->musics[music_key].second >= this->waitingBeforePlay)
-	{
-		if (this->isPlaying != &this->musics[music_key])
+		// If it is high enough
+		if (this->musics[music_key].second >= this->waitingBeforePlay)
 		{
-			if (this->isPlaying)
+			// If this music is not playing
+			if (this->isPlaying != &this->musics[music_key])
 			{
-				this->isPlaying->first->setVolume(0);
-				this->isPlaying->second = 0;
+				// If isPlaying is not nullptr
+				if (this->isPlaying)
+				{
+					// Then it resets it timer and its sound
+					this->isPlaying->first->setVolume(0);
+					this->isPlaying->second = 0;
+				}
+				// Change isPlaying pointer
+				this->isPlaying = &this->musics[music_key];
+				// Play the music
+				this->isPlaying->first->play();
 			}
-			this->isPlaying = &this->musics[music_key];
-			this->isPlaying->first->play();
-		}
-		else if (this->isPlaying && this->isPlaying->first->getStatus() == sf::Music::Status::Paused)
-		{
-			this->isPlaying->first->play();
-		}
-		else
-		{
-			if (this->isPlaying->first->getVolume() < 100)
+			// If this music was playing but was paused
+			else if (this->isPlaying && this->isPlaying->first->getStatus() == sf::Music::Status::Paused)
 			{
-				this->isPlaying->first->setVolume(this->isPlaying->first->getVolume() + 5 * dt);
+				// Resumes it
+				this->isPlaying->first->play();
+			}
+			// If this music is playing and its volume is not max, then it rises
+			else
+			{
+				if (this->isPlaying->first->getVolume() < 100)
+				{
+					this->isPlaying->first->setVolume(this->isPlaying->first->getVolume() + 5 * dt);
+				}
 			}
 		}
 	}
 }
 
-void MusicComponent::pause(std::string music_key)
+void MusicComponent::Pause(std::string music_key)
 {
 	if (this->musics.count(music_key) && this->isPlaying == &this->musics[music_key])
 	{
@@ -74,7 +86,7 @@ void MusicComponent::pause(std::string music_key)
 	}
 }
 
-void MusicComponent::stop(std::string music_key)
+void MusicComponent::Stop(std::string music_key)
 {
 	if (this->musics.count(music_key) && this->isPlaying == &this->musics[music_key])
 	{
@@ -82,6 +94,7 @@ void MusicComponent::stop(std::string music_key)
 	}
 }
 
+// Getter
 const std::pair<sf::Music*, float >* MusicComponent::getPlay() const
 {
 	return this->isPlaying;

@@ -35,7 +35,6 @@
     <ClInclude Include="..\Include\MenuState.h" />
     <ClInclude Include="..\Include\MovementComponent.h" />
     <ClInclude Include="..\Include\MusicComponent.h" />
-    <ClInclude Include="..\Include\Mutex.h" />
     <ClInclude Include="..\Include\Player.h" />
     <ClInclude Include="..\Include\State.h" />
     <ClInclude Include="..\Include\TileMap.h" />

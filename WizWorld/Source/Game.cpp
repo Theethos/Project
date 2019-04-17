@@ -2,15 +2,17 @@
 #include "../Include/Macros.h"
 #include "../Include/Game.h"
 
-/* Constructor */
-Game::Game() : dt(0.0), fullscreen(false), music("../External/Config/music.cfg")
+// Constructor
+Game::Game() :
+dt(0.0), 
+fullscreen(false),
+music("../External/Config/music.cfg")
 {
-	initWindow();
-	initKeys();
-	initStates();
+	InitWindow();
+	InitKeys();
+	InitStates();
 }
-
-/* Destructor */
+// Destructor
 Game::~Game()
 {
 	// Delete the states stack
@@ -21,35 +23,35 @@ Game::~Game()
 	}
 }
 
-/* It is the main fonction (this is where the magic happens) */
-void Game::run()
+// It is the main fonction (this is where the magic happens)
+void Game::Run()
 {
-	/* Main loop */
+	// Main loop
 	while (this->window.isOpen())
 	{
-		// Update delta_time to know how long it takes to do the entire loop
-		this->updateDt();
-		this->update();
-		this->render();
+		// Update delta time to know how long it takes to do the entire loop
+		this->UpdateDt();
+		this->Update();
+		this->Render();
 	}
 }
 
-void Game::update()
+void Game::Update()
 {
 	// Check if user close the window
-	this->updateEvents();
+	this->UpdateEvents();
 
 	// Updates from top state
 	if (!this->states.empty())
 	{
-		this->states.top()->update(this->dt);
+		this->states.top()->Update(this->dt);
 		// Pops the state it is finished/closed 
 		if (this->states.top()->getQuit())
 		{
 			delete this->states.top();
 			this->states.pop();
 		}
-		this->updateMusic(this->dt);
+		this->UpdateMusic();
 	}
 	// There is no more states
 	else
@@ -58,17 +60,81 @@ void Game::update()
 	}
 }
 
-void Game::render()
+void Game::UpdateEvents()
+{
+	while (this->window.pollEvent(this->event))
+	{
+		// User closed the window
+		if (this->event.type == sf::Event::Closed)
+		{
+			this->window.close();
+			break;
+		}
+	}
+}
+
+void Game::UpdateMusic()
+{
+	if (this->states.top()->getState() == WhichState::MENU_STATE)
+	{
+		MenuState* menu = static_cast<MenuState*>(this->states.top());
+		if (menu->getMenuType() == Menu::PAUSE_MENU)
+		{
+			this->music.Pause("GAME");
+			this->music.Play(this->dt, "PAUSE_MENU");
+		}
+		else
+		{
+			this->music.Stop("PAUSE_MENU");
+			this->music.Stop("GAME");
+			this->music.Play(this->dt, "MENU");
+		}
+	}
+	else if (this->states.top()->getState() == WhichState::GAME_STATE)
+	{
+		this->music.Stop("PAUSE_MENU");
+		this->music.Stop("MENU");
+		this->music.Play(this->dt, "GAME");
+	}
+}
+
+void Game::UpdateDt()
+{
+	this->dt = this->clock.restart().asSeconds();
+}
+
+void Game::Render()
 {
 	this->window.clear();
 
 	// Renders from state
 	if (!this->states.empty())
-		this->states.top()->render(&this->window);
+		this->states.top()->Render(&this->window);
+
+	//this->DisplayFPS();
 
 	this->window.display();
 }
+/* Initializes @member[keys] with the parameters in the files "game_keys.cfg"
+   Format :
+		Key_Name SFML_Key_Value
+*/
+void Game::InitKeys()
+{
+	std::ifstream config_file("../External/Config/game_keys.cfg");
 
+	if (config_file.is_open())
+	{
+		std::string key = "";
+		int key_value = 0;
+		while (config_file >> key >> key_value)
+		{
+			this->keys[key] = key_value;
+		}
+	}
+
+	config_file.close();
+}
 /* Initializes the window with the parameters in the file "window.cfg" 
    Format :
 		Title
@@ -77,7 +143,7 @@ void Game::render()
 		FPS
 		Vertical synchronisation enabled 
 */
-void Game::initWindow()
+void Game::InitWindow()
 {
 	std::ifstream config_file("../External/Config/window.cfg");
 
@@ -107,72 +173,21 @@ void Game::initWindow()
 	this->window.setVerticalSyncEnabled(vertical_sync_enabled);
 }
 
-void Game::initStates()
+void Game::InitStates()
 {
 	this->states.push(new MenuState(&this->window, &this->keys, &this->states, WhichState::MENU_STATE, "../External/Config/main_menu_buttons.cfg", Menu::MAIN_MENU));
 }
 
-/* Initializes @member[keys] with the parameters in the files "game_keys.cfg"
-   Format :
-		Key_Name SFML_Key_Value
-*/
-void Game::initKeys()
+void Game::DisplayFPS()
 {
-	std::ifstream config_file("../External/Config/game_keys.cfg");
+	sf::Font font;
+	font.loadFromFile("../External/Fonts/Animales_Fantastic.otf");
 
-	if (config_file.is_open())
-	{
-		std::string key = "";
-		int key_value = 0;
-		while (config_file >> key >> key_value)
-		{
-			this->keys[key] = key_value;
-		}
-	}
-
-	config_file.close();
-}
-
-void Game::updateEvents()
-{
-	while (this->window.pollEvent(this->event))
-	{
-		// User closed the window
-		if (this->event.type == sf::Event::Closed)
-		{
-			this->window.close();
-			break;
-		}
-	}
-}
-
-void Game::updateMusic(const float & dt)
-{
-	if (this->states.top()->getState() == WhichState::MENU_STATE)
-	{
-		MenuState* menu = static_cast<MenuState*>(this->states.top());
-		if (menu->getMenuType() == Menu::PAUSE_MENU)
-		{
-			this->music.pause("GAME");
-			this->music.play(dt, "PAUSE_MENU");
-		}
-		else
-		{
-			this->music.stop("PAUSE_MENU");
-			this->music.stop("GAME");
-			this->music.play(dt, "MENU");
-		}
-	}
-	else if (this->states.top()->getState() == WhichState::GAME_STATE)
-	{
-		this->music.stop("PAUSE_MENU");
-		this->music.stop("MENU");
-		this->music.play(dt, "GAME");
-	}
-}
-
-void Game::updateDt()
-{
-	this->dt = this->clock.restart().asSeconds();
+	sf::Text fps;
+	fps.setString(std::to_string(static_cast<int>(1 / this->dt)));
+	fps.setCharacterSize(60);
+	fps.setFont(font);
+	fps.setFillColor(sf::Color::Black);
+	this->window.draw(fps);
 }
 

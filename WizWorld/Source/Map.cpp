@@ -2,7 +2,9 @@
 #include "../Include/Macros.h"
 #include "../Include/Map.h"
 
-Map::Map(std::string texture_path, int map_scale) : scale(map_scale)
+// Constructor
+Map::Map(std::string texture_path, int map_scale) : 
+scale(map_scale)
 {
 	this->mapTexture = new sf::Texture;
 	if (this->mapTexture->loadFromFile(texture_path))
@@ -11,6 +13,8 @@ Map::Map(std::string texture_path, int map_scale) : scale(map_scale)
 		this->map.setPosition(0, 0);
 		this->map.setSize(static_cast<sf::Vector2f>(this->mapTexture->getSize()));
 		this->map.setScale(scale, scale);
+
+		this->mapImage = this->mapTexture->copyToImage();
 	}
 	else
 	{
@@ -18,21 +22,23 @@ Map::Map(std::string texture_path, int map_scale) : scale(map_scale)
 	}
 
 }
-
+// Destructor
 Map::~Map()
 {
 	delete this->mapTexture;
 }
 
-void Map::update(const float & dt)
+// Functions
+void Map::Update(const float & dt)
 {
 }
 
-void Map::render(sf::RenderTarget * target)
+void Map::Render(sf::RenderTarget * target)
 {
 	target->draw(this->map);
 }
 
+// Getters
 sf::Vector2f Map::getSize() const
 {
 	return this->map.getSize();
@@ -52,3 +58,12 @@ const int & Map::getScale() const
 {
 	return this->scale;
 }
+
+const sf::Color Map::getPixelColor(int x, int y) const
+{
+	if (0 <= x && x < mapImage.getSize().x && 0 <= y && y < mapImage.getSize().y)
+		return this->mapImage.getPixel(x, y);
+	else
+		return sf::Color::Red;
+}
+

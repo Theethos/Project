@@ -2,9 +2,12 @@
 #include "../Include/Macros.h"
 #include "../Include/MovementComponent.h"
 
-/* Constructor */
-MovementComponent::MovementComponent(float maxVelocity, float acceleration, float deceleration)
-	: maxVelocity(maxVelocity), velocity({0,0}), acceleration(acceleration), deceleration(deceleration)
+// Constructors
+MovementComponent::MovementComponent(float maxVelocity, float acceleration, float deceleration) :
+maxVelocity(maxVelocity), 
+velocity({0,0}),
+acceleration(acceleration),
+deceleration(deceleration)
 {}
 
 MovementComponent::MovementComponent(const MovementComponent & other)
@@ -15,12 +18,12 @@ MovementComponent::MovementComponent(const MovementComponent & other)
 	this->velocity = other.velocity;
 }
 
-/* Destructor */
+// Destructor
 MovementComponent::~MovementComponent()
 {}
 
-/* Functions */
-void MovementComponent::move(const float & dt, const float dir_x, const float dir_y)
+// Functions
+void MovementComponent::Move(const float & dt, const float dir_x, const float dir_y)
 {
 	// Update the velocity
 	this->velocity.x += dir_x * this->acceleration * dt;
@@ -49,7 +52,7 @@ void MovementComponent::move(const float & dt, const float dir_x, const float di
 	}
 }
 
-void MovementComponent::update(const float & dt, sf::Sprite *sprite)
+void MovementComponent::Update(const float & dt, sf::Sprite *sprite)
 {
 	// Decelerating phase and check that velocity doesn't go below 0
 	// Going right
@@ -92,6 +95,7 @@ void MovementComponent::update(const float & dt, sf::Sprite *sprite)
 	sprite->move(this->velocity);
 }
 
+// Operator
 MovementComponent MovementComponent::operator=(const MovementComponent & other)
 {
 	this->maxVelocity = other.maxVelocity;
@@ -102,6 +106,7 @@ MovementComponent MovementComponent::operator=(const MovementComponent & other)
 	return *this;
 }
 
+// Getters
 const sf::Vector2f & MovementComponent::getVelocity() const
 {
 	return this->velocity;
@@ -110,4 +115,25 @@ const sf::Vector2f & MovementComponent::getVelocity() const
 const float & MovementComponent::getMaxVelocity() const
 {
 	return this->maxVelocity;
+}
+
+// Setters
+void MovementComponent::setVelocity(sf::Vector2f velocity)
+{
+	this->velocity = velocity;
+}
+
+void MovementComponent::setVelocity(float x, float y)
+{
+	this->velocity = sf::Vector2f(x, y);
+}
+
+void MovementComponent::setVelocityX(float x)
+{
+	this->velocity.x = x;
+}
+
+void MovementComponent::setVelocityY(float y)
+{
+	this->velocity.y = y;
 }

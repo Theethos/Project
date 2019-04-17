@@ -8,26 +8,16 @@
 class MenuState : public State
 {
 public:
+	// Constructor
 	MenuState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*> *states, WhichState state, std::string configFile, Menu menuType);
+	// Destructor
 	virtual ~MenuState();
 
+	// Functions
+	void Update(const float &dt);
+	void Render(sf::RenderTarget* target = nullptr);
 
-	void handleInput(const float &dt);
-	void update(const float &dt);
-	void updateButtons();
-	void render(sf::RenderTarget* target = nullptr);
-	void renderButtons(sf::RenderTarget* target);
-	void renderSprites(sf::RenderTarget* target);
-
-	void initFonts();
-	void initButtons();
-	void initTitle();
-	void initSprites();
-	void initAnimations();
-
-	void updateCursor();
-
-	// Getters
+	// Getter
 	const Menu & getMenuType() const;
 
 private:
@@ -52,6 +42,18 @@ private:
 	// Background behind the sprites to help vizualize them
 	sf::RectangleShape spritesBackground;
 	sf::Cursor cursor;
+	
+	// Private functions
+	void UpdateButtons();
+	void UpdateCursor();
+	void RenderButtons(sf::RenderTarget* target);
+	void RenderSprites(sf::RenderTarget* target);
+	void InitFonts();
+	void InitButtons();
+	void InitTitle();
+	void InitSprites();
+	void InitAnimations();
+	void HandleInput(const float &dt);
 };
 
 #endif // !_MENU_STATE_H_

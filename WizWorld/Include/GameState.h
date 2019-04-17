@@ -8,23 +8,28 @@
 class GameState : public State
 {
 public:
-	GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, WhichState state,
-		std::string config_file, int sprite_scale, std::string player_name, sf::Font* player_name_font);
+	// Construtor
+	GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, WhichState state, std::string config_file, int sprite_scale, std::string player_name, sf::Font* player_name_font);
+	// Destructor
 	virtual ~GameState();
 
-	void handleInput(const float &dt);
-	void update(const float &dt);
-	void render(sf::RenderTarget* target);
-	void initActions();
-	bool checkSpritePosition();
-	bool checkViewPosition(std::string movement);
+	// Functions
+	void Update(const float &dt);
+	void Render(sf::RenderTarget* target);
 
 private:
 	Player *player;	
 	Map *map;
+	Map *collidedMap;
 	sf::View playerView;
-	std::map<std::string, int> playerSpriteOffset;
-	sf::Music music;
+	std::map<std::string, int> viewLocked;
+	sf::RectangleShape viewMovementArea;
+	
+	// Private functions
+	void InitActions();
+	void HandleInput(const float &dt);
+	bool CheckSpriteCollision(const float & dt, std::string movement);
+	bool CheckViewPosition(std::string movement);
 };
 
 #endif // !_GAME_STATE_H_

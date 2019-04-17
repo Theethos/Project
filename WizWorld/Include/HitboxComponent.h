@@ -4,13 +4,15 @@
 class HitboxComponent
 {
 public:
+	// Constructor
 	HitboxComponent(sf::Sprite *sprite, const float width, const float height);
+	// Destructor
 	virtual ~HitboxComponent();
 
-	void update();
-	void render(sf::RenderTarget* target) const;
+	// Functions
+	void Update();
+	void Render(sf::RenderTarget* target) const;
 
-	bool checkCollision(const sf::FloatRect &rect);
 private:
 	sf::RectangleShape hitbox;
 	sf::Sprite *sprite;
