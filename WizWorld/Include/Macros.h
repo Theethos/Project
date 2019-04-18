@@ -50,4 +50,5 @@ enum class HairStyle { SHORT, LONG };
 enum class AnimationSide { LEFT, RIGHT, DOWN, UP };
 enum class Menu { NONE, MAIN_MENU, PAUSE_MENU, CHARACTER_MENU };
 enum class WhichState { NONE, GAME_STATE, MENU_STATE };
+enum class TransitionStatus { NONE, HALF, WAIT_COMPLETE, COMPLETE };
 #endif // !_MACROS_H_

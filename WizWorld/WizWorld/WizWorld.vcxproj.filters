@@ -102,6 +102,9 @@
     <ClInclude Include="..\Include\ButtonText.h">
       <Filter>Button</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\TransitionComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Weapon.cpp">
@@ -166,6 +169,9 @@
     </ClCompile>
     <ClCompile Include="..\Source\ButtonText.cpp">
       <Filter>Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\TransitionComponent.cpp">
+      <Filter>Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

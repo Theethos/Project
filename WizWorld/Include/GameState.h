@@ -4,6 +4,7 @@
 #include "State.h"
 #include "Player.h"
 #include "Map.h"
+#include "TransitionComponent.h"
 
 class GameState : public State
 {
@@ -19,12 +20,16 @@ public:
 
 private:
 	Player *player;	
+	std::string previousMove;
+	bool movementLocked;
 	
 	// Map managers
 	std::map<std::string, Map*> maps;
 	std::map<std::string, Map*> collisionMaps;
 	std::string currentMap;
-	
+	TransitionComponent transition;
+	sf::Color transitionColor;
+
 	// Camera managers
 	sf::View playerView;
 	std::map<std::string, int> viewLocked;

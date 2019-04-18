@@ -25,8 +25,10 @@ AnimationSide StringToSide(std::string side)
 }
 
 // Construtor
-GameState::GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, WhichState state, std::string config_file, int sprite_scale, std::string player_name, sf::Font* player_name_font) : 
-State(window, keys, states, state)
+GameState::GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, WhichState state, std::string config_file, int sprite_scale, std::string player_name, sf::Font* player_name_font) :
+State(window, keys, states, state), 
+movementLocked(false),
+transition(window->getSize())
 {
 	InitActions();
 	InitMaps(sprite_scale);
@@ -61,45 +63,52 @@ GameState::~GameState()
 // Functions
 void GameState::HandleInput(const float &dt)
 {
-	sf::Vector2f sprite_current_position = this->player->getSprite()->getPosition();
-	// Move the character in the direction given by input
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_UP"])))
+	if (!this->movementLocked)
 	{
-		// Check that the player doesn't collid anything
-		if (!this->CheckSpriteCollision(dt ,"MOVE_UP"))
+		sf::Vector2f sprite_current_position = this->player->getSprite()->getPosition();
+		// Move the character in the direction given by input
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_UP"])))
 		{
-			this->player->Move(dt, 0.f, -1.f);
-			// Check if the camera can move
-			if (!this->CheckViewPosition("MOVE_UP"))
-				// * 2 * is in hard, don't know why but otherwise the camera is slower than the player
-				this->playerView.move(0.f, 1.f * 2 * this->player->getMovement()->getVelocity().y);
-		} 
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_DOWN"])))
-	{
-		if (!this->CheckSpriteCollision(dt, "MOVE_DOWN"))
-		{
-			this->player->Move(dt, 0.f, 1.f);
-			if (!this->CheckViewPosition("MOVE_DOWN"))
-				this->playerView.move(0.f, 1.f * 2 * this->player->getMovement()->getVelocity().y);
+			// Check that the player doesn't collid anything
+			if (!this->CheckSpriteCollision(dt, "MOVE_UP"))
+			{
+				this->player->Move(dt, 0.f, -1.f);
+				this->previousMove = "MOVE_UP";
+				// Check if the camera can move
+				if (!this->CheckViewPosition("MOVE_UP"))
+					// * 2 * is in hard, don't know why but otherwise the camera is slower than the player
+					this->playerView.move(0.f, 1.f * 2 * this->player->getMovement()->getVelocity().y);
+			}
 		}
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_LEFT"])))
-	{
-		if (!this->CheckSpriteCollision(dt, "MOVE_LEFT"))
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_DOWN"])))
 		{
-			this->player->Move(dt, -1.f, 0.f);
-			if (!this->CheckViewPosition("MOVE_LEFT"))
-				this->playerView.move(1.f * 2 * this->player->getMovement()->getVelocity().x, 0.f);
+			if (!this->CheckSpriteCollision(dt, "MOVE_DOWN"))
+			{
+				this->player->Move(dt, 0.f, 1.f);
+				this->previousMove = "MOVE_DOWN";
+				if (!this->CheckViewPosition("MOVE_DOWN"))
+					this->playerView.move(0.f, 1.f * 2 * this->player->getMovement()->getVelocity().y);
+			}
 		}
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_RIGHT"])))
-	{
-		if (!this->CheckSpriteCollision(dt, "MOVE_RIGHT"))
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_LEFT"])))
 		{
-			this->player->Move(dt, 1.f, 0.f);
-			if (!this->CheckViewPosition("MOVE_RIGHT"))
-				this->playerView.move(1.f * 2 * this->player->getMovement()->getVelocity().x, 0.f);
+			if (!this->CheckSpriteCollision(dt, "MOVE_LEFT"))
+			{
+				this->player->Move(dt, -1.f, 0.f);
+				this->previousMove = "MOVE_LEFT";
+				if (!this->CheckViewPosition("MOVE_LEFT"))
+					this->playerView.move(1.f * 2 * this->player->getMovement()->getVelocity().x, 0.f);
+			}
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_RIGHT"])))
+		{
+			if (!this->CheckSpriteCollision(dt, "MOVE_RIGHT"))
+			{
+				this->player->Move(dt, 1.f, 0.f);
+				this->previousMove = "MOVE_RIGHT";
+				if (!this->CheckViewPosition("MOVE_RIGHT"))
+					this->playerView.move(1.f * 2 * this->player->getMovement()->getVelocity().x, 0.f);
+			}
 		}
 	}
 	// Open pause menu when "Escape" is pressed
@@ -133,7 +142,7 @@ void GameState::ChangeMap(sf::Color color)
 		}
 		else if (color == sf::Color::Magenta)
 		{
-			this->currentMap = "The_Great_Hall"; 
+			this->currentMap = "The_Great_Hall";
 			this->player->getSprite()->setPosition(this->maps[currentMap]->getStartingPosition("START"));
 			ResetView();
 		}
@@ -212,6 +221,19 @@ void GameState::Update(const float& dt)
 	this->HandleInput(dt);
 
 	this->player->Update(dt);
+
+	if (this->movementLocked)
+	{
+		this->transition.Update();
+		if (this->transition.getStatus() == TransitionStatus::HALF)
+		{
+			ChangeMap(this->transitionColor);
+		}
+		else if (this->transition.getStatus() == TransitionStatus::COMPLETE)
+		{
+			this->movementLocked = false;
+		}
+	}
 }
 
 void GameState::Render(sf::RenderTarget* target)
@@ -227,6 +249,10 @@ void GameState::Render(sf::RenderTarget* target)
 
 	// Reset the view
 	target->setView(this->window->getDefaultView());
+	if (this->movementLocked)
+	{
+		this->transition.Render(target);
+	}
 }
 /////////////////////////////////////////////////////////////////////
 /// Initializes the map of actions for each key with the parameters in the files "Game/actions.cfg"
@@ -352,7 +378,9 @@ bool GameState::CheckSpriteCollision(const float & dt,std::string movement)
 		}
 		else if (it == sf::Color::Magenta || it == sf::Color::Blue || it == sf::Color::Green || it == sf::Color::Yellow)
 		{
-			this->ChangeMap(it);
+			this->movementLocked = true;
+			this->transitionColor = it;
+			return true;
 		}
 	}
 	return false;

@@ -38,6 +38,7 @@
     <ClInclude Include="..\Include\Player.h" />
     <ClInclude Include="..\Include\State.h" />
     <ClInclude Include="..\Include\TileMap.h" />
+    <ClInclude Include="..\Include\TransitionComponent.h" />
     <ClInclude Include="..\Include\Weapon.h" />
     <ClInclude Include="..\Source\Precompiled_Header.h" />
   </ItemGroup>
@@ -65,6 +66,7 @@
     </ClCompile>
     <ClCompile Include="..\Source\State.cpp" />
     <ClCompile Include="..\Source\TilesMap.cpp" />
+    <ClCompile Include="..\Source\TransitionComponent.cpp" />
     <ClCompile Include="..\Source\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
