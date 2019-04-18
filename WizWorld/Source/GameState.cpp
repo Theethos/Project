@@ -29,19 +29,13 @@ GameState::GameState(sf::RenderWindow *window, std::map < std::string, int> *key
 State(window, keys, states, state)
 {
 	InitActions();
+	InitMaps(sprite_scale);
 	this->player = new Player(1.5f, 0.0, 0.0, config_file, player_name, player_name_font, sprite_scale);
-	this->map = new Map("../External/Images/Map/Visible/Courtyard.png", sprite_scale);
-	this->collidedMap = new Map("../External/Images/Map/Collision/Courtyard.png", sprite_scale);
 
 	this->playerView.setSize(this->window->getSize().x, this->window->getSize().y);
-	this->player->getSprite()->setPosition(this->map->getSize().x * sprite_scale / 2, this->map->getSize().y * sprite_scale / 2);
-	this->playerView.setCenter(this->player->getSprite()->getPosition());
+	this->player->getSprite()->setPosition(this->maps[currentMap]->getSize().x * sprite_scale / 2, this->maps[currentMap]->getSize().y * sprite_scale / 2);
 
-	// These are the limits for the movement of the camera. If the player goes behond, the camera stops moving
-	this->viewLocked["LEFT"] = this->map->getPosition().x + this->window->getSize().x / 2;
-	this->viewLocked["RIGHT"] = this->map->getPosition().x + (this->map->getSize().x * sprite_scale) - (this->window->getSize().x / 2);
-	this->viewLocked["UP"] = this->map->getPosition().y + this->window->getSize().y / 2;
-	this->viewLocked["DOWN"] = this->map->getPosition().y + (this->map->getSize().y * sprite_scale) - (this->window->getSize().y / 2);
+	InitView();
 
 	// Display the area where the camera can move (Render it to see)
 	this->viewMovementArea.setFillColor(sf::Color::Transparent);
@@ -54,7 +48,14 @@ State(window, keys, states, state)
 GameState::~GameState()
 {
 	delete this->player;
-	delete this->map;
+	for (auto &it : this->maps)
+	{
+		delete it.second;
+	}
+	for (auto &it : this->collisionMaps)
+	{
+		delete it.second;
+	}
 }
 
 // Functions
@@ -104,7 +105,103 @@ void GameState::HandleInput(const float &dt)
 	// Open pause menu when "Escape" is pressed
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MENU"])))
 	{
-		this->states->push(new MenuState(this->window, this->keys, this->states, WhichState::MENU_STATE, "../External/Config/pause_menu_buttons.cfg", Menu::PAUSE_MENU));
+		this->states->push(new MenuState(this->window, this->keys, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));
+	}
+}
+
+void GameState::ChangeMap(sf::Color color)
+{
+	if (this->currentMap == "Courtyard")
+	{
+		if (color == sf::Color::Blue)
+		{
+			this->currentMap = "Hogwarts_Hallways";
+			this->player->getSprite()->setPosition(this->maps[currentMap]->getStartingPosition("START"));
+			ResetView();
+		}
+		else if (color == sf::Color::Green)
+		{
+			this->currentMap = "Library";
+			this->player->getSprite()->setPosition(this->maps[currentMap]->getStartingPosition("START"));
+			ResetView();
+		}
+		else if (color == sf::Color::Yellow)
+		{
+			this->currentMap = "Potions_Room";
+			this->player->getSprite()->setPosition(this->maps[currentMap]->getStartingPosition("START"));
+			ResetView();
+		}
+		else if (color == sf::Color::Magenta)
+		{
+			this->currentMap = "The_Great_Hall"; 
+			this->player->getSprite()->setPosition(this->maps[currentMap]->getStartingPosition("START"));
+			ResetView();
+		}
+	}
+	else if (this->currentMap == "Hogwarts_Hallways")
+	{
+		if (color == sf::Color::Red)
+		{
+
+		}
+		else if (color == sf::Color::Red)
+		{
+
+		}
+		else if (color == sf::Color::Red)
+		{
+		}
+	}
+	else if (this->currentMap == "Library")
+	{
+		if (color == sf::Color::Red)
+		{
+
+		}
+		else if (color == sf::Color::Red)
+		{
+
+		}
+		else if (color == sf::Color::Red)
+		{
+
+		}
+	}
+	else if (this->currentMap == "Potions_Room")
+	{
+		if (color == sf::Color::Blue)
+		{
+			this->player->getSprite()->setPosition(this->maps[currentMap]->getStartingPosition("FROM_BLUE"));
+			ResetView();
+		}
+		else if (color == sf::Color::Magenta)
+		{
+			this->player->getSprite()->setPosition(this->maps[currentMap]->getStartingPosition("FROM_MAGENTA"));
+			ResetView();
+		}
+		else if (color == sf::Color::Green)
+		{
+			this->currentMap = "Library";
+			this->player->getSprite()->setPosition(this->maps[currentMap]->getStartingPosition("START"));
+			ResetView();
+		}
+	}
+	else if (this->currentMap == "The_Great_Hall")
+	{
+		if (color == sf::Color::Magenta)
+		{
+			this->player->getSprite()->setPosition(this->maps[currentMap]->getStartingPosition("FROM_BLUE"));
+			ResetView();
+		}
+		else if (color == sf::Color::Blue)
+		{
+			this->player->getSprite()->setPosition(this->maps[currentMap]->getStartingPosition("FROM_MAGENTA"));
+			ResetView();
+		}
+		else if (color == sf::Color::Red)
+		{
+
+		}
 	}
 }
 
@@ -124,21 +221,21 @@ void GameState::Render(sf::RenderTarget* target)
 
 	// Change the view
 	target->setView(this->playerView);
-	this->map->Render(target);
+	this->maps[currentMap]->Render(target);
 	this->player->Render(target);
 	//target->draw(this->viewMovementArea); // Render the camera area
 
 	// Reset the view
 	target->setView(this->window->getDefaultView());
 }
-
-/* Initializes @member[actions] with the parameters in the files "game_actions.cfg"
-   Format :
-		Action_Name Key_Name
-*/
+/////////////////////////////////////////////////////////////////////
+/// Initializes the map of actions for each key with the parameters in the files "Game/actions.cfg"
+/// Format :
+///	Action_Name >> Key_Name
+/////////////////////////////////////////////////////////////////////
 void GameState::InitActions()
 {
-	std::ifstream config_file("../External/Config/game_actions.cfg");
+	std::ifstream config_file("../External/Config/Game/Actions.cfg");
 
 	if (config_file.is_open())
 	{
@@ -152,51 +249,110 @@ void GameState::InitActions()
 	}
 
 }
+/////////////////////////////////////////////////////////////////////
+/// Initializes the map of Maps with the parameters in the files "Maps/Maps.cfg"
+/// Format : 
+/// Map_name >> map_path >> collision_map_path
+/////////////////////////////////////////////////////////////////////
+void GameState::InitMaps(int scale)
+{
+	std::ifstream config_file("../External/Config/Maps/Maps.cfg");
+	if (config_file.is_open())
+	{
+		std::string map_name = "", map_path = "", collision_map_path = "", starting_position = "";
+		while (config_file >> map_name >> map_path >> collision_map_path >> starting_position)
+		{
+			this->maps[map_name] = new Map(map_path, scale);
+			this->maps[map_name]->InitPositions(starting_position);
+			this->collisionMaps[map_name] = new Map(collision_map_path, scale);
+		}
+		config_file.close();
+	}
+	this->currentMap = "Courtyard";
+}
+
+void GameState::InitView()
+{
+	int sprite_scale = this->player->getSprite()->getScale().x;
+	// These are the limits for the movement of the camera. If the player goes behond, the camera stops moving
+	this->viewLocked["LEFT"] = this->maps[currentMap]->getPosition().x + this->window->getSize().x / 2;
+	this->viewLocked["RIGHT"] = this->maps[currentMap]->getPosition().x + (this->maps[currentMap]->getSize().x * sprite_scale) - (this->window->getSize().x / 2);
+	this->viewLocked["UP"] = this->maps[currentMap]->getPosition().y + this->window->getSize().y / 2;
+	this->viewLocked["DOWN"] = this->maps[currentMap]->getPosition().y + (this->maps[currentMap]->getSize().y * sprite_scale) - (this->window->getSize().y / 2);
+
+	this->playerView.setCenter(this->player->getSprite()->getPosition());
+}
+
+void GameState::ResetView()
+{
+	InitView();
+
+	if (this->playerView.getCenter().x < this->viewLocked["LEFT"])
+	{
+		this->playerView.setCenter(this->viewLocked["LEFT"], this->playerView.getCenter().y);
+	}
+	else if (this->playerView.getCenter().x >= this->viewLocked["RIGHT"])
+	{
+		this->playerView.setCenter(this->viewLocked["RIGHT"] - 1, this->playerView.getCenter().y);
+	}
+	else if (this->playerView.getCenter().x < this->viewLocked["UP"])
+	{
+		this->playerView.setCenter(this->playerView.getCenter().x, this->viewLocked["UP"]);
+	}
+	else if (this->playerView.getCenter().x >= this->viewLocked["DOWN"])
+	{
+		this->playerView.setCenter(this->playerView.getCenter().x, this->viewLocked["DOWN"] - 1);
+	}
+}
 
 bool GameState::CheckSpriteCollision(const float & dt,std::string movement)
 {
-	// Collision are tested on a copy of the map (collidedMap). The areas that can't be crossed by the player are in red (255, 0, 0).
-	sf::Vector2f sprite_position = sf::Vector2f(this->player->getSprite()->getPosition().x / this->collidedMap->getScale(), this->player->getSprite()->getPosition().y / this->collidedMap->getScale());
+	// Collision are tested on a copy of the map (collisionMaps). The areas that can't be crossed by the player are in red (255, 0, 0).
+	sf::Vector2f sprite_position = sf::Vector2f(this->player->getSprite()->getPosition().x / this->collisionMaps[currentMap]->getScale(), this->player->getSprite()->getPosition().y / this->collisionMaps[currentMap]->getScale());
 	sprite_position = sf::Vector2f(std::roundl(sprite_position.x), std::roundl(sprite_position.y));
 
-	sf::Vector2f sprite_size = sf::Vector2f(this->player->getSprite()->getGlobalBounds().width / this->collidedMap->getScale(), this->player->getSprite()->getGlobalBounds().height / this->collidedMap->getScale());
+	sf::Vector2f sprite_size = sf::Vector2f(this->player->getSprite()->getGlobalBounds().width / this->collisionMaps[currentMap]->getScale(), this->player->getSprite()->getGlobalBounds().height / this->collisionMaps[currentMap]->getScale());
 
 	sf::Color pixel_toward_color[3];
 
 	if (movement == "MOVE_UP")
 	{
-		pixel_toward_color[0] = this->collidedMap->getPixelColor(sprite_position.x + 1, sprite_position.y + sprite_size.y - 1);
-		pixel_toward_color[1] = this->collidedMap->getPixelColor(sprite_position.x + sprite_size.x / 2 , sprite_position.y - 1 + sprite_size.y);
-		pixel_toward_color[2] = this->collidedMap->getPixelColor(sprite_position.x - 1 + sprite_size.x, sprite_position.y - 1 + sprite_size.y);
+		pixel_toward_color[0] = this->collisionMaps[currentMap]->getPixelColor(sprite_position.x + 1, sprite_position.y + sprite_size.y - 1);
+		pixel_toward_color[1] = this->collisionMaps[currentMap]->getPixelColor(sprite_position.x + sprite_size.x / 2 , sprite_position.y - 1 + sprite_size.y);
+		pixel_toward_color[2] = this->collisionMaps[currentMap]->getPixelColor(sprite_position.x - 1 + sprite_size.x, sprite_position.y - 1 + sprite_size.y);
 	}
 	else if (movement == "MOVE_DOWN")
 	{
-		pixel_toward_color[0] = this->collidedMap->getPixelColor(sprite_position.x + 1, sprite_position.y + sprite_size.y + 1);
-		pixel_toward_color[1] = this->collidedMap->getPixelColor(sprite_position.x + sprite_size.x / 2, sprite_position.y + sprite_size.y + 1);
-		pixel_toward_color[2] = this->collidedMap->getPixelColor(sprite_position.x - 1 + sprite_size.x, sprite_position.y + sprite_size.y + 1);
+		pixel_toward_color[0] = this->collisionMaps[currentMap]->getPixelColor(sprite_position.x + 1, sprite_position.y + sprite_size.y + 1);
+		pixel_toward_color[1] = this->collisionMaps[currentMap]->getPixelColor(sprite_position.x + sprite_size.x / 2, sprite_position.y + sprite_size.y + 1);
+		pixel_toward_color[2] = this->collisionMaps[currentMap]->getPixelColor(sprite_position.x - 1 + sprite_size.x, sprite_position.y + sprite_size.y + 1);
 	}
 	else if (movement == "MOVE_LEFT")
 	{
-		pixel_toward_color[0] = this->collidedMap->getPixelColor(sprite_position.x - 1, std::min(sprite_position.y + sprite_size.y, this->map->getSize().y));
+		pixel_toward_color[0] = this->collisionMaps[currentMap]->getPixelColor(sprite_position.x - 1, std::min(sprite_position.y + sprite_size.y, this->maps[currentMap]->getSize().y));
 		// Others are not required
-		pixel_toward_color[1] = sf::Color::Green;
-		pixel_toward_color[2] = sf::Color::Green;
+		pixel_toward_color[1] = sf::Color::Black;
+		pixel_toward_color[2] = sf::Color::Black;
 	}
 	else if (movement == "MOVE_RIGHT")
 	{
-		pixel_toward_color[0] = this->collidedMap->getPixelColor(sprite_position.x + sprite_size.x + 1, std::min(sprite_position.y + sprite_size.y, this->map->getSize().y));
-		pixel_toward_color[1] = sf::Color::Green;
-		pixel_toward_color[2] = sf::Color::Green;
+		pixel_toward_color[0] = this->collisionMaps[currentMap]->getPixelColor(sprite_position.x + sprite_size.x + 1, std::min(sprite_position.y + sprite_size.y, this->maps[currentMap]->getSize().y));
+		pixel_toward_color[1] = sf::Color::Black;
+		pixel_toward_color[2] = sf::Color::Black;
 	}
 	for (auto &it : pixel_toward_color)
 	{
-		if (it == sf::Color::Red || it == sf::Color::Blue)
+		if (it == sf::Color::Red)
 		{
 			this->player->getMovement()->setVelocity(0, 0);
 			this->player->getAnimation()->PlayAnimation(0, dt, movement);
 			std::string side = movement.replace(movement.begin(), movement.begin() + 5, "");
 			this->player->getAnimation()->setSide(StringToSide(side));
 			return true;
+		}
+		else if (it == sf::Color::Magenta || it == sf::Color::Blue || it == sf::Color::Green || it == sf::Color::Yellow)
+		{
+			this->ChangeMap(it);
 		}
 	}
 	return false;

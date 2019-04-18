@@ -67,3 +67,31 @@ const sf::Color Map::getPixelColor(int x, int y) const
 		return sf::Color::Red;
 }
 
+sf::Vector2f Map::getStartingPosition(std::string key) const
+{
+	if (this->startingPositions.count(key))
+	{
+		return this->startingPositions.at(key);
+	}
+}
+/////////////////////////////////////////////////////////////////////
+/// Initializes the starting position with the parameters in the given file
+/// Format :
+/// Key >> x >> y;
+/////////////////////////////////////////////////////////////////////
+void Map::InitPositions(std::string path)
+{
+	std::ifstream config_file(path);
+	if (config_file.is_open())
+	{
+		std::string key;
+		float x, y;
+
+		while (config_file >> key >> x >> y)
+		{
+			this->startingPositions[key] = sf::Vector2f(x * this->scale, y * this->scale);
+		}
+		config_file.close();
+	}
+}
+

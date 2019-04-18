@@ -17,6 +17,11 @@ MusicComponent::~MusicComponent()
 }
 
 // Functions
+/////////////////////////////////////////////////////////////////////
+/// Initializes the map of music with the parameters in the given file
+/// Format : 
+/// Key >> path
+/////////////////////////////////////////////////////////////////////
 void MusicComponent::InitMusics(std::string path)
 {
 	std::ifstream config_file(path);

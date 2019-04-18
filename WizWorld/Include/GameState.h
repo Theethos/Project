@@ -19,15 +19,24 @@ public:
 
 private:
 	Player *player;	
-	Map *map;
-	Map *collidedMap;
+	
+	// Map managers
+	std::map<std::string, Map*> maps;
+	std::map<std::string, Map*> collisionMaps;
+	std::string currentMap;
+	
+	// Camera managers
 	sf::View playerView;
 	std::map<std::string, int> viewLocked;
 	sf::RectangleShape viewMovementArea;
 	
 	// Private functions
 	void InitActions();
+	void InitMaps(int scale);
+	void InitView();
+	void ResetView();
 	void HandleInput(const float &dt);
+	void ChangeMap(sf::Color color);
 	bool CheckSpriteCollision(const float & dt, std::string movement);
 	bool CheckViewPosition(std::string movement);
 };

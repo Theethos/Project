@@ -83,7 +83,7 @@ void MenuState::UpdateButtons()
 			if (it.first == "NEW_GAME")
 			{
 				it.second->setPressed(false);
-				this->states->push(new MenuState(this->window, this->keys, this->states, WhichState::MENU_STATE, "../External/Config/choose_character_buttons.cfg", Menu::CHARACTER_MENU));
+				this->states->push(new MenuState(this->window, this->keys, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Choose_character_menu.cfg", Menu::CHARACTER_MENU));
 			}
 			else if (it.first == "QUIT")
 			{
@@ -103,7 +103,7 @@ void MenuState::UpdateButtons()
 				else
 				{
 					it.second->setPressed(false);
-					this->states->push(new MenuState(this->window, this->keys, this->states, WhichState::MENU_STATE, "../External/Config/main_menu_buttons.cfg", Menu::MAIN_MENU));
+					this->states->push(new MenuState(this->window, this->keys, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Main_menu.cfg", Menu::MAIN_MENU));
 				}
 			}
 			else if (it.first == "SETTINGS")
@@ -271,12 +271,13 @@ void MenuState::InitFonts()
 		std::cerr << "Error in 'MenuState' : Could not load \"GOTHICB.TTF\" font\n";
 	}
 }
-/* Initializes @member[buttons] with the parameters in the file "@member[configFile]"
-   Format :
-		*** First line for title ***
-		Name x y w h "Text"- r1 g1 b1 r2 b2 g2 r3 g3 b3 rText gText bText textSize 
-		* x y w h in percentage of the window size;
-*/
+/////////////////////////////////////////////////////////////////////
+/// Initializes the map of buttons with the parameters in the file this->configFile
+/// Format :
+///	--- First line for title ---
+///	Name >> x >> y >> w >> h >> "Text"- >> r1 >> g1 >> b1 >> r2 >> b2 >> g2 >> r3 >> g3 >> b3 >> rText >> gText >> bText >> textSize 
+///	--> x, y, w, and h in percentage of the window size
+/////////////////////////////////////////////////////////////////////
 void MenuState::InitButtons()
 {
 	float x_window = this->window->getSize().x, y_window = this->window->getSize().y;
@@ -381,12 +382,13 @@ void MenuState::InitButtons()
 		config_file.close();
 	}
 }
-/* Initializes @member[title] with the FIRST line in the file ""@member[configFile]"
-   Format :
-		number_of_buttons x y Title'-' r g b textSize/ <-- end the line with '/'
-		*** Other lines ***
-		* x y in percentage of the window size
-*/
+/////////////////////////////////////////////////////////////////////
+/// Initializes @member[title] with the FIRST line in the file this->configFile
+/// Format :
+///	number_of_buttons >> x >> y >> "Title"- >> rText >> gText >> bText >> textSize/ <-- end the line with '/'
+///	*** Other lines ***
+///	--> x and y in percentage of the window size
+/////////////////////////////////////////////////////////////////////
 void MenuState::InitTitle()
 {
 	float x_window = this->window->getSize().x, y_window = this->window->getSize().y;
@@ -432,7 +434,9 @@ void MenuState::InitTitle()
 		config_file.close();
 	}
 }
-/* Initializes @member[Sprites] and the sprite_scale depending on the screen size */
+/////////////////////////////////////////////////////////////////////
+/// Initializes the map of sprites and the sprite_scale depending on the screen size
+/////////////////////////////////////////////////////////////////////
 void MenuState::InitSprites()
 {
 	this->sprites["LEFT"] = new sf::Sprite();
@@ -446,13 +450,14 @@ void MenuState::InitSprites()
 		it.second->setScale(this->spriteScale, this->spriteScale);
 	}
 }
-/* Initializes @member[title] with the the parameters in the file "@member[configFile]"
-   Format :
-		animation_component animation_key texture_sheet_path number_of_textures width height animation_timer
-*/
+/////////////////////////////////////////////////////////////////////
+/// Initializes the map of Animatins with the parameters in the file "Sprites/Sprites.cfg"
+/// Format :
+///	animation_component >> animation_key >> texture_sheet_path >> number_of_textures >> width >> height >> animation_timer
+/////////////////////////////////////////////////////////////////////
 void MenuState::InitAnimations()
 {
-	std::ifstream config_file("../External/Config/sprites_menu_character.cfg");
+	std::ifstream config_file("../External/Config/Sprites/Sprites.cfg");
 
 	if (config_file.is_open())
 	{

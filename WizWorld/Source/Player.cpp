@@ -67,7 +67,11 @@ void Player::Render(sf::RenderTarget * target)
 	Entity::Render(target);
 	target->draw(this->nameRendered);
 }
-
+/////////////////////////////////////////////////////////////////////
+/// Initializes the map of music with the parameters in the given file
+/// Format : 
+/// Key >> path >> number_of_textures >> width >> height >> animation_timer
+/////////////////////////////////////////////////////////////////////
 void Player::InitAnimationComponent(std::string file_path)
 {
 	// Calls the superclass Init

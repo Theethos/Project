@@ -34,7 +34,7 @@
     <Filter Include="Component">
       <UniqueIdentifier>{83395c0f-5095-49fa-9eb1-1db27d8ed77f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tiles/Map">
+    <Filter Include="Tile/Map">
       <UniqueIdentifier>{abe9f394-e5a1-4826-8f4a-3b55dda9700b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -91,10 +91,10 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\TileMap.h">
-      <Filter>Tiles/Map</Filter>
+      <Filter>Tile/Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Map.h">
-      <Filter>Tiles/Map</Filter>
+      <Filter>Tile/Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\MusicComponent.h">
       <Filter>Component</Filter>
@@ -156,10 +156,10 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\TilesMap.cpp">
-      <Filter>Tiles/Map</Filter>
+      <Filter>Tile/Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Map.cpp">
-      <Filter>Tiles/Map</Filter>
+      <Filter>Tile/Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\MusicComponent.cpp">
       <Filter>Component</Filter>

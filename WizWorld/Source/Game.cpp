@@ -6,7 +6,7 @@
 Game::Game() :
 dt(0.0), 
 fullscreen(false),
-music("../External/Config/music.cfg")
+music("../External/Config/Music/Music.cfg")
 {
 	InitWindow();
 	InitKeys();
@@ -115,13 +115,14 @@ void Game::Render()
 
 	this->window.display();
 }
-/* Initializes @member[keys] with the parameters in the files "game_keys.cfg"
-   Format :
-		Key_Name SFML_Key_Value
-*/
+/////////////////////////////////////////////////////////////////////
+/// Initializes the key used in the game with the parameters in the files "Game/keys.cfg"
+/// Format :
+///	Key_Name SFML_Key_Value
+/////////////////////////////////////////////////////////////////////
 void Game::InitKeys()
 {
-	std::ifstream config_file("../External/Config/game_keys.cfg");
+	std::ifstream config_file("../External/Config/Game/Keys.cfg");
 
 	if (config_file.is_open())
 	{
@@ -135,19 +136,21 @@ void Game::InitKeys()
 
 	config_file.close();
 }
-/* Initializes the window with the parameters in the file "window.cfg" 
-   Format :
-		Title
-		Width Height
-		FullScreen
-		FPS
-		Vertical synchronisation enabled 
-*/
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+/// Initializes the window with the parameters in the file "window.cfg" 
+/// Format :
+/// Title
+///	Width Height
+///	FullScreen
+///	FPS
+///	Vertical synchronisation enabled 
+/////////////////////////////////////////////////////////////////////
 void Game::InitWindow()
 {
-	std::ifstream config_file("../External/Config/window.cfg");
+	std::ifstream config_file("../External/Config/Window/Window.cfg");
 
-	/* Window's attributes */
+	// Window's attributes
 	std::string title("None");
 	sf::VideoMode video_mode(sf::VideoMode::getDesktopMode());
 	unsigned fps = 120;
@@ -175,7 +178,7 @@ void Game::InitWindow()
 
 void Game::InitStates()
 {
-	this->states.push(new MenuState(&this->window, &this->keys, &this->states, WhichState::MENU_STATE, "../External/Config/main_menu_buttons.cfg", Menu::MAIN_MENU));
+	this->states.push(new MenuState(&this->window, &this->keys, &this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Main_menu.cfg", Menu::MAIN_MENU));
 }
 
 void Game::DisplayFPS()
