@@ -5,7 +5,7 @@ class Map
 {
 public:
 	// Constructor
-	Map(std::string texture_path, int map_scale = 1);
+	Map(std::string texture_path, int map_scale = 1, bool collision = false);
 	// Destructor
 	virtual ~Map();
 

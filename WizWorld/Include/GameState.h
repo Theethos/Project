@@ -39,11 +39,10 @@ private:
 	void InitActions();
 	void InitMaps(int scale);
 	void InitView();
-	void ResetView();
+	void ResetView(bool new_map = false);
 	void HandleInput(const float &dt);
 	void ChangeMap(sf::Color color);
 	bool CheckSpriteCollision(const float & dt, std::string movement);
-	bool CheckViewPosition(std::string movement);
 };
 
 #endif // !_GAME_STATE_H_

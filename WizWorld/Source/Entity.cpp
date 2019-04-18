@@ -2,7 +2,6 @@
 #include "../Include/Macros.h"
 #include "../Include/Entity.h"
 
-
 // Constructor
 Entity::Entity() : 
 sprite(nullptr), 

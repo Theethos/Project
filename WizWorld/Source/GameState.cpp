@@ -3,7 +3,7 @@
 #include "../Include/GameState.h"
 #include "../Include/MenuState.h"
 
-// Function to tranform std::string in AnimationSide::side
+// Function to tranform std::string in AnimationSide::side \see CheckSpriteCollision()
 AnimationSide StringToSide(std::string side)
 {
 	if (side == "LEFT")
@@ -75,9 +75,10 @@ void GameState::HandleInput(const float &dt)
 				this->player->Move(dt, 0.f, -1.f);
 				this->previousMove = "MOVE_UP";
 				// Check if the camera can move
-				if (!this->CheckViewPosition("MOVE_UP"))
+				//if (!this->CheckViewPosition("MOVE_UP"))
 					// * 2 * is in hard, don't know why but otherwise the camera is slower than the player
-					this->playerView.move(0.f, 1.f * 2 * this->player->getMovement()->getVelocity().y);
+					//this->playerView.move(0.f, 1.f * 2 * this->player->getMovement()->getVelocity().y);
+				ResetView();
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_DOWN"])))
@@ -86,8 +87,7 @@ void GameState::HandleInput(const float &dt)
 			{
 				this->player->Move(dt, 0.f, 1.f);
 				this->previousMove = "MOVE_DOWN";
-				if (!this->CheckViewPosition("MOVE_DOWN"))
-					this->playerView.move(0.f, 1.f * 2 * this->player->getMovement()->getVelocity().y);
+				ResetView();
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_LEFT"])))
@@ -96,8 +96,7 @@ void GameState::HandleInput(const float &dt)
 			{
 				this->player->Move(dt, -1.f, 0.f);
 				this->previousMove = "MOVE_LEFT";
-				if (!this->CheckViewPosition("MOVE_LEFT"))
-					this->playerView.move(1.f * 2 * this->player->getMovement()->getVelocity().x, 0.f);
+				ResetView();
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_RIGHT"])))
@@ -106,8 +105,7 @@ void GameState::HandleInput(const float &dt)
 			{
 				this->player->Move(dt, 1.f, 0.f);
 				this->previousMove = "MOVE_RIGHT";
-				if (!this->CheckViewPosition("MOVE_RIGHT"))
-					this->playerView.move(1.f * 2 * this->player->getMovement()->getVelocity().x, 0.f);
+				ResetView();
 			}
 		}
 	}
@@ -126,25 +124,25 @@ void GameState::ChangeMap(sf::Color color)
 		{
 			this->currentMap = "Hogwarts_Hallways";
 			this->player->getSprite()->setPosition(this->maps[currentMap]->getStartingPosition("START"));
-			ResetView();
+			ResetView(true);
 		}
 		else if (color == sf::Color::Green)
 		{
 			this->currentMap = "Library";
 			this->player->getSprite()->setPosition(this->maps[currentMap]->getStartingPosition("START"));
-			ResetView();
+			ResetView(true);
 		}
 		else if (color == sf::Color::Yellow)
 		{
 			this->currentMap = "Potions_Room";
 			this->player->getSprite()->setPosition(this->maps[currentMap]->getStartingPosition("START"));
-			ResetView();
+			ResetView(true);
 		}
 		else if (color == sf::Color::Magenta)
 		{
 			this->currentMap = "The_Great_Hall";
 			this->player->getSprite()->setPosition(this->maps[currentMap]->getStartingPosition("START"));
-			ResetView();
+			ResetView(true);
 		}
 	}
 	else if (this->currentMap == "Hogwarts_Hallways")
@@ -192,7 +190,7 @@ void GameState::ChangeMap(sf::Color color)
 		{
 			this->currentMap = "Library";
 			this->player->getSprite()->setPosition(this->maps[currentMap]->getStartingPosition("START"));
-			ResetView();
+			ResetView(true);
 		}
 	}
 	else if (this->currentMap == "The_Great_Hall")
@@ -290,7 +288,7 @@ void GameState::InitMaps(int scale)
 		{
 			this->maps[map_name] = new Map(map_path, scale);
 			this->maps[map_name]->InitPositions(starting_position);
-			this->collisionMaps[map_name] = new Map(collision_map_path, scale);
+			this->collisionMaps[map_name] = new Map(collision_map_path, scale, true);
 		}
 		config_file.close();
 	}
@@ -309,9 +307,13 @@ void GameState::InitView()
 	this->playerView.setCenter(this->player->getSprite()->getPosition());
 }
 
-void GameState::ResetView()
+void GameState::ResetView(bool new_map)
 {
-	InitView();
+	// If the map changes, we have to modify the previous value of viewLocked
+	if (new_map)
+		InitView();
+	else
+		this->playerView.setCenter(this->player->getSprite()->getPosition());
 
 	if (this->playerView.getCenter().x < this->viewLocked["LEFT"])
 	{
@@ -321,11 +323,11 @@ void GameState::ResetView()
 	{
 		this->playerView.setCenter(this->viewLocked["RIGHT"] - 1, this->playerView.getCenter().y);
 	}
-	else if (this->playerView.getCenter().x < this->viewLocked["UP"])
+	if (this->playerView.getCenter().y < this->viewLocked["UP"])
 	{
 		this->playerView.setCenter(this->playerView.getCenter().x, this->viewLocked["UP"]);
 	}
-	else if (this->playerView.getCenter().x >= this->viewLocked["DOWN"])
+	else if (this->playerView.getCenter().y >= this->viewLocked["DOWN"])
 	{
 		this->playerView.setCenter(this->playerView.getCenter().x, this->viewLocked["DOWN"] - 1);
 	}
@@ -384,22 +386,4 @@ bool GameState::CheckSpriteCollision(const float & dt,std::string movement)
 		}
 	}
 	return false;
-}
-
-bool GameState::CheckViewPosition(std::string movement)
-{
-	sf::Vector2f sprite_size = sf::Vector2f(this->player->getSprite()->getGlobalBounds().width, this->player->getSprite()->getGlobalBounds().height);
-	sf::Vector2f sprite_position = sf::Vector2f(std::round(this->player->getSprite()->getPosition().x), std::round(this->player->getSprite()->getPosition().y));
-
-	sf::Vector2f view_center = sf::Vector2f(std::round(this->playerView.getCenter().x), std::round(this->playerView.getCenter().y));
-	sf::Vector2f view_size = sf::Vector2f(std::round(this->playerView.getSize().x), std::round(this->playerView.getSize().y));
-
-	if (movement == "MOVE_LEFT" || movement == "MOVE_RIGHT")
-	{
-		return (sprite_position.x <= this->viewLocked["LEFT"] || sprite_position.x > this->viewLocked["RIGHT"]);
-	}
-	else if (movement == "MOVE_DOWN" || movement == "MOVE_UP")
-	{
-		return (sprite_position.y <= this->viewLocked["UP"] || sprite_position.y > this->viewLocked["DOWN"]);
-	}
 }

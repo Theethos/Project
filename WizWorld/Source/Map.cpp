@@ -3,18 +3,21 @@
 #include "../Include/Map.h"
 
 // Constructor
-Map::Map(std::string texture_path, int map_scale) : 
+Map::Map(std::string texture_path, int map_scale, bool collision) :
 scale(map_scale)
 {
 	this->mapTexture = new sf::Texture;
 	if (this->mapTexture->loadFromFile(texture_path))
 	{
-		this->map.setTexture(this->mapTexture);
-		this->map.setPosition(0, 0);
-		this->map.setSize(static_cast<sf::Vector2f>(this->mapTexture->getSize()));
-		this->map.setScale(scale, scale);
-
-		this->mapImage = this->mapTexture->copyToImage();
+		if (collision)
+			this->mapImage = this->mapTexture->copyToImage();
+		else
+		{
+			this->map.setTexture(this->mapTexture);
+			this->map.setPosition(0, 0);
+			this->map.setSize(static_cast<sf::Vector2f>(this->mapTexture->getSize()));
+			this->map.setScale(scale, scale);
+		}
 	}
 	else
 	{
