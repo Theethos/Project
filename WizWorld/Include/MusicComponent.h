@@ -24,6 +24,7 @@ private:
 	std::pair<sf::Music*, float >* isPlaying;
 	// Time between two music
 	float waitingBeforePlay;
+	int maxVolume;
 	
 	// Private functions
 	void InitMusics(std::string path);

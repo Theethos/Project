@@ -109,7 +109,20 @@ void Game::Render()
 
 	// Renders from state
 	if (!this->states.empty())
+	{
+		// Render the game under the pause menu 
+		if (this->states.top()->getState() == WhichState::MENU_STATE)
+		{
+			auto menu = static_cast<MenuState*>(this->states.top());
+			if (menu->getMenuType() == Menu::PAUSE_MENU)
+			{
+				this->states.pop();
+				this->states.top()->Render(&this->window);
+				this->states.push(menu);
+			}
+		}
 		this->states.top()->Render(&this->window);
+	}
 
 	//this->DisplayFPS();
 

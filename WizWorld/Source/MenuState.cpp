@@ -14,16 +14,22 @@ menuType(menuType)
 	InitTitle();
 	InitButtons();
 
-	this->background.setSize(sf::Vector2f(this->window->getSize()));
-
+	if (this->menuType == Menu::PAUSE_MENU)
+	{
+		this->background.setSize(sf::Vector2f(this->window->getSize().x / 2, this->window->getSize().y));
+		this->background.setPosition(this->window->getSize().x / 4, 0);
+		this->background.setFillColor(sf::Color::Transparent);
+	}
+	else
+	{
+		this->background.setSize(sf::Vector2f(this->window->getSize()));
+		this->background.setFillColor(sf::Color(0, 128, 255));
+	}
 	// Loads the background's image depending on the size of the window
 	//if (this->backgroundTexture.loadFromFile("../External/Images/Background/"+std::to_string(this->window->getSize().x)+"_"+ std::to_string(this->window->getSize().y)+".png"))
 	//	this->background.setTexture(&this->backgroundTexture);
 	// if the file does not exist
 	//else
-	{
-		this->background.setFillColor(sf::Color(0, 128, 255));
-	}
 
 	if (this->menuType == Menu::CHARACTER_MENU)
 	{

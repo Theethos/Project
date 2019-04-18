@@ -3,7 +3,10 @@
 #include "../Include/MusicComponent.h"
 
 // Constructor
-MusicComponent::MusicComponent(std::string path) : isPlaying(nullptr), waitingBeforePlay(2.5)
+MusicComponent::MusicComponent(std::string path) :
+isPlaying(nullptr),
+waitingBeforePlay(2.5),
+maxVolume(0)
 {
 	this->InitMusics(path);
 }
@@ -74,7 +77,7 @@ void MusicComponent::Play(const float &dt, std::string music_key)
 			// If this music is playing and its volume is not max, then it rises
 			else
 			{
-				if (this->isPlaying->first->getVolume() < 100)
+				if (this->isPlaying->first->getVolume() < this->maxVolume)
 				{
 					this->isPlaying->first->setVolume(this->isPlaying->first->getVolume() + 5 * dt);
 				}
