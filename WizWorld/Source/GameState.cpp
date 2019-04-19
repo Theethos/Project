@@ -25,12 +25,11 @@ AnimationSide StringToSide(std::string side)
 }
 
 // Construtor
-GameState::GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, WhichState state, std::string config_file, int sprite_scale, std::string player_name, sf::Font* player_name_font) :
-State(window, keys, states, state), 
+GameState::GameState(sf::RenderWindow *window, std::stack<State*>* states, WhichState state, std::string config_file, int sprite_scale, std::string player_name, sf::Font* player_name_font) :
+State(window, states, state), 
 movementLocked(false),
 transition(window->getSize())
 {
-	InitActions();
 	InitMaps(sprite_scale);
 	this->player = new Player(2.f, 0.0, 0.0, config_file, player_name, player_name_font, sprite_scale);
 
@@ -61,7 +60,7 @@ GameState::~GameState()
 }
 
 // Functions
-void GameState::HandleInput(const float &dt)
+void GameState::HandleKeyboardInput(const float &dt)
 {
 	if (!this->movementLocked)
 	{
@@ -105,10 +104,65 @@ void GameState::HandleInput(const float &dt)
 			}
 		}
 	}
-	// Open pause menu when "Escape" is pressed
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MENU"])))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["PAUSE"])))
 	{
-		this->states->push(new MenuState(this->window, this->keys, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));
+		this->states->push(new MenuState(this->window, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));
+	}
+}
+
+void GameState::HandleControllerInput(const float & dt)
+{
+	////////////////////////////////////
+	/// Infos about controller : 
+	/// PS4 : name : Wireless Controller, vendorID : 1356, productID : 2508
+	////////////////////////////////////
+	sf::Vector2f controller_position(sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X), sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y));
+	if (!this->movementLocked)
+	{
+		sf::Vector2f sprite_current_position = this->player->getSprite()->getPosition();
+		// Move the character in the direction given by input
+		if (controller_position.y < -80)
+		{
+			// Check that the player doesn't collid anything
+			if (!this->CheckSpriteCollision(dt, "MOVE_UP"))
+			{
+				this->player->Move(dt, 0.f, -1.f);
+				this->previousMove = "MOVE_UP";
+				ResetView();
+			}
+		}
+		else if (controller_position.y > 80)
+		{
+			if (!this->CheckSpriteCollision(dt, "MOVE_DOWN"))
+			{
+				this->player->Move(dt, 0.f, 1.f);
+				this->previousMove = "MOVE_DOWN";
+				ResetView();
+			}
+		}
+		if (controller_position.x < -80)
+		{
+			if (!this->CheckSpriteCollision(dt, "MOVE_LEFT"))
+			{
+				this->player->Move(dt, -1.f, 0.f);
+				this->previousMove = "MOVE_LEFT";
+				ResetView();
+			}
+		}
+		else if (controller_position.x > 80)
+		{
+			if (!this->CheckSpriteCollision(dt, "MOVE_RIGHT"))
+			{
+				this->player->Move(dt, 1.f, 0.f);
+				this->previousMove = "MOVE_RIGHT";
+				ResetView();
+			}
+		}
+		// Open pause menu when "Options" is pressed
+		if (sf::Joystick::isButtonPressed(0, 9))
+		{
+			this->states->push(new MenuState(this->window, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));
+		}
 	}
 }
 
@@ -210,9 +264,13 @@ void GameState::ChangeMap(sf::Color color)
 
 void GameState::Update(const float& dt)
 {
-	this->UpdateMousePositions();
+	UpdateMousePositions();
 
-	this->HandleInput(dt);
+	if (sf::Joystick::isConnected(0))
+		HandleControllerInput(dt);
+	else
+		HandleKeyboardInput(dt);
+
 
 	this->player->Update(dt);
 
@@ -247,27 +305,6 @@ void GameState::Render(sf::RenderTarget* target)
 	{
 		this->transition.Render(target);
 	}
-}
-/////////////////////////////////////////////////////////////////////
-/// Initializes the map of actions for each key with the parameters in the files "Game/actions.cfg"
-/// Format :
-///	Action_Name >> Key_Name
-/////////////////////////////////////////////////////////////////////
-void GameState::InitActions()
-{
-	std::ifstream config_file("../External/Config/Game/Actions.cfg");
-
-	if (config_file.is_open())
-	{
-		std::string action = "";
-		std::string key = "";
-		while (config_file >> action >> key)
-		{
-			this->actions[action] = this->keys->at(key);
-		}
-		config_file.close();
-	}
-
 }
 /////////////////////////////////////////////////////////////////////
 /// Initializes the map of Maps with the parameters in the files "Maps/Maps.cfg"

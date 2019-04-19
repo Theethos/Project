@@ -10,7 +10,7 @@ class GameState : public State
 {
 public:
 	// Construtor
-	GameState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, WhichState state, std::string config_file, int sprite_scale, std::string player_name, sf::Font* player_name_font);
+	GameState(sf::RenderWindow *window, std::stack<State*>* states, WhichState state, std::string config_file, int sprite_scale, std::string player_name, sf::Font* player_name_font);
 	// Destructor
 	virtual ~GameState();
 
@@ -36,11 +36,11 @@ private:
 	sf::RectangleShape viewMovementArea;
 	
 	// Private functions
-	void InitActions();
 	void InitMaps(int scale);
 	void InitView();
 	void ResetView(bool new_map = false);
-	void HandleInput(const float &dt);
+	void HandleKeyboardInput(const float &dt);
+	void HandleControllerInput(const float &dt);
 	void ChangeMap(sf::Color color);
 	bool CheckSpriteCollision(const float & dt, std::string movement);
 };

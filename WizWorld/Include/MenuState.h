@@ -9,7 +9,7 @@ class MenuState : public State
 {
 public:
 	// Constructor
-	MenuState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*> *states, WhichState state, std::string configFile, Menu menuType);
+	MenuState(sf::RenderWindow *window, std::stack<State*> *states, WhichState state, std::string configFile, Menu menuType);
 	// Destructor
 	virtual ~MenuState();
 
@@ -53,7 +53,8 @@ private:
 	void InitTitle();
 	void InitSprites();
 	void InitAnimations();
-	void HandleInput(const float &dt);
+	void HandleKeyboardInput(const float &dt);
+	void HandleControllerInput(const float &dt);
 };
 
 #endif // !_MENU_STATE_H_

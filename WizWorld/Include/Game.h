@@ -36,7 +36,6 @@ private:
 	void Render();
 	void InitWindow();
 	void InitStates();
-	void InitKeys();
 	void DisplayFPS();
 };
 

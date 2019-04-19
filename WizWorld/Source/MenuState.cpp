@@ -3,8 +3,8 @@
 #include "../Include/MenuState.h"
 
 // Constructor
-MenuState::MenuState(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, WhichState state, std::string configFile, Menu menuType) :
-State(window, keys, states, state), 
+MenuState::MenuState(sf::RenderWindow *window, std::stack<State*>* states, WhichState state, std::string configFile, Menu menuType) :
+State(window, states, state), 
 numberOfButtons(0),
 configFile(configFile), 
 selectedButton(nullptr),
@@ -66,16 +66,59 @@ MenuState::~MenuState()
 }
 
 // Functions
-void MenuState::HandleInput(const float &dt)
-{}
+void MenuState::HandleKeyboardInput(const float &dt)
+{
+	switch (this->menuType)
+	{
+	case Menu::MAIN_MENU:
+		break;
+	case Menu::PAUSE_MENU:
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["RESUME"])));
+			this->quit = true;
+		break;
+	case Menu::CHARACTER_MENU:
+		break;
+	default:
+		break;
+	}
+}
+
+void MenuState::HandleControllerInput(const float &dt)
+{
+	// Common parts
+	if (sf::Joystick::isButtonPressed(0, this->actions["VALIDATE"]));
+	// Do something
+
+	// Specific parts
+	switch (this->menuType)
+	{
+	case Menu::MAIN_MENU:
+		break;
+	case Menu::PAUSE_MENU:
+		if (sf::Joystick::isButtonPressed(0, this->actions["RESUME"]));
+		{
+			this->quit = true;
+		}
+		break;
+	case Menu::CHARACTER_MENU:
+		break;
+	default:
+		break;
+	}
+}
 
 void MenuState::Update(const float& dt)
 {
-	this->UpdateMousePositions();
+	UpdateMousePositions();
 	
-	this->UpdateButtons();
+	UpdateButtons();
 
-	this->UpdateCursor();
+	UpdateCursor();
+
+	if (sf::Joystick::isConnected(0))
+		HandleControllerInput(dt);
+	else
+		HandleKeyboardInput(dt);
 }
 
 void MenuState::UpdateButtons()
@@ -89,7 +132,7 @@ void MenuState::UpdateButtons()
 			if (it.first == "NEW_GAME")
 			{
 				it.second->setPressed(false);
-				this->states->push(new MenuState(this->window, this->keys, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Choose_character_menu.cfg", Menu::CHARACTER_MENU));
+				this->states->push(new MenuState(this->window, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Choose_character_menu.cfg", Menu::CHARACTER_MENU));
 			}
 			else if (it.first == "QUIT")
 			{
@@ -109,7 +152,7 @@ void MenuState::UpdateButtons()
 				else
 				{
 					it.second->setPressed(false);
-					this->states->push(new MenuState(this->window, this->keys, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Main_menu.cfg", Menu::MAIN_MENU));
+					this->states->push(new MenuState(this->window, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Main_menu.cfg", Menu::MAIN_MENU));
 				}
 			}
 			else if (it.first == "SETTINGS")
@@ -163,7 +206,7 @@ void MenuState::UpdateButtons()
 				}
 				else
 				{
-					this->states->push(new GameState(this->window, this->keys, this->states, WhichState::GAME_STATE, path_to_sprite, this->spriteScale, button->getTextEntered(), &this->font["ALL"]));
+					this->states->push(new GameState(this->window, this->states, WhichState::GAME_STATE, path_to_sprite, this->spriteScale, button->getTextEntered(), &this->font["ALL"]));
 				}
 
 				this->buttons["PSEUDO"]->Deactivate();

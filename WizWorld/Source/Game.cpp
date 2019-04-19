@@ -9,7 +9,6 @@ fullscreen(false),
 music("../External/Config/Music/Music.cfg")
 {
 	InitWindow();
-	InitKeys();
 	InitStates();
 }
 // Destructor
@@ -70,6 +69,16 @@ void Game::UpdateEvents()
 			this->window.close();
 			break;
 		}
+		else if (this->event.type == sf::Event::JoystickConnected)
+		{
+			this->states.top()->InitControllerKeys();
+			this->states.top()->InitControllerActions();
+		}
+		else if (this->event.type == sf::Event::JoystickDisconnected)
+		{
+			this->states.top()->InitKeyboardKeys();
+			this->states.top()->InitKeyboardActions();
+		}
 	}
 }
 
@@ -129,28 +138,6 @@ void Game::Render()
 	this->window.display();
 }
 /////////////////////////////////////////////////////////////////////
-/// Initializes the key used in the game with the parameters in the files "Game/keys.cfg"
-/// Format :
-///	Key_Name SFML_Key_Value
-/////////////////////////////////////////////////////////////////////
-void Game::InitKeys()
-{
-	std::ifstream config_file("../External/Config/Game/Keys.cfg");
-
-	if (config_file.is_open())
-	{
-		std::string key = "";
-		int key_value = 0;
-		while (config_file >> key >> key_value)
-		{
-			this->keys[key] = key_value;
-		}
-	}
-
-	config_file.close();
-}
-/////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////
 /// Initializes the window with the parameters in the file "window.cfg" 
 /// Format :
 /// Title
@@ -191,7 +178,7 @@ void Game::InitWindow()
 
 void Game::InitStates()
 {
-	this->states.push(new MenuState(&this->window, &this->keys, &this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Main_menu.cfg", Menu::MAIN_MENU));
+	this->states.push(new MenuState(&this->window, &this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Main_menu.cfg", Menu::MAIN_MENU));
 }
 
 void Game::DisplayFPS()

@@ -5,14 +5,19 @@ class State
 {
 public:
 	// Constructor
-	State(sf::RenderWindow *window, std::map < std::string, int> *keys, std::stack<State*>* states, WhichState state);
+	State(sf::RenderWindow *window, std::stack<State*>* states, WhichState state);
 	// Destructor
 	virtual ~State();
 
 	// Virtual functions
-	virtual void HandleInput(const float &dt) = 0;
+	virtual void HandleControllerInput(const float &dt) = 0;
+	virtual void HandleKeyboardInput(const float &dt) = 0;
 	virtual void Update(const float &dt) = 0;
 	virtual void Render(sf::RenderTarget* target = nullptr) = 0;
+	virtual void InitControllerKeys();
+	virtual void InitControllerActions();
+	virtual void InitKeyboardKeys();
+	virtual void InitKeyboardActions();
 
 	// Getters
 	virtual const bool& getQuit() const;
@@ -26,7 +31,7 @@ protected:
 	// If the state wants to quit
 	bool quit;
 	// Supported keys
-	std::map < std::string, int> *keys;
+	std::map < std::string, int> keys;
 	// Actions associated to those keys
 	std::map < std::string, int> actions;
 	// Mouse positions
