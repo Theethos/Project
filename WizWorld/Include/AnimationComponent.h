@@ -43,10 +43,11 @@ private:
 		{
 			// Updates the timer
 			// Plays the animation faster if the entity's velocity is greater than 1
-			if (std::abs(velocity) < 1)
+			if (std::abs(velocity) < 1 || this->numberOfTextures <= 4)
 				this->timer += dt;
 			else
 				this->timer += dt * std::abs(velocity);
+			
 			// If there has been enough time since the last frame
 			if (this->timer >= this->animationTimer)
 			{

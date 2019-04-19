@@ -32,7 +32,7 @@ transition(window->getSize())
 {
 	InitActions();
 	InitMaps(sprite_scale);
-	this->player = new Player(1.5f, 0.0, 0.0, config_file, player_name, player_name_font, sprite_scale);
+	this->player = new Player(2.f, 0.0, 0.0, config_file, player_name, player_name_font, sprite_scale);
 
 	this->playerView.setSize(this->window->getSize().x, this->window->getSize().y);
 	this->player->getSprite()->setPosition(this->maps[currentMap]->getSize().x * sprite_scale / 2, this->maps[currentMap]->getSize().y * sprite_scale / 2);
@@ -74,10 +74,6 @@ void GameState::HandleInput(const float &dt)
 			{
 				this->player->Move(dt, 0.f, -1.f);
 				this->previousMove = "MOVE_UP";
-				// Check if the camera can move
-				//if (!this->CheckViewPosition("MOVE_UP"))
-					// * 2 * is in hard, don't know why but otherwise the camera is slower than the player
-					//this->playerView.move(0.f, 1.f * 2 * this->player->getMovement()->getVelocity().y);
 				ResetView();
 			}
 		}

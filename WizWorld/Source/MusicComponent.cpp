@@ -6,7 +6,7 @@
 MusicComponent::MusicComponent(std::string path) :
 isPlaying(nullptr),
 waitingBeforePlay(2.5),
-maxVolume(0)
+maxVolume(100)
 {
 	this->InitMusics(path);
 }
