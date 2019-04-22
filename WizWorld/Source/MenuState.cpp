@@ -4,12 +4,25 @@
 
 // Constructor
 MenuState::MenuState(sf::RenderWindow *window, std::stack<State*>* states, WhichState state, std::string configFile, Menu menuType) :
-State(window, states, state), 
+State(window, states, state),
+menuType(menuType),
 numberOfButtons(0),
 configFile(configFile), 
-selectedButton(nullptr),
-menuType(menuType)
+activatedButton(nullptr),
+joystickMovedX(false),
+joystickMovedY(false)
 {
+	if (sf::Joystick::isConnected(0))
+	{
+		InitControllerKeys();
+		InitControllerActions();
+	}
+	else
+	{
+		InitKeyboardKeys();
+		InitKeyboardActions();
+	}
+
 	InitFonts();
 	InitTitle();
 	InitButtons();
@@ -25,11 +38,6 @@ menuType(menuType)
 		this->background.setSize(sf::Vector2f(this->window->getSize()));
 		this->background.setFillColor(sf::Color(0, 128, 255));
 	}
-	// Loads the background's image depending on the size of the window
-	//if (this->backgroundTexture.loadFromFile("../External/Images/Background/"+std::to_string(this->window->getSize().x)+"_"+ std::to_string(this->window->getSize().y)+".png"))
-	//	this->background.setTexture(&this->backgroundTexture);
-	// if the file does not exist
-	//else
 
 	if (this->menuType == Menu::CHARACTER_MENU)
 	{
@@ -46,6 +54,7 @@ menuType(menuType)
 			this->buttons["FEMALE"]->getPosition().x + this->buttons["FEMALE"]->getSize().x - this->buttons["MALE"]->getPosition().x,
 			this->buttons["RANGER"]->getPosition().y + this->buttons["RANGER"]->getSize().y - this->buttons["WARRIOR"]->getPosition().y + 15 * this->spriteScale));
 	}
+	this->selectedButton = std::make_pair(-1, -1);
 }
 // Destructor
 MenuState::~MenuState()
@@ -66,28 +75,131 @@ MenuState::~MenuState()
 }
 
 // Functions
-void MenuState::HandleKeyboardInput(const float &dt)
-{
-	switch (this->menuType)
-	{
-	case Menu::MAIN_MENU:
-		break;
-	case Menu::PAUSE_MENU:
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["RESUME"])));
-			this->quit = true;
-		break;
-	case Menu::CHARACTER_MENU:
-		break;
-	default:
-		break;
-	}
-}
-
-void MenuState::HandleControllerInput(const float &dt)
+void MenuState::HandleKeyboardInput(int input, const float &dt)
 {
 	// Common parts
-	if (sf::Joystick::isButtonPressed(0, this->actions["VALIDATE"]));
-	// Do something
+	if (input == sf::Keyboard::Key(this->actions["VALIDATE"]))
+	{
+		if (this->selectedButton.first >= 0 && this->selectedButton.second >= 0 && this->buttons.count(this->buttonsText[this->selectedButton.first][this->selectedButton.second]))
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setPressed(true);
+	}
+	if (input == sf::Keyboard::Key(this->actions["DOWN"]))
+	{
+		if (this->selectedButton.second < 0)
+		{
+			this->selectedButton.second = 0;
+			if (this->selectedButton.first < 0)
+			{
+				this->selectedButton.first = 0;
+			}
+		}
+		else
+		{
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
+			if (this->selectedButton.second < this->buttonsText[this->selectedButton.first].size() - 1)
+			{
+				++this->selectedButton.second;
+			}
+			else
+			{
+				this->selectedButton.second = 0;
+			}
+		}
+		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
+		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
+	}
+	else if (input == sf::Keyboard::Key(this->actions["UP"]))
+	{
+		if (this->selectedButton.first < 0)
+		{
+			this->selectedButton.first = this->buttonsText.size() - 1;
+			if (this->selectedButton.second < 0)
+			{
+				this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
+			}
+		}
+		else
+		{
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
+			if (this->selectedButton.second != 0)
+			{
+				--this->selectedButton.second;
+			}
+			else
+			{
+				this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
+			}
+		}
+		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
+		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
+	}
+	else if  (input == sf::Keyboard::Key(this->actions["RIGHT"]))
+	{
+		if (this->selectedButton.first < 0)
+		{
+			this->selectedButton.first = this->buttonsText.size() - 1;
+			if (this->selectedButton.second < 0)
+			{
+				this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
+			}
+		}
+		else
+		{
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
+			float index = this->selectedButton.second / (this->buttonsText[this->selectedButton.first].size() - 1);
+			if (this->selectedButton.first != this->buttonsText.size() - 1)
+			{
+				++this->selectedButton.first;
+			}
+			else
+			{
+				this->selectedButton.first = 0;
+			}
+			this->selectedButton.second = std::round((this->buttonsText[selectedButton.first].size() - 1)* index);
+			if (this->selectedButton.second > this->buttonsText[selectedButton.first].size() - 1)
+			{
+				this->selectedButton.second = this->buttonsText[selectedButton.first].size() - 1;
+			}
+		}
+		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
+		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
+	}
+	else if  (input == sf::Keyboard::Key(this->actions["LEFT"]))
+	{
+		if (this->selectedButton.first < 0)
+		{
+			this->selectedButton.first = this->buttonsText.size() - 1;
+			if (this->selectedButton.second < 0)
+			{
+				this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
+			}
+		}
+		else
+		{
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
+			float index = this->selectedButton.second / (this->buttonsText[this->selectedButton.first].size() - 1);
+			if (this->selectedButton.first != 0)
+			{
+				--this->selectedButton.first;
+			}
+			else
+			{
+				this->selectedButton.first = 0;
+			}
+			this->selectedButton.second = std::round((this->buttonsText[selectedButton.first].size() - 1)* index);
+			if (this->selectedButton.second > this->buttonsText[selectedButton.first].size() - 1)
+			{
+				this->selectedButton.second = this->buttonsText[selectedButton.first].size() - 1;
+			}
+		}
+		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
+		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
+	}
+
 
 	// Specific parts
 	switch (this->menuType)
@@ -95,12 +207,161 @@ void MenuState::HandleControllerInput(const float &dt)
 	case Menu::MAIN_MENU:
 		break;
 	case Menu::PAUSE_MENU:
-		if (sf::Joystick::isButtonPressed(0, this->actions["RESUME"]));
-		{
+		if  (input == sf::Keyboard::Key(this->actions["RESUME"]))
 			this->quit = true;
-		}
 		break;
 	case Menu::CHARACTER_MENU:
+		if  (input == sf::Keyboard::Key(this->actions["QUIT"]))
+			this->quit = true;
+		break;
+	default:
+		break;
+	}
+}
+
+void MenuState::HandleControllerInput(int input, const float &dt)
+{
+	sf::Vector2f controller_position(sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X), sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y));
+	
+	// Common parts
+	if (input == this->actions["VALIDATE"])
+	{
+		if (this->selectedButton.first >= 0 && this->selectedButton.second >= 0 && this->buttons.count(this->buttonsText[this->selectedButton.first][this->selectedButton.second]))
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setPressed(true);
+	}
+	if (controller_position.y > 80 && !this->joystickMovedY)
+	{
+		this->joystickMovedY = true;
+		if (this->selectedButton.second < 0)
+		{
+			this->selectedButton.second = 0;
+			if (this->selectedButton.first < 0)
+			{
+				this->selectedButton.first = 0;
+			}
+		}
+		else
+		{
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
+			if (this->selectedButton.second < this->buttonsText[this->selectedButton.first].size() - 1)
+			{
+				++this->selectedButton.second;
+			}
+			else
+			{
+				this->selectedButton.second = 0;
+			}
+		}
+		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
+		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
+	}
+	else if (controller_position.y < -80 && !this->joystickMovedY)
+	{
+		this->joystickMovedY = true;
+		if (this->selectedButton.first < 0)
+		{
+			this->selectedButton.first = this->buttonsText.size() - 1;
+			if (this->selectedButton.second < 0)
+			{
+				this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
+			}
+		}
+		else
+		{
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
+			if (this->selectedButton.second != 0)
+			{
+				--this->selectedButton.second;
+			}
+			else
+			{
+				this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
+			}
+		}
+		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
+		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
+	}
+	else if (controller_position.x > 80 && !this->joystickMovedX)
+	{
+		this->joystickMovedX = true;
+		if (this->selectedButton.first < 0)
+		{
+			this->selectedButton.first = this->buttonsText.size() - 1;
+			if (this->selectedButton.second < 0)
+			{
+				this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
+			}
+		}
+		else
+		{
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
+			float index = this->selectedButton.second / (this->buttonsText[this->selectedButton.first].size() - 1);
+			if (this->selectedButton.first != this->buttonsText.size() - 1)
+			{
+				++this->selectedButton.first;
+			}
+			else
+			{
+				this->selectedButton.first = 0;
+			}
+			this->selectedButton.second = std::round((this->buttonsText[selectedButton.first].size() - 1)* index);
+			if (this->selectedButton.second > this->buttonsText[selectedButton.first].size() - 1)
+			{
+				this->selectedButton.second = this->buttonsText[selectedButton.first].size() - 1;
+			}
+		}
+		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
+		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
+	}
+	else if (controller_position.x < -80 && !this->joystickMovedX)
+	{
+		this->joystickMovedX = true;
+		if (this->selectedButton.first < 0)
+		{
+			this->selectedButton.first = this->buttonsText.size() - 1;
+			if (this->selectedButton.second < 0)
+			{
+				this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
+			}
+		}
+		else
+		{
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
+			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
+			float index = this->selectedButton.second / (this->buttonsText[this->selectedButton.first].size() - 1);
+			if (this->selectedButton.first != 0)
+			{
+				--this->selectedButton.first;
+			}
+			else
+			{
+				this->selectedButton.first = 0;
+			}
+			this->selectedButton.second = std::round((this->buttonsText[selectedButton.first].size() - 1) * index);
+			if (this->selectedButton.second > this->buttonsText[selectedButton.first].size() - 1)
+			{
+				this->selectedButton.second = this->buttonsText[selectedButton.first].size() - 1;
+			}
+		}
+		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
+		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
+	}
+
+	// Specific parts
+	switch (this->menuType)
+	{
+	case Menu::MAIN_MENU:
+		break;
+	case Menu::PAUSE_MENU:
+		if (input == this->actions["RESUME"])
+			this->quit = true;
+		break;
+	case Menu::CHARACTER_MENU:
+		if (input == this->actions["QUIT"])
+			this->quit = true;
 		break;
 	default:
 		break;
@@ -115,10 +376,12 @@ void MenuState::Update(const float& dt)
 
 	UpdateCursor();
 
-	if (sf::Joystick::isConnected(0))
-		HandleControllerInput(dt);
-	else
-		HandleKeyboardInput(dt);
+	sf::Vector2f controller_position(sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X), sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y));
+
+	if (controller_position.y > -20 && controller_position.y < 20)
+		this->joystickMovedY = false;
+	if (controller_position.x > -20 && controller_position.x < 20)
+		this->joystickMovedX = false;
 }
 
 void MenuState::UpdateButtons()
@@ -131,6 +394,11 @@ void MenuState::UpdateButtons()
 			// Main Menu
 			if (it.first == "NEW_GAME")
 			{
+				if (it.second->getSelected())
+				{
+					it.second->setSelected(false);
+					this->selectedButton = std::make_pair(-1, -1);
+				}
 				it.second->setPressed(false);
 				this->states->push(new MenuState(this->window, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Choose_character_menu.cfg", Menu::CHARACTER_MENU));
 			}
@@ -151,7 +419,6 @@ void MenuState::UpdateButtons()
 				}
 				else
 				{
-					it.second->setPressed(false);
 					this->states->push(new MenuState(this->window, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Main_menu.cfg", Menu::MAIN_MENU));
 				}
 			}
@@ -164,23 +431,26 @@ void MenuState::UpdateButtons()
 				it.second->Activate();
 				this->buttons["FEMALE"]->Deactivate();
 				this->buttons["PSEUDO"]->Deactivate();
+				it.second->setPressed(false);
 			}
 			else if (it.first == "FEMALE")
 			{
 				it.second->Activate();
 				this->buttons["MALE"]->Deactivate();
 				this->buttons["PSEUDO"]->Deactivate();
+				it.second->setPressed(false);
 			}
 			else if (it.first == "WARRIOR" || it.first == "MAGICIAN" || it.first == "HEALER" || it.first == "NINJA" || it.first == "RANGER")
 			{
 				it.second->Activate();
-				this->selectedClass = it.first;
-				if (this->selectedButton && this->selectedButton != it.second)
+				this->activatedClass = it.first;
+				if (this->activatedButton && this->activatedButton != it.second)
 				{
-					this->selectedButton->Deactivate();
+					this->activatedButton->Deactivate();
 				}
-				this->selectedButton = it.second;
+				this->activatedButton = it.second;
 				this->buttons["PSEUDO"]->Deactivate();
+				it.second->setPressed(false);
 			}
 			else if (it.first == "GO")
 			{
@@ -188,11 +458,11 @@ void MenuState::UpdateButtons()
 				std::string path_to_sprite;
 				if (this->buttons["MALE"]->getActivated())
 				{
-					path_to_sprite = "../External/Config/Character_Class/" + this->selectedClass + "_MALE.cfg";
+					path_to_sprite = "../External/Config/Character_Class/" + this->activatedClass + "_MALE.cfg";
 				}
 				else if (this->buttons["FEMALE"]->getActivated())
 				{
-					path_to_sprite = "../External/Config/Character_Class/"+ this->selectedClass + "_FEMALE.cfg";
+					path_to_sprite = "../External/Config/Character_Class/"+ this->activatedClass + "_FEMALE.cfg";
 				}
 
 				// Reset the button
@@ -214,6 +484,7 @@ void MenuState::UpdateButtons()
 			else if (it.first == "PSEUDO")
 			{
 				it.second->Activate();
+				it.second->setPressed(false);
 			}
 		}
 	}
@@ -279,14 +550,14 @@ void MenuState::RenderSprites(sf::RenderTarget * target)
 	if (this->buttons["MALE"]->getActivated())
 	{
 		// Set the position of the sprite on the left (the first one)
-		sprite_position = sf::Vector2f(this->buttons["MALE"]->getPosition().x + this->sprites["LEFT"]->getGlobalBounds().width , this->buttons[selectedClass]->getPosition().y);
+		sprite_position = sf::Vector2f(this->buttons["MALE"]->getPosition().x + this->sprites["LEFT"]->getGlobalBounds().width , this->buttons[activatedClass]->getPosition().y);
 		// For each sprite
 		for (auto &it : sprites)
 		{
 			// Update its position
 			it.second->setPosition(sprite_position);
 			// Play the right animation
-			this->spritesAnimation[it.first]->PlayAnimation(1, 0.005, selectedClass + "_" + it.first + "_MALE");
+			this->spritesAnimation[it.first]->PlayAnimation(1, 0.005, activatedClass + "_" + it.first + "_MALE");
 			// Update the position of the next sprite
 			sprite_position.x += 20 * this->spriteScale;
 		}
@@ -294,11 +565,11 @@ void MenuState::RenderSprites(sf::RenderTarget * target)
 	// Same if user selects "female"
 	else if (this->buttons["FEMALE"]->getActivated())
 	{
-		sprite_position = sf::Vector2f(this->buttons["FEMALE"]->getPosition().x + 1.5 * this->sprites["LEFT"]->getGlobalBounds().width, this->buttons[selectedClass]->getPosition().y);
+		sprite_position = sf::Vector2f(this->buttons["FEMALE"]->getPosition().x + 1.5 * this->sprites["LEFT"]->getGlobalBounds().width, this->buttons[activatedClass]->getPosition().y);
 		for (auto &it : sprites)
 		{
 			it.second->setPosition(sprite_position);
-			this->spritesAnimation[it.first]->PlayAnimation(1, 0.005, selectedClass + "_" + it.first + "_FEMALE");
+			this->spritesAnimation[it.first]->PlayAnimation(1, 0.005, activatedClass + "_" + it.first + "_FEMALE");
 			sprite_position.x += 20 * this->spriteScale;
 		}
 	}
@@ -324,7 +595,7 @@ void MenuState::InitFonts()
 /// Initializes the map of buttons with the parameters in the file this->configFile
 /// Format :
 ///	--- First line for title ---
-///	Name >> x >> y >> w >> h >> "Text"- >> r1 >> g1 >> b1 >> r2 >> b2 >> g2 >> r3 >> g3 >> b3 >> rText >> gText >> bText >> textSize 
+///	Name >> x >> y >> w >> h >> "Text"- >> r1 >> g1 >> b1 >> r2 >> b2 >> g2 >> r3 >> g3 >> b3 >> rText >> gText >> bText >> textSize >> navigation_row
 ///	--> x, y, w, and h in percentage of the window size
 /////////////////////////////////////////////////////////////////////
 void MenuState::InitButtons()
@@ -332,7 +603,7 @@ void MenuState::InitButtons()
 	float x_window = this->window->getSize().x, y_window = this->window->getSize().y;
 
 	std::ifstream config_file(this->configFile);
-		if (config_file.is_open())
+	if (config_file.is_open())
 	{
 		int i = 0;
 		int button_type = 0;
@@ -349,6 +620,7 @@ void MenuState::InitButtons()
 		sf::Color idle_color = sf::Color::White, hover_color = sf::Color::White, active_color = sf::Color::White;
 		/* Size of the text on the button */
 		float textSize = 12.0;
+		int navigation_row = 0;
 
 		/* Skip the first line */
 		std::getline(config_file, line, '\n');
@@ -411,8 +683,12 @@ void MenuState::InitButtons()
 			active_color.b = std::atoi(line.c_str());
 
 			/* get Text_size */
-			std::getline(config_file, line, '\n');
+			std::getline(config_file, line, ' ');
 			textSize = (static_cast<float>(std::atof(line.c_str())*x_window));
+
+			/* get navigation_row */
+			std::getline(config_file, line, '\n');
+			navigation_row = static_cast<int>(std::atoi(line.c_str()));
 
 			/* Create the button */
 			switch (button_type)
@@ -426,6 +702,12 @@ void MenuState::InitButtons()
 			default:
 				break;
 			}
+			if (navigation_row == this->buttonsText.size())
+			{
+				std::vector<std::string> new_row;
+				this->buttonsText.push_back(new_row);
+			}
+			this->buttonsText[navigation_row].push_back(action);
 			i++;
 		}
 		config_file.close();
@@ -502,7 +784,7 @@ void MenuState::InitSprites()
 /////////////////////////////////////////////////////////////////////
 /// Initializes the map of Animatins with the parameters in the file "Sprites/Sprites.cfg"
 /// Format :
-///	animation_component >> animation_key >> texture_sheet_path >> number_of_textures >> width >> height >> animation_timer
+///	animation_component >> animation_key >> texture_sheet_path >> number_of_textures >> width >> height >> animation_timer 
 /////////////////////////////////////////////////////////////////////
 void MenuState::InitAnimations()
 {
@@ -534,8 +816,8 @@ void MenuState::InitAnimations()
 		// Display the warrior male by default
 		this->buttons["WARRIOR"]->Activate();
 		this->buttons["MALE"]->Activate();
-		this->selectedButton = this->buttons["WARRIOR"];
-		this->selectedClass = "WARRIOR";
+		this->activatedButton = this->buttons["WARRIOR"];
+		this->activatedClass = "WARRIOR";
 	}
 }
 

@@ -13,16 +13,20 @@ mousePosView(0, 0),
 states(states), 
 state(state)
 {
-	if (sf::Joystick::isConnected(0))
+	if (this->state != WhichState::MENU_STATE)
 	{
-		InitControllerKeys();
-		InitControllerActions();
+		if (sf::Joystick::isConnected(0))
+		{
+			InitControllerKeys();
+			InitControllerActions();
+		}
+		else
+		{
+			InitKeyboardKeys();
+			InitKeyboardActions();
+		}
 	}
-	else
-	{
-		InitKeyboardKeys();
-		InitKeyboardActions();
-	}
+
 }
 // Destructor
 State::~State()
@@ -93,6 +97,7 @@ void State::InitControllerKeys()
 
 	std::ifstream config_file;
 	auto tmp = static_cast<MenuState*>(this);
+
 	switch (this->state)
 	{
 	case WhichState::GAME_STATE:

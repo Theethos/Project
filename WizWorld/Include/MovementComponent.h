@@ -22,6 +22,7 @@ public:
 	const float & getMaxVelocity() const;
 
 	// Setters
+	void setMaxVelocity(float maxVelocity);
 	void setVelocity(sf::Vector2f velocity);
 	void setVelocity(float x, float y);
 	void setVelocityX(float x);

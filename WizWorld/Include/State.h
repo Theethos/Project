@@ -10,8 +10,8 @@ public:
 	virtual ~State();
 
 	// Virtual functions
-	virtual void HandleControllerInput(const float &dt) = 0;
-	virtual void HandleKeyboardInput(const float &dt) = 0;
+	virtual void HandleControllerInput(int input, const float &dt) = 0;
+	virtual void HandleKeyboardInput(int input, const float &dt) = 0;
 	virtual void Update(const float &dt) = 0;
 	virtual void Render(sf::RenderTarget* target = nullptr) = 0;
 	virtual void InitControllerKeys();

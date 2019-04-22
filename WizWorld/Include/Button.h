@@ -19,11 +19,14 @@ public:
 	bool getPressed() const;
 	bool getActivated() const;
 	bool getHovered() const;
+	bool getSelected() const;
 	sf::Vector2f getPosition() const;
 	sf::Vector2f getSize() const;	
 
-	// Setter
+	// Setters
 	void setPressed(bool pressed);
+	void setHovered(bool hovered);
+	void setSelected(bool selected);
 
 protected:
 	// Shape of the button
@@ -44,6 +47,7 @@ protected:
 	bool clicked;
 	bool activated;
 	bool hovered;
+	bool selected;
 };
 
 #endif // !_BUTTON_H_

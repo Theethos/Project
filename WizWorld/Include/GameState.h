@@ -17,6 +17,8 @@ public:
 	// Functions
 	void Update(const float &dt);
 	void Render(sf::RenderTarget* target);
+	void HandleKeyboardInput(int input, const float &dt);
+	void HandleControllerInput(int input, const float &dt);
 
 private:
 	Player *player;	
@@ -39,8 +41,6 @@ private:
 	void InitMaps(int scale);
 	void InitView();
 	void ResetView(bool new_map = false);
-	void HandleKeyboardInput(const float &dt);
-	void HandleControllerInput(const float &dt);
 	void ChangeMap(sf::Color color);
 	bool CheckSpriteCollision(const float & dt, std::string movement);
 };

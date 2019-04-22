@@ -117,6 +117,10 @@ const float & MovementComponent::getMaxVelocity() const
 	return this->maxVelocity;
 }
 
+void MovementComponent::setMaxVelocity(float maxVelocity)
+{
+	this->maxVelocity = maxVelocity;
+}
 // Setters
 void MovementComponent::setVelocity(sf::Vector2f velocity)
 {

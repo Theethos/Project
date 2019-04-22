@@ -60,57 +60,118 @@ GameState::~GameState()
 }
 
 // Functions
-void GameState::HandleKeyboardInput(const float &dt)
+void GameState::HandleKeyboardInput(int input, const float &dt)
 {
 	if (!this->movementLocked)
 	{
 		sf::Vector2f sprite_current_position = this->player->getSprite()->getPosition();
 		// Move the character in the direction given by input
+		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_UP"])))
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_UP"])))
 		{
-			// Check that the player doesn't collid anything
-			if (!this->CheckSpriteCollision(dt, "MOVE_UP"))
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["RUN"])))
 			{
-				this->player->Move(dt, 0.f, -1.f);
-				this->previousMove = "MOVE_UP";
-				ResetView();
+				if (!this->CheckSpriteCollision(dt, "MOVE_UP"))
+				{
+					this->player->getMovement()->setMaxVelocity(3.f);
+					this->player->getMovement()->setVelocityX(0);
+					this->player->Move(dt, 0.f, -2.f);
+					this->previousMove = "MOVE_UP";
+					ResetView();
+				}
+			}
+			else
+			{
+				// Check that the player doesn't collid anything
+				if (!this->CheckSpriteCollision(dt, "MOVE_UP"))
+				{
+					this->player->getMovement()->setMaxVelocity(2.f);
+					this->player->Move(dt, 0.f, -1.f);
+					this->previousMove = "MOVE_UP";
+					ResetView();
+				}
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_DOWN"])))
 		{
-			if (!this->CheckSpriteCollision(dt, "MOVE_DOWN"))
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["RUN"])))
 			{
-				this->player->Move(dt, 0.f, 1.f);
-				this->previousMove = "MOVE_DOWN";
-				ResetView();
+				if (!this->CheckSpriteCollision(dt, "MOVE_DOWN"))
+				{
+					this->player->getMovement()->setMaxVelocity(3.f);
+					this->player->getMovement()->setVelocityX(0);
+					this->player->Move(dt, 0.f, 2.f);
+					this->previousMove = "MOVE_DOWN";
+					ResetView();
+				}
+			}
+			else
+			{
+				if (!this->CheckSpriteCollision(dt, "MOVE_DOWN"))
+				{
+					this->player->getMovement()->setMaxVelocity(2.f);
+					this->player->Move(dt, 0.f, 1.f);
+					this->previousMove = "MOVE_DOWN";
+					ResetView();
+				}
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_LEFT"])))
 		{
-			if (!this->CheckSpriteCollision(dt, "MOVE_LEFT"))
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["RUN"])))
 			{
-				this->player->Move(dt, -1.f, 0.f);
-				this->previousMove = "MOVE_LEFT";
-				ResetView();
+				if (!this->CheckSpriteCollision(dt, "MOVE_LEFT"))
+				{
+					this->player->getMovement()->setMaxVelocity(3.f);
+					this->player->getMovement()->setVelocityY(0);
+					this->player->Move(dt, -2.f, 0.f);
+					this->previousMove = "MOVE_LEFT";
+					ResetView();
+				}
+			}
+			else
+			{
+				if (!this->CheckSpriteCollision(dt, "MOVE_LEFT"))
+				{
+					this->player->getMovement()->setMaxVelocity(2.f);
+					this->player->Move(dt, -1.f, 0.f);
+					this->previousMove = "MOVE_LEFT";
+					ResetView();
+				}
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_RIGHT"])))
 		{
-			if (!this->CheckSpriteCollision(dt, "MOVE_RIGHT"))
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["RUN"])))
 			{
-				this->player->Move(dt, 1.f, 0.f);
-				this->previousMove = "MOVE_RIGHT";
-				ResetView();
+				if (!this->CheckSpriteCollision(dt, "MOVE_RIGHT"))
+				{
+					this->player->getMovement()->setMaxVelocity(3.f);
+					this->player->getMovement()->setVelocityY(0);
+					this->player->Move(dt, 2.f, 0.f);
+					this->previousMove = "MOVE_RIGHT";
+					ResetView();
+				}
+			}
+			else
+			{
+				if (!this->CheckSpriteCollision(dt, "MOVE_RIGHT"))
+				{
+					this->player->getMovement()->setMaxVelocity(2.f);
+					this->player->Move(dt, 1.f, 0.f);
+					this->previousMove = "MOVE_RIGHT";
+					ResetView();
+				}
 			}
 		}
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["PAUSE"])))
+	if (input == sf::Keyboard::Key(this->actions["PAUSE"]))
 	{
 		this->states->push(new MenuState(this->window, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));
 	}
 }
 
-void GameState::HandleControllerInput(const float & dt)
+void GameState::HandleControllerInput(int input, const float & dt)
 {
 	////////////////////////////////////
 	/// Infos about controller : 
@@ -123,43 +184,103 @@ void GameState::HandleControllerInput(const float & dt)
 		// Move the character in the direction given by input
 		if (controller_position.y < -80)
 		{
-			// Check that the player doesn't collid anything
-			if (!this->CheckSpriteCollision(dt, "MOVE_UP"))
+			if (sf::Joystick::isButtonPressed(0, this->actions["RUN"]))
 			{
-				this->player->Move(dt, 0.f, -1.f);
-				this->previousMove = "MOVE_UP";
-				ResetView();
+				if (!this->CheckSpriteCollision(dt, "MOVE_UP"))
+				{
+					this->player->getMovement()->setMaxVelocity(3.f);
+					this->player->getMovement()->setVelocityX(0);
+					this->player->Move(dt, 0.f, -2.f);
+					this->previousMove = "MOVE_UP";
+					ResetView();
+				}
+			}
+			else
+			{
+				// Check that the player doesn't collid anything
+				if (!this->CheckSpriteCollision(dt, "MOVE_UP"))
+				{
+					this->player->getMovement()->setMaxVelocity(2.f);
+					this->player->Move(dt, 0.f, -1.f);
+					this->previousMove = "MOVE_UP";
+					ResetView();
+				}
 			}
 		}
 		else if (controller_position.y > 80)
 		{
-			if (!this->CheckSpriteCollision(dt, "MOVE_DOWN"))
+			if (sf::Joystick::isButtonPressed(0, this->actions["RUN"]))
 			{
-				this->player->Move(dt, 0.f, 1.f);
-				this->previousMove = "MOVE_DOWN";
-				ResetView();
+				if (!this->CheckSpriteCollision(dt, "MOVE_DOWN"))
+				{
+					this->player->getMovement()->setMaxVelocity(3.f);
+					this->player->getMovement()->setVelocityX(0);
+					this->player->Move(dt, 0.f, 2.f);
+					this->previousMove = "MOVE_DOWN";
+					ResetView();
+				}
+			}
+			else
+			{
+				if (!this->CheckSpriteCollision(dt, "MOVE_DOWN"))
+				{
+					this->player->getMovement()->setMaxVelocity(2.f);
+					this->player->Move(dt, 0.f, 1.f);
+					this->previousMove = "MOVE_DOWN";
+					ResetView();
+				}
 			}
 		}
-		if (controller_position.x < -80)
+		else if (controller_position.x < -80)
 		{
-			if (!this->CheckSpriteCollision(dt, "MOVE_LEFT"))
+			if (sf::Joystick::isButtonPressed(0, this->actions["RUN"]))
 			{
-				this->player->Move(dt, -1.f, 0.f);
-				this->previousMove = "MOVE_LEFT";
-				ResetView();
+				if (!this->CheckSpriteCollision(dt, "MOVE_LEFT"))
+				{
+					this->player->getMovement()->setMaxVelocity(3.f);
+					this->player->getMovement()->setVelocityY(0);
+					this->player->Move(dt, -2.f, 0.f);
+					this->previousMove = "MOVE_LEFT";
+					ResetView();
+				}
+			}
+			else
+			{
+				if (!this->CheckSpriteCollision(dt, "MOVE_LEFT"))
+				{
+					this->player->getMovement()->setMaxVelocity(2.f);
+					this->player->Move(dt, -1.f, 0.f);
+					this->previousMove = "MOVE_LEFT";
+					ResetView();
+				}
 			}
 		}
 		else if (controller_position.x > 80)
 		{
-			if (!this->CheckSpriteCollision(dt, "MOVE_RIGHT"))
+			if (sf::Joystick::isButtonPressed(0, this->actions["RUN"]))
 			{
-				this->player->Move(dt, 1.f, 0.f);
-				this->previousMove = "MOVE_RIGHT";
-				ResetView();
+				if (!this->CheckSpriteCollision(dt, "MOVE_RIGHT"))
+				{
+					this->player->getMovement()->setMaxVelocity(3.f);
+					this->player->getMovement()->setVelocityY(0);
+					this->player->Move(dt, 2.f, 0.f);
+					this->previousMove = "MOVE_RIGHT";
+					ResetView();
+				}
+			}
+			else
+			{
+				if (!this->CheckSpriteCollision(dt, "MOVE_RIGHT"))
+				{
+					this->player->getMovement()->setMaxVelocity(2.f);
+					this->player->Move(dt, 1.f, 0.f);
+					this->previousMove = "MOVE_RIGHT";
+					ResetView();
+				}
 			}
 		}
 		// Open pause menu when "Options" is pressed
-		if (sf::Joystick::isButtonPressed(0, 9))
+		if (input == this->actions["PAUSE"])
 		{
 			this->states->push(new MenuState(this->window, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));
 		}
@@ -267,9 +388,9 @@ void GameState::Update(const float& dt)
 	UpdateMousePositions();
 
 	if (sf::Joystick::isConnected(0))
-		HandleControllerInput(dt);
+		HandleControllerInput(-1, dt);
 	else
-		HandleKeyboardInput(dt);
+		HandleKeyboardInput(-1, dt);
 
 
 	this->player->Update(dt);
@@ -337,16 +458,20 @@ void GameState::InitView()
 	this->viewLocked["UP"] = this->maps[currentMap]->getPosition().y + this->window->getSize().y / 2;
 	this->viewLocked["DOWN"] = this->maps[currentMap]->getPosition().y + (this->maps[currentMap]->getSize().y * sprite_scale) - (this->window->getSize().y / 2);
 
-	this->playerView.setCenter(this->player->getSprite()->getPosition());
+	sf::Vector2f sprite_size(this->player->getSprite()->getGlobalBounds().width, this->player->getSprite()->getGlobalBounds().height);
+
+	this->playerView.setCenter(this->player->getSprite()->getPosition().x + sprite_size.x / 2, this->player->getSprite()->getPosition().y + sprite_size.y / 2);
 }
 
 void GameState::ResetView(bool new_map)
 {
+	sf::Vector2f sprite_size(this->player->getSprite()->getGlobalBounds().width, this->player->getSprite()->getGlobalBounds().height);
+
 	// If the map changes, we have to modify the previous value of viewLocked
 	if (new_map)
 		InitView();
 	else
-		this->playerView.setCenter(this->player->getSprite()->getPosition());
+		this->playerView.setCenter(this->player->getSprite()->getPosition().x + sprite_size.x / 2, this->player->getSprite()->getPosition().y + sprite_size.y / 2);
 
 	if (this->playerView.getCenter().x < this->viewLocked["LEFT"])
 	{

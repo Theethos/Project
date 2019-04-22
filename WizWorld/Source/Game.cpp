@@ -79,6 +79,27 @@ void Game::UpdateEvents()
 			this->states.top()->InitKeyboardKeys();
 			this->states.top()->InitKeyboardActions();
 		}
+		if (sf::Joystick::isConnected(0))
+		{
+			if (this->event.type == sf::Event::JoystickMoved)
+			{
+				if (std::abs(this->event.joystickMove.position) > 80)
+				{
+					this->states.top()->HandleControllerInput(-1, dt);
+				}
+			}
+			else if (this->event.type == sf::Event::JoystickButtonReleased)
+			{
+				this->states.top()->HandleControllerInput(this->event.joystickButton.button, dt);
+			}
+		}
+		else if (this->event.type != sf::Event::TextEntered)
+		{
+			if (this->event.type == sf::Event::KeyReleased)
+			{
+				this->states.top()->HandleKeyboardInput(this->event.key.code, dt);
+			}
+		}
 	}
 }
 

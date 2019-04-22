@@ -16,6 +16,8 @@ public:
 	// Functions
 	void Update(const float &dt);
 	void Render(sf::RenderTarget* target = nullptr);
+	void HandleKeyboardInput(int input, const float &dt);
+	void HandleControllerInput(int input, const float &dt);
 
 	// Getter
 	const Menu & getMenuType() const;
@@ -23,16 +25,15 @@ public:
 private:
 	Menu menuType;
 	sf::RectangleShape background;
-	sf::Texture backgroundTexture;
 	std::map<std::string,sf::Font> font;
 	std::map<std::string, Button*> buttons;
 	int numberOfButtons;
 	sf::Text title;
 	std::string configFile;
 	// The button that is activated in the character menu
-	Button *selectedButton;
+	Button *activatedButton;
 	// The class associated to the selected button
-	std::string selectedClass;
+	std::string activatedClass;
 	// The sprites in the character menu
 	std::map<std::string, sf::Sprite*> sprites;
 	// The sprite's animation that has to be displayed in the character menu
@@ -42,6 +43,10 @@ private:
 	// Background behind the sprites to help vizualize them
 	sf::RectangleShape spritesBackground;
 	sf::Cursor cursor;
+	// Button that has the "focus"
+	std::pair<int, int> selectedButton;
+	std::vector<std::vector<std::string>> buttonsText;
+	bool joystickMovedX, joystickMovedY;
 	
 	// Private functions
 	void UpdateButtons();
@@ -53,8 +58,6 @@ private:
 	void InitTitle();
 	void InitSprites();
 	void InitAnimations();
-	void HandleKeyboardInput(const float &dt);
-	void HandleControllerInput(const float &dt);
 };
 
 #endif // !_MENU_STATE_H_

@@ -12,7 +12,8 @@ textSize(textSize),
 pressed(false), 
 clicked(false), 
 activated(false),
-hovered(false)
+hovered(false),
+selected(false)
 {
 	this->shape.setSize(sf::Vector2f(w, h));
 	this->shape.setPosition(sf::Vector2f(x, y));
@@ -32,8 +33,6 @@ Button::~Button()
 // Functions
 void Button::Update(const sf::Vector2f mousePos)
 {
-	// Set button to idle_color
-	this->text.setFillColor(this->idleColor);
 	// If the mouse is over the button
 	if (this->text.getGlobalBounds().contains(mousePos))
 	{
@@ -44,23 +43,15 @@ void Button::Update(const sf::Vector2f mousePos)
 			this->clicked = true;
 		}
 		// When user releases the click and is still over the button (simulate mouse button up event)
-		else if (sf::Event::MouseButtonReleased && this->clicked)
+		else if (this->clicked)
 		{
 			// Set to active_color
-			this->text.setFillColor(this->activeColor);
 			this->pressed = true;
 			this->clicked = false;
 		}
-		// Else set it to hover_color
-		else
-		{
-			this->text.setFillColor(this->hoverColor);
-			if (this->pressed)
-				this->pressed = false;
-		}
 	}
 	// Else, if user clicked on the button but is not over it anymore
-	else
+	else if (!this->selected)
 	{
 		if (this->hovered)
 		{
@@ -72,14 +63,18 @@ void Button::Update(const sf::Vector2f mousePos)
 			this->clicked = false;
 		}
 	}
-	if (this->activated)
-	{
-	this->text.setFillColor(this->hoverColor);
-	}
 }
 
 void Button::Render(sf::RenderTarget * target)
 {
+	if (this->activated && this->selected)
+		this->text.setFillColor(sf::Color::Black);
+	else if (this->activated)
+		this->text.setFillColor(sf::Color::Red);
+	else if (this->hovered || this->selected)
+		this->text.setFillColor(this->hoverColor);
+	else
+		this->text.setFillColor(this->idleColor);
 	if (target)
 	{
 		target->draw(this->text);
@@ -118,6 +113,11 @@ bool Button::getHovered() const
 	return this->hovered;
 }
 
+bool Button::getSelected() const
+{
+	return this->selected;
+}
+
 sf::Vector2f Button::getPosition() const
 {
 	return this->shape.getPosition();
@@ -128,8 +128,18 @@ sf::Vector2f Button::getSize() const
 	return this->shape.getSize();
 }
 
-// Setter
+// Setters
 void Button::setPressed(bool pressed)
 {
 	this->pressed = pressed;
+}
+
+void Button::setHovered(bool hovered)
+{
+	this->hovered = hovered;
+}
+
+void Button::setSelected(bool selected)
+{
+	this->selected = selected;
 }
