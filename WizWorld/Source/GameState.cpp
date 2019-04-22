@@ -60,229 +60,68 @@ GameState::~GameState()
 }
 
 // Functions
-void GameState::HandleKeyboardInput(int input, const float &dt)
+void GameState::HandleInput(int input, const float & dt)
 {
-	if (!this->movementLocked)
-	{
-		sf::Vector2f sprite_current_position = this->player->getSprite()->getPosition();
-		// Move the character in the direction given by input
-		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_UP"])))
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_UP"])))
-		{
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["RUN"])))
-			{
-				if (!this->CheckSpriteCollision(dt, "MOVE_UP"))
-				{
-					this->player->getMovement()->setMaxVelocity(3.f);
-					this->player->getMovement()->setVelocityX(0);
-					this->player->Move(dt, 0.f, -2.f);
-					this->previousMove = "MOVE_UP";
-					ResetView();
-				}
-			}
-			else
-			{
-				// Check that the player doesn't collid anything
-				if (!this->CheckSpriteCollision(dt, "MOVE_UP"))
-				{
-					this->player->getMovement()->setMaxVelocity(2.f);
-					this->player->Move(dt, 0.f, -1.f);
-					this->previousMove = "MOVE_UP";
-					ResetView();
-				}
-			}
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_DOWN"])))
-		{
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["RUN"])))
-			{
-				if (!this->CheckSpriteCollision(dt, "MOVE_DOWN"))
-				{
-					this->player->getMovement()->setMaxVelocity(3.f);
-					this->player->getMovement()->setVelocityX(0);
-					this->player->Move(dt, 0.f, 2.f);
-					this->previousMove = "MOVE_DOWN";
-					ResetView();
-				}
-			}
-			else
-			{
-				if (!this->CheckSpriteCollision(dt, "MOVE_DOWN"))
-				{
-					this->player->getMovement()->setMaxVelocity(2.f);
-					this->player->Move(dt, 0.f, 1.f);
-					this->previousMove = "MOVE_DOWN";
-					ResetView();
-				}
-			}
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_LEFT"])))
-		{
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["RUN"])))
-			{
-				if (!this->CheckSpriteCollision(dt, "MOVE_LEFT"))
-				{
-					this->player->getMovement()->setMaxVelocity(3.f);
-					this->player->getMovement()->setVelocityY(0);
-					this->player->Move(dt, -2.f, 0.f);
-					this->previousMove = "MOVE_LEFT";
-					ResetView();
-				}
-			}
-			else
-			{
-				if (!this->CheckSpriteCollision(dt, "MOVE_LEFT"))
-				{
-					this->player->getMovement()->setMaxVelocity(2.f);
-					this->player->Move(dt, -1.f, 0.f);
-					this->previousMove = "MOVE_LEFT";
-					ResetView();
-				}
-			}
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["MOVE_RIGHT"])))
-		{
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["RUN"])))
-			{
-				if (!this->CheckSpriteCollision(dt, "MOVE_RIGHT"))
-				{
-					this->player->getMovement()->setMaxVelocity(3.f);
-					this->player->getMovement()->setVelocityY(0);
-					this->player->Move(dt, 2.f, 0.f);
-					this->previousMove = "MOVE_RIGHT";
-					ResetView();
-				}
-			}
-			else
-			{
-				if (!this->CheckSpriteCollision(dt, "MOVE_RIGHT"))
-				{
-					this->player->getMovement()->setMaxVelocity(2.f);
-					this->player->Move(dt, 1.f, 0.f);
-					this->previousMove = "MOVE_RIGHT";
-					ResetView();
-				}
-			}
-		}
-	}
-	if (input == sf::Keyboard::Key(this->actions["PAUSE"]))
+	// Open pause menu when "Options" or "Escape" is pressed
+	if (input == (sf::Joystick::isConnected(0) ? this->actions["PAUSE"] : sf::Keyboard::Key(this->actions["PAUSE"])))
 	{
 		this->states->push(new MenuState(this->window, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));
 	}
-}
+	// Makes the player run
+	bool running = false;
+	if (sf::Joystick::isButtonPressed(0, this->actions["RUN"]) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["RUN"])))
+	{
+		this->player->getMovement()->setMaxVelocity(3.f);
+		running = true;
+	}
+	else
+	{
+		this->player->getMovement()->setMaxVelocity(2.f);
+	}
 
-void GameState::HandleControllerInput(int input, const float & dt)
-{
-	////////////////////////////////////
-	/// Infos about controller : 
-	/// PS4 : name : Wireless Controller, vendorID : 1356, productID : 2508
-	////////////////////////////////////
 	sf::Vector2f controller_position(sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X), sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y));
+
 	if (!this->movementLocked)
 	{
-		sf::Vector2f sprite_current_position = this->player->getSprite()->getPosition();
-		// Move the character in the direction given by input
-		if (controller_position.y < -80)
+		if (controller_position.y < -80 || sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["UP"])))
 		{
-			if (sf::Joystick::isButtonPressed(0, this->actions["RUN"]))
+			if (!this->CheckSpriteCollision(dt, "UP"))
 			{
-				if (!this->CheckSpriteCollision(dt, "MOVE_UP"))
-				{
-					this->player->getMovement()->setMaxVelocity(3.f);
-					this->player->getMovement()->setVelocityX(0);
-					this->player->Move(dt, 0.f, -2.f);
-					this->previousMove = "MOVE_UP";
-					ResetView();
-				}
-			}
-			else
-			{
-				// Check that the player doesn't collid anything
-				if (!this->CheckSpriteCollision(dt, "MOVE_UP"))
-				{
-					this->player->getMovement()->setMaxVelocity(2.f);
-					this->player->Move(dt, 0.f, -1.f);
-					this->previousMove = "MOVE_UP";
-					ResetView();
-				}
+				this->player->getMovement()->setVelocityX(0);
+				this->player->Move(dt, 0.f, (running ? -2.f : -1.f));
+				this->previousMove = "UP";
+				ResetView();
 			}
 		}
-		else if (controller_position.y > 80)
+		else if (controller_position.y > 80 || sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["DOWN"])))
 		{
-			if (sf::Joystick::isButtonPressed(0, this->actions["RUN"]))
+			if (!this->CheckSpriteCollision(dt, "DOWN"))
 			{
-				if (!this->CheckSpriteCollision(dt, "MOVE_DOWN"))
-				{
-					this->player->getMovement()->setMaxVelocity(3.f);
-					this->player->getMovement()->setVelocityX(0);
-					this->player->Move(dt, 0.f, 2.f);
-					this->previousMove = "MOVE_DOWN";
-					ResetView();
-				}
-			}
-			else
-			{
-				if (!this->CheckSpriteCollision(dt, "MOVE_DOWN"))
-				{
-					this->player->getMovement()->setMaxVelocity(2.f);
-					this->player->Move(dt, 0.f, 1.f);
-					this->previousMove = "MOVE_DOWN";
-					ResetView();
-				}
+				this->player->getMovement()->setVelocityX(0);
+				this->player->Move(dt, 0.f, (running ? 2.f : 1.f));
+				this->previousMove = "DOWN";
+				ResetView();
 			}
 		}
-		else if (controller_position.x < -80)
+		else if (controller_position.x < -80 || sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["LEFT"])))
 		{
-			if (sf::Joystick::isButtonPressed(0, this->actions["RUN"]))
+			if (!this->CheckSpriteCollision(dt, "LEFT"))
 			{
-				if (!this->CheckSpriteCollision(dt, "MOVE_LEFT"))
-				{
-					this->player->getMovement()->setMaxVelocity(3.f);
-					this->player->getMovement()->setVelocityY(0);
-					this->player->Move(dt, -2.f, 0.f);
-					this->previousMove = "MOVE_LEFT";
-					ResetView();
-				}
-			}
-			else
-			{
-				if (!this->CheckSpriteCollision(dt, "MOVE_LEFT"))
-				{
-					this->player->getMovement()->setMaxVelocity(2.f);
-					this->player->Move(dt, -1.f, 0.f);
-					this->previousMove = "MOVE_LEFT";
-					ResetView();
-				}
+				this->player->getMovement()->setVelocityY(0);
+				this->player->Move(dt, (running ? -2.f : -1.f), 0.f);
+				this->previousMove = "LEFT";
+				ResetView();
 			}
 		}
-		else if (controller_position.x > 80)
+		else if (controller_position.x > 80 || sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["RIGHT"])))
 		{
-			if (sf::Joystick::isButtonPressed(0, this->actions["RUN"]))
+			if (!this->CheckSpriteCollision(dt, "RIGHT"))
 			{
-				if (!this->CheckSpriteCollision(dt, "MOVE_RIGHT"))
-				{
-					this->player->getMovement()->setMaxVelocity(3.f);
-					this->player->getMovement()->setVelocityY(0);
-					this->player->Move(dt, 2.f, 0.f);
-					this->previousMove = "MOVE_RIGHT";
-					ResetView();
-				}
+				this->player->getMovement()->setVelocityY(0);
+				this->player->Move(dt, (running ? 2.f : 1.f), 0.f);
+				this->previousMove = "RIGHT";
+				ResetView();
 			}
-			else
-			{
-				if (!this->CheckSpriteCollision(dt, "MOVE_RIGHT"))
-				{
-					this->player->getMovement()->setMaxVelocity(2.f);
-					this->player->Move(dt, 1.f, 0.f);
-					this->previousMove = "MOVE_RIGHT";
-					ResetView();
-				}
-			}
-		}
-		// Open pause menu when "Options" is pressed
-		if (input == this->actions["PAUSE"])
-		{
-			this->states->push(new MenuState(this->window, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));
 		}
 	}
 }
@@ -387,11 +226,7 @@ void GameState::Update(const float& dt)
 {
 	UpdateMousePositions();
 
-	if (sf::Joystick::isConnected(0))
-		HandleControllerInput(-1, dt);
-	else
-		HandleKeyboardInput(-1, dt);
-
+	HandleInput(-1, dt);
 
 	this->player->Update(dt);
 
@@ -427,6 +262,7 @@ void GameState::Render(sf::RenderTarget* target)
 		this->transition.Render(target);
 	}
 }
+
 /////////////////////////////////////////////////////////////////////
 /// Initializes the map of Maps with the parameters in the files "Maps/Maps.cfg"
 /// Format : 
@@ -501,26 +337,26 @@ bool GameState::CheckSpriteCollision(const float & dt,std::string movement)
 
 	sf::Color pixel_toward_color[3];
 
-	if (movement == "MOVE_UP")
+	if (movement == "UP")
 	{
 		pixel_toward_color[0] = this->collisionMaps[currentMap]->getPixelColor(sprite_position.x + 1, sprite_position.y + sprite_size.y - 1);
 		pixel_toward_color[1] = this->collisionMaps[currentMap]->getPixelColor(sprite_position.x + sprite_size.x / 2 , sprite_position.y - 1 + sprite_size.y);
 		pixel_toward_color[2] = this->collisionMaps[currentMap]->getPixelColor(sprite_position.x - 1 + sprite_size.x, sprite_position.y - 1 + sprite_size.y);
 	}
-	else if (movement == "MOVE_DOWN")
+	else if (movement == "DOWN")
 	{
 		pixel_toward_color[0] = this->collisionMaps[currentMap]->getPixelColor(sprite_position.x + 1, sprite_position.y + sprite_size.y + 1);
 		pixel_toward_color[1] = this->collisionMaps[currentMap]->getPixelColor(sprite_position.x + sprite_size.x / 2, sprite_position.y + sprite_size.y + 1);
 		pixel_toward_color[2] = this->collisionMaps[currentMap]->getPixelColor(sprite_position.x - 1 + sprite_size.x, sprite_position.y + sprite_size.y + 1);
 	}
-	else if (movement == "MOVE_LEFT")
+	else if (movement == "LEFT")
 	{
 		pixel_toward_color[0] = this->collisionMaps[currentMap]->getPixelColor(sprite_position.x - 1, std::min(sprite_position.y + sprite_size.y, this->maps[currentMap]->getSize().y));
 		// Others are not required
 		pixel_toward_color[1] = sf::Color::Black;
 		pixel_toward_color[2] = sf::Color::Black;
 	}
-	else if (movement == "MOVE_RIGHT")
+	else if (movement == "RIGHT")
 	{
 		pixel_toward_color[0] = this->collisionMaps[currentMap]->getPixelColor(sprite_position.x + sprite_size.x + 1, std::min(sprite_position.y + sprite_size.y, this->maps[currentMap]->getSize().y));
 		pixel_toward_color[1] = sf::Color::Black;

@@ -17,8 +17,7 @@ public:
 	// Functions
 	void Update(const float &dt);
 	void Render(sf::RenderTarget* target);
-	void HandleKeyboardInput(int input, const float &dt);
-	void HandleControllerInput(int input, const float &dt);
+	void HandleInput(int input, const float &dt);
 
 private:
 	Player *player;	

@@ -9,8 +9,8 @@ menuType(menuType),
 numberOfButtons(0),
 configFile(configFile), 
 activatedButton(nullptr),
-joystickMovedX(false),
-joystickMovedY(false)
+movedX(false),
+movedY(false)
 {
 	if (sf::Joystick::isConnected(0))
 	{
@@ -54,7 +54,7 @@ joystickMovedY(false)
 			this->buttons["FEMALE"]->getPosition().x + this->buttons["FEMALE"]->getSize().x - this->buttons["MALE"]->getPosition().x,
 			this->buttons["RANGER"]->getPosition().y + this->buttons["RANGER"]->getSize().y - this->buttons["WARRIOR"]->getPosition().y + 15 * this->spriteScale));
 	}
-	this->selectedButton = std::make_pair(-1, -1);
+	this->selectedButton = std::make_pair(0, 0);
 }
 // Destructor
 MenuState::~MenuState()
@@ -75,292 +75,94 @@ MenuState::~MenuState()
 }
 
 // Functions
-void MenuState::HandleKeyboardInput(int input, const float &dt)
+void MenuState::HandleInput(int input, const float & dt)
 {
-	// Common parts
-	if (input == sf::Keyboard::Key(this->actions["VALIDATE"]))
-	{
-		if (this->selectedButton.first >= 0 && this->selectedButton.second >= 0 && this->buttons.count(this->buttonsText[this->selectedButton.first][this->selectedButton.second]))
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setPressed(true);
-	}
-	if (input == sf::Keyboard::Key(this->actions["DOWN"]))
-	{
-		if (this->selectedButton.second < 0)
-		{
-			this->selectedButton.second = 0;
-			if (this->selectedButton.first < 0)
-			{
-				this->selectedButton.first = 0;
-			}
-		}
-		else
-		{
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
-			if (this->selectedButton.second < this->buttonsText[this->selectedButton.first].size() - 1)
-			{
-				++this->selectedButton.second;
-			}
-			else
-			{
-				this->selectedButton.second = 0;
-			}
-		}
-		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
-		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
-	}
-	else if (input == sf::Keyboard::Key(this->actions["UP"]))
-	{
-		if (this->selectedButton.first < 0)
-		{
-			this->selectedButton.first = this->buttonsText.size() - 1;
-			if (this->selectedButton.second < 0)
-			{
-				this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
-			}
-		}
-		else
-		{
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
-			if (this->selectedButton.second != 0)
-			{
-				--this->selectedButton.second;
-			}
-			else
-			{
-				this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
-			}
-		}
-		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
-		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
-	}
-	else if  (input == sf::Keyboard::Key(this->actions["RIGHT"]))
-	{
-		if (this->selectedButton.first < 0)
-		{
-			this->selectedButton.first = this->buttonsText.size() - 1;
-			if (this->selectedButton.second < 0)
-			{
-				this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
-			}
-		}
-		else
-		{
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
-			float index = this->selectedButton.second / (this->buttonsText[this->selectedButton.first].size() - 1);
-			if (this->selectedButton.first != this->buttonsText.size() - 1)
-			{
-				++this->selectedButton.first;
-			}
-			else
-			{
-				this->selectedButton.first = 0;
-			}
-			this->selectedButton.second = std::round((this->buttonsText[selectedButton.first].size() - 1)* index);
-			if (this->selectedButton.second > this->buttonsText[selectedButton.first].size() - 1)
-			{
-				this->selectedButton.second = this->buttonsText[selectedButton.first].size() - 1;
-			}
-		}
-		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
-		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
-	}
-	else if  (input == sf::Keyboard::Key(this->actions["LEFT"]))
-	{
-		if (this->selectedButton.first < 0)
-		{
-			this->selectedButton.first = this->buttonsText.size() - 1;
-			if (this->selectedButton.second < 0)
-			{
-				this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
-			}
-		}
-		else
-		{
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
-			float index = this->selectedButton.second / (this->buttonsText[this->selectedButton.first].size() - 1);
-			if (this->selectedButton.first != 0)
-			{
-				--this->selectedButton.first;
-			}
-			else
-			{
-				this->selectedButton.first = 0;
-			}
-			this->selectedButton.second = std::round((this->buttonsText[selectedButton.first].size() - 1)* index);
-			if (this->selectedButton.second > this->buttonsText[selectedButton.first].size() - 1)
-			{
-				this->selectedButton.second = this->buttonsText[selectedButton.first].size() - 1;
-			}
-		}
-		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
-		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
-	}
-
-
-	// Specific parts
-	switch (this->menuType)
-	{
-	case Menu::MAIN_MENU:
-		break;
-	case Menu::PAUSE_MENU:
-		if  (input == sf::Keyboard::Key(this->actions["RESUME"]))
-			this->quit = true;
-		break;
-	case Menu::CHARACTER_MENU:
-		if  (input == sf::Keyboard::Key(this->actions["QUIT"]))
-			this->quit = true;
-		break;
-	default:
-		break;
-	}
-}
-
-void MenuState::HandleControllerInput(int input, const float &dt)
-{
+	////////////////////////////////////
+	/// Infos about controller : 
+	/// PS4 : name : Wireless Controller, vendorID : 1356, productID : 2508
+	////////////////////////////////////
 	sf::Vector2f controller_position(sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X), sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y));
-	
+
 	// Common parts
-	if (input == this->actions["VALIDATE"])
+	if (input == (sf::Joystick::isConnected(0) ? this->actions["VALIDATE"] : sf::Keyboard::Key(this->actions["VALIDATE"])))
 	{
-		if (this->selectedButton.first >= 0 && this->selectedButton.second >= 0 && this->buttons.count(this->buttonsText[this->selectedButton.first][this->selectedButton.second]))
+		if (this->buttons.count(this->buttonsText[this->selectedButton.first][this->selectedButton.second]))
 			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setPressed(true);
 	}
-	if (controller_position.y > 80 && !this->joystickMovedY)
+	// Unselects the previous button
+	this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
+	this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
+	
+	if ((controller_position.y > 80 && !movedY ) || input == sf::Keyboard::Key(this->actions["DOWN"]))
 	{
-		this->joystickMovedY = true;
-		if (this->selectedButton.second < 0)
+		movedY = true;
+		if (this->selectedButton.second < this->buttonsText[this->selectedButton.first].size() - 1)
+		{
+			++this->selectedButton.second;
+		}
+		else
 		{
 			this->selectedButton.second = 0;
-			if (this->selectedButton.first < 0)
-			{
-				this->selectedButton.first = 0;
-			}
 		}
-		else
-		{
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
-			if (this->selectedButton.second < this->buttonsText[this->selectedButton.first].size() - 1)
-			{
-				++this->selectedButton.second;
-			}
-			else
-			{
-				this->selectedButton.second = 0;
-			}
-		}
-		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
-		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
 	}
-	else if (controller_position.y < -80 && !this->joystickMovedY)
+	else if ((controller_position.y < -80 && !movedY) || input == sf::Keyboard::Key(this->actions["UP"]))
 	{
-		this->joystickMovedY = true;
-		if (this->selectedButton.first < 0)
+		movedY = true;
+		if (this->selectedButton.second != 0)
 		{
-			this->selectedButton.first = this->buttonsText.size() - 1;
-			if (this->selectedButton.second < 0)
-			{
-				this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
-			}
+			--this->selectedButton.second;
 		}
 		else
 		{
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
-			if (this->selectedButton.second != 0)
-			{
-				--this->selectedButton.second;
-			}
-			else
-			{
-				this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
-			}
+			this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
 		}
-		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
-		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
 	}
-	else if (controller_position.x > 80 && !this->joystickMovedX)
+	else if ((controller_position.x > 80 && !movedX) || input == sf::Keyboard::Key(this->actions["RIGHT"]))
 	{
-		this->joystickMovedX = true;
-		if (this->selectedButton.first < 0)
+		movedX = true;
+		
+		float index = this->selectedButton.second / (this->buttonsText[this->selectedButton.first].size() - 1);
+		
+		if (this->selectedButton.first != this->buttonsText.size() - 1)
 		{
-			this->selectedButton.first = this->buttonsText.size() - 1;
-			if (this->selectedButton.second < 0)
-			{
-				this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
-			}
+			++this->selectedButton.first;
 		}
 		else
 		{
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
-			float index = this->selectedButton.second / (this->buttonsText[this->selectedButton.first].size() - 1);
-			if (this->selectedButton.first != this->buttonsText.size() - 1)
-			{
-				++this->selectedButton.first;
-			}
-			else
-			{
-				this->selectedButton.first = 0;
-			}
-			this->selectedButton.second = std::round((this->buttonsText[selectedButton.first].size() - 1)* index);
-			if (this->selectedButton.second > this->buttonsText[selectedButton.first].size() - 1)
-			{
-				this->selectedButton.second = this->buttonsText[selectedButton.first].size() - 1;
-			}
+			this->selectedButton.first = 0;
 		}
-		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
-		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
+		
+		this->selectedButton.second = std::round((this->buttonsText[selectedButton.first].size() - 1)* index);
 	}
-	else if (controller_position.x < -80 && !this->joystickMovedX)
+	else if ((controller_position.x	< -80 && !movedX) || input == sf::Keyboard::Key(this->actions["LEFT"]))
 	{
-		this->joystickMovedX = true;
-		if (this->selectedButton.first < 0)
+		movedX = true;
+		float index = this->selectedButton.second / (this->buttonsText[this->selectedButton.first].size() - 1);
+		if (this->selectedButton.first != 0)
 		{
-			this->selectedButton.first = this->buttonsText.size() - 1;
-			if (this->selectedButton.second < 0)
-			{
-				this->selectedButton.second = this->buttonsText[this->selectedButton.first].size() - 1;
-			}
+			--this->selectedButton.first;
 		}
 		else
 		{
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(false);
-			this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(false);
-			float index = this->selectedButton.second / (this->buttonsText[this->selectedButton.first].size() - 1);
-			if (this->selectedButton.first != 0)
-			{
-				--this->selectedButton.first;
-			}
-			else
-			{
-				this->selectedButton.first = 0;
-			}
-			this->selectedButton.second = std::round((this->buttonsText[selectedButton.first].size() - 1) * index);
-			if (this->selectedButton.second > this->buttonsText[selectedButton.first].size() - 1)
-			{
-				this->selectedButton.second = this->buttonsText[selectedButton.first].size() - 1;
-			}
+			this->selectedButton.first = 0;
 		}
-		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
-		this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
+		this->selectedButton.second = std::round((this->buttonsText[selectedButton.first].size() - 1) * index);
 	}
-
+	// Selects the current button
+	this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
+	this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
+	
 	// Specific parts
 	switch (this->menuType)
 	{
 	case Menu::MAIN_MENU:
 		break;
 	case Menu::PAUSE_MENU:
-		if (input == this->actions["RESUME"])
+		if (input == (sf::Joystick::isConnected(0) ? this->actions["RESUME"] : sf::Keyboard::Key(this->actions["RESUME"])))
 			this->quit = true;
 		break;
 	case Menu::CHARACTER_MENU:
-		if (input == this->actions["QUIT"])
+		if (input == (sf::Joystick::isConnected(0) ? this->actions["QUIT"] : sf::Keyboard::Key(this->actions["QUIT"])))
 			this->quit = true;
 		break;
 	default:
@@ -376,12 +178,15 @@ void MenuState::Update(const float& dt)
 
 	UpdateCursor();
 
-	sf::Vector2f controller_position(sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X), sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y));
+	if (sf::Joystick::isConnected(0))
+	{
+		sf::Vector2f controller_position(sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X), sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y));
 
-	if (controller_position.y > -20 && controller_position.y < 20)
-		this->joystickMovedY = false;
-	if (controller_position.x > -20 && controller_position.x < 20)
-		this->joystickMovedX = false;
+		if (controller_position.y > -20 && controller_position.y < 20)
+			this->movedY = false;
+		if (controller_position.x > -20 && controller_position.x < 20)
+			this->movedX = false;
+	}
 }
 
 void MenuState::UpdateButtons()

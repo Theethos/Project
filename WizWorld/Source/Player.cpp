@@ -16,7 +16,7 @@ Entity(), name(name), font(font)
 	InitName();
 	
 	// Set the sprite texture to IDLE_DOWN at the beginning
-	this->animation->IdleAnimation(0.05, "MOVE_DOWN");
+	this->animation->IdleAnimation(0.05, "DOWN");
 }
 // Destructor
 Player::~Player()
@@ -43,16 +43,16 @@ void Player::Update(const float & dt)
 			switch (this->animation->getSide())
 			{
 				case AnimationSide::LEFT:
-					this->animation->IdleAnimation(0.005, "MOVE_LEFT");
+					this->animation->IdleAnimation(0.005, "LEFT");
 					break;
 				case AnimationSide::RIGHT:
-					this->animation->IdleAnimation(0.005, "MOVE_RIGHT");
+					this->animation->IdleAnimation(0.005, "RIGHT");
 					break;
 				case AnimationSide::UP:
-					this->animation->IdleAnimation(0.005, "MOVE_UP");
+					this->animation->IdleAnimation(0.005, "UP");
 					break;
 				case AnimationSide::DOWN:
-					this->animation->IdleAnimation(0.005, "MOVE_DOWN");
+					this->animation->IdleAnimation(0.005, "DOWN");
 					break;
 				default:
 					break;

@@ -16,8 +16,7 @@ public:
 	// Functions
 	void Update(const float &dt);
 	void Render(sf::RenderTarget* target = nullptr);
-	void HandleKeyboardInput(int input, const float &dt);
-	void HandleControllerInput(int input, const float &dt);
+	void HandleInput(int input, const float &dt);
 
 	// Getter
 	const Menu & getMenuType() const;
@@ -46,7 +45,7 @@ private:
 	// Button that has the "focus"
 	std::pair<int, int> selectedButton;
 	std::vector<std::vector<std::string>> buttonsText;
-	bool joystickMovedX, joystickMovedY;
+	bool movedX, movedY;
 	
 	// Private functions
 	void UpdateButtons();

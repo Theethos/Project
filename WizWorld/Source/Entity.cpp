@@ -20,7 +20,7 @@ void Entity::Move(const float& dt, const float x_motion, const float y_motion)
 	{
 		this->movement->Move(dt, x_motion, y_motion);
 		this->sprite->move(this->movement->getVelocity());
-		// An entity with animation needs to define those four "MOVE_..."
+		// An entity with animation needs to define those four moves
 		// Plays the right animation
 		if (this->animation)
 		{
@@ -30,13 +30,13 @@ void Entity::Move(const float& dt, const float x_motion, const float y_motion)
 				if (this->movement->getVelocity().x < 0)
 				{
 					this->animation->setSide(AnimationSide::LEFT);
-					this->animation->PlayAnimation(this->movement->getVelocity().x, dt, "MOVE_LEFT");
+					this->animation->PlayAnimation(this->movement->getVelocity().x, dt, "LEFT");
 				}
 				// Moving right
 				else if (this->movement->getVelocity().x > 0)
 				{
 					this->animation->setSide(AnimationSide::RIGHT);
-					this->animation->PlayAnimation(this->movement->getVelocity().x, dt, "MOVE_RIGHT");
+					this->animation->PlayAnimation(this->movement->getVelocity().x, dt, "RIGHT");
 				}
 			}
 			else
@@ -45,13 +45,13 @@ void Entity::Move(const float& dt, const float x_motion, const float y_motion)
 				if (this->movement->getVelocity().y < 0)
 				{
 					this->animation->setSide(AnimationSide::UP);
-					this->animation->PlayAnimation(this->movement->getVelocity().y, dt, "MOVE_UP");
+					this->animation->PlayAnimation(this->movement->getVelocity().y, dt, "UP");
 				}
 				// Moving up
 				else if (this->movement->getVelocity().y > 0)
 				{
 					this->animation->setSide(AnimationSide::DOWN);
-					this->animation->PlayAnimation(this->movement->getVelocity().y, dt, "MOVE_DOWN");
+					this->animation->PlayAnimation(this->movement->getVelocity().y, dt, "DOWN");
 				}
 			}
 		}

@@ -85,19 +85,19 @@ void Game::UpdateEvents()
 			{
 				if (std::abs(this->event.joystickMove.position) > 80)
 				{
-					this->states.top()->HandleControllerInput(-1, dt);
+					this->states.top()->HandleInput(-1, dt);
 				}
 			}
 			else if (this->event.type == sf::Event::JoystickButtonReleased)
 			{
-				this->states.top()->HandleControllerInput(this->event.joystickButton.button, dt);
+				this->states.top()->HandleInput(this->event.joystickButton.button, dt);
 			}
 		}
 		else if (this->event.type != sf::Event::TextEntered)
 		{
 			if (this->event.type == sf::Event::KeyReleased)
 			{
-				this->states.top()->HandleKeyboardInput(this->event.key.code, dt);
+				this->states.top()->HandleInput(this->event.key.code, dt);
 			}
 		}
 	}
