@@ -55,6 +55,8 @@ movedY(false)
 			this->buttons["RANGER"]->getPosition().y + this->buttons["RANGER"]->getSize().y - this->buttons["WARRIOR"]->getPosition().y + 15 * this->spriteScale));
 	}
 	this->selectedButton = std::make_pair(0, 0);
+	this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setHovered(true);
+	this->buttons[this->buttonsText[this->selectedButton.first][this->selectedButton.second]]->setSelected(true);
 }
 // Destructor
 MenuState::~MenuState()
@@ -137,7 +139,9 @@ void MenuState::HandleInput(int input, const float & dt)
 	else if ((controller_position.x	< -80 && !movedX) || input == sf::Keyboard::Key(this->actions["LEFT"]))
 	{
 		movedX = true;
+		
 		float index = this->selectedButton.second / (this->buttonsText[this->selectedButton.first].size() - 1);
+		
 		if (this->selectedButton.first != 0)
 		{
 			--this->selectedButton.first;
@@ -202,7 +206,7 @@ void MenuState::UpdateButtons()
 				if (it.second->getSelected())
 				{
 					it.second->setSelected(false);
-					this->selectedButton = std::make_pair(-1, -1);
+					this->selectedButton = std::make_pair(0, 0);
 				}
 				it.second->setPressed(false);
 				this->states->push(new MenuState(this->window, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Choose_character_menu.cfg", Menu::CHARACTER_MENU));

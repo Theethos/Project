@@ -31,7 +31,7 @@ movementLocked(false),
 transition(window->getSize())
 {
 	InitMaps(sprite_scale);
-	this->player = new Player(2.f, 0.0, 0.0, config_file, player_name, player_name_font, sprite_scale);
+	this->player = new Player(1.f, 0.0, 0.0, config_file, player_name, player_name_font, sprite_scale);
 
 	this->playerView.setSize(this->window->getSize().x, this->window->getSize().y);
 	this->player->getSprite()->setPosition(this->maps[currentMap]->getSize().x * sprite_scale / 2, this->maps[currentMap]->getSize().y * sprite_scale / 2);
@@ -67,17 +67,16 @@ void GameState::HandleInput(int input, const float & dt)
 	{
 		this->states->push(new MenuState(this->window, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));
 	}
+
 	// Makes the player run
 	bool running = false;
 	if (sf::Joystick::isButtonPressed(0, this->actions["RUN"]) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["RUN"])))
 	{
-		this->player->getMovement()->setMaxVelocity(3.f);
+		this->player->getMovement()->setMaxVelocity(2.f);
 		running = true;
 	}
 	else
-	{
-		this->player->getMovement()->setMaxVelocity(2.f);
-	}
+		this->player->getMovement()->setMaxVelocity(1.f);
 
 	sf::Vector2f controller_position(sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X), sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y));
 
@@ -90,7 +89,6 @@ void GameState::HandleInput(int input, const float & dt)
 				this->player->getMovement()->setVelocityX(0);
 				this->player->Move(dt, 0.f, (running ? -2.f : -1.f));
 				this->previousMove = "UP";
-				ResetView();
 			}
 		}
 		else if (controller_position.y > 80 || sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["DOWN"])))
@@ -100,7 +98,6 @@ void GameState::HandleInput(int input, const float & dt)
 				this->player->getMovement()->setVelocityX(0);
 				this->player->Move(dt, 0.f, (running ? 2.f : 1.f));
 				this->previousMove = "DOWN";
-				ResetView();
 			}
 		}
 		else if (controller_position.x < -80 || sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["LEFT"])))
@@ -110,7 +107,6 @@ void GameState::HandleInput(int input, const float & dt)
 				this->player->getMovement()->setVelocityY(0);
 				this->player->Move(dt, (running ? -2.f : -1.f), 0.f);
 				this->previousMove = "LEFT";
-				ResetView();
 			}
 		}
 		else if (controller_position.x > 80 || sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["RIGHT"])))
@@ -120,7 +116,6 @@ void GameState::HandleInput(int input, const float & dt)
 				this->player->getMovement()->setVelocityY(0);
 				this->player->Move(dt, (running ? 2.f : 1.f), 0.f);
 				this->previousMove = "RIGHT";
-				ResetView();
 			}
 		}
 	}
@@ -242,6 +237,8 @@ void GameState::Update(const float& dt)
 			this->movementLocked = false;
 		}
 	}
+
+	ResetView();
 }
 
 void GameState::Render(sf::RenderTarget* target)
