@@ -4,7 +4,7 @@
 
 // Constructor 
 Player::Player(float maxVelocity, float x_pos, float y_pos, std::string config_file, std::string name, sf::Font* font, int sprite_scale) :
-Entity(), name(name), font(font)
+Entity(), name(name), font(font), _statistics()
 {
 
 	InitSprite();
@@ -112,5 +112,15 @@ void Player::InitName()
 sf::Sprite * Player::getSprite() const
 {
 	return this->sprite;
+}
+
+const std::string & Player::getName() const
+{
+	return this->name;
+}
+
+StatisticsComponent & Player::getStatistics()
+{
+	return _statistics;
 }
 

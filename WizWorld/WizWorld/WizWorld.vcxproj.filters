@@ -37,6 +37,15 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{e01bd434-bd58-4f1b-900e-2b89d836724f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Game">
+      <UniqueIdentifier>{06f22a7e-d7df-423e-9a0c-1e045c602b5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\GUI">
+      <UniqueIdentifier>{0a24d785-4d49-4ac3-862b-345d7512699a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Weapon.h">
@@ -75,15 +84,6 @@
     <ClInclude Include="..\Include\Player.h">
       <Filter>Entity</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\MovementComponent.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\AnimationComponent.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\HitboxComponent.h">
-      <Filter>Component</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\Macros.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -96,14 +96,29 @@
     <ClInclude Include="..\Include\Map.h">
       <Filter>Tile/Map</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\MusicComponent.h">
-      <Filter>Component</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\ButtonText.h">
       <Filter>Button</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\AnimationComponent.h">
+      <Filter>Component\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\HitboxComponent.h">
+      <Filter>Component\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\MovementComponent.h">
+      <Filter>Component\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\MusicComponent.h">
+      <Filter>Component\Game</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\TransitionComponent.h">
-      <Filter>Component</Filter>
+      <Filter>Component\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\PlayerGUI.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\StatisticsComponent.h">
+      <Filter>Component\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -143,15 +158,6 @@
     <ClCompile Include="..\Source\Player.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\MovementComponent.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\AnimationComponent.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\HitboxComponent.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Precompiled_Header.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -164,14 +170,29 @@
     <ClCompile Include="..\Source\Map.cpp">
       <Filter>Tile/Map</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\MusicComponent.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\ButtonText.cpp">
       <Filter>Button</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\AnimationComponent.cpp">
+      <Filter>Component\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\MovementComponent.cpp">
+      <Filter>Component\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\MusicComponent.cpp">
+      <Filter>Component\Game</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\TransitionComponent.cpp">
-      <Filter>Component</Filter>
+      <Filter>Component\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\HitboxComponent.cpp">
+      <Filter>Component\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\PlayerGUI.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\StatisticsComponent.cpp">
+      <Filter>Component\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

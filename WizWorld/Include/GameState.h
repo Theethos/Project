@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Map.h"
 #include "TransitionComponent.h"
+#include "PlayerGUI.h"
 
 class GameState : public State
 {
@@ -20,7 +21,11 @@ public:
 	void HandleInput(int input, const float &dt);
 
 private:
-	Player *player;	
+	// GUI
+	PlayerGUI _playerGUI;
+
+	// Player
+	Player player;	
 	std::string previousMove;
 	bool movementLocked;
 	

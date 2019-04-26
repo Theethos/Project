@@ -1,9 +1,9 @@
 #include "Precompiled_Header.h"
+/* 
 #include "../Include/Macros.h"
 #include "../Include/Character.h"
 
-
-/* Constructors */
+// Constructors
 Character::Character() : name("Mickael"), sexe(Sexe::MALE), hair{ HairColor::DARK, HairStyle::SHORT }, level{ 1, 0, 300 }, healthPoints{ 100, 100, 0, 0 }, inventory()
 {}
 
@@ -12,17 +12,17 @@ Character::Character(std::string name, Sexe sexe, HairColor color, HairStyle sty
 					  healthPoints{ 100, 100, 0, 0 }, inventory()
 {}
 
-/* Destructor */
+// Destructor 
 Character::~Character() 
 {}
 
-/* Displays informations about the character */
+// Displays informations about the character
 void Character::introduce() const
 {
 	std::cout << "Hello, my name is " << this->name << ". I am level " << this->level.level << " and I have " << this->healthPoints.currentHealthPoints << "/" << this->healthPoints.characteristicHealthPoint + this->healthPoints.equipmentHealthPoints + this->healthPoints.levelHealthPoints << " health points." << std::endl;
 }
 
-/* Adds EXPValue to the character's current EXP */
+// Adds EXPValue to the character's current EXP
 void Character::gainEXP(long long EXPValue)
 {
 	std::cout << this->name << " gains " << std::to_string(EXPValue) << " EXP! " << GENDER(this->sexe, "His", "Her") << " current EXP : " << this->level.currentLevelEXP << "/" << this->level.nextLevelEXP << "." << std::endl << std::endl;
@@ -57,7 +57,7 @@ void Character::gainEXP(long long EXPValue)
 	}
 }
 
-/* Removes DamageValue to the character's health points */
+// Removes DamageValue to the character's health points 
 void Character::receiveDamage(int damageValue)
 {
 	std::cout << this->name << " loses " << damageValue << " health points." << std::endl;
@@ -70,7 +70,7 @@ void Character::receiveDamage(int damageValue)
 	}
 }
 
-/* Attacks the target with the weapon that has the higher damages */
+// Attacks the target with the weapon that has the higher damages 
 void Character::hitWithWeapon(Character &target) const
 {
 	// Select the best weapon 
@@ -80,7 +80,7 @@ void Character::hitWithWeapon(Character &target) const
 	target.receiveDamage(weapon->getDamage());
 }
 
-/* Puts an item in the character's inventory if it is not full */
+// Puts an item in the character's inventory if it is not full 
 void Character::pickUpItem(Item * item)
 {
 	std::cout << this->name << " picks up \"" << item->getName() << "\"." << std::endl;
@@ -88,7 +88,7 @@ void Character::pickUpItem(Item * item)
 	this->inventory.setBag(item);
 }
 
-/* Equips an item depending on its category */
+// Equips an item depending on its category 
 void Character::equipItem(Item * item)
 {
 	std::cout << this->name << " equips \"" << item->getName() << "\"." << std::endl;
@@ -101,7 +101,7 @@ void Character::equipItem(Item * item)
 		this->inventory.setStuff(dynamic_cast<Armor*>(item));
 }
 
-/* DEBUG FUNCTION : just display what is inside the character's inventory */
+// DEBUG FUNCTION : just display what is inside the character's inventory 
 void Character::displayInventory() const
 {
 	std::cout << this->name << "'s inventory : " << std::endl << std::endl << "Bag : [";
@@ -218,3 +218,4 @@ void Character::setHair(HairColor color, HairStyle style)
 	this->hair.color = color;
 	this->hair.style = style;
 }
+*/

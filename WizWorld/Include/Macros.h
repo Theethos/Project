@@ -45,8 +45,6 @@ enum class ItemCategories { ARMOR, PRIMARY_WEAPON, SECONDARY_WEAPON, NO_ITEM,};
 enum class WeaponCategories { WAND, STAFF, MAGIC_RING, SHIELD, NO_WEAPON};
 enum class ArmorCategories { HAT, CLOAK, CHEST, BELT, PANTS, BOOTS, GLOVE_1, GLOVE_2, NECKLESS, EARING_1, EARING_2, RING_1, RING_2, NO_ARMOR };
 enum class Sexe { MALE, FEMALE };
-enum class HairColor { BLOND, DARK, BROWN, RED, BLUE, GREEN };
-enum class HairStyle { SHORT, LONG };
 enum class AnimationSide { LEFT, RIGHT, DOWN, UP };
 enum class Menu { NONE, MAIN_MENU, PAUSE_MENU, CHARACTER_MENU };
 enum class WhichState { NONE, GAME_STATE, MENU_STATE };

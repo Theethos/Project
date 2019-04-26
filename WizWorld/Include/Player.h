@@ -2,6 +2,7 @@
 #define _PLAYER_H_
 
 #include "Entity.h"
+#include "StatisticsComponent.h"
 
 class Player : public Entity
 {
@@ -17,16 +18,23 @@ public:
 
 	// Getter
 	sf::Sprite* getSprite() const;
+	const std::string &getName() const;
+	StatisticsComponent &getStatistics();
 
 private:
-	// Pseudo if the player
+	// Pseudo of the player
 	std::string name;
 	sf::Text nameRendered;
 	sf::Font* font;
 
+	// Attributes of the player
+	StatisticsComponent _statistics;
+
 	// Private functions
 	void InitAnimationComponent(std::string config_file);
 	void InitName();
+
+
 };
 
 #endif //!_PLAYER_H_
