@@ -32,14 +32,16 @@ void StatisticsComponent::addExp(long long amount)
 void StatisticsComponent::removeExp(long long amount)
 {
 	_experience._current -= amount;
-	while (_experience._current < getPreviousNext())
+	long long previousNext = getPreviousNext();
+	while (_experience._current < previousNext)
 	{
 		if (_experience._level > 1)
 		{
 			_experience._level -= 1;
-			_experience._next = getPreviousNext();
+			_experience._next = previousNext;
 			_healthPoints._levelHP -= _healthPoints._increment;
 			_healthPoints._currentHP = getMaxHP();
+			previousNext = getPreviousNext();
 		}
 		else // Level min
 		{
@@ -62,9 +64,9 @@ void StatisticsComponent::removeHp(long amount)
 
 long long StatisticsComponent::getPreviousNext()
 {
-	// Get the amount of exp required to up the previous level
-	long long startingNext = 150;
-	long long previousNext = 150;
+	// Get the amount of exp required for the previous level
+	long long startingNext = 150; // Initial amount of xp
+	long long previousNext = 150; 
 	while ((startingNext *= _experience._increment) && startingNext < _experience._next)
 		previousNext = startingNext;
 	return previousNext;
