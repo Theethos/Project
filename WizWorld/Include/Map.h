@@ -6,6 +6,7 @@ class Map
 public:
 	// Constructor
 	Map(std::string texture_path, int map_scale = 1, bool collision = false);
+	Map(const Map &map);
 	// Destructor
 	virtual ~Map();
 
@@ -21,10 +22,13 @@ public:
 	const sf::RectangleShape & getShape() const;
 	const int & getScale() const;
 	const sf::Color getPixelColor(int x, int y) const;
+	sf::Texture *getTexture();
+
+	// Setter
+	inline void setScale(int scale) { this->scale = scale; }
 
 private:
 	sf::RectangleShape map;
-	sf::IntRect displayedMap;
 	sf::Texture* mapTexture;
 	sf::Image mapImage;
 	std::map<std::string, sf::Vector2f> startingPositions;

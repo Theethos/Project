@@ -6,6 +6,7 @@
 #include "Map.h"
 #include "TransitionComponent.h"
 #include "PlayerGUI.h"
+#include "MiniMapGUI.h"
 
 class GameState : public State
 {
@@ -23,6 +24,7 @@ public:
 private:
 	// GUI
 	PlayerGUI _playerGUI;
+	MiniMapGUI _miniMapGUI;
 
 	// Player
 	Player player;	

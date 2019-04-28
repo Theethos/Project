@@ -34,7 +34,7 @@ Button::~Button()
 void Button::Update(const sf::Vector2f mousePos)
 {
 	// If the mouse is over the button
-	if (this->text.getGlobalBounds().contains(mousePos))
+	if (this->text.getGlobalBounds().contains(mousePos) && !sf::Joystick::isConnected(0))
 	{
 		this->hovered = true;
 		// If the user clicks over the button

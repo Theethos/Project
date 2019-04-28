@@ -29,10 +29,12 @@ GameState::GameState(sf::RenderWindow *window, std::stack<State*>* states, Which
 State(window, states, state),
 player(1.f, 0.0, 0.0, config_file, player_name, player_name_font, sprite_scale),
 _playerGUI(*window, player, player_name),
+_miniMapGUI(*window, player),
 movementLocked(false),
 transition(window->getSize())
 {
 	InitMaps(sprite_scale);
+	_miniMapGUI.Init(*window, this->maps[currentMap]->getTexture());
 
 
 	this->playerView.setSize(this->window->getSize().x, this->window->getSize().y);
@@ -65,18 +67,32 @@ void GameState::HandleInput(int input, const float & dt)
 {
 	// Open pause menu when "Options" or "Escape" is pressed
 	if (input == (sf::Joystick::isConnected(0) ? this->actions["PAUSE"] : sf::Keyboard::Key(this->actions["PAUSE"])))
-	{
 		this->states->push(new MenuState(this->window, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));
+	// Only-Joystick inputs
+	else if (sf::Joystick::isConnected(0))
+	{
+		if (input == this->actions["TOGGLE_GUI"])
+		{
+			_playerGUI.Toggle();
+			_miniMapGUI.Toggle();
+		}
+		else if (input == this->keys["Square"])
+			this->player.getStatistics().AddExp(100);
+		else if (input == this->keys["Triangle"])
+			this->player.getStatistics().RemoveExp(100);
+		else if (input == this->keys["Cross"])
+			this->player.getStatistics().AddHp(100);
+		else if (input == this->keys["Circle"])
+			this->player.getStatistics().RemoveHp(100);
 	}
-	else if (input == this->keys["Square"])
-		this->player.getStatistics().addExp(100);
-	else if (input == this->keys["Triangle"])
-		this->player.getStatistics().removeExp(100);
-	else if (input == this->keys["Cross"])
-		this->player.getStatistics().addHp(100);
-	else if (input == this->keys["Circle"])
-		this->player.getStatistics().removeHp(100);
-
+	// Only-Keyboard inputs
+	else
+	{
+		if (input == sf::Keyboard::Key(this->actions["TOGGLE_PLAYER_GUI"]))
+			_playerGUI.Toggle();
+		else if (input == sf::Keyboard::Key(this->actions["TOGGLE_MINIMAP_GUI"]))
+			_miniMapGUI.Toggle();
+	}
 	// Makes the player run
 	bool running = false;
 	if (sf::Joystick::isButtonPressed(0, this->actions["RUN"]) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["RUN"])))
@@ -234,12 +250,18 @@ void GameState::Update(const float& dt)
 
 	this->player.Update(dt);
 
+	ResetView();
+
+	_playerGUI.Update(dt);
+	_miniMapGUI.Update(dt);
+	
 	if (this->movementLocked)
 	{
 		this->transition.Update();
 		if (this->transition.getStatus() == TransitionStatus::HALF)
 		{
 			ChangeMap(this->transitionColor);
+			_miniMapGUI.setTexture(this->maps[currentMap]->getTexture());
 		}
 		else if (this->transition.getStatus() == TransitionStatus::COMPLETE)
 		{
@@ -247,9 +269,6 @@ void GameState::Update(const float& dt)
 		}
 	}
 
-	ResetView();
-
-	_playerGUI.Update(dt);
 }
 
 void GameState::Render(sf::RenderTarget* target)
@@ -265,12 +284,15 @@ void GameState::Render(sf::RenderTarget* target)
 
 	// Reset the view
 	target->setView(this->window->getDefaultView());
+	
+	_playerGUI.Render(target);
+	_miniMapGUI.Render(target);
+	
 	if (this->movementLocked)
 	{
 		this->transition.Render(target);
 	}
 
-	_playerGUI.Render(target);
 }
 
 /////////////////////////////////////////////////////////////////////

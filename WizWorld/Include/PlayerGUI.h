@@ -1,40 +1,42 @@
 #ifndef PLAYER_GUI_H
 #define PLAYER_GUI_H
 
-#include "Player.h"
+#include "GUI.h"
 
-class PlayerGUI
+class PlayerGUI : public GUI
 {
 public:
 	// Constructor
 	PlayerGUI(sf::RenderWindow &window, Player &player, std::string &player_name);
 	// Destructor
-	virtual ~PlayerGUI();
+	~PlayerGUI();
 
 	// Functions
-	virtual void Update(const float &dt);
-	virtual void Render(sf::RenderTarget *target);
+	void Update(const float &dt);
+	void Render(sf::RenderTarget *target);
 
 private:
-	// Entity ralated to
-	Player &_player;
-
-	// Global
-	sf::RenderWindow &_window;
-	sf::RectangleShape _globalShape;
-	sf::Color _globalColor;
-	sf::Font _font;
+	// Private function
+	void UpdatePosition(const sf::Vector2f &mousePos);
 
 	// Health bar
+	sf::RectangleShape _healthBarFull;
 	sf::RectangleShape _healthBar;
 	sf::Text _healthPoints;
 
 	// Exp bar
+	sf::RectangleShape _expBarFull;
 	sf::RectangleShape _expBar;
 	sf::Text _expPoints;
 
+	// Mana bar
+	sf::RectangleShape _manaBarFull;
+	sf::RectangleShape _manaBar;
+	sf::Text _manaPoints;
+
 	// Infos
 	sf::Text _pseudo;
+	sf::CircleShape _levelShape;
 	sf::Text _level;
 };
 

@@ -10,7 +10,7 @@ public:
 	virtual ~StatisticsComponent();
 
 	// Internal static struct
-	static struct HealthPoints
+	struct HealthPoints
 	{
 		// Value of HP added every level
 		const long _increment = 15;
@@ -29,7 +29,7 @@ public:
 		_statisticsHP(statisticsHP),
 		_equipmentHP(equipmentHP) {}
 	};
-	static struct Experience
+	struct Experience
 	{
 		// Value of the increase of _next every level
 		const float _increment = 1.405;
@@ -43,25 +43,48 @@ public:
 		_current(current),
 		_next(next) {}
 	};
+	struct Mana
+	{
+		// Works the same way as HP
+		const int _increment = 50;
+		long _currentMana;
+		long _levelMana;
+		long _statisticsMana;
+		long _equipmentMana;
+
+		// Constructor
+		inline Mana(long currentMana = 150, long levelMana = 150, long statisticsMana = 0, long equipmentMana = 0) :
+		_currentMana(currentMana),
+		_levelMana(levelMana),
+		_statisticsMana(statisticsMana),
+		_equipmentMana(equipmentMana)
+		{
+		}
+	};
 
 	// Functions
-	void addExp(long long amount);
-	void removeExp(long long amount);
-	void addHp(long amount);
-	void removeHp(long amount);
+	void AddExp(long long amount);
+	void RemoveExp(long long amount);
+	void AddHp(long amount);
+	void RemoveHp(long amount);
+	void AddMana(long amount);
+	void RemoveMana(long amount);
 
 	// Getters
 	inline const long &getCurrentHP() const { return _healthPoints._currentHP; }
 	inline const long &getMaxHP() const { return _healthPoints._levelHP + _healthPoints._statisticsHP + _healthPoints._equipmentHP; }
+	inline const long &getCurrentMana() const { return _mana._currentMana; }
+	inline const long &getMaxMana() const { return _mana._levelMana + _mana._statisticsMana + _mana._equipmentMana; }
 	inline const int& getLevel() const { return _experience._level; }
 	inline const long long& getCurrentLevelExp() const { return _experience._current; }
 	inline const long long& getNextLevelExp() const { return _experience._next; }
+	long long getPreviousNext();
 
 private:
 	HealthPoints _healthPoints;
 	Experience _experience;
+	Mana _mana;
 
-	long long getPreviousNext();
 };
 
 #endif // !STATISTICS_COMPONENT_H

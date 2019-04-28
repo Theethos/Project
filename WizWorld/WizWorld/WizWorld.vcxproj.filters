@@ -120,6 +120,12 @@
     <ClInclude Include="..\Include\StatisticsComponent.h">
       <Filter>Component\Game</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\GUI.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\MiniMapGUI.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Weapon.cpp">
@@ -193,6 +199,12 @@
     </ClCompile>
     <ClCompile Include="..\Source\StatisticsComponent.cpp">
       <Filter>Component\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\GUI.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\MiniMapGUI.cpp">
+      <Filter>GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

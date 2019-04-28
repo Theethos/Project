@@ -9,7 +9,7 @@ StatisticsComponent::StatisticsComponent()
 StatisticsComponent::~StatisticsComponent()
 {}
 
-void StatisticsComponent::addExp(long long amount)
+void StatisticsComponent::AddExp(long long amount)
 {
 	_experience._current += amount;
 	while (_experience._current >= _experience._next)
@@ -20,6 +20,8 @@ void StatisticsComponent::addExp(long long amount)
 			_experience._next *= _experience._increment;
 			_healthPoints._levelHP += _healthPoints._increment;
 			_healthPoints._currentHP = getMaxHP();
+			_mana._levelMana += _mana._increment;
+			_mana._currentMana = getMaxMana();
 		}
 		else // Level max
 		{
@@ -29,7 +31,7 @@ void StatisticsComponent::addExp(long long amount)
 	}
 }
 
-void StatisticsComponent::removeExp(long long amount)
+void StatisticsComponent::RemoveExp(long long amount)
 {
 	_experience._current -= amount;
 	long long previousNext = getPreviousNext();
@@ -41,6 +43,8 @@ void StatisticsComponent::removeExp(long long amount)
 			_experience._next = previousNext;
 			_healthPoints._levelHP -= _healthPoints._increment;
 			_healthPoints._currentHP = getMaxHP();
+			_mana._levelMana -= _mana._increment;
+			_mana._currentMana = getMaxMana();
 			previousNext = getPreviousNext();
 		}
 		else // Level min
@@ -52,14 +56,24 @@ void StatisticsComponent::removeExp(long long amount)
 	}
 }
 
-void StatisticsComponent::addHp(long amount)
+void StatisticsComponent::AddHp(long amount)
 {
 	_healthPoints._currentHP = std::min(_healthPoints._currentHP + amount, getMaxHP());
 }
 
-void StatisticsComponent::removeHp(long amount)
+void StatisticsComponent::RemoveHp(long amount)
 {
 	_healthPoints._currentHP = std::max(_healthPoints._currentHP - amount, static_cast<long>(0));
+}
+
+void StatisticsComponent::AddMana(long amount)
+{
+	_mana._currentMana = std::min(_mana._currentMana + amount, getMaxMana());
+}
+
+void StatisticsComponent::RemoveMana(long amount)
+{
+	_mana._currentMana = std::max(_mana._currentMana - amount, static_cast<long>(0));
 }
 
 long long StatisticsComponent::getPreviousNext()

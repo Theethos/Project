@@ -70,6 +70,11 @@ const sf::Color Map::getPixelColor(int x, int y) const
 		return sf::Color::Red;
 }
 
+sf::Texture * Map::getTexture()
+{
+	return this->mapTexture;
+}
+
 sf::Vector2f Map::getStartingPosition(std::string key) const
 {
 	if (this->startingPositions.count(key))

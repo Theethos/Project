@@ -73,14 +73,18 @@ void Game::UpdateEvents()
 		{
 			this->states.top()->InitControllerKeys();
 			this->states.top()->InitControllerActions();
+			this->window.setMouseCursorVisible(false);
 		}
 		else if (this->event.type == sf::Event::JoystickDisconnected)
 		{
 			this->states.top()->InitKeyboardKeys();
 			this->states.top()->InitKeyboardActions();
+			this->window.setMouseCursorVisible(true);
+
 		}
 		if (sf::Joystick::isConnected(0))
 		{
+			this->window.setMouseCursorVisible(false);
 			if (this->event.type == sf::Event::JoystickMoved)
 			{
 				if (std::abs(this->event.joystickMove.position) > 80)
@@ -95,6 +99,7 @@ void Game::UpdateEvents()
 		}
 		else if (this->event.type != sf::Event::TextEntered)
 		{
+			this->window.setMouseCursorVisible(true);
 			if (this->event.type == sf::Event::KeyReleased)
 			{
 				this->states.top()->HandleInput(this->event.key.code, dt);

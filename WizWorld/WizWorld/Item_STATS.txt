@@ -1,7 +1,7 @@
 
 ALL CHARASTERISTICS:
 	DOFUS : Primal : Vitality, Wisdom, Agility, Chance, Strength, Intelligence, Power, Range(PO), Critical Hits.
-			Secondar : Heals, Lock(Tacle), Dodge, Initiative, Summons(Invocations), Prospecting.
+			Secondar : Heals, Lock, Dodge, Initiative, Summons, Prospecting.
 			Damages : Earth, Air, Water, Fire, Neutral, Critical, Pushback(Do Pou).
 			Resistances : All elements (% and fixed), Distance, Melee, Pushback, Critical Hits.
 	
