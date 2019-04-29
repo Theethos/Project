@@ -8,14 +8,13 @@ class MiniMapGUI : public GUI
 {
 public:
 	// Constructor
-	MiniMapGUI(sf::RenderWindow &window, Player & player);
+	MiniMapGUI(sf::RenderWindow &window, Player & player, sf::Texture *mapTexture);
 	// Destructor
 	~MiniMapGUI();
 
 	// Functions
 	void Update(const float& dt);
 	void Render(sf::RenderTarget *target);
-	void Init(sf::RenderWindow &window, sf::Texture *mapTexture);
 
 	// Setter
 	void setTexture(sf::Texture *texture);

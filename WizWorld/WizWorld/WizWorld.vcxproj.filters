@@ -24,9 +24,6 @@
     <Filter Include="Entity">
       <UniqueIdentifier>{556ace7e-68bf-41d6-b670-2f77f77cee20}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Button">
-      <UniqueIdentifier>{6cbce9fc-9867-45a1-bd5b-b46d55f5519d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Component">
       <UniqueIdentifier>{83395c0f-5095-49fa-9eb1-1db27d8ed77f}</UniqueIdentifier>
     </Filter>
@@ -45,6 +42,9 @@
     </Filter>
     <Filter Include="Component\GUI">
       <UniqueIdentifier>{0a24d785-4d49-4ac3-862b-345d7512699a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Button/Field">
+      <UniqueIdentifier>{6cbce9fc-9867-45a1-bd5b-b46d55f5519d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -76,7 +76,7 @@
       <Filter>State</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Button.h">
-      <Filter>Button</Filter>
+      <Filter>Button/Field</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\MenuState.h">
       <Filter>State</Filter>
@@ -95,9 +95,6 @@
     </ClInclude>
     <ClInclude Include="..\Include\Map.h">
       <Filter>Tile/Map</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\ButtonText.h">
-      <Filter>Button</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\AnimationComponent.h">
       <Filter>Component\Game</Filter>
@@ -125,6 +122,12 @@
     </ClInclude>
     <ClInclude Include="..\Include\MiniMapGUI.h">
       <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\ChatBoxGUI.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\TextField.h">
+      <Filter>Button/Field</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -156,7 +159,7 @@
       <Filter>State</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Button.cpp">
-      <Filter>Button</Filter>
+      <Filter>Button/Field</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\MenuState.cpp">
       <Filter>State</Filter>
@@ -175,9 +178,6 @@
     </ClCompile>
     <ClCompile Include="..\Source\Map.cpp">
       <Filter>Tile/Map</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\ButtonText.cpp">
-      <Filter>Button</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\AnimationComponent.cpp">
       <Filter>Component\Game</Filter>
@@ -205,6 +205,12 @@
     </ClCompile>
     <ClCompile Include="..\Source\MiniMapGUI.cpp">
       <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\ChatBoxGUI.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\TextField.cpp">
+      <Filter>Button/Field</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

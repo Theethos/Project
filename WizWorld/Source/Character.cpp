@@ -16,47 +16,6 @@ Character::Character(std::string name, Sexe sexe, HairColor color, HairStyle sty
 Character::~Character() 
 {}
 
-// Displays informations about the character
-void Character::introduce() const
-{
-	std::cout << "Hello, my name is " << this->name << ". I am level " << this->level.level << " and I have " << this->healthPoints.currentHealthPoints << "/" << this->healthPoints.characteristicHealthPoint + this->healthPoints.equipmentHealthPoints + this->healthPoints.levelHealthPoints << " health points." << std::endl;
-}
-
-// Adds EXPValue to the character's current EXP
-void Character::gainEXP(long long EXPValue)
-{
-	std::cout << this->name << " gains " << std::to_string(EXPValue) << " EXP! " << GENDER(this->sexe, "His", "Her") << " current EXP : " << this->level.currentLevelEXP << "/" << this->level.nextLevelEXP << "." << std::endl << std::endl;
-	
-	this->level.currentLevelEXP += EXPValue;
-	while (this->level.currentLevelEXP >= this->level.nextLevelEXP)
-	{
-		if (this->level.level < 50) // Level max is 50 (== 5 148 376 331 EXP)
-		{
-			this->level.level += 1;
-			
-			std::cout << this->name << " levels up ! " << GENDER(this->sexe, "He", "She") << " is now level " << this->level.level;
-			
-			// Each level, characters need 0.405 more EXP to level up
-			this->level.nextLevelEXP += (long long)(this->level.nextLevelEXP * 0.405); 
-			// Each level, characters gain 50 "native" HP
-			this->healthPoints.levelHealthPoints += 50; 
-			
-			std::cout << " (" << MIN(this->level.currentLevelEXP, this->level.nextLevelEXP, this->level.currentLevelEXP, this->level.nextLevelEXP) << "/" << this->level.nextLevelEXP << ")" << std::endl;
-		}
-		// Amount of EXP already at max
-		else 
-		{
-			std::cout << this->name << " is already level " << this->level.level;
-			
-			this->level.currentLevelEXP = this->level.nextLevelEXP;
-			
-			std::cout << " (" << this->level.currentLevelEXP << "/" << this->level.nextLevelEXP << ")" << std::endl;
-			// Goes out the while loop
-			break;
-		}
-	}
-}
-
 // Removes DamageValue to the character's health points 
 void Character::receiveDamage(int damageValue)
 {

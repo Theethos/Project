@@ -25,6 +25,8 @@ selected(false)
 	this->text.setPosition(sf::Vector2f(
 		this->shape.getPosition().x + (this->shape.getGlobalBounds().width  / 2.f - this->text.getGlobalBounds().width  / 2.f),
 		this->shape.getPosition().y + (this->shape.getGlobalBounds().height / 2.f - this->text.getGlobalBounds().height / 1.35)));
+	this->shape.setSize(sf::Vector2f(this->text.getGlobalBounds().width, this->text.getGlobalBounds().height));
+	this->shape.setPosition(sf::Vector2f(this->text.getGlobalBounds().left, this->text.getGlobalBounds().top));
 }
 // Destructor
 Button::~Button()
@@ -34,7 +36,7 @@ Button::~Button()
 void Button::Update(const sf::Vector2f mousePos)
 {
 	// If the mouse is over the button
-	if (this->text.getGlobalBounds().contains(mousePos) && !sf::Joystick::isConnected(0))
+	if (this->shape.getGlobalBounds().contains(mousePos) && !sf::Joystick::isConnected(0))
 	{
 		this->hovered = true;
 		// If the user clicks over the button

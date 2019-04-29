@@ -278,7 +278,7 @@ void MenuState::UpdateButtons()
 				it.second->setPressed(false);
 
 				// Checking if the player chose a pseudo
-				ButtonText* button = static_cast<ButtonText*>(this->buttons["PSEUDO"]);
+				TextField* button = static_cast<TextField*>(this->buttons["PSEUDO"]);
 				if (button->getTextEntered() == "")
 				{
 					button->Blink();
@@ -506,7 +506,7 @@ void MenuState::InitButtons()
 				this->buttons[action] = new Button(x, y, w, h, text, &this->font["ALL"], idle_color, hover_color, active_color, textSize);
 				break;
 			case 1:
-				this->buttons[action] = new ButtonText(x, y, w, h, text, &this->font["ALL"], idle_color, hover_color, active_color, textSize, this->window);
+				this->buttons[action] = new TextField(x, y, w, h, text, &this->font["ALL"], idle_color, hover_color, active_color, textSize, this->window, true);
 				break;
 			default:
 				break;

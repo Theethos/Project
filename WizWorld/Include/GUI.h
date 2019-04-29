@@ -12,7 +12,7 @@ public:
 	// Functions
 	virtual void Update(const float &dt) = 0;
 	virtual void Render(sf::RenderTarget *target) = 0;
-	// Function that calls UpdatePosition(), that has to be overload
+	// Function which behavior has to defined in UpdatePosition()
 	virtual void Move();
 	inline void Toggle() { (_visible ? _visible = false : _visible = true); }
 
@@ -20,6 +20,7 @@ public:
 	static bool _token;
 
 private:
+	// List of all instances -> required to check collisions between modules.
 	static std::list<GUI*> _instances;
 protected:
 	bool _visible;
@@ -38,7 +39,9 @@ protected:
 	sf::Color _globalColorText;
 
 	// Private functions
+	// Defines the behavior to use when function Move() is called (When user use Drag&Drop on the GUI module)
 	virtual void UpdatePosition(const sf::Vector2f &mousePos) = 0;
+	// Get the most likely position of the GUI module if it collides with an other
 	virtual const sf::Vector2f getNewPosition(const sf::FloatRect & intersect) const;
 };
 

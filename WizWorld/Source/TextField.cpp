@@ -1,17 +1,22 @@
 #include "Precompiled_Header.h"
 #include "../Include/Macros.h"
-#include "../Include/ButtonText.h"
+#include "../Include/TextField.h"
 
 // Constructor
-ButtonText::ButtonText(float x, float y, float w, float h, std::string text, sf::Font *font, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor, int textSize, sf::Window* window) :
+TextField::TextField(float x, float y, float w, float h, std::string text, sf::Font *font, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor, int textSize, sf::RenderWindow* window, bool only_letter) :
 Button(x, y, w, h, text, font, idleColor, hoverColor, activeColor, textSize),
 textEntered(""),
 window(window), 
-thread(&ButtonText::CaptureText, this), 
+thread(&TextField::CaptureText, this), 
 blinking(false), 
 threadIsRunning(false),
+_onlyLetter(only_letter),
 maxSize(12)
 {
+	this->shape.setSize(sf::Vector2f(w, h));
+	this->shape.setPosition(sf::Vector2f(x, y));
+
+	this->text.setPosition(sf::Vector2f(this->getPosition()) + sf::Vector2f(this->shape.getGlobalBounds().width * 0.02, this->shape.getGlobalBounds().height / 2.f - this->text.getGlobalBounds().height / 1.35));
 	this->textEnteredToRender.setString(this->textEntered);
 	this->textEnteredToRender.setFont(*this->font);
 	this->textEnteredToRender.setFillColor(this->idleColor);
@@ -24,7 +29,7 @@ maxSize(12)
 	this->shape.setFillColor(this->backgroundColor);
 }
 // Destructor
-ButtonText::~ButtonText()
+TextField::~TextField()
 {
 	if (this->threadIsRunning)
 	{
@@ -33,19 +38,24 @@ ButtonText::~ButtonText()
 }
 
 // Functions
-void ButtonText::Update(const sf::Vector2f mousePos)
+void TextField::Update(const sf::Vector2f mousePos)
 {
 	Button::Update(mousePos);
 
+	sf::Text letter("a", *this->font, this->textSize);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+	{
+		this->Deactivate();
+	}                                                                        // Check that the text is not bigger than the shape
 	// Launch the thread
-	if (this->activated && this->textEntered.size() < this->maxSize && !this->threadIsRunning)
+	else if (this->activated && this->textEntered.size() < this->maxSize && !(textEnteredToRender.getGlobalBounds().width + 2 * letter.getGlobalBounds().width > shape.getSize().x) && !this->threadIsRunning)
 	{
 		// Lock the thread
-		this->threadIsRunning = true,
+		this->threadIsRunning = true;
 		this->thread.launch();
 	}
 	// If user presses "BackSpace"
-	else if (this->activated && this->textEntered.size() == this->maxSize)
+	else if (this->activated && (this->textEntered.size() == this->maxSize || (textEnteredToRender.getGlobalBounds().width + 2 * letter.getGlobalBounds().width > shape.getSize().x)))
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
 		{
@@ -54,7 +64,7 @@ void ButtonText::Update(const sf::Vector2f mousePos)
 	}
 }
 
-void ButtonText::Render(sf::RenderTarget* target)
+void TextField::Render(sf::RenderTarget* target)
 {
 	if (this->activated)
 	{
@@ -94,7 +104,7 @@ void ButtonText::Render(sf::RenderTarget* target)
 	}
 }
 
-void ButtonText::AddChar(char character)
+void TextField::AddChar(char character)
 {
 	// Add the character to the text string
 	this->textEntered += character;
@@ -103,7 +113,7 @@ void ButtonText::AddChar(char character)
 	sf::sleep(sf::milliseconds(150));
 }
 
-void ButtonText::RemoveChar()
+void TextField::RemoveChar()
 {
 	// If there is at least one character in the text string
 	if (this->textEntered.size())
@@ -116,15 +126,21 @@ void ButtonText::RemoveChar()
 	}
 }
 
-void ButtonText::CaptureText()
+void TextField::CaptureText()
 {
 	this->mutex.lock();
 	// I can't use pollEvent because otherwise it may crash with the Game function "UpdateEvent"
 	// and I have to use a thread in order to keep the game moving when the user enters its text */
-	// Testing MAJ letter
+	// Testing MAJ letter and SHIFT + key
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
 	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Slash) && !_onlyLetter)
+			this->AddChar('/');
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Comma) && !_onlyLetter)
+			this->AddChar('?');
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Period) && !_onlyLetter)
+			this->AddChar(';');
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		{
 			this->AddChar('A');
 		}
@@ -231,17 +247,27 @@ void ButtonText::CaptureText()
 	}
 	// Backspace
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
-	{
 		this->RemoveChar();
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-	{
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !_onlyLetter)
 		this->AddChar(' ');
-	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Divide) && !_onlyLetter)
+		this->AddChar('/');
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Slash) && !_onlyLetter)
+		this->AddChar(':');
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Comma) && !_onlyLetter)
+		this->AddChar(',');
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Period) && !_onlyLetter)
+		this->AddChar('.');
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3) && !_onlyLetter)
+		this->AddChar('"');
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4) && !_onlyLetter)
+		this->AddChar('\'');
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num5) && !_onlyLetter)
+		this->AddChar('(');
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num6))
-	{
 		this->AddChar('-');
-	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LBracket) && !_onlyLetter)
+		this->AddChar(')');
 	// NORMALE letter
 	else
 	{
@@ -355,7 +381,7 @@ void ButtonText::CaptureText()
 	this->mutex.unlock();
 }
 
-void ButtonText::Blink()
+void TextField::Blink()
 {
 	// Set the background to RED. This function is used for example
 	// when the user try to launch the game without entering a pseudo.
@@ -365,7 +391,16 @@ void ButtonText::Blink()
 }
 
 // Getter
-const std::string & ButtonText::getTextEntered() const
+const std::string & TextField::getTextEntered() const
 {
 	return this->textEntered;
+}
+
+void TextField::setPosition(float x, float y)
+{ 
+	this->shape.setPosition(x, y);
+	this->text.setPosition(sf::Vector2f(this->getPosition()) +
+										  sf::Vector2f(this->shape.getGlobalBounds().width * 0.02,
+										  this->shape.getGlobalBounds().height / 2.f - this->text.getGlobalBounds().height / 1.35));
+	this->textEnteredToRender.setPosition(this->text.getPosition());
 }

@@ -16,7 +16,7 @@ GUI(window, player)
 	// 15% of the window's width and 10% of the window's height by default
 	_globalShape.setSize(sf::Vector2f(_window.getSize().x * 0.11 + std::max(_pseudo.getGlobalBounds().width, _levelShape.getRadius() * 2),
 	_window.getSize().y * 0.11));
-	_globalShape.setPosition(_window.getSize().x * 0.01, _window.getSize().y * 0.01);
+	_globalShape.setPosition(_window.getPosition().x, _window.getPosition().y);
 	_globalShape.setFillColor(_globalColor);
 
 	// Infos

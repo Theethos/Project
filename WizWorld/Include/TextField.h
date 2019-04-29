@@ -3,13 +3,15 @@
 
 #include "../Include/Button.h"
 
-class ButtonText : public Button
+class TextField : public Button
 {
 public:
 	// Constructor
-	ButtonText(float x, float y, float w, float h, std::string text, sf::Font *font, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor, int textSize, sf::Window* window);
+	TextField(float x = 0, float y = 0, float w = 0, float h = 0, std::string text = "", sf::Font *font = nullptr,
+			  sf::Color idleColor = sf::Color::White, sf::Color hoverColor = sf::Color::White, sf::Color activeColor = sf::Color::White,
+			  int textSize = 0, sf::RenderWindow* window = nullptr, bool only_letter = false);
 	// Destructor
-	virtual ~ButtonText();
+	virtual ~TextField();
 
 	// Functions
 	void Update(const sf::Vector2f mousePos);
@@ -19,9 +21,15 @@ public:
 	// Getter
 	const std::string& getTextEntered() const;
 
+	// Setter
+	inline void setMaxSize(int value) { this->maxSize = value; }
+	inline void setRenderColor(sf::Color color) { this->textEnteredToRender.setFillColor(color); }
+	inline void setTextEntered(std::string text) { this->textEntered = text; this->textEnteredToRender.setString(text); }
+	void setPosition(float x, float y);
+
 private:
 	// Main window
-	sf::Window* window;
+	sf::RenderWindow* window;
 
 	// Text entered
 	std::string textEntered;
@@ -38,6 +46,7 @@ private:
 	// States of the button
 	bool threadIsRunning;
 	bool blinking;
+	bool _onlyLetter;
 	
 	// Private functions
 	void AddChar(char character);

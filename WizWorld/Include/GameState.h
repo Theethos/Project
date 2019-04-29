@@ -7,6 +7,7 @@
 #include "TransitionComponent.h"
 #include "PlayerGUI.h"
 #include "MiniMapGUI.h"
+#include "ChatBoxGUI.h"
 
 class GameState : public State
 {
@@ -23,12 +24,10 @@ public:
 
 private:
 	// GUI
-	PlayerGUI _playerGUI;
-	MiniMapGUI _miniMapGUI;
+	std::map<std::string, GUI*> _GUI;
 
 	// Player
 	Player player;	
-	std::string previousMove;
 	bool movementLocked;
 	
 	// Map managers
@@ -46,6 +45,7 @@ private:
 	// Private functions
 	void InitMaps(int scale);
 	void InitView();
+	void InitGUI(std::string &player_name);
 	void ResetView(bool new_map = false);
 	void ChangeMap(sf::Color color);
 	bool CheckSpriteCollision(const float & dt, std::string movement);

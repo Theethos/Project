@@ -2,10 +2,11 @@
 #include "../Include/Macros.h"
 #include "../Include/GUI.h"
 
+// Static variables;
 bool GUI::_token = false;
-
 std::list<GUI*> GUI::_instances;
 
+// Constructor
 GUI::GUI(sf::RenderWindow &window, Player &player) :
 _window(window),
 _player(player),
@@ -25,12 +26,13 @@ _offset(0, 0)
 	// It is used to check for collision between instance
 	GUI::_instances.push_back(this);
 }
-
+// Destructor
 GUI::~GUI()
 {
 	_instances.remove(this);
 }
 
+// Function
 void GUI::Move()
 {
 	// Move the GUI in Drag&Drop
@@ -83,6 +85,7 @@ void GUI::Move()
 	}
 }
 
+// Private Function
 const sf::Vector2f GUI::getNewPosition(const sf::FloatRect & intersect) const
 {
 	// Calculate the minimum offset of the intersection

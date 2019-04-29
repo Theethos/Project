@@ -2,7 +2,7 @@
 #define _MENU_STATE_H_
 
 #include "GameState.h"
-#include "ButtonText.h"
+#include "TextField.h"
 #include "AnimationComponent.h"
 
 class MenuState : public State

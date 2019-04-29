@@ -5,12 +5,25 @@
 
 const float MiniMapGUI::_miniMapScale = 0.3;
 
-
-MiniMapGUI::MiniMapGUI(sf::RenderWindow &window, Player & player) :
+MiniMapGUI::MiniMapGUI(sf::RenderWindow &window, Player & player, sf::Texture *mapTexture) :
 GUI(window, player)
 {
 	_playerPosition.setRadius(2);
 	_playerPosition.setFillColor(sf::Color::Red);
+
+	_mapTexture = mapTexture;
+
+	_mapShape.setSize(sf::Vector2f(_mapTexture->getSize()));
+	_mapShape.setTexture(_mapTexture);
+	_mapShape.setScale(_miniMapScale, _miniMapScale);
+
+	_globalShape.setSize(sf::Vector2f(_mapShape.getSize().x * _miniMapScale, _mapShape.getSize().y * _miniMapScale) + sf::Vector2f(_window.getSize().x * 0.01, _window.getSize().x * 0.01));
+	_globalShape.setFillColor(_globalColor);
+
+	_globalShape.setPosition(sf::Vector2f(_window.getSize().x - _globalShape.getSize().x, _window.getPosition().y));
+	_mapShape.setPosition(_globalShape.getPosition() + sf::Vector2f(_globalShape.getSize().x / 2 - _mapShape.getSize().x * _miniMapScale / 2,
+		_globalShape.getSize().y / 2 - _mapShape.getSize().y * _miniMapScale / 2));
+	_mapShape.setTextureRect(sf::IntRect(0, 0, _mapShape.getSize().x, _mapShape.getSize().y));
 }
 
 MiniMapGUI::~MiniMapGUI()
@@ -41,23 +54,11 @@ void MiniMapGUI::Render(sf::RenderTarget * target)
 	}
 }
 
-void MiniMapGUI::Init(sf::RenderWindow & window, sf::Texture * mapTexture)
+/*void MiniMapGUI::Init(sf::RenderWindow & window, sf::Texture * mapTexture)
 {
-	_mapTexture = mapTexture;
 	
-	_mapShape.setSize(sf::Vector2f(_mapTexture->getSize()));
-	_mapShape.setTexture(_mapTexture);
-	_mapShape.setScale(_miniMapScale, _miniMapScale);
-	
-	_globalShape.setSize(sf::Vector2f(_mapShape.getSize().x * _miniMapScale, _mapShape.getSize().y * _miniMapScale) + sf::Vector2f(_window.getSize().x * 0.01, _window.getSize().x * 0.01));
-	_globalShape.setFillColor(_globalColor);
 
-	_globalShape.setPosition(sf::Vector2f(_window.getSize().x - _globalShape.getSize().x , _window.getPosition().y));
-	_mapShape.setPosition(_globalShape.getPosition() + sf::Vector2f(_globalShape.getSize().x / 2 - _mapShape.getSize().x * _miniMapScale / 2,
-																	_globalShape.getSize().y / 2 - _mapShape.getSize().y * _miniMapScale / 2));
-	_mapShape.setTextureRect(sf::IntRect(0, 0, _mapShape.getSize().x,_mapShape.getSize().y));
-
-}
+}*/
 
 void MiniMapGUI::setTexture(sf::Texture * texture)
 {

@@ -28,13 +28,11 @@ AnimationSide StringToSide(std::string side)
 GameState::GameState(sf::RenderWindow *window, std::stack<State*>* states, WhichState state, std::string config_file, int sprite_scale, std::string player_name, sf::Font* player_name_font) :
 State(window, states, state),
 player(1.f, 0.0, 0.0, config_file, player_name, player_name_font, sprite_scale),
-_playerGUI(*window, player, player_name),
-_miniMapGUI(*window, player),
 movementLocked(false),
 transition(window->getSize())
 {
 	InitMaps(sprite_scale);
-	_miniMapGUI.Init(*window, this->maps[currentMap]->getTexture());
+	InitGUI(player_name);
 
 
 	this->playerView.setSize(this->window->getSize().x, this->window->getSize().y);
@@ -53,28 +51,33 @@ transition(window->getSize())
 GameState::~GameState()
 {
 	for (auto &it : this->maps)
-	{
 		delete it.second;
-	}
+
 	for (auto &it : this->collisionMaps)
-	{
 		delete it.second;
-	}
+
+	for (auto &it : _GUI)
+		delete it.second;
 }
 
 // Functions
 void GameState::HandleInput(int input, const float & dt)
 {
+	bool chating = static_cast<ChatBoxGUI*>(_GUI["CHAT_BOX"])->IsActive();
+	if (chating) // Consume the input if the player is in the chat box
+		input = -1;
 	// Open pause menu when "Options" or "Escape" is pressed
-	if (input == (sf::Joystick::isConnected(0) ? this->actions["PAUSE"] : sf::Keyboard::Key(this->actions["PAUSE"])))
+	else if (input == (sf::Joystick::isConnected(0) ? this->actions["PAUSE"] : sf::Keyboard::Key(this->actions["PAUSE"])))
 		this->states->push(new MenuState(this->window, this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));
+	else if (input == (sf::Joystick::isConnected(0) ? this->actions["ENTER_CHAT"] : sf::Keyboard::Key(this->actions["ENTER_CHAT"])))
+		static_cast<ChatBoxGUI*>(_GUI["CHAT_BOX"])->Activate();
 	// Only-Joystick inputs
 	else if (sf::Joystick::isConnected(0))
 	{
 		if (input == this->actions["TOGGLE_GUI"])
 		{
-			_playerGUI.Toggle();
-			_miniMapGUI.Toggle();
+			for (auto &it : _GUI)
+				it.second->Toggle();
 		}
 		else if (input == this->keys["Square"])
 			this->player.getStatistics().AddExp(100);
@@ -89,9 +92,9 @@ void GameState::HandleInput(int input, const float & dt)
 	else
 	{
 		if (input == sf::Keyboard::Key(this->actions["TOGGLE_PLAYER_GUI"]))
-			_playerGUI.Toggle();
+			_GUI["PLAYER"]->Toggle();
 		else if (input == sf::Keyboard::Key(this->actions["TOGGLE_MINIMAP_GUI"]))
-			_miniMapGUI.Toggle();
+			_GUI["MINI_MAP"]->Toggle();
 	}
 	// Makes the player run
 	bool running = false;
@@ -105,7 +108,7 @@ void GameState::HandleInput(int input, const float & dt)
 
 	sf::Vector2f controller_position(sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X), sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y));
 
-	if (!this->movementLocked)
+	if (!this->movementLocked && !chating)
 	{
 		if (controller_position.y < -80 || sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["UP"])))
 		{
@@ -113,8 +116,9 @@ void GameState::HandleInput(int input, const float & dt)
 			{
 				this->player.getMovement()->setVelocityX(0);
 				this->player.Move(dt, 0.f, (running ? -2.f : -1.f));
-				this->previousMove = "UP";
 			}
+			else
+				this->player.getAnimation()->PlayAnimation(0, dt, "UP");
 		}
 		else if (controller_position.y > 80 || sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["DOWN"])))
 		{
@@ -122,8 +126,9 @@ void GameState::HandleInput(int input, const float & dt)
 			{
 				this->player.getMovement()->setVelocityX(0);
 				this->player.Move(dt, 0.f, (running ? 2.f : 1.f));
-				this->previousMove = "DOWN";
 			}
+			else
+				this->player.getAnimation()->PlayAnimation(0, dt, "DOWN");
 		}
 		else if (controller_position.x < -80 || sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["LEFT"])))
 		{
@@ -131,8 +136,9 @@ void GameState::HandleInput(int input, const float & dt)
 			{
 				this->player.getMovement()->setVelocityY(0);
 				this->player.Move(dt, (running ? -2.f : -1.f), 0.f);
-				this->previousMove = "LEFT";
 			}
+			else
+				this->player.getAnimation()->PlayAnimation(0, dt, "LEFT");
 		}
 		else if (controller_position.x > 80 || sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->actions["RIGHT"])))
 		{
@@ -140,8 +146,9 @@ void GameState::HandleInput(int input, const float & dt)
 			{
 				this->player.getMovement()->setVelocityY(0);
 				this->player.Move(dt, (running ? 2.f : 1.f), 0.f);
-				this->previousMove = "RIGHT";
 			}
+			else
+				this->player.getAnimation()->PlayAnimation(0, dt, "RIGHT");
 		}
 	}
 }
@@ -246,29 +253,29 @@ void GameState::Update(const float& dt)
 {
 	UpdateMousePositions();
 
-	HandleInput(-1, dt);
-
 	this->player.Update(dt);
+	
+	HandleInput(-1, dt);
 
 	ResetView();
 
-	_playerGUI.Update(dt);
-	_miniMapGUI.Update(dt);
-	
+	for (auto &it : _GUI)
+		it.second->Update(dt);
+
 	if (this->movementLocked)
 	{
 		this->transition.Update();
 		if (this->transition.getStatus() == TransitionStatus::HALF)
 		{
 			ChangeMap(this->transitionColor);
-			_miniMapGUI.setTexture(this->maps[currentMap]->getTexture());
+			MiniMapGUI *tmp = static_cast<MiniMapGUI*>(_GUI["MINI_MAP"]);
+			tmp->setTexture(this->maps[currentMap]->getTexture());
 		}
 		else if (this->transition.getStatus() == TransitionStatus::COMPLETE)
 		{
 			this->movementLocked = false;
 		}
 	}
-
 }
 
 void GameState::Render(sf::RenderTarget* target)
@@ -285,8 +292,8 @@ void GameState::Render(sf::RenderTarget* target)
 	// Reset the view
 	target->setView(this->window->getDefaultView());
 	
-	_playerGUI.Render(target);
-	_miniMapGUI.Render(target);
+	for (auto &it : _GUI)
+		it.second->Render(target);
 	
 	if (this->movementLocked)
 	{
@@ -329,6 +336,13 @@ void GameState::InitView()
 	sf::Vector2f sprite_size(this->player.getSprite()->getGlobalBounds().width, this->player.getSprite()->getGlobalBounds().height);
 
 	this->playerView.setCenter(this->player.getSprite()->getPosition().x + sprite_size.x / 2, this->player.getSprite()->getPosition().y + sprite_size.y / 2);
+}
+
+void GameState::InitGUI(std::string &player_name)
+{
+	_GUI["PLAYER"] = new PlayerGUI(*window, player, player_name);
+	_GUI["MINI_MAP"] = new MiniMapGUI(*window, player, this->maps[currentMap]->getTexture());
+	_GUI["CHAT_BOX"] = new ChatBoxGUI(*window, player);
 }
 
 void GameState::ResetView(bool new_map)
@@ -398,10 +412,7 @@ bool GameState::CheckSpriteCollision(const float & dt,std::string movement)
 	{
 		if (it == sf::Color::Red)
 		{
-			this->player.getMovement()->setVelocity(0, 0);
-			this->player.getAnimation()->PlayAnimation(0, dt, movement);
-			std::string side = movement.replace(movement.begin(), movement.begin() + 5, "");
-			this->player.getAnimation()->setSide(StringToSide(side));
+			this->player.getAnimation()->setSide(StringToSide(movement));
 			return true;
 		}
 		else if (it == sf::Color::Magenta || it == sf::Color::Blue || it == sf::Color::Green || it == sf::Color::Yellow)

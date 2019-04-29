@@ -22,8 +22,8 @@
     <ClInclude Include="..\Include\AnimationComponent.h" />
     <ClInclude Include="..\Include\Armor.h" />
     <ClInclude Include="..\Include\Button.h" />
-    <ClInclude Include="..\Include\ButtonText.h" />
     <ClInclude Include="..\Include\Character.h" />
+    <ClInclude Include="..\Include\ChatBoxGUI.h" />
     <ClInclude Include="..\Include\Entity.h" />
     <ClInclude Include="..\Include\Game.h" />
     <ClInclude Include="..\Include\GameState.h" />
@@ -41,6 +41,7 @@
     <ClInclude Include="..\Include\PlayerGUI.h" />
     <ClInclude Include="..\Include\State.h" />
     <ClInclude Include="..\Include\StatisticsComponent.h" />
+    <ClInclude Include="..\Include\TextField.h" />
     <ClInclude Include="..\Include\TileMap.h" />
     <ClInclude Include="..\Include\TransitionComponent.h" />
     <ClInclude Include="..\Include\Weapon.h" />
@@ -50,8 +51,8 @@
     <ClCompile Include="..\Source\AnimationComponent.cpp" />
     <ClCompile Include="..\Source\Armor.cpp" />
     <ClCompile Include="..\Source\Button.cpp" />
-    <ClCompile Include="..\Source\ButtonText.cpp" />
     <ClCompile Include="..\Source\Character.cpp" />
+    <ClCompile Include="..\Source\ChatBoxGUI.cpp" />
     <ClCompile Include="..\Source\Entity.cpp" />
     <ClCompile Include="..\Source\Game.cpp" />
     <ClCompile Include="..\Source\GameState.cpp" />
@@ -73,6 +74,7 @@
     </ClCompile>
     <ClCompile Include="..\Source\State.cpp" />
     <ClCompile Include="..\Source\StatisticsComponent.cpp" />
+    <ClCompile Include="..\Source\TextField.cpp" />
     <ClCompile Include="..\Source\TilesMap.cpp" />
     <ClCompile Include="..\Source\TransitionComponent.cpp" />
     <ClCompile Include="..\Source\Weapon.cpp" />

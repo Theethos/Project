@@ -102,6 +102,7 @@ void Game::UpdateEvents()
 			this->window.setMouseCursorVisible(true);
 			if (this->event.type == sf::Event::KeyReleased)
 			{
+				std::cout << event.key.code << std::endl;
 				this->states.top()->HandleInput(this->event.key.code, dt);
 			}
 		}
