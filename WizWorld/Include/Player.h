@@ -8,33 +8,31 @@ class Player : public Entity
 {
 public:
 	// Constructor
-	Player(float maxVelocity, float x_pos, float y_pos, std::string config_file, std::string name, sf::Font* font, int sprite_scale = 1);
+	Player(float max_velocity, float x_pos, float y_pos, std::string config_file, std::string name, sf::Font& font, int sprite_scale = 1);
 	// Destructor
 	virtual ~Player();
 
 	// Functions
 	void Update(const float &dt);
-	void Render(sf::RenderTarget* target);
+	void Render(sf::RenderTarget& target);
 
 	// Getter
-	sf::Sprite* getSprite() const;
-	const std::string &getName() const;
-	StatisticsComponent &getStatistics();
+	sf::Sprite& GetSprite() const { return *m_Sprite; }
+	const std::string &GetName() const { return m_Name; }
+	StatisticsComponent &GetStatistics() { return m_Statistics; }
 
 private:
 	// Pseudo of the player
-	std::string name;
-	sf::Text nameRendered;
-	sf::Font* font;
+	std::string m_Name;
+	sf::Text m_NameRendered;
+	sf::Font& m_Font;
 
 	// Attributes of the player
-	StatisticsComponent _statistics;
+	StatisticsComponent m_Statistics;
 
 	// Private functions
-	void InitAnimationComponent(std::string config_file);
+	void InitAnimationComponent(const std::string config_file);
 	void InitName();
-
-
 };
 
 #endif //!_PLAYER_H_

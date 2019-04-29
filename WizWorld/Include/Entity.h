@@ -14,26 +14,26 @@ public:
 	virtual ~Entity();
 
 	// Virtual functions
-	virtual void Update(const float &dt) = 0;
+	virtual void Update(const float& dt) = 0;
 	
 	// Functions
 	virtual void Move(const float& dt, const float x_motion, const float y_motion);
-	virtual void Render(sf::RenderTarget* target);
+	virtual void Render(sf::RenderTarget& target);
 
 	// Getters
-	MovementComponent *getMovement() const;
-	AnimationComponent *getAnimation() const;
+	MovementComponent& GetMovement() const;
+	AnimationComponent& GetAnimation() const;
 
 protected:
-	sf::Sprite *sprite;
-	std::map<std::string, sf::Texture> textures;
-	MovementComponent *movement;
-	AnimationComponent *animation;
-	HitboxComponent *hitbox;
+	sf::Sprite* m_Sprite;
+	std::map<std::string, sf::Texture> m_Textures;
+	MovementComponent* m_Movement;
+	AnimationComponent* m_Animation;
+	HitboxComponent* m_Hitbox;
 	
 	// Private functions
 	virtual void InitSprite();
-	virtual void InitMovementComponent(float maxVelocity, float acceleration, float deceleration);
+	virtual void InitMovementComponent(float max_velocity, float acceleration, float deceleration);
 	virtual void InitAnimationComponent();
 	virtual void InitTextures();
 };

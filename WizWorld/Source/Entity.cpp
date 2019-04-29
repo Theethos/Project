@@ -2,12 +2,14 @@
 #include "../Include/Macros.h"
 #include "../Include/Entity.h"
 
+using namespace sf;
+
 // Constructor
 Entity::Entity() : 
-sprite(nullptr), 
-movement(nullptr), 
-animation(nullptr), 
-hitbox(nullptr)
+m_Sprite(nullptr), 
+m_Movement(nullptr), 
+m_Animation(nullptr), 
+m_Hitbox(nullptr)
 {}
 // Destructor
 Entity::~Entity()
@@ -16,85 +18,82 @@ Entity::~Entity()
 // Functions
 void Entity::Move(const float& dt, const float x_motion, const float y_motion)
 {
-	if (this->sprite && this->movement)
+	if (m_Sprite && m_Movement)
 	{
-		this->movement->Move(dt, x_motion, y_motion);
-		this->sprite->move(this->movement->getVelocity());
-		// An entity with animation needs to define those four moves
-		// Plays the right animation
-		if (this->animation)
+		m_Movement->Move(dt, x_motion, y_motion);
+		m_Sprite->move(m_Movement->GetVelocity());
+		// An entity with m_Animation needs to define those four moves
+		// Plays the right m_Animation
+		if (m_Animation)
 		{
-			if (this->movement->getVelocity().y == 0)
+			if (m_Movement->GetVelocity().y == 0)
 			{
 				// Moving left
-				if (this->movement->getVelocity().x < 0)
+				if (m_Movement->GetVelocity().x < 0)
 				{
-					this->animation->setSide(AnimationSide::LEFT);
-					this->animation->PlayAnimation(this->movement->getVelocity().x, dt, "LEFT");
+					m_Animation->SetSide(AnimationSide::LEFT);
+					m_Animation->PlayAnimation(m_Movement->GetVelocity().x, dt, "LEFT");
 				}
 				// Moving right
-				else if (this->movement->getVelocity().x > 0)
+				else if (m_Movement->GetVelocity().x > 0)
 				{
-					this->animation->setSide(AnimationSide::RIGHT);
-					this->animation->PlayAnimation(this->movement->getVelocity().x, dt, "RIGHT");
+					m_Animation->SetSide(AnimationSide::RIGHT);
+					m_Animation->PlayAnimation(m_Movement->GetVelocity().x, dt, "RIGHT");
 				}
 			}
 			else
 			{
 				// Moving up
-				if (this->movement->getVelocity().y < 0)
+				if (m_Movement->GetVelocity().y < 0)
 				{
-					this->animation->setSide(AnimationSide::UP);
-					this->animation->PlayAnimation(this->movement->getVelocity().y, dt, "UP");
+					m_Animation->SetSide(AnimationSide::UP);
+					m_Animation->PlayAnimation(m_Movement->GetVelocity().y, dt, "UP");
 				}
 				// Moving up
-				else if (this->movement->getVelocity().y > 0)
+				else if (m_Movement->GetVelocity().y > 0)
 				{
-					this->animation->setSide(AnimationSide::DOWN);
-					this->animation->PlayAnimation(this->movement->getVelocity().y, dt, "DOWN");
+					m_Animation->SetSide(AnimationSide::DOWN);
+					m_Animation->PlayAnimation(m_Movement->GetVelocity().y, dt, "DOWN");
 				}
 			}
 		}
 	}
 }
 
-void Entity::Render(sf::RenderTarget* target)
+void Entity::Render(RenderTarget& target)
 {
-	if (this->sprite)
-	{
-		target->draw(*this->sprite);
-	}
+	if (m_Sprite)
+		target.draw(*m_Sprite);
 }
 
 void Entity::InitSprite()
 {
-	this->sprite = new sf::Sprite();
-	this->hitbox = new HitboxComponent(this->sprite, 64, 64);
-
+	m_Sprite = new Sprite();
+	m_Hitbox = new HitboxComponent(*m_Sprite, 64, 64);
 }
 
 void Entity::InitAnimationComponent()
 {
-	this->animation = new AnimationComponent(this->sprite);
+	m_Animation = new AnimationComponent(*m_Sprite);
 }
 
 void Entity::InitTextures()
 {}
 
-void Entity::InitMovementComponent(float maxVelocity, float acceleration, float deceleration)
+void Entity::InitMovementComponent(float max_velocity, float acceleration, float deceleration)
 {
-	this->movement = new MovementComponent(maxVelocity, acceleration, deceleration);
+	m_Movement = new MovementComponent(max_velocity, acceleration, deceleration);
 }
 
 // Getters
-MovementComponent * Entity::getMovement() const
+MovementComponent& Entity::GetMovement() const
 {
-	if (this->movement)
-		return this->movement;
+	if (m_Movement)
+		return *m_Movement;
 }
 
-AnimationComponent * Entity::getAnimation() const
+AnimationComponent& Entity::GetAnimation() const
 {
-	if (this->animation)
-		return this->animation;
+	if (m_Animation)
+		return *m_Animation;
 }

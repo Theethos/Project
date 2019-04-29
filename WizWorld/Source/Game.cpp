@@ -2,11 +2,13 @@
 #include "../Include/Macros.h"
 #include "../Include/Game.h"
 
+using namespace sf;
+
 // Constructor
 Game::Game() :
-dt(0.0), 
-fullscreen(false),
-music("../External/Config/Music/Music.cfg")
+m_DeltaTime(0.0), 
+m_Fullscreen(false),
+m_Music("../External/Config/Music/Music.cfg")
 {
 	InitWindow();
 	InitStates();
@@ -15,10 +17,10 @@ music("../External/Config/Music/Music.cfg")
 Game::~Game()
 {
 	// Delete the states stack
-	while (!this->states.empty())
+	while (!m_States.empty())
 	{
-		delete this->states.top();
-		this->states.pop();
+		delete m_States.top();
+		m_States.pop();
 	}
 }
 
@@ -26,84 +28,83 @@ Game::~Game()
 void Game::Run()
 {
 	// Main loop
-	while (this->window.isOpen())
+	while (m_Window.isOpen())
 	{
 		// Update delta time to know how long it takes to do the entire loop
-		this->UpdateDt();
-		this->Update();
-		this->Render();
+		UpdateDt();
+		Update();
+		Render();
 	}
 }
 
 void Game::Update()
 {
 	// Check if user close the window
-	this->UpdateEvents();
+	UpdateEvents();
 
 	// Updates from top state
-	if (!this->states.empty())
+	if (!m_States.empty())
 	{
-		this->states.top()->Update(this->dt);
+		m_States.top()->Update(m_DeltaTime);
 		// Pops the state it is finished/closed 
-		if (this->states.top()->getQuit())
+		if (m_States.top()->GetQuit())
 		{
-			delete this->states.top();
-			this->states.pop();
+			delete m_States.top();
+			m_States.pop();
 		}
-		this->UpdateMusic();
+		UpdateMusic();
 	}
 	// There is no more states
 	else
 	{
-		this->window.close();
+		m_Window.close();
 	}
 }
 
 void Game::UpdateEvents()
 {
-	while (this->window.pollEvent(this->event))
+	while (m_Window.pollEvent(m_Event))
 	{
-		// User closed the window
-		if (this->event.type == sf::Event::Closed)
+		// User closed the m_Window
+		if (m_Event.type == Event::Closed)
 		{
-			this->window.close();
+			m_Window.close();
 			break;
 		}
-		else if (this->event.type == sf::Event::JoystickConnected)
+		else if (m_Event.type == Event::JoystickConnected)
 		{
-			this->states.top()->InitControllerKeys();
-			this->states.top()->InitControllerActions();
-			this->window.setMouseCursorVisible(false);
+			m_States.top()->InitControllerKeys();
+			m_States.top()->InitControllerActions();
+			m_Window.setMouseCursorVisible(false);
 		}
-		else if (this->event.type == sf::Event::JoystickDisconnected)
+		else if (m_Event.type == Event::JoystickDisconnected)
 		{
-			this->states.top()->InitKeyboardKeys();
-			this->states.top()->InitKeyboardActions();
-			this->window.setMouseCursorVisible(true);
+			m_States.top()->InitKeyboardKeys();
+			m_States.top()->InitKeyboardActions();
+			m_Window.setMouseCursorVisible(true);
 
 		}
-		if (sf::Joystick::isConnected(0))
+		if (Joystick::isConnected(0))
 		{
-			this->window.setMouseCursorVisible(false);
-			if (this->event.type == sf::Event::JoystickMoved)
+			m_Window.setMouseCursorVisible(false);
+			if (m_Event.type == Event::JoystickMoved)
 			{
-				if (std::abs(this->event.joystickMove.position) > 80)
+				if (std::abs(m_Event.joystickMove.position) > 80)
 				{
-					this->states.top()->HandleInput(-1, dt);
+					m_States.top()->HandleInput(-1, m_DeltaTime);
 				}
 			}
-			else if (this->event.type == sf::Event::JoystickButtonReleased)
+			else if (m_Event.type == Event::JoystickButtonReleased)
 			{
-				this->states.top()->HandleInput(this->event.joystickButton.button, dt);
+				m_States.top()->HandleInput(m_Event.joystickButton.button, m_DeltaTime);
 			}
 		}
-		else if (this->event.type != sf::Event::TextEntered)
+		else if (m_Event.type != Event::TextEntered)
 		{
-			this->window.setMouseCursorVisible(true);
-			if (this->event.type == sf::Event::KeyReleased)
+			m_Window.setMouseCursorVisible(true);
+			if (m_Event.type == Event::KeyReleased)
 			{
-				std::cout << event.key.code << std::endl;
-				this->states.top()->HandleInput(this->event.key.code, dt);
+				m_States.top()->HandleInput(m_Event.key.code, m_DeltaTime);
 			}
 		}
 	}
@@ -111,61 +112,61 @@ void Game::UpdateEvents()
 
 void Game::UpdateMusic()
 {
-	if (this->states.top()->getState() == WhichState::MENU_STATE)
+	if (m_States.top()->GetState() == WhichState::MENU_STATE)
 	{
-		MenuState* menu = static_cast<MenuState*>(this->states.top());
-		if (menu->getMenuType() == Menu::PAUSE_MENU)
+		MenuState* menu = static_cast<MenuState*>(m_States.top());
+		if (menu->GetMenuType() == Menu::PAUSE_MENU)
 		{
-			this->music.Pause("GAME");
-			this->music.Play(this->dt, "PAUSE_MENU");
+			m_Music.Pause("GAME");
+			m_Music.Play(m_DeltaTime, "PAUSE_MENU");
 		}
 		else
 		{
-			this->music.Stop("PAUSE_MENU");
-			this->music.Stop("GAME");
-			this->music.Play(this->dt, "MENU");
+			m_Music.Stop("PAUSE_MENU");
+			m_Music.Stop("GAME");
+			m_Music.Play(m_DeltaTime, "MENU");
 		}
 	}
-	else if (this->states.top()->getState() == WhichState::GAME_STATE)
+	else if (m_States.top()->GetState() == WhichState::GAME_STATE)
 	{
-		this->music.Stop("PAUSE_MENU");
-		this->music.Stop("MENU");
-		this->music.Play(this->dt, "GAME");
+		m_Music.Stop("PAUSE_MENU");
+		m_Music.Stop("MENU");
+		m_Music.Play(m_DeltaTime, "GAME");
 	}
 }
 
 void Game::UpdateDt()
 {
-	this->dt = this->clock.restart().asSeconds();
+	m_DeltaTime = m_Clock.restart().asSeconds();
 }
 
 void Game::Render()
 {
-	this->window.clear();
+	m_Window.clear();
 
 	// Renders from state
-	if (!this->states.empty())
+	if (!m_States.empty())
 	{
 		// Render the game under the pause menu 
-		if (this->states.top()->getState() == WhichState::MENU_STATE)
+		if (m_States.top()->GetState() == WhichState::MENU_STATE)
 		{
-			auto menu = static_cast<MenuState*>(this->states.top());
-			if (menu->getMenuType() == Menu::PAUSE_MENU)
+			auto menu = static_cast<MenuState*>(m_States.top());
+			if (menu->GetMenuType() == Menu::PAUSE_MENU)
 			{
-				this->states.pop();
-				this->states.top()->Render(&this->window);
-				this->states.push(menu);
+				m_States.pop();
+				m_States.top()->Render(m_Window);
+				m_States.push(menu);
 			}
 		}
-		this->states.top()->Render(&this->window);
+		m_States.top()->Render(m_Window);
 	}
 
-	//this->DisplayFPS();
+	//_DisplayFPS();
 
-	this->window.display();
+	m_Window.display();
 }
 /////////////////////////////////////////////////////////////////////
-/// Initializes the window with the parameters in the file "window.cfg" 
+/// Initializes the m_Window with the parameters in the file "m_Window.cfg" 
 /// Format :
 /// Title
 ///	Width Height
@@ -175,11 +176,11 @@ void Game::Render()
 /////////////////////////////////////////////////////////////////////
 void Game::InitWindow()
 {
-	std::ifstream config_file("../External/Config/Window/Window.cfg");
+	std::ifstream config_file("../External/Config/window/window.cfg");
 
-	// Window's attributes
+	// m_Window's attributes
 	std::string title("None");
-	sf::VideoMode video_mode(sf::VideoMode::getDesktopMode());
+	VideoMode video_mode(VideoMode::getDesktopMode());
 	unsigned fps = 120;
 	bool vertical_sync_enabled = false;
 
@@ -187,37 +188,37 @@ void Game::InitWindow()
 	{
 		std::getline(config_file, title);
 		config_file >> video_mode.width >> video_mode.height;
-		config_file >> this->fullscreen;
+		config_file >> m_Fullscreen;
 		config_file >> fps;
 		config_file >> vertical_sync_enabled;
 		
 		config_file.close();
 	}
 
-	if (this->fullscreen)
-		this->window.create(video_mode, title, sf::Style::Fullscreen);
+	if (m_Fullscreen)
+		m_Window.create(video_mode, title, Style::Fullscreen);
 	else
-		this->window.create(video_mode, title);
+		m_Window.create(video_mode, title);
 
-	this->window.setFramerateLimit(fps);
-	this->window.setVerticalSyncEnabled(vertical_sync_enabled);
+	m_Window.setFramerateLimit(fps);
+	m_Window.setVerticalSyncEnabled(vertical_sync_enabled);
 }
 
 void Game::InitStates()
 {
-	this->states.push(new MenuState(&this->window, &this->states, WhichState::MENU_STATE, "../External/Config/Buttons/Main_menu.cfg", Menu::MAIN_MENU));
+	m_States.push(new MenuState(m_Window, m_States, WhichState::MENU_STATE, "../External/Config/Buttons/Main_menu.cfg", Menu::MAIN_MENU));
 }
 
 void Game::DisplayFPS()
 {
-	sf::Font font;
+	Font font;
 	font.loadFromFile("../External/Fonts/Animales_Fantastic.otf");
 
-	sf::Text fps;
-	fps.setString(std::to_string(static_cast<int>(1 / this->dt)));
+	Text fps;
+	fps.setString(std::to_string(static_cast<int>(1 / m_DeltaTime)));
 	fps.setCharacterSize(60);
 	fps.setFont(font);
-	fps.setFillColor(sf::Color::Black);
-	this->window.draw(fps);
+	fps.setFillColor(Color::Black);
+	m_Window.draw(fps);
 }
 

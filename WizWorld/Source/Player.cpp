@@ -2,70 +2,75 @@
 #include "../Include/Macros.h"
 #include "../Include/Player.h"
 
+using namespace sf;
+
 // Constructor 
-Player::Player(float maxVelocity, float x_pos, float y_pos, std::string config_file, std::string name, sf::Font* font, int sprite_scale) :
-Entity(), name(name), font(font), _statistics()
+Player::Player(float max_velocity, float x_pos, float y_pos, std::string config_file, std::string name, Font& font, int sprite_scale) :
+Entity(),
+m_Name(name),
+m_Font(font),
+m_Statistics()
 {
 
 	InitSprite();
-	this->sprite->setPosition(sf::Vector2f(x_pos, y_pos));
-	this->sprite->setScale(sprite_scale, sprite_scale);
+	m_Sprite->setPosition(Vector2f(x_pos, y_pos));
+	m_Sprite->setScale(sprite_scale, sprite_scale);
 
-	InitMovementComponent(maxVelocity, 10.f, 9.f);
+	InitMovementComponent(max_velocity, 10.f, 9.f);
 	InitAnimationComponent(config_file);
 	InitName();
 	
 	// Set the sprite texture to IDLE_DOWN at the beginning
-	this->animation->IdleAnimation(0.05, "DOWN");
+	m_Animation->IdleAnimation(0.05, "DOWN");
 }
 // Destructor
 Player::~Player()
 {
-	delete this->sprite;
-	delete this->movement;
-	delete this->animation;
-	delete this->hitbox;
+	delete m_Sprite;
+	delete m_Movement;
+	delete m_Animation;
+	delete m_Hitbox;
 }
 
 //Functions
 void Player::Update(const float & dt)
 {
-	if (this->sprite && this->movement)
+	if (m_Sprite && m_Movement)
 	{
 		// Calls the decelerating phase
-		this->movement->Update(dt, this->sprite);
+		m_Movement->Update(dt, *m_Sprite);
 		// Update hitbox
-		this->hitbox->Update();
-		if (this->animation)
+		m_Hitbox->Update();
+		if (m_Animation)
 		{
 			// Sets the accurate texture depending on the sprite orientation
 			// If the player moves, it will be changes after so those animations are only played if the player doesn't move
-			switch (this->animation->getSide())
+			switch (m_Animation->GetSide())
 			{
 				case AnimationSide::LEFT:
-					this->animation->IdleAnimation(0.005, "LEFT");
+					m_Animation->IdleAnimation(0.005, "LEFT");
 					break;
 				case AnimationSide::RIGHT:
-					this->animation->IdleAnimation(0.005, "RIGHT");
+					m_Animation->IdleAnimation(0.005, "RIGHT");
 					break;
 				case AnimationSide::UP:
-					this->animation->IdleAnimation(0.005, "UP");
+					m_Animation->IdleAnimation(0.005, "UP");
 					break;
 				case AnimationSide::DOWN:
-					this->animation->IdleAnimation(0.005, "DOWN");
+					m_Animation->IdleAnimation(0.005, "DOWN");
 					break;
 				default:
 					break;
 			}
 		}
-		this->nameRendered.setPosition(this->sprite->getPosition() - sf::Vector2f((this->nameRendered.getGlobalBounds().width - this->sprite->getGlobalBounds().width) / 2, 3 * this->sprite->getScale().x + this->nameRendered.getGlobalBounds().height));
+		m_NameRendered.setPosition(m_Sprite->getPosition() - Vector2f((m_NameRendered.getGlobalBounds().width - m_Sprite->getGlobalBounds().width) / 2, 3 * m_Sprite->getScale().x + m_NameRendered.getGlobalBounds().height));
 	}
 }
 
-void Player::Render(sf::RenderTarget * target)
+void Player::Render(RenderTarget& target)
 {
 	Entity::Render(target);
-	target->draw(this->nameRendered);
+	target.draw(m_NameRendered);
 }
 /////////////////////////////////////////////////////////////////////
 /// Initializes the map of music with the parameters in the given file
@@ -91,10 +96,10 @@ void Player::InitAnimationComponent(std::string file_path)
 		while (config_file >> key >> path >> number_of_textures >> width >> height >> animation_timer)
 		{
 			// Loads appropriate texture
-			sf::Texture *texture_sheet = new sf::Texture;
+			Texture *texture_sheet = new Texture;
 			texture_sheet->loadFromFile(path);
 			// Add it to the animation component
-			this->animation->AddAnimation(key, texture_sheet, number_of_textures, width, height, animation_timer);
+			m_Animation->AddAnimation(key, texture_sheet, number_of_textures, width, height, animation_timer);
 		}
 		config_file.close();
 	}
@@ -102,25 +107,9 @@ void Player::InitAnimationComponent(std::string file_path)
 
 void Player::InitName()
 {
-	this->nameRendered.setFont(*this->font);
-	this->nameRendered.setFillColor(sf::Color::Black);
-	this->nameRendered.setString(this->name);
-	this->nameRendered.setCharacterSize(16);
-}
-
-// Getter
-sf::Sprite * Player::getSprite() const
-{
-	return this->sprite;
-}
-
-const std::string & Player::getName() const
-{
-	return this->name;
-}
-
-StatisticsComponent & Player::getStatistics()
-{
-	return _statistics;
+	m_NameRendered.setFont(m_Font);
+	m_NameRendered.setFillColor(Color::Black);
+	m_NameRendered.setString(m_Name);
+	m_NameRendered.setCharacterSize(16);
 }
 

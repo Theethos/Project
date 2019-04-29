@@ -2,405 +2,403 @@
 #include "../Include/Macros.h"
 #include "../Include/TextField.h"
 
+using namespace sf;
+
 // Constructor
-TextField::TextField(float x, float y, float w, float h, std::string text, sf::Font *font, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor, int textSize, sf::RenderWindow* window, bool only_letter) :
-Button(x, y, w, h, text, font, idleColor, hoverColor, activeColor, textSize),
-textEntered(""),
-window(window), 
-thread(&TextField::CaptureText, this), 
-blinking(false), 
-threadIsRunning(false),
-_onlyLetter(only_letter),
-maxSize(12)
+TextField::TextField(RenderWindow& window, Font &font, float x, float y, float width, float height, std::string text, Color idle_color, Color hover_color,
+Color active_color, int text_size, bool only_letter) :
+Button(x, y, width, height, text, font, idle_color, hover_color, active_color, text_size),
+m_TextEntered(""),
+m_Window(window), 
+m_Thread(&TextField::CaptureText, this), 
+m_Blinking(false), 
+m_Running(false),
+m_OnlyLetter(only_letter),
+m_MaxSize(12)
 {
-	this->shape.setSize(sf::Vector2f(w, h));
-	this->shape.setPosition(sf::Vector2f(x, y));
+	m_BackgroundColor = Color(0, 0, 0, 128);
+	
+	m_Shape.setSize(Vector2f(width, height));
+	m_Shape.setPosition(Vector2f(x, y));
+	m_Shape.setFillColor(m_BackgroundColor);
+	m_Shape.setOutlineThickness(0);
 
-	this->text.setPosition(sf::Vector2f(this->getPosition()) + sf::Vector2f(this->shape.getGlobalBounds().width * 0.02, this->shape.getGlobalBounds().height / 2.f - this->text.getGlobalBounds().height / 1.35));
-	this->textEnteredToRender.setString(this->textEntered);
-	this->textEnteredToRender.setFont(*this->font);
-	this->textEnteredToRender.setFillColor(this->idleColor);
-	this->textEnteredToRender.setCharacterSize(this->textSize);
-	this->textEnteredToRender.setPosition(this->text.getPosition());
-
-	this->backgroundColor = sf::Color::Black;
-	this->backgroundColor.a = 128;
-
-	this->shape.setFillColor(this->backgroundColor);
+	m_Text.setPosition(Vector2f(m_Shape.getPosition()) 
+					 + Vector2f(m_Shape.getGlobalBounds().width * 0.02, m_Shape.getGlobalBounds().height * 0.1));
+	
+	m_TextRendered.setString(m_TextEntered);
+	m_TextRendered.setFont(m_Font);
+	m_TextRendered.setFillColor(m_IdleColor);
+	m_TextRendered.setCharacterSize(m_TextSize);
+	m_TextRendered.setPosition(m_Text.getPosition());
 }
 // Destructor
 TextField::~TextField()
 {
-	if (this->threadIsRunning)
-	{
-		this->thread.wait();
-	}
+	if (m_Running)
+		m_Thread.wait();
 }
 
 // Functions
-void TextField::Update(const sf::Vector2f mousePos)
+void TextField::Update(const Vector2f mouse_position)
 {
-	Button::Update(mousePos);
+	Button::Update(mouse_position);
 
-	sf::Text letter("a", *this->font, this->textSize);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+	Text letter("a", m_Font, m_TextSize);                                                       
+	// Launch the m_Thread                                    Check that the text is not bigger than the shape
+	if (m_Activated && m_TextEntered.size() < m_MaxSize && !(m_TextRendered.getGlobalBounds().width + 2 * letter.getGlobalBounds().width > m_Shape.getSize().x) && !m_Running)
 	{
-		this->Deactivate();
-	}                                                                        // Check that the text is not bigger than the shape
-	// Launch the thread
-	else if (this->activated && this->textEntered.size() < this->maxSize && !(textEnteredToRender.getGlobalBounds().width + 2 * letter.getGlobalBounds().width > shape.getSize().x) && !this->threadIsRunning)
-	{
-		// Lock the thread
-		this->threadIsRunning = true;
-		this->thread.launch();
+		// Lock the m_Thread
+		m_Running = true;
+		m_Thread.launch();
 	}
 	// If user presses "BackSpace"
-	else if (this->activated && (this->textEntered.size() == this->maxSize || (textEnteredToRender.getGlobalBounds().width + 2 * letter.getGlobalBounds().width > shape.getSize().x)))
+	else if (m_Activated && (m_TextEntered.size() == m_MaxSize || (m_TextRendered.getGlobalBounds().width + 2 * letter.getGlobalBounds().width > m_Shape.getSize().x)))
 	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
+		if (Keyboard::isKeyPressed(Keyboard::BackSpace))
 		{
-			this->RemoveChar();
+			RemoveChar();
 		}
 	}
 }
 
-void TextField::Render(sf::RenderTarget* target)
+void TextField::Render(RenderTarget& target)
 {
-	if (this->activated)
+	if (m_Activated)
 	{
-		// Reset the blinking state
-		this->blinking = false;
+		// Reset the m_Blinking state
+		m_Blinking = false;
 		// Set background black
-		this->backgroundColor = sf::Color::Black;
-		this->backgroundColor.a = 128;
-		this->shape.setFillColor(this->backgroundColor);
+		m_BackgroundColor = Color::Black;
+		m_BackgroundColor.a = 128;
+		m_Shape.setFillColor(m_BackgroundColor);
 
-		target->draw(this->shape);
-		target->draw(this->textEnteredToRender);
+		target.draw(m_Shape);
+		target.draw(m_TextRendered);
 	}
 	// If the user entered a text but is not over the button anymore
-	else if (this->textEntered != "")
+	else if (m_TextEntered != "")
 	{
-		if (!this->blinking)
+		if (!m_Blinking)
 		{
 			// Set background transparent
-			this->backgroundColor = sf::Color::Transparent;
+			m_BackgroundColor = Color::Transparent;
 		}
-		this->shape.setFillColor(this->backgroundColor);
-		target->draw(this->shape);
-		target->draw(this->textEnteredToRender);
+		m_Shape.setFillColor(m_BackgroundColor);
+		target.draw(m_Shape);
+		target.draw(m_TextRendered);
 	}
 	// If the user did not yet enter a text and is not over the button
 	else
 	{
 		Button::Render(target);
-		if (!this->blinking)
+		if (!m_Blinking)
 		{
 			// Set background transparent
-			this->backgroundColor = sf::Color::Transparent;
+			m_BackgroundColor = Color::Transparent;
 		}
-		this->shape.setFillColor(this->backgroundColor);
-		target->draw(this->shape);
+		m_Shape.setFillColor(m_BackgroundColor);
+		target.draw(m_Shape);
 	}
 }
 
 void TextField::AddChar(char character)
 {
 	// Add the character to the text string
-	this->textEntered += character;
-	this->textEnteredToRender.setString(this->textEntered);
+	m_TextEntered += character;
+	m_TextRendered.setString(m_TextEntered);
 	// Then put a delay between 2 character
-	sf::sleep(sf::milliseconds(150));
+	sleep(milliseconds(150));
 }
 
 void TextField::RemoveChar()
 {
 	// If there is at least one character in the text string
-	if (this->textEntered.size())
+	if (m_TextEntered.size())
 	{
 		// Remove the character to the text string
-		this->textEntered.pop_back();
-		this->textEnteredToRender.setString(this->textEntered);
+		m_TextEntered.pop_back();
+		m_TextRendered.setString(m_TextEntered);
 		// Then put a delay between 2 character
-		sf::sleep(sf::milliseconds(150));
+		sleep(milliseconds(150));
 	}
 }
 
 void TextField::CaptureText()
 {
-	this->mutex.lock();
+	m_Mutex.lock();
 	// I can't use pollEvent because otherwise it may crash with the Game function "UpdateEvent"
-	// and I have to use a thread in order to keep the game moving when the user enters its text */
+	// and I have to use a m_Thread in order to keep the game moving when the user enters its text */
 	// Testing MAJ letter and SHIFT + key
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
+	if (Keyboard::isKeyPressed(Keyboard::LShift) || Keyboard::isKeyPressed(Keyboard::RShift))
 	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Slash) && !_onlyLetter)
-			this->AddChar('/');
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Comma) && !_onlyLetter)
-			this->AddChar('?');
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Period) && !_onlyLetter)
-			this->AddChar(';');
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		if (Keyboard::isKeyPressed(Keyboard::Slash) && !m_OnlyLetter)
+			AddChar('/');
+		else if (Keyboard::isKeyPressed(Keyboard::Comma) && !m_OnlyLetter)
+			AddChar('?');
+		else if (Keyboard::isKeyPressed(Keyboard::Period) && !m_OnlyLetter)
+			AddChar(';');
+		else if (Keyboard::isKeyPressed(Keyboard::A))
 		{
-			this->AddChar('A');
+			AddChar('A');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
+		else if (Keyboard::isKeyPressed(Keyboard::B))
 		{
-			this->AddChar('B');
+			AddChar('B');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
+		else if (Keyboard::isKeyPressed(Keyboard::C))
 		{
-			this->AddChar('C');
+			AddChar('C');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		else if (Keyboard::isKeyPressed(Keyboard::D))
 		{
-			this->AddChar('D');
+			AddChar('D');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+		else if (Keyboard::isKeyPressed(Keyboard::E))
 		{
-			this->AddChar('E');
+			AddChar('E');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+		else if (Keyboard::isKeyPressed(Keyboard::F))
 		{
-			this->AddChar('F');
+			AddChar('F');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
+		else if (Keyboard::isKeyPressed(Keyboard::G))
 		{
-			this->AddChar('G');
+			AddChar('G');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::H))
+		else if (Keyboard::isKeyPressed(Keyboard::H))
 		{
-			this->AddChar('H');
+			AddChar('H');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::I))
+		else if (Keyboard::isKeyPressed(Keyboard::I))
 		{
-			this->AddChar('I');
+			AddChar('I');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::J))
+		else if (Keyboard::isKeyPressed(Keyboard::J))
 		{
-			this->AddChar('J');
+			AddChar('J');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+		else if (Keyboard::isKeyPressed(Keyboard::K))
 		{
-			this->AddChar('K');
+			AddChar('K');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+		else if (Keyboard::isKeyPressed(Keyboard::L))
 		{
-			this->AddChar('L');
+			AddChar('L');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+		else if (Keyboard::isKeyPressed(Keyboard::M))
 		{
-			this->AddChar('M');
+			AddChar('M');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::N))
+		else if (Keyboard::isKeyPressed(Keyboard::N))
 		{
-			this->AddChar('N');
+			AddChar('N');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
+		else if (Keyboard::isKeyPressed(Keyboard::O))
 		{
-			this->AddChar('O');
+			AddChar('O');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+		else if (Keyboard::isKeyPressed(Keyboard::P))
 		{
-			this->AddChar('P');
+			AddChar('P');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+		else if (Keyboard::isKeyPressed(Keyboard::Q))
 		{
-			this->AddChar('Q');
+			AddChar('Q');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+		else if (Keyboard::isKeyPressed(Keyboard::R))
 		{
-			this->AddChar('R');
+			AddChar('R');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		else if (Keyboard::isKeyPressed(Keyboard::S))
 		{
-			this->AddChar('S');
+			AddChar('S');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::T))
+		else if (Keyboard::isKeyPressed(Keyboard::T))
 		{
-			this->AddChar('T');
+			AddChar('T');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::U))
+		else if (Keyboard::isKeyPressed(Keyboard::U))
 		{
-			this->AddChar('U');
+			AddChar('U');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::V))
+		else if (Keyboard::isKeyPressed(Keyboard::V))
 		{
-			this->AddChar('V');
+			AddChar('V');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+		else if (Keyboard::isKeyPressed(Keyboard::W))
 		{
-			this->AddChar('W');
+			AddChar('W');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+		else if (Keyboard::isKeyPressed(Keyboard::X))
 		{
-			this->AddChar('X');
+			AddChar('X');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y))
+		else if (Keyboard::isKeyPressed(Keyboard::Y))
 		{
-			this->AddChar('Y');
+			AddChar('Y');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+		else if (Keyboard::isKeyPressed(Keyboard::Z))
 		{
-			this->AddChar('Z');
+			AddChar('Z');
 		}
 	}
 	// Backspace
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
-		this->RemoveChar();
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !_onlyLetter)
-		this->AddChar(' ');
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Divide) && !_onlyLetter)
-		this->AddChar('/');
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Slash) && !_onlyLetter)
-		this->AddChar(':');
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Comma) && !_onlyLetter)
-		this->AddChar(',');
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Period) && !_onlyLetter)
-		this->AddChar('.');
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3) && !_onlyLetter)
-		this->AddChar('"');
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4) && !_onlyLetter)
-		this->AddChar('\'');
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num5) && !_onlyLetter)
-		this->AddChar('(');
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num6))
-		this->AddChar('-');
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LBracket) && !_onlyLetter)
-		this->AddChar(')');
+	else if (Keyboard::isKeyPressed(Keyboard::BackSpace))
+		RemoveChar();
+	else if (Keyboard::isKeyPressed(Keyboard::Space) && !m_OnlyLetter)
+		AddChar(' ');
+	else if (Keyboard::isKeyPressed(Keyboard::Divide) && !m_OnlyLetter)
+		AddChar('/');
+	else if (Keyboard::isKeyPressed(Keyboard::Slash) && !m_OnlyLetter)
+		AddChar(':');
+	else if (Keyboard::isKeyPressed(Keyboard::Comma) && !m_OnlyLetter)
+		AddChar(',');
+	else if (Keyboard::isKeyPressed(Keyboard::Period) && !m_OnlyLetter)
+		AddChar('.');
+	else if (Keyboard::isKeyPressed(Keyboard::Num3) && !m_OnlyLetter)
+		AddChar('"');
+	else if (Keyboard::isKeyPressed(Keyboard::Num4) && !m_OnlyLetter)
+		AddChar('\'');
+	else if (Keyboard::isKeyPressed(Keyboard::Num5) && !m_OnlyLetter)
+		AddChar('(');
+	else if (Keyboard::isKeyPressed(Keyboard::Num6))
+		AddChar('-');
+	else if (Keyboard::isKeyPressed(Keyboard::LBracket) && !m_OnlyLetter)
+		AddChar(')');
 	// NORMALE letter
 	else
 	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		if (Keyboard::isKeyPressed(Keyboard::A))
 		{
-			this->AddChar('a');
+			AddChar('a');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
+		else if (Keyboard::isKeyPressed(Keyboard::B))
 		{
-			this->AddChar('b');
+			AddChar('b');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
+		else if (Keyboard::isKeyPressed(Keyboard::C))
 		{
-			this->AddChar('c');
+			AddChar('c');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		else if (Keyboard::isKeyPressed(Keyboard::D))
 		{
-			this->AddChar('d');
+			AddChar('d');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+		else if (Keyboard::isKeyPressed(Keyboard::E))
 		{
-			this->AddChar('e');
+			AddChar('e');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+		else if (Keyboard::isKeyPressed(Keyboard::F))
 		{
-			this->AddChar('f');
+			AddChar('f');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
+		else if (Keyboard::isKeyPressed(Keyboard::G))
 		{
-			this->AddChar('g');
+			AddChar('g');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::H))
+		else if (Keyboard::isKeyPressed(Keyboard::H))
 		{
-			this->AddChar('h');
+			AddChar('h');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::I))
+		else if (Keyboard::isKeyPressed(Keyboard::I))
 		{
-			this->AddChar('i');
+			AddChar('i');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::J))
+		else if (Keyboard::isKeyPressed(Keyboard::J))
 		{
-			this->AddChar('j');
+			AddChar('j');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+		else if (Keyboard::isKeyPressed(Keyboard::K))
 		{
-			this->AddChar('k');
+			AddChar('k');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+		else if (Keyboard::isKeyPressed(Keyboard::L))
 		{
-			this->AddChar('l');
+			AddChar('l');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+		else if (Keyboard::isKeyPressed(Keyboard::M))
 		{
-			this->AddChar('m');
+			AddChar('m');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::N))
+		else if (Keyboard::isKeyPressed(Keyboard::N))
 		{
-			this->AddChar('n');
+			AddChar('n');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
+		else if (Keyboard::isKeyPressed(Keyboard::O))
 		{
-			this->AddChar('o');
+			AddChar('o');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+		else if (Keyboard::isKeyPressed(Keyboard::P))
 		{
-			this->AddChar('p');
+			AddChar('p');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+		else if (Keyboard::isKeyPressed(Keyboard::Q))
 		{
-			this->AddChar('q');
+			AddChar('q');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+		else if (Keyboard::isKeyPressed(Keyboard::R))
 		{
-			this->AddChar('r');
+			AddChar('r');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		else if (Keyboard::isKeyPressed(Keyboard::S))
 		{
-			this->AddChar('s');
+			AddChar('s');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::T))
+		else if (Keyboard::isKeyPressed(Keyboard::T))
 		{
-			this->AddChar('t');
+			AddChar('t');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::U))
+		else if (Keyboard::isKeyPressed(Keyboard::U))
 		{
-			this->AddChar('u');
+			AddChar('u');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::V))
+		else if (Keyboard::isKeyPressed(Keyboard::V))
 		{
-			this->AddChar('v');
+			AddChar('v');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+		else if (Keyboard::isKeyPressed(Keyboard::W))
 		{
-			this->AddChar('w');
+			AddChar('w');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+		else if (Keyboard::isKeyPressed(Keyboard::X))
 		{
-			this->AddChar('x');
+			AddChar('x');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y))
+		else if (Keyboard::isKeyPressed(Keyboard::Y))
 		{
-			this->AddChar('y');
+			AddChar('y');
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+		else if (Keyboard::isKeyPressed(Keyboard::Z))
 		{
-			this->AddChar('z');
+			AddChar('z');
 		}
 	}
 
-	this->threadIsRunning = false;
-	this->mutex.unlock();
+	m_Running = false;
+	m_Mutex.unlock();
 }
 
 void TextField::Blink()
 {
 	// Set the background to RED. This function is used for example
 	// when the user try to launch the game without entering a pseudo.
-	this->blinking = true;
-	this->backgroundColor = sf::Color::Red;
-	this->backgroundColor.a = 128;
+	m_Blinking = true;
+	m_BackgroundColor = Color::Red;
+	m_BackgroundColor.a = 128;
 }
 
 // Getter
-const std::string & TextField::getTextEntered() const
+const std::string & TextField::GetTextEntered() const
 {
-	return this->textEntered;
+	return m_TextEntered;
 }
 
-void TextField::setPosition(float x, float y)
+void TextField::SetPosition(float x, float y)
 { 
-	this->shape.setPosition(x, y);
-	this->text.setPosition(sf::Vector2f(this->getPosition()) +
-										  sf::Vector2f(this->shape.getGlobalBounds().width * 0.02,
-										  this->shape.getGlobalBounds().height / 2.f - this->text.getGlobalBounds().height / 1.35));
-	this->textEnteredToRender.setPosition(this->text.getPosition());
+	m_Shape.setPosition(x, y);
+	m_Text.setPosition(Vector2f(GetPosition()) +
+										  Vector2f(m_Shape.getGlobalBounds().width * 0.02,
+										  m_Shape.getGlobalBounds().height / 2.f - m_Text.getGlobalBounds().height / 1.35));
+	m_TextRendered.setPosition(m_Text.getPosition());
 }

@@ -2,28 +2,30 @@
 #include "../Include/Macros.h"
 #include "../Include/TransitionComponent.h"
 
+using namespace sf;
+
 // Constructor
 TransitionComponent::TransitionComponent(unsigned int width, unsigned int height) :
-status(TransitionStatus::NONE)
+m_Status(TransitionStatus::NONE)
 {
-	this->color.r = 0;
-	this->color.g = 0;
-	this->color.b = 0;
-	this->color.a = 0;
+	m_Color.r = 0;
+	m_Color.g = 0;
+	m_Color.b = 0;
+	m_Color.a = 0;
 
-	this->transitionScreen.setSize(sf::Vector2f(width, height));
-	this->transitionScreen.setFillColor(this->color);
+	m_TransitionScreen.setSize(Vector2f(width, height));
+	m_TransitionScreen.setFillColor(m_Color);
 }
-TransitionComponent::TransitionComponent(sf::Vector2u size) :
-status(TransitionStatus::NONE)
+TransitionComponent::TransitionComponent(Vector2u size) :
+m_Status(TransitionStatus::NONE)
 {
-	this->color.r = 0;
-	this->color.g = 0;
-	this->color.b = 0;
-	this->color.a = 0;
+	m_Color.r = 0;
+	m_Color.g = 0;
+	m_Color.b = 0;
+	m_Color.a = 0;
 
-	this->transitionScreen.setSize(sf::Vector2f(size.x, size.y));
-	this->transitionScreen.setFillColor(this->color);
+	m_TransitionScreen.setSize(Vector2f(size.x, size.y));
+	m_TransitionScreen.setFillColor(m_Color);
 }
 // Destructor
 TransitionComponent::~TransitionComponent()
@@ -32,42 +34,31 @@ TransitionComponent::~TransitionComponent()
 // Functions
 void TransitionComponent::Update()
 {
-	switch (this->status)
+	switch (m_Status)
 	{
 	case TransitionStatus::NONE:
-		this->color.a += 1;
-		if (this->color.a == 255)
-			this->status = TransitionStatus::HALF;
+		m_Color.a += 1;
+		if (m_Color.a == 255)
+			m_Status = TransitionStatus::HALF;
 		break;
 	case TransitionStatus::HALF:
-		this->status = TransitionStatus::WAIT_COMPLETE;
+		m_Status = TransitionStatus::WAIT_COMPLETE;
 		break;
 	case TransitionStatus::WAIT_COMPLETE:
-		this->color.a -= 1;
-		if (this->color.a == 0)
-			this->status = TransitionStatus::COMPLETE;
+		m_Color.a -= 1;
+		if (m_Color.a == 0)
+			m_Status = TransitionStatus::COMPLETE;
 		break;
 	case TransitionStatus::COMPLETE:
-		this->status = TransitionStatus::NONE;
+		m_Status = TransitionStatus::NONE;
 		break;
 	default:
 		break;
 	}
-	this->transitionScreen.setFillColor(this->color);
+	m_TransitionScreen.setFillColor(m_Color);
 }
 
-void TransitionComponent::Render(sf::RenderTarget * target)
+void TransitionComponent::Render(RenderTarget& target)
 {
-	target->draw(this->transitionScreen);
-}
-
-// Getters
-const TransitionStatus & TransitionComponent::getStatus() const
-{
-	return this->status;
-}
-
-const sf::Color & TransitionComponent::getColor() const
-{
-	return this->color;
+	target.draw(m_TransitionScreen);
 }

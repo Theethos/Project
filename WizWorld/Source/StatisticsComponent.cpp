@@ -11,21 +11,21 @@ StatisticsComponent::~StatisticsComponent()
 
 void StatisticsComponent::AddExp(long long amount)
 {
-	_experience._current += amount;
-	while (_experience._current >= _experience._next)
+	m_Experience.m_Current += amount;
+	while (m_Experience.m_Current >= m_Experience.m_Next)
 	{
-		if (_experience._level < 50)
+		if (m_Experience.m_Level < 50)
 		{
-			_experience._level += 1;
-			_experience._next *= _experience._increment;
-			_healthPoints._levelHP += _healthPoints._increment;
-			_healthPoints._currentHP = getMaxHP();
-			_mana._levelMana += _mana._increment;
-			_mana._currentMana = getMaxMana();
+			m_Experience.m_Level += 1;
+			m_Experience.m_Next *= m_Experience._increment;
+			m_HealthPoints.m_LevelHP += m_HealthPoints._increment;
+			m_HealthPoints.m_CurrentHP = GetMaxHP();
+			m_Mana.m_LevelMana += m_Mana._increment;
+			m_Mana.m_CurrentMana = GetMaxMana();
 		}
 		else // Level max
 		{
-			_experience._current = _experience._next;
+			m_Experience.m_Current = m_Experience.m_Next;
 			break;
 		}
 	}
@@ -33,24 +33,24 @@ void StatisticsComponent::AddExp(long long amount)
 
 void StatisticsComponent::RemoveExp(long long amount)
 {
-	_experience._current -= amount;
-	long long previousNext = getPreviousNext();
-	while (_experience._current < previousNext)
+	m_Experience.m_Current -= amount;
+	long long previousNext = GetPreviousNext();
+	while (m_Experience.m_Current < previousNext)
 	{
-		if (_experience._level > 1)
+		if (m_Experience.m_Level > 1)
 		{
-			_experience._level -= 1;
-			_experience._next = previousNext;
-			_healthPoints._levelHP -= _healthPoints._increment;
-			_healthPoints._currentHP = getMaxHP();
-			_mana._levelMana -= _mana._increment;
-			_mana._currentMana = getMaxMana();
-			previousNext = getPreviousNext();
+			m_Experience.m_Level -= 1;
+			m_Experience.m_Next = previousNext;
+			m_HealthPoints.m_LevelHP -= m_HealthPoints._increment;
+			m_HealthPoints.m_CurrentHP = GetMaxHP();
+			m_Mana.m_LevelMana -= m_Mana._increment;
+			m_Mana.m_CurrentMana = GetMaxMana();
+			previousNext = GetPreviousNext();
 		}
 		else // Level min
 		{
-			if (_experience._current < 0)
-				_experience._current = 0;
+			if (m_Experience.m_Current < 0)
+				m_Experience.m_Current = 0;
 			break;
 		}
 	}
@@ -58,30 +58,30 @@ void StatisticsComponent::RemoveExp(long long amount)
 
 void StatisticsComponent::AddHp(long amount)
 {
-	_healthPoints._currentHP = std::min(_healthPoints._currentHP + amount, getMaxHP());
+	m_HealthPoints.m_CurrentHP = std::min(m_HealthPoints.m_CurrentHP + amount, GetMaxHP());
 }
 
 void StatisticsComponent::RemoveHp(long amount)
 {
-	_healthPoints._currentHP = std::max(_healthPoints._currentHP - amount, static_cast<long>(0));
+	m_HealthPoints.m_CurrentHP = std::max(m_HealthPoints.m_CurrentHP - amount, static_cast<long>(0));
 }
 
 void StatisticsComponent::AddMana(long amount)
 {
-	_mana._currentMana = std::min(_mana._currentMana + amount, getMaxMana());
+	m_Mana.m_CurrentMana = std::min(m_Mana.m_CurrentMana + amount, GetMaxMana());
 }
 
 void StatisticsComponent::RemoveMana(long amount)
 {
-	_mana._currentMana = std::max(_mana._currentMana - amount, static_cast<long>(0));
+	m_Mana.m_CurrentMana = std::max(m_Mana.m_CurrentMana - amount, static_cast<long>(0));
 }
 
-long long StatisticsComponent::getPreviousNext()
+long long StatisticsComponent::GetPreviousNext()
 {
 	// Get the amount of exp required for the previous level
 	long long startingNext = 150; // Initial amount of xp
 	long long previousNext = 150; 
-	while ((startingNext *= _experience._increment) && startingNext < _experience._next)
+	while ((startingNext *= m_Experience._increment) && startingNext < m_Experience.m_Next)
 		previousNext = startingNext;
 	return previousNext;
 }

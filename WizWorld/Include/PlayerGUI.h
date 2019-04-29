@@ -7,37 +7,33 @@ class PlayerGUI : public GUI
 {
 public:
 	// Constructor
-	PlayerGUI(sf::RenderWindow &window, Player &player, std::string &player_name);
+	PlayerGUI(sf::RenderWindow& window, Player& player, const std::string& player_name);
 	// Destructor
 	~PlayerGUI();
 
 	// Functions
 	void Update(const float &dt);
-	void Render(sf::RenderTarget *target);
+	void Render(sf::RenderTarget& target);
 
 private:
 	// Private function
-	void UpdatePosition(const sf::Vector2f &mousePos);
+	void UpdatePosition(const sf::Vector2f& mouse_position);
 
 	// Health bar
-	sf::RectangleShape _healthBarFull;
-	sf::RectangleShape _healthBar;
-	sf::Text _healthPoints;
+	std::pair<sf::RectangleShape, sf::RectangleShape> m_HPBar;
+	sf::Text m_HPValue;
 
 	// Exp bar
-	sf::RectangleShape _expBarFull;
-	sf::RectangleShape _expBar;
-	sf::Text _expPoints;
+	std::pair<sf::RectangleShape, sf::RectangleShape> m_EXPBar;
+	sf::Text m_EXPValue;
 
 	// Mana bar
-	sf::RectangleShape _manaBarFull;
-	sf::RectangleShape _manaBar;
-	sf::Text _manaPoints;
+	std::pair<sf::RectangleShape, sf::RectangleShape> m_ManaBar;
+	sf::Text m_ManaValue;
 
 	// Infos
-	sf::Text _pseudo;
-	sf::CircleShape _levelShape;
-	sf::Text _level;
+	sf::Text m_PlayerName;
+	std::pair<sf::CircleShape, sf::Text> m_PlayerLevel;
 };
 
 

@@ -7,49 +7,49 @@ class TextField : public Button
 {
 public:
 	// Constructor
-	TextField(float x = 0, float y = 0, float w = 0, float h = 0, std::string text = "", sf::Font *font = nullptr,
-			  sf::Color idleColor = sf::Color::White, sf::Color hoverColor = sf::Color::White, sf::Color activeColor = sf::Color::White,
-			  int textSize = 0, sf::RenderWindow* window = nullptr, bool only_letter = false);
+	TextField(sf::RenderWindow& window, sf::Font& font, float x = 0, float y = 0, float width = 0, float height = 0, std::string text = "",
+			  sf::Color idle_color = sf::Color::White, sf::Color hover_color = sf::Color::White, sf::Color active_color = sf::Color::White,
+			  int text_size = 0, bool only_letter = false);
 	// Destructor
 	virtual ~TextField();
 
 	// Functions
-	void Update(const sf::Vector2f mousePos);
-	void Render(sf::RenderTarget* target);
+	void Update(const sf::Vector2f mouse_position);
+	void Render(sf::RenderTarget& target);
 	void Blink();
 
 	// Getter
-	const std::string& getTextEntered() const;
+	const std::string& GetTextEntered() const;
 
 	// Setter
-	inline void setMaxSize(int value) { this->maxSize = value; }
-	inline void setRenderColor(sf::Color color) { this->textEnteredToRender.setFillColor(color); }
-	inline void setTextEntered(std::string text) { this->textEntered = text; this->textEnteredToRender.setString(text); }
-	void setPosition(float x, float y);
+	inline void SetMaxSize(const int value) { m_MaxSize = value; }
+	inline void SetRenderColor(const sf::Color color) { m_TextRendered.setFillColor(color); }
+	inline void SetTextEntered(const std::string text) { m_TextEntered = text; m_TextRendered.setString(text); }
+	void SetPosition(float x, float y);
 
 private:
 	// Main window
-	sf::RenderWindow* window;
+	sf::RenderWindow& m_Window;
 
 	// Text entered
-	std::string textEntered;
-	sf::Text textEnteredToRender;
+	std::string m_TextEntered;
+	sf::Text m_TextRendered;
 	// Maximum size of the text entered
-	int maxSize;
+	int m_MaxSize;
 	// Background when the text is entered
-	sf::Color backgroundColor;
+	sf::Color m_BackgroundColor;
 	
 	// Thread managing
-	sf::Thread thread;
-	sf::Mutex mutex;
+	sf::Thread m_Thread;
+	sf::Mutex m_Mutex;
 	
 	// States of the button
-	bool threadIsRunning;
-	bool blinking;
-	bool _onlyLetter;
+	bool m_Running;
+	bool m_Blinking;
+	bool m_OnlyLetter;
 	
 	// Private functions
-	void AddChar(char character);
+	void AddChar(const char character);
 	void RemoveChar();
 	void CaptureText();
 };

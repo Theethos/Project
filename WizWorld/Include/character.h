@@ -23,16 +23,16 @@ public:
 	void displayInventory() const;
 
 	// Getters 
-	std::string getName() const;
-	Sexe getSexe() const;
-	int getHealthPoints() const;
-	int getLevel() const;
-	Inventory* getInventory();
+	std::string GetName() const;
+	Sexe GetSexe() const;
+	int GetHealthPoints() const;
+	int GetLevel() const;
+	Inventory* GetInventory();
 
 	// Setters 
-	void setName(std::string name);
-	void setSexe(Sexe sexe);
-	void setHair(HairColor color, HairStyle style);
+	void SetName(std::string name);
+	void SetSexe(Sexe sexe);
+	void SetHair(HairColor color, HairStyle style);
 
 protected:
 

@@ -1,9 +1,10 @@
 #include "Precompiled_Header.h"
+/*
 #include "../Include/Macros.h"
 #include "../Include/Item.h"
 #include "../Include/Weapon.h"
 
-/* Constructors */
+// Constructors
 Weapon::Weapon() : Item(), weaponCategory(WeaponCategories::NO_WEAPON), damage(0)
 {}
 
@@ -12,41 +13,41 @@ Weapon::Weapon(std::string name, ItemCategories category, WeaponCategories weapo
 
 Weapon::Weapon(const Weapon & weapon)
 {
-	this->category = weapon.category;
-	this->name = weapon.name;
-	this->damage = weapon.damage;
-	this->weaponCategory = weapon.weaponCategory;
+	_category = weapon.category;
+	_name = weapon.name;
+	_damage = weapon.damage;
+	_weaponCategory = weapon.weaponCategory;
 }
 
-/* Destructors */
+// Destructors
 Weapon:: ~Weapon()
 {}
 
 Weapon & Weapon::operator=(const Weapon &weapon)
 {
-	this->category = weapon.category;
-	this->name = weapon.name;
-	this->damage = weapon.damage;
-	this->weaponCategory = weapon.weaponCategory;
+	_category = weapon.category;
+	_name = weapon.name;
+	_damage = weapon.damage;
+	_weaponCategory = weapon.weaponCategory;
 
 	return *this;
 }
 
-/* Getters */
-int Weapon::getDamage() const
+// Getters
+int Weapon::GetDamage() const
 {
-	return this->damage;
+	return _damage;
 }
 
-WeaponCategories Weapon::getWeaponCategory() const
+WeaponCategories Weapon::GetWeaponCategory() const
 {
-	return this->weaponCategory;
+	return _weaponCategory;
 }
 
-/* WeaponCategory (string not enum [for display]) */
+// WeaponCategory (string not enum [for display])
 std::string Weapon::showCategory() const
 {
-	switch (this->weaponCategory)
+	switch (_weaponCategory)
 	{
 	case WeaponCategories::NO_WEAPON:
 		return "None";
@@ -68,3 +69,4 @@ std::string Weapon::showCategory() const
 		break;
 	};
 }
+*/

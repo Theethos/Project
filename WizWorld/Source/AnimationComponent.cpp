@@ -2,59 +2,41 @@
 #include "../Include/Macros.h"
 #include "../Include/AnimationComponent.h"
 
+using namespace sf;
+
 // Constructor
-AnimationComponent::AnimationComponent(sf::Sprite *sprite) : 
-associatedSprite(sprite), 
-side(AnimationSide::DOWN)
+AnimationComponent::AnimationComponent(Sprite& sprite) : 
+m_Sprite(sprite), 
+m_Side(AnimationSide::DOWN)
 {}
 // Destructor
 AnimationComponent::~AnimationComponent()
 {
-	for (auto &it : this->animation)
+	for (auto &it : m_Animation)
 	{
-		// Delete all texture sheet
-		delete it.second.textureSheet;
-		it.second.textureSheet = nullptr;
+		delete it.second->m_TextureSheet;
+		delete it.second;
 	}
-	this->animation.clear();
 }
 
 // Functions
-void AnimationComponent::AddAnimation(const std::string key, sf::Texture * textureSheet, int numberOfTextures, int width, int height, float animationTimer)
+void AnimationComponent::AddAnimation(const std::string key, Texture* texture_sheet, int texture_size, int width, int height, float frame_delay)
 {
-	// Create and set a new animation with a "key"
-	this->animation[key].Init(textureSheet, this->associatedSprite, numberOfTextures, animationTimer, width, height);
+	// Create and Set a new animation with a "key"
+	m_Animation[key] = new Animation(texture_sheet, m_Sprite, texture_size, width, height, frame_delay);
 }
 
 void AnimationComponent::PlayAnimation(const float & velocity, const float & dt, const std::string animation)
 {
-	this->animation[animation].Play(velocity, dt);
+	m_Animation[animation]->Play(velocity, dt);
 }
 
-void AnimationComponent::ResetAnimation(const std::string animation)
+void AnimationComponent::ReSetAnimation(const std::string animation)
 {
-	this->animation[animation].Reset();
+	m_Animation[animation]->Reset();
 }
 
 void AnimationComponent::IdleAnimation(const float &dt, const std::string animation)
 {
-	this->animation[animation].Idle(dt);
-}
-
-// Getters
-AnimationSide AnimationComponent::getSide() const
-{
-	return this->side;
-}
-
-sf::Texture * AnimationComponent::getTexture(std::string animation)
-{
-	if (this->animation.count(animation))
-		return this->animation[animation].textureSheet;
-}
-
-// Setter
-void AnimationComponent::setSide(const AnimationSide side)
-{
-	this->side = side;
+	m_Animation[animation]->Idle(dt);
 }

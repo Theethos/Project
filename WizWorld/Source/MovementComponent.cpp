@@ -3,19 +3,19 @@
 #include "../Include/MovementComponent.h"
 
 // Constructors
-MovementComponent::MovementComponent(float maxVelocity, float acceleration, float deceleration) :
-maxVelocity(maxVelocity), 
-velocity({0,0}),
-acceleration(acceleration),
-deceleration(deceleration)
+MovementComponent::MovementComponent(float max_velocity, float acceleration, float deceleration) :
+m_MaxVelocity(max_velocity), 
+m_Velocity({0,0}),
+m_Acceleration(acceleration),
+m_Deceleration(deceleration)
 {}
 
 MovementComponent::MovementComponent(const MovementComponent & other)
 {
-	this->maxVelocity = other.maxVelocity;
-	this->acceleration = other.acceleration;
-	this->deceleration = other.deceleration;
-	this->velocity = other.velocity;
+	m_MaxVelocity = other.m_MaxVelocity;
+	m_Acceleration = other.m_Acceleration;
+	m_Deceleration = other.m_Deceleration;
+	m_Velocity = other.m_Velocity;
 }
 
 // Destructor
@@ -26,118 +26,82 @@ MovementComponent::~MovementComponent()
 void MovementComponent::Move(const float & dt, const float dir_x, const float dir_y)
 {
 	// Update the velocity
-	this->velocity.x += dir_x * this->acceleration * dt;
-	this->velocity.y += dir_y * this->acceleration * dt; 
+	m_Velocity.x += dir_x * m_Acceleration * dt;
+	m_Velocity.y += dir_y * m_Acceleration * dt; 
 		
 	// Checking if the velocity is not over the max velocity
 	// Going right
-	if (this->velocity.x > this->maxVelocity)
+	if (m_Velocity.x > m_MaxVelocity)
 	{
-		this->velocity.x = this->maxVelocity;
+		m_Velocity.x = m_MaxVelocity;
 	}
 	// Going left
-	else if (this->velocity.x < -this->maxVelocity)
+	else if (m_Velocity.x < - m_MaxVelocity)
 	{
-		this->velocity.x = -this->maxVelocity;
+		m_Velocity.x = - m_MaxVelocity;
 	}
 	// Going down
-	if (this->velocity.y > this->maxVelocity)
+	if (m_Velocity.y > m_MaxVelocity)
 	{
-		this->velocity.y = this->maxVelocity;
+		m_Velocity.y = m_MaxVelocity;
 	}
 	// Going up
-	else if (this->velocity.y < -this->maxVelocity)
+	else if (m_Velocity.y < - m_MaxVelocity)
 	{
-		this->velocity.y = -this->maxVelocity;
+		m_Velocity.y = - m_MaxVelocity;
 	}
 }
 
-void MovementComponent::Update(const float & dt, sf::Sprite *sprite)
+void MovementComponent::Update(const float & dt, sf::Sprite& sprite)
 {
 	// Decelerating phase and check that velocity doesn't go below 0
 	// Going right
-	if (this->velocity.x > 0)
+	if (m_Velocity.x > 0)
 	{
-		this->velocity.x -= this->deceleration * dt;
-		if (this->velocity.x < 0)
+		m_Velocity.x -= m_Deceleration * dt;
+		if (m_Velocity.x < 0)
 		{
-			this->velocity.x = 0;
+			m_Velocity.x = 0;
 		}
 	}
 	// Going left
-	else if (this->velocity.x < 0)
+	else if (m_Velocity.x < 0)
 	{
-		this->velocity.x += this->deceleration * dt;
-		if (this->velocity.x > 0)
+		m_Velocity.x += m_Deceleration * dt;
+		if (m_Velocity.x > 0)
 		{
-			this->velocity.x = 0;
+			m_Velocity.x = 0;
 		}
 	}
 	// Going down
-	if (this->velocity.y > 0)
+	if (m_Velocity.y > 0)
 	{
-		this->velocity.y -= this->deceleration * dt;
-		if (this->velocity.y < 0)
+		m_Velocity.y -= m_Deceleration * dt;
+		if (m_Velocity.y < 0)
 		{
-			this->velocity.y = 0;
+			m_Velocity.y = 0;
 		}
 	}
 	// Going up
-	else if (this->velocity.y < 0)
+	else if (m_Velocity.y < 0)
 	{
-		this->velocity.y += this->deceleration * dt;
-		if (this->velocity.y > 0)
+		m_Velocity.y += m_Deceleration * dt;
+		if (m_Velocity.y > 0)
 		{
-			this->velocity.y = 0;
+			m_Velocity.y = 0;
 		}
 	}
 	// Finaly move the sprite with the correct velocity
-	sprite->move(this->velocity);
+	sprite.move(m_Velocity);
 }
 
 // Operator
 MovementComponent MovementComponent::operator=(const MovementComponent & other)
 {
-	this->maxVelocity = other.maxVelocity;
-	this->acceleration = other.acceleration;
-	this->deceleration = other.deceleration;
-	this->velocity = other.velocity;
+	m_MaxVelocity = other.m_MaxVelocity;
+	m_Acceleration = other.m_Acceleration;
+	m_Deceleration = other.m_Deceleration;
+	m_Velocity = other.m_Velocity;
 
 	return *this;
-}
-
-// Getters
-const sf::Vector2f & MovementComponent::getVelocity() const
-{
-	return this->velocity;
-}
-
-const float & MovementComponent::getMaxVelocity() const
-{
-	return this->maxVelocity;
-}
-
-void MovementComponent::setMaxVelocity(float maxVelocity)
-{
-	this->maxVelocity = maxVelocity;
-}
-// Setters
-void MovementComponent::setVelocity(sf::Vector2f velocity)
-{
-	this->velocity = velocity;
-}
-
-void MovementComponent::setVelocity(float x, float y)
-{
-	this->velocity = sf::Vector2f(x, y);
-}
-
-void MovementComponent::setVelocityX(float x)
-{
-	this->velocity.x = x;
-}
-
-void MovementComponent::setVelocityY(float y)
-{
-	this->velocity.y = y;
 }

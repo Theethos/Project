@@ -1,8 +1,9 @@
 #include "Precompiled_Header.h"
+/*
 #include "../Include/Macros.h"
 #include "../Include/Item.h"
 
-/* Constructors */
+// Constructors
 Item::Item() : name("NULL"), category(ItemCategories::NO_ITEM)
 {}
 
@@ -11,37 +12,37 @@ Item::Item(std::string name, ItemCategories category) : name(name), category(cat
 
 Item::Item(const Item & item)
 {
-	this->category = item.category;
-	this->name = item.name;
+	_category = item.category;
+	_name = item.name;
 }
 
-/* Destructor */
+// Destructor
 Item::~Item()
 {}
 
 Item & Item::operator=(const Item & item)
 {
-	this->category = item.category;
-	this->name = name;
+	_category = item.category;
+	_name = name;
 
 	return *this;
 }
 
-/* Getters */
-std::string Item::getName() const
+// Getters
+std::string Item::GetName() const
 {
-	return this->name;
+	return _name;
 }
 
-ItemCategories Item::getCategory() const
+ItemCategories Item::GetCategory() const
 {
-	return this->category;
+	return _category;
 }
 
-/* Category (string not enum [for display]) */
+// Category (string not enum [for display])
 std::string Item::showCategory() const
 {
-	switch (this->category)
+	switch (_category)
 	{
 	case ItemCategories::NO_ITEM:
 		return "None";
@@ -60,3 +61,4 @@ std::string Item::showCategory() const
 		break;
 	}
 }
+*/

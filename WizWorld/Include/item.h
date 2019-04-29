@@ -1,5 +1,5 @@
-/* Validate weapons : Wand/Staff/Magic Ring  --- Possible weapons : Bow/Sword/Hammer/Axe/Club */
-
+// Validate weapons : Wand/Staff/Magic Ring  --- Possible weapons : Bow/Sword/Hammer/Axe/Club
+/*
 #ifndef _ITEM_H_
 #define _ITEM_H_
 
@@ -13,9 +13,9 @@ public:
 
 	Item &operator=(const Item &item);
 
-	/* Getters */
-	virtual std::string getName() const;
-	virtual ItemCategories getCategory() const;
+	// Getters
+	virtual std::string GetName() const;
+	virtual ItemCategories GetCategory() const;
 	virtual std::string showCategory() const;
 
 protected:
@@ -24,4 +24,4 @@ protected:
 };
 
 #endif // !_ITEM_H_
-
+*/

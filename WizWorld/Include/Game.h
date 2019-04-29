@@ -17,16 +17,16 @@ public:
 	void Run();
 
 private:
-	sf::RenderWindow window;
-	bool fullscreen;
-	sf::Event event;
-	std::stack<State*> states;
-	sf::Clock clock;
+	sf::RenderWindow m_Window;
+	bool m_Fullscreen;
+	sf::Event m_Event;
+	std::stack<State*> m_States;
+	sf::Clock m_Clock;
 	// Delta time, time between 2 frames
-	float dt;
+	float m_DeltaTime;
 	// Keys that Game uses
-	std::map<std::string, int> keys;
-	MusicComponent music;
+	std::map<std::string, int> m_Keys;
+	MusicComponent m_Music;
 
 	//Private functions
 	void Update();

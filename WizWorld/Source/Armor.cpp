@@ -1,9 +1,10 @@
 #include "Precompiled_Header.h"
+/*
 #include "../Include/Macros.h"
 #include "../Include/Item.h"
 #include "../Include/Armor.h"
 
-/* Constructors */
+// Constructors
 Armor::Armor() : Item(), armorCategory(ArmorCategories::NO_ARMOR)
 {}
 
@@ -12,33 +13,33 @@ Armor::Armor(std::string name, ItemCategories category, ArmorCategories armorCat
 
 Armor::Armor(const Armor & armor)
 {
-	this->name = armor.name;
-	this->category = armor.category;
-	this->armorCategory = armor.armorCategory;
+	_name = armor.name;
+	_category = armor.category;
+	_armorCategory = armor.armorCategory;
 }
 
-/* Destructor */
+// Destructor
 Armor::~Armor()
 {}
 
 Armor & Armor::operator=(const Armor & armor)
 {
-	this->name = armor.name;
-	this->category = armor.category;
-	this->armorCategory = armor.armorCategory;
+	_name = armor.name;
+	_category = armor.category;
+	_armorCategory = armor.armorCategory;
 
 	return *this;
 }
-/* Getters */
-ArmorCategories Armor::getArmorCategory() const
+// Getters
+ArmorCategories Armor::GetArmorCategory() const
 {
-	return this->armorCategory;
+	return _armorCategory;
 }
 
-/* ArmorCategory (string not enum [for display]) */
+// ArmorCategory (string not enum [for display])
 std::string Armor::showCategory() const
 {
-	switch (this->armorCategory)
+	switch (_armorCategory)
 	{
 		case ArmorCategories::NO_ARMOR:
 			return "None";
@@ -87,3 +88,4 @@ std::string Armor::showCategory() const
 			break;
 	}
 }
+*/

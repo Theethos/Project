@@ -62,7 +62,7 @@ int main()
 
 
 	ahbdekha.hitWithWeapon(mickael);
-	mickael.getHealthPoints();
+	mickael.GetHealthPoints();
 	std::cout << "=================" << std::endl << std::endl;
 
 	mickael.gainEXP(450); // 5 148 376 331 max EXP;

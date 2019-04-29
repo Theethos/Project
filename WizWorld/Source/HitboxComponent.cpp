@@ -2,16 +2,18 @@
 #include "../Include/Macros.h"
 #include "../Include/HitboxComponent.h"
 
-// Constructor
-HitboxComponent::HitboxComponent(sf::Sprite *sprite, const float width, const float height) : 
-sprite(sprite)
-{
-	this->hitbox.setPosition(this->sprite->getPosition());
-	this->hitbox.setSize(sf::Vector2f(width, height));
+using namespace sf;
 
-	this->hitbox.setFillColor(sf::Color::Transparent);
-	this->hitbox.setOutlineThickness(1.f);
-	this->hitbox.setOutlineColor(sf::Color::Red);
+// Constructor
+HitboxComponent::HitboxComponent(Sprite& sprite, const float width, const float height) : 
+m_Sprite(sprite)
+{
+	m_Hitbox.setPosition(m_Sprite.getPosition());
+	m_Hitbox.setSize(Vector2f(width, height));
+
+	m_Hitbox.setFillColor(Color::Transparent);
+	m_Hitbox.setOutlineThickness(1.f);
+	m_Hitbox.setOutlineColor(Color::Red);
 }
 // Destructor
 HitboxComponent::~HitboxComponent()
@@ -20,10 +22,10 @@ HitboxComponent::~HitboxComponent()
 // Functions
 void HitboxComponent::Update()
 {
-	this->hitbox.setPosition(this->sprite->getPosition());
+	m_Hitbox.setPosition(m_Sprite.getPosition());
 }
 
-void HitboxComponent::Render(sf::RenderTarget * target) const
+void HitboxComponent::Render(RenderTarget& target) const
 {
-	target->draw(this->hitbox);
+	target.draw(m_Hitbox);
 }

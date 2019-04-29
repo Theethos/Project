@@ -8,29 +8,29 @@ class MiniMapGUI : public GUI
 {
 public:
 	// Constructor
-	MiniMapGUI(sf::RenderWindow &window, Player & player, sf::Texture *mapTexture);
+	MiniMapGUI(sf::RenderWindow& window, Player& player, sf::Texture& map_texture);
 	// Destructor
 	~MiniMapGUI();
 
 	// Functions
 	void Update(const float& dt);
-	void Render(sf::RenderTarget *target);
+	void Render(sf::RenderTarget& target);
 
 	// Setter
-	void setTexture(sf::Texture *texture);
+	void SetTexture(sf::Texture& texture);
 
-	static const float _miniMapScale;
+	static const float s_MiniMapScale;
 private:
 	// Private function
-	void UpdatePosition(const sf::Vector2f &mousPos);
+	void UpdatePosition(const sf::Vector2f& mouse_position);
 	void UpdatePlayerPosition();
 
 	// Related map
-	sf::RectangleShape _mapShape;
-	sf::Texture *_mapTexture;
+	sf::RectangleShape m_MapShape;
+	sf::Texture& m_MapTexture;
 
 	// Entity infos
-	sf::CircleShape _playerPosition;
+	sf::CircleShape m_PlayerPosition;
 };
 
 #endif // !MINI_MAP_GUI_H

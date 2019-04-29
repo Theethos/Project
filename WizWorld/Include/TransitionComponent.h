@@ -12,16 +12,16 @@ public:
 
 	// Functions
 	void Update();
-	void Render(sf::RenderTarget *target);
+	void Render(sf::RenderTarget& target);
 
 	// Getters
-	const TransitionStatus &getStatus() const;
-	const sf::Color &getColor() const;
+	inline const TransitionStatus &GetStatus() const { return m_Status; }
+	inline const sf::Color &GetColor() const { return m_Color; }
 
 private:
-	sf::RectangleShape transitionScreen;
-	sf::Color color;
-	TransitionStatus status;
+	sf::RectangleShape m_TransitionScreen;
+	sf::Color m_Color;
+	TransitionStatus m_Status;
 };
 
 #endif // !TRANSITION_COMPONENT_H

@@ -2,86 +2,88 @@
 #include "../Include/Macros.h"
 #include "../Include/PlayerGUI.h"
 
+using namespace sf;
+
 // Constructor
-PlayerGUI::PlayerGUI(sf::RenderWindow & window, Player & player, std::string &player_name) :
+PlayerGUI::PlayerGUI(RenderWindow& window, Player& player, const std::string& player_name) :
 GUI(window, player)
 {
 	// Needed initialisation
-	_levelShape.setRadius(_window.getSize().x * 0.015); 
-	_pseudo.setString(player_name);
-	_pseudo.setCharacterSize(25);
-	_pseudo.setFont(_font);
+	m_PlayerLevel.first.setRadius(m_Window.getSize().x * 0.015); 
+	m_PlayerName.setString(player_name);
+	m_PlayerName.setCharacterSize(25);
+	m_PlayerName.setFont(m_Font);
 
 	// Global
-	// 15% of the window's width and 10% of the window's height by default
-	_globalShape.setSize(sf::Vector2f(_window.getSize().x * 0.11 + std::max(_pseudo.getGlobalBounds().width, _levelShape.getRadius() * 2),
-	_window.getSize().y * 0.11));
-	_globalShape.setPosition(_window.getPosition().x, _window.getPosition().y);
-	_globalShape.setFillColor(_globalColor);
+	// 15% of the m_Window's width and 10% of the m_Window's height by default
+	m_GlobalShape.setSize(Vector2f(m_Window.getSize().x * 0.11 + std::max(m_PlayerName.getGlobalBounds().width, m_PlayerLevel.first.getRadius() * 2),
+	m_Window.getSize().y * 0.11));
+	m_GlobalShape.setPosition(m_Window.getPosition().x, m_Window.getPosition().y);
+	m_GlobalShape.setFillColor(m_GlobalColor);
 
 	// Infos
-	_pseudo.setPosition(_globalShape.getPosition().x + _globalShape.getSize().x * 0.01, _globalShape.getPosition().y + _globalShape.getSize().y * 0.1);
-	_pseudo.setFillColor(_globalColorText);
+	m_PlayerName.setPosition(m_GlobalShape.getPosition().x + m_GlobalShape.getSize().x * 0.01, m_GlobalShape.getPosition().y + m_GlobalShape.getSize().y * 0.1);
+	m_PlayerName.setFillColor(m_GlobalTextColor);
 	
-	_levelShape.setFillColor(_globalColor);
-	_levelShape.setOutlineColor(_globalColorText);
-	_levelShape.setOutlineThickness(2);
-	if (_pseudo.getGlobalBounds().width > _levelShape.getRadius() * 2)
-		_levelShape.setPosition(_pseudo.getPosition() + sf::Vector2f(_pseudo.getGlobalBounds().width / 2 - _levelShape.getRadius(),
-		_pseudo.getGlobalBounds().height + _levelShape.getRadius() / 2));
+	m_PlayerLevel.first.setFillColor(m_GlobalColor);
+	m_PlayerLevel.first.setOutlineColor(m_GlobalTextColor);
+	m_PlayerLevel.first.setOutlineThickness(2);
+	if (m_PlayerName.getGlobalBounds().width > m_PlayerLevel.first.getRadius() * 2)
+		m_PlayerLevel.first.setPosition(m_PlayerName.getPosition() + Vector2f(m_PlayerName.getGlobalBounds().width / 2 - m_PlayerLevel.first.getRadius(),
+		m_PlayerName.getGlobalBounds().height + m_PlayerLevel.first.getRadius() / 2));
 	else
-		_levelShape.setPosition(_pseudo.getPosition() + sf::Vector2f(0, _pseudo.getGlobalBounds().height + _levelShape.getRadius() / 2));
-	_level.setString("1");
-	_level.setCharacterSize(25);
-	_level.setFont(_font);
-	_level.setFillColor(_globalColorText);
-	_level.setPosition(_levelShape.getPosition() + sf::Vector2f((_levelShape.getRadius() + _level.getGlobalBounds().width) / 2.f , _levelShape.getRadius() / 2.f));
+		m_PlayerLevel.first.setPosition(m_PlayerName.getPosition() + Vector2f(0, m_PlayerName.getGlobalBounds().height + m_PlayerLevel.first.getRadius() / 2));
+	m_PlayerLevel.second.setString("1");
+	m_PlayerLevel.second.setCharacterSize(25);
+	m_PlayerLevel.second.setFont(m_Font);
+	m_PlayerLevel.second.setFillColor(m_GlobalTextColor);
+	m_PlayerLevel.second.setPosition(m_PlayerLevel.first.getPosition() + Vector2f((m_PlayerLevel.first.getRadius() + m_PlayerLevel.second.getGlobalBounds().width) / 2.f , m_PlayerLevel.first.getRadius() / 2.f));
 
 	
 	// Health bar
-	_healthBar.setSize(sf::Vector2f(_window.getSize().x * 0.10, _window.getSize().y * 0.02));
-	_healthBar.setPosition(_pseudo.getPosition() + sf::Vector2f(std::max(_pseudo.getGlobalBounds().width, _levelShape.getRadius() * 2) + _window.getSize().y * 0.01, 0));
-	_healthBar.setFillColor(sf::Color::Red);
-	_healthBarFull.setSize(_healthBar.getSize());
-	_healthBarFull.setPosition(_healthBar.getPosition());
-	_healthBarFull.setOutlineColor(_globalColorText);
-	_healthBarFull.setOutlineThickness(1);
-	_healthBarFull.setFillColor(sf::Color::Transparent);
-	_healthPoints.setString("150/150");
-	_healthPoints.setCharacterSize(20);
-	_healthPoints.setFont(_font);
-	_healthPoints.setFillColor(_globalColorText);
-	_healthPoints.setPosition(_healthBar.getPosition() + sf::Vector2f((_healthBar.getSize().x - _healthPoints.getGlobalBounds().width) / 2, 0));
+	m_HPBar.first.setSize(Vector2f(m_Window.getSize().x * 0.10, m_Window.getSize().y * 0.02));
+	m_HPBar.first.setPosition(m_PlayerName.getPosition() + Vector2f(std::max(m_PlayerName.getGlobalBounds().width, m_PlayerLevel.first.getRadius() * 2) + m_Window.getSize().y * 0.01, 0));
+	m_HPBar.first.setFillColor(Color::Red);
+	m_HPBar.second.setSize(m_HPBar.first.getSize());
+	m_HPBar.second.setPosition(m_HPBar.first.getPosition());
+	m_HPBar.second.setOutlineColor(m_GlobalTextColor);
+	m_HPBar.second.setOutlineThickness(1);
+	m_HPBar.second.setFillColor(Color::Transparent);
+	m_HPValue.setString("150/150");
+	m_HPValue.setCharacterSize(20);
+	m_HPValue.setFont(m_Font);
+	m_HPValue.setFillColor(m_GlobalTextColor);
+	m_HPValue.setPosition(m_HPBar.first.getPosition() + Vector2f((m_HPBar.first.getSize().x - m_HPValue.getGlobalBounds().width) / 2, 0));
 
 	// Exp bar
-	_expBar.setSize(_healthBar.getSize());
-	_expBar.setPosition(_healthBar.getPosition().x, _healthBar.getPosition().y + _window.getSize().y * 0.01 + _expBar.getSize().y);
-	_expBar.setFillColor(sf::Color(50, 205, 50, 255));
-	_expBarFull.setSize(_expBar.getSize());
-	_expBarFull.setPosition(_expBar.getPosition());
-	_expBarFull.setOutlineColor(_globalColorText);
-	_expBarFull.setOutlineThickness(1);
-	_expBarFull.setFillColor(sf::Color::Transparent);
-	_expPoints.setString("0/150");
-	_expPoints.setCharacterSize(20);
-	_expPoints.setFont(_font);
-	_expPoints.setFillColor(_globalColorText);
-	_expPoints.setPosition(_expBar.getPosition() + sf::Vector2f((_expBar.getSize().x - _expPoints.getGlobalBounds().width) / 2, 0));
+	m_EXPBar.first.setSize(m_HPBar.first.getSize());
+	m_EXPBar.first.setPosition(m_HPBar.first.getPosition().x, m_HPBar.first.getPosition().y + m_Window.getSize().y * 0.01 + m_EXPBar.first.getSize().y);
+	m_EXPBar.first.setFillColor(Color(50, 205, 50, 255));
+	m_EXPBar.second.setSize(m_EXPBar.first.getSize());
+	m_EXPBar.second.setPosition(m_EXPBar.first.getPosition());
+	m_EXPBar.second.setOutlineColor(m_GlobalTextColor);
+	m_EXPBar.second.setOutlineThickness(1);
+	m_EXPBar.second.setFillColor(Color::Transparent);
+	m_EXPValue.setString("0/150");
+	m_EXPValue.setCharacterSize(20);
+	m_EXPValue.setFont(m_Font);
+	m_EXPValue.setFillColor(m_GlobalTextColor);
+	m_EXPValue.setPosition(m_EXPBar.first.getPosition() + Vector2f((m_EXPBar.first.getSize().x - m_EXPValue.getGlobalBounds().width) / 2, 0));
 
 	// Mana bar
-	_manaBar.setSize(_expBar.getSize());
-	_manaBar.setPosition(_expBar.getPosition().x, _expBar.getPosition().y + _window.getSize().y * 0.01 + _manaBar.getSize().y);
-	_manaBar.setFillColor(sf::Color::Blue);
-	_manaBarFull.setSize(_manaBar.getSize());
-	_manaBarFull.setPosition(_manaBar.getPosition());
-	_manaBarFull.setOutlineColor(_globalColorText);
-	_manaBarFull.setOutlineThickness(1);
-	_manaBarFull.setFillColor(sf::Color::Transparent);
-	_manaPoints.setString("150/150");
-	_manaPoints.setCharacterSize(20);
-	_manaPoints.setFont(_font);
-	_manaPoints.setFillColor(_globalColorText);
-	_manaPoints.setPosition(_manaBar.getPosition() + sf::Vector2f((_manaBar.getSize().x - _manaPoints.getGlobalBounds().width) / 2, 0));	
+	m_ManaBar.first.setSize(m_EXPBar.first.getSize());
+	m_ManaBar.first.setPosition(m_EXPBar.first.getPosition().x, m_EXPBar.first.getPosition().y + m_Window.getSize().y * 0.01 + m_ManaBar.first.getSize().y);
+	m_ManaBar.first.setFillColor(Color::Blue);
+	m_ManaBar.second.setSize(m_ManaBar.first.getSize());
+	m_ManaBar.second.setPosition(m_ManaBar.first.getPosition());
+	m_ManaBar.second.setOutlineColor(m_GlobalTextColor);
+	m_ManaBar.second.setOutlineThickness(1);
+	m_ManaBar.second.setFillColor(Color::Transparent);
+	m_ManaValue.setString("150/150");
+	m_ManaValue.setCharacterSize(20);
+	m_ManaValue.setFont(m_Font);
+	m_ManaValue.setFillColor(m_GlobalTextColor);
+	m_ManaValue.setPosition(m_ManaBar.first.getPosition() + Vector2f((m_ManaBar.first.getSize().x - m_ManaValue.getGlobalBounds().width) / 2, 0));	
 }
 // Destructor
 PlayerGUI::~PlayerGUI()
@@ -90,85 +92,82 @@ PlayerGUI::~PlayerGUI()
 // Functions
 void PlayerGUI::Update(const float & dt)
 {
-	if (_visible)
+	if (m_Visible)
 	{
 		// Check Drag&Drop
-		if (!sf::Joystick::isConnected(0) && (!GUI::_token || _move))
+		if (!Joystick::isConnected(0) && (!GUI::s_Token || m_Move))
 			Move();
 
 		// Update texts' and bars' size
-		long long currentXp = _player.getStatistics().getCurrentLevelExp();
-		long long nextXp = _player.getStatistics().getNextLevelExp();
-		float previous_next = _player.getStatistics().getPreviousNext() == 150 ? 0 : _player.getStatistics().getPreviousNext();
-		_expBar.setSize(sf::Vector2f(_expBarFull.getSize().x * static_cast<double>(currentXp - previous_next) / static_cast<double>(nextXp - previous_next), _expBarFull.getSize().y));
+		long long currentXp = m_Player.GetStatistics().GetCurrentLevelExp();
+		long long nextXp = m_Player.GetStatistics().GetNextLevelExp();
+		float previous_next = m_Player.GetStatistics().GetPreviousNext() == 150 ? 0 : m_Player.GetStatistics().GetPreviousNext();
+		m_EXPBar.first.setSize(Vector2f(m_EXPBar.second.getSize().x * static_cast<double>(currentXp - previous_next) / static_cast<double>(nextXp - previous_next), m_EXPBar.second.getSize().y));
 		
-		_expPoints.setString(std::to_string(currentXp) + "/" + std::to_string(nextXp));
+		m_EXPValue.setString(std::to_string(currentXp) + "/" + std::to_string(nextXp));
 
-		long currentHp = _player.getStatistics().getCurrentHP();
-		long maxHp = _player.getStatistics().getMaxHP();
-		_healthBar.setSize(sf::Vector2f(_healthBarFull.getSize().x * static_cast<double>(currentHp) / static_cast<double>(maxHp), _healthBarFull.getSize().y));
+		long currentHp = m_Player.GetStatistics().GetCurrentHP();
+		long maxHp = m_Player.GetStatistics().GetMaxHP();
+		m_HPBar.first.setSize(Vector2f(m_HPBar.second.getSize().x * static_cast<double>(currentHp) / static_cast<double>(maxHp), m_HPBar.second.getSize().y));
 		
-		_healthPoints.setString(std::to_string(currentHp) + "/" + std::to_string(maxHp));
+		m_HPValue.setString(std::to_string(currentHp) + "/" + std::to_string(maxHp));
 
-		long currentMana = _player.getStatistics().getCurrentMana();
-		long maxMana = _player.getStatistics().getMaxMana();
-		_manaBar.setSize(sf::Vector2f(_manaBarFull.getSize().x * static_cast<double>(currentMana) / static_cast<double>(maxMana), _manaBarFull.getSize().y));
+		long currentMana = m_Player.GetStatistics().GetCurrentMana();
+		long maxMana = m_Player.GetStatistics().GetMaxMana();
+		m_ManaBar.first.setSize(Vector2f(m_ManaBar.second.getSize().x * static_cast<double>(currentMana) / static_cast<double>(maxMana), m_ManaBar.second.getSize().y));
 		
-		_manaPoints.setString(std::to_string(currentMana) + "/" + std::to_string(maxMana));
+		m_ManaValue.setString(std::to_string(currentMana) + "/" + std::to_string(maxMana));
 
-		std::string level = std::to_string(_player.getStatistics().getLevel());
-		_level.setString(level);
+		std::string level = std::to_string(m_Player.GetStatistics().GetLevel());
+		m_PlayerLevel.second.setString(level);
 
 		// Update texts' positions
 		if (level.size() > 1)
-			_level.setPosition(_levelShape.getPosition() + sf::Vector2f(_levelShape.getRadius() / 2.f, _levelShape.getRadius() / 2.f));
+			m_PlayerLevel.second.setPosition(m_PlayerLevel.first.getPosition() + Vector2f(m_PlayerLevel.first.getRadius() / 2.f, m_PlayerLevel.first.getRadius() / 2.f));
 		else
-			_level.setPosition(_levelShape.getPosition() + sf::Vector2f((_levelShape.getRadius() + _level.getGlobalBounds().width) / 2.f, _levelShape.getRadius() / 2.f));
-		_healthPoints.setPosition(_healthBarFull.getPosition() + sf::Vector2f((_healthBarFull.getSize().x - _healthPoints.getGlobalBounds().width) / 2, 0));
-		_expPoints.setPosition(_expBarFull.getPosition() + sf::Vector2f((_expBarFull.getSize().x - _expPoints.getGlobalBounds().width) / 2, 0));
-		_manaPoints.setPosition(_manaBarFull.getPosition() + sf::Vector2f((_manaBarFull.getSize().x - _manaPoints.getGlobalBounds().width) / 2, 0));
+			m_PlayerLevel.second.setPosition(m_PlayerLevel.first.getPosition() + Vector2f((m_PlayerLevel.first.getRadius() + m_PlayerLevel.second.getGlobalBounds().width) / 2.f, m_PlayerLevel.first.getRadius() / 2.f));
+		m_HPValue.setPosition(m_HPBar.second.getPosition() + Vector2f((m_HPBar.second.getSize().x - m_HPValue.getGlobalBounds().width) / 2, 0));
+		m_EXPValue.setPosition(m_EXPBar.second.getPosition() + Vector2f((m_EXPBar.second.getSize().x - m_EXPValue.getGlobalBounds().width) / 2, 0));
+		m_ManaValue.setPosition(m_ManaBar.second.getPosition() + Vector2f((m_ManaBar.second.getSize().x - m_ManaValue.getGlobalBounds().width) / 2, 0));
 	}
 }
 
-void PlayerGUI::Render(sf::RenderTarget * target)
+void PlayerGUI::Render(RenderTarget& target)
 {
-	if (_visible)
+	if (m_Visible)
 	{
-		if (!target)
-			target = &_window;
-
-		target->draw(_globalShape);
-		target->draw(_healthBar);
-		target->draw(_expBar);
-		target->draw(_manaBar);
-		target->draw(_healthBarFull);
-		target->draw(_expBarFull);
-		target->draw(_manaBarFull);
-		target->draw(_levelShape);
-		target->draw(_pseudo);
-		target->draw(_level);
-		target->draw(_healthPoints);
-		target->draw(_expPoints);
-		target->draw(_manaPoints);
+		target.draw(m_GlobalShape);
+		target.draw(m_HPBar.first);
+		target.draw(m_EXPBar.first);
+		target.draw(m_ManaBar.first);
+		target.draw(m_HPBar.second);
+		target.draw(m_EXPBar.second);
+		target.draw(m_ManaBar.second);
+		target.draw(m_PlayerLevel.first);
+		target.draw(m_PlayerName);
+		target.draw(m_PlayerLevel.second);
+		target.draw(m_HPValue);
+		target.draw(m_EXPValue);
+		target.draw(m_ManaValue);
 	}
 }
 
-void PlayerGUI::UpdatePosition(const sf::Vector2f & mousePos)
+void PlayerGUI::UpdatePosition(const Vector2f & mouse_position)
 {
 	// Update all the position based on the new position of the global shape (Text are updated in Update())
-	_globalShape.setPosition(mousePos);
-	_pseudo.setPosition(_globalShape.getPosition().x + _globalShape.getSize().x * 0.01, _globalShape.getPosition().y + _globalShape.getSize().y * 0.1);
-	if (_pseudo.getGlobalBounds().width > _levelShape.getRadius() * 2)
-		_levelShape.setPosition(_pseudo.getPosition() + sf::Vector2f(_pseudo.getGlobalBounds().width / 2 - _levelShape.getRadius(),
-		_pseudo.getGlobalBounds().height + _levelShape.getRadius() / 2));
+	m_GlobalShape.setPosition(mouse_position);
+	m_PlayerName.setPosition(m_GlobalShape.getPosition().x + m_GlobalShape.getSize().x * 0.01, m_GlobalShape.getPosition().y + m_GlobalShape.getSize().y * 0.1);
+	if (m_PlayerName.getGlobalBounds().width > m_PlayerLevel.first.getRadius() * 2)
+		m_PlayerLevel.first.setPosition(m_PlayerName.getPosition() + Vector2f(m_PlayerName.getGlobalBounds().width / 2 - m_PlayerLevel.first.getRadius(),
+		m_PlayerName.getGlobalBounds().height + m_PlayerLevel.first.getRadius() / 2));
 	else
-		_levelShape.setPosition(_pseudo.getPosition() + sf::Vector2f(0, _pseudo.getGlobalBounds().height + _levelShape.getRadius() / 2));
-	_healthBar.setPosition(_pseudo.getPosition() + sf::Vector2f(std::max(_pseudo.getGlobalBounds().width, _levelShape.getRadius() * 2) + _window.getSize().y * 0.01, 0));
-	_expBar.setPosition(_healthBar.getPosition().x, _healthBar.getPosition().y + _window.getSize().y * 0.01 + _expBar.getSize().y);
-	_manaBar.setPosition(_expBar.getPosition().x, _expBar.getPosition().y + _window.getSize().y * 0.01 + _manaBar.getSize().y);
-	_healthBarFull.setPosition(_healthBar.getPosition());
-	_expBarFull.setPosition(_expBar.getPosition());
-	_manaBarFull.setPosition(_manaBar.getPosition());
+		m_PlayerLevel.first.setPosition(m_PlayerName.getPosition() + Vector2f(0, m_PlayerName.getGlobalBounds().height + m_PlayerLevel.first.getRadius() / 2));
+	m_HPBar.first.setPosition(m_PlayerName.getPosition() + Vector2f(std::max(m_PlayerName.getGlobalBounds().width, m_PlayerLevel.first.getRadius() * 2) + m_Window.getSize().y * 0.01, 0));
+	m_EXPBar.first.setPosition(m_HPBar.first.getPosition().x, m_HPBar.first.getPosition().y + m_Window.getSize().y * 0.01 + m_EXPBar.first.getSize().y);
+	m_ManaBar.first.setPosition(m_EXPBar.first.getPosition().x, m_EXPBar.first.getPosition().y + m_Window.getSize().y * 0.01 + m_ManaBar.first.getSize().y);
+	m_HPBar.second.setPosition(m_HPBar.first.getPosition());
+	m_EXPBar.second.setPosition(m_EXPBar.first.getPosition());
+	m_ManaBar.second.setPosition(m_ManaBar.first.getPosition());
 }
 
 

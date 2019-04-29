@@ -1,3 +1,4 @@
+/*
 #ifndef _WEAPON_H_
 #define _WEAPON_H_
 
@@ -11,9 +12,9 @@ public:
 
 	Weapon &operator=(const Weapon &weapon);
 
-	/* Getters */
-	int getDamage() const;
-	virtual WeaponCategories getWeaponCategory() const;
+	// Getters
+	int GetDamage() const;
+	virtual WeaponCategories GetWeaponCategory() const;
 	virtual std::string showCategory() const;
 
 private:
@@ -22,3 +23,4 @@ private:
 };
 
 #endif // !_WEAPON_H_
+*/

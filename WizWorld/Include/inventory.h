@@ -1,3 +1,4 @@
+/*
 #ifndef _INVENTORY_H_
 #define _INVENTORY_H_
 
@@ -17,18 +18,18 @@ public:
 	void removeFromBag(Item *item);
 	void removeFromStuff(Item *item);
 
-	/* Getters */
-	Weapon* getWeapon_1() const;
-	Weapon* getWeapon_2() const;
-	Item** getBag() const;
-	Armor** getStuff() const;
-	int getSize() const;
+	// Getters
+	Weapon* GetWeapon_1() const;
+	Weapon* GetWeapon_2() const;
+	Item** GetBag() const;
+	Armor** GetStuff() const;
+	int GetSize() const;
 
-	/* Setters */
-	void setBag(Item *item);
-	void setWeapon_1(Weapon *weapon);
-	void setWeapon_2(Weapon *weapon);
-	void setStuff(Armor *armor);
+	// Setters
+	void SetBag(Item *item);
+	void SetWeapon_1(Weapon *weapon);
+	void SetWeapon_2(Weapon *weapon);
+	void SetStuff(Armor *armor);
 
 private:
 	// Weapon in primary hand
@@ -46,3 +47,4 @@ private:
 };
 
 #endif // !_INVENTORY_H_
+*/

@@ -3,32 +3,32 @@
 #include "../Include/Map.h"
 
 // Constructor
-Map::Map(std::string texture_path, int map_scale, bool collision) :
-scale(map_scale)
+Map::Map(const std::string texture_path, int map_scale, bool collision) :
+m_Scale(map_scale)
 {
-	this->mapTexture = new sf::Texture;
-	if (this->mapTexture->loadFromFile(texture_path))
+	m_MapTexture = new sf::Texture;
+	if (m_MapTexture->loadFromFile(texture_path))
 	{
 		if (collision)
-			this->mapImage = this->mapTexture->copyToImage();
+			m_MapImage = m_MapTexture->copyToImage();
 		else
 		{
-			this->map.setTexture(this->mapTexture);
-			this->map.setPosition(0, 0);
-			this->map.setSize(static_cast<sf::Vector2f>(this->mapTexture->getSize()));
-			this->map.setScale(scale, scale);
+			m_Map.setTexture(m_MapTexture);
+			m_Map.setPosition(0, 0);
+			m_Map.setSize(static_cast<sf::Vector2f>(m_MapTexture->getSize()));
+			m_Map.setScale(m_Scale, m_Scale);
 		}
 	}
 	else
 	{
-		this->map.setFillColor(sf::Color::Black);
+		m_Map.setFillColor(sf::Color::Black);
 	}
 
 }
 // Destructor
 Map::~Map()
 {
-	delete this->mapTexture;
+	delete m_MapTexture;
 }
 
 // Functions
@@ -36,51 +36,24 @@ void Map::Update(const float & dt)
 {
 }
 
-void Map::Render(sf::RenderTarget * target)
+void Map::Render(sf::RenderTarget& target)
 {
-	target->draw(this->map);
+	target.draw(m_Map);
 }
 
 // Getters
-sf::Vector2f Map::getSize() const
+const sf::Color Map::GetPixelColor(int x, int y) const
 {
-	return this->map.getSize();
-}
-
-sf::Vector2f Map::getPosition() const
-{
-	return this->map.getPosition();
-}
-
-const sf::RectangleShape& Map::getShape() const
-{
-	return this->map;
-}
-
-const int & Map::getScale() const
-{
-	return this->scale;
-}
-
-const sf::Color Map::getPixelColor(int x, int y) const
-{
-	if (0 <= x && x < mapImage.getSize().x && 0 <= y && y < mapImage.getSize().y)
-		return this->mapImage.getPixel(x, y);
+	if (0 <= x && x < m_MapImage.getSize().x && 0 <= y && y < m_MapImage.getSize().y)
+		return m_MapImage.getPixel(x, y);
 	else
 		return sf::Color::Red;
 }
 
-sf::Texture * Map::getTexture()
+const sf::Vector2f Map::GetStartingPosition(std::string key) const
 {
-	return this->mapTexture;
-}
-
-sf::Vector2f Map::getStartingPosition(std::string key) const
-{
-	if (this->startingPositions.count(key))
-	{
-		return this->startingPositions.at(key);
-	}
+	if (m_StartingPositions.count(key))
+		return m_StartingPositions.at(key);
 }
 /////////////////////////////////////////////////////////////////////
 /// Initializes the starting position with the parameters in the given file
@@ -97,7 +70,7 @@ void Map::InitPositions(std::string path)
 
 		while (config_file >> key >> x >> y)
 		{
-			this->startingPositions[key] = sf::Vector2f(x * this->scale, y * this->scale);
+			m_StartingPositions[key] = sf::Vector2f(x * m_Scale, y * m_Scale);
 		}
 		config_file.close();
 	}

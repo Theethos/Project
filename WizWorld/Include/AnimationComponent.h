@@ -7,62 +7,53 @@ private:
 	// Private struct that stores one animation
 	struct Animation
 	{
-		sf::Texture *textureSheet;
-		sf::Sprite *sprite;
+		sf::Texture* m_TextureSheet;
+		sf::Sprite& m_Sprite;
 		// Area of the texture sheet that will be rendered
-		sf::IntRect currentRect;
+		sf::IntRect m_CurrentRect;
 		// Number of image in the texture sheet
-		int numberOfTextures;
+		int m_TextureSize;
 		// Time between two frames of the animation 
-		float animationTimer;
+		float m_FrameDelay;
 		// Time spend between last call to this animation
-		float timer;
+		float m_Timer;
 
 		// Constructor
-		Animation() :
-		textureSheet(nullptr), 
-		sprite(nullptr),
-		currentRect(0, 0, 0, 0), 
-		numberOfTextures(0), 
-		animationTimer(0),
-		timer(0)
+		Animation(sf::Texture* texture_sheet, sf::Sprite& sprite, int texture_size, int width, int height, float frame_delay) :
+		m_TextureSheet(texture_sheet), 
+		m_Sprite(sprite),
+		m_TextureSize(texture_size),
+		m_CurrentRect(0, 0, width / texture_size, height),
+		m_FrameDelay(frame_delay),
+		m_Timer(0)
 		{}
 
 		// Functions
-		// Initializes the animation during "AddAnimation()" in the AnimationComponent class
-		void Init(sf::Texture *textureSheet, sf::Sprite *sprite, int numberOfTextures, float animationTimer, int width, int height)
-		{
-			this->textureSheet = textureSheet;
-			this->sprite = sprite;
-			this->numberOfTextures = numberOfTextures; 
-			this->animationTimer = animationTimer;
-			this->currentRect = sf::IntRect(0, 0, width/numberOfTextures, height);
-		}
 
 		void Play(const float & velocity, const float &dt)
 		{
-			// Updates the timer
+			// Updates the m_Timer
 			// Plays the animation faster if the entity's velocity is greater than 1
-			if (std::abs(velocity) < 1 || this->numberOfTextures <= 4)
-				this->timer += dt;
+			if (std::abs(velocity) < 1 || m_TextureSize <= 4)
+				m_Timer += dt;
 			else
-				this->timer += dt * std::abs(velocity);
+				m_Timer += dt * std::abs(velocity);
 			
 			// If there has been enough time since the last frame
-			if (this->timer >= this->animationTimer)
+			if (m_Timer >= m_FrameDelay)
 			{
 				// Updates sprite's texture
-				this->sprite->setTexture(*this->textureSheet, true);
-				this->sprite->setTextureRect(this->currentRect);
+				m_Sprite.setTexture(*m_TextureSheet, true);
+				m_Sprite.setTextureRect(m_CurrentRect);
 				
-				// Resets timer
-				this->timer = 0;
+				// ReSets m_Timer
+				m_Timer = 0;
 
 				// Moves on to the next frame of the animation
-				this->currentRect.left += this->currentRect.width;
+				m_CurrentRect.left += m_CurrentRect.width;
 
 				// And if it was the last one, it goes back to first frame
-				if (this->currentRect.left == this->currentRect.width * this->numberOfTextures)
+				if (m_CurrentRect.left == m_CurrentRect.width * m_TextureSize)
 				{
 					Reset();
 				}
@@ -71,50 +62,50 @@ private:
 		
 		void Reset()
 		{
-			this->currentRect.left = 0;
-			this->timer = 0;
+			m_CurrentRect.left = 0;
+			m_Timer = 0;
 		}
 		// Set the texture to the first of the sprite sheet -> idle
 		void Idle(const float &dt)
 		{
-			this->timer += dt;
+			m_Timer += dt;
 
-			if (this->timer >= this->animationTimer)
+			if (m_Timer >= m_FrameDelay)
 			{
-				this->sprite->setTexture(*this->textureSheet, true);
-				this->sprite->setTextureRect(sf::IntRect(this->currentRect.width, 0, this->currentRect.width, this->currentRect.height));
-				// Reset timer
-				this->timer = 0;
+				m_Sprite.setTexture(*m_TextureSheet, true);
+				m_Sprite.setTextureRect(sf::IntRect(m_CurrentRect.width, 0, m_CurrentRect.width, m_CurrentRect.height));
+				// Reset m_Timer
+				m_Timer = 0;
 			}
 		}
 	};
 
 public:
 	// Constructor
-	AnimationComponent(sf::Sprite *sprite);
+	AnimationComponent(sf::Sprite& sprite);
 	// Destructor
 	virtual ~AnimationComponent();
 
 	// Functions
-	void AddAnimation(const std::string key, sf::Texture *textureSheet, int numberOfTextures, int width, int height, float animationTimer = 0.5);
+	void AddAnimation(const std::string key, sf::Texture* texture_sheet, int texture_size, int width, int height, float frame_delay = 0.5);
 	void PlayAnimation(const float & velocity, const float & dt, const std::string animation);
-	void ResetAnimation(const std::string animation);
+	void ReSetAnimation(const std::string animation);
 	void IdleAnimation(const float &dt, const std::string animation);
 
 	// Getters
-	AnimationSide getSide() const;
-	sf::Texture* getTexture(std::string animation);
+	inline const AnimationSide GetSide() const { return m_Side; }
+	inline sf::Texture& GetTexture(const std::string animation) {if (m_Animation.count(animation)) return *m_Animation[animation]->m_TextureSheet; }
 
 	// Setter
-	void setSide(const AnimationSide side);
+	inline void SetSide(const AnimationSide side) { m_Side = side; }
 
 private:
 	// Map of animation
-	std::map<std::string, Animation> animation;
+	std::map<std::string, Animation*> m_Animation;
 	// Sprite on which to play the animation
-	sf::Sprite *associatedSprite;
+	sf::Sprite& m_Sprite;
 	// Orientation of this sprite (to play the right animation)
-	AnimationSide side;
+	AnimationSide m_Side;
 };
 
 

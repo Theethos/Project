@@ -7,28 +7,29 @@
 class ChatBoxGUI : public GUI
 {
 public:
-	ChatBoxGUI(sf::RenderWindow &window, Player &player);
+	ChatBoxGUI(sf::RenderWindow& window, Player& player);
 	~ChatBoxGUI();
 
 	// Functions
 	void Update(const float &dt);
-	void Render(sf::RenderTarget *target);
-	inline void Activate() { _textField->Activate(); }
-	inline void Deactivate() { _textField->Deactivate(); }
-	inline const bool IsActive() const { return _textField->getActivated(); }
+	void Render(sf::RenderTarget& target);
+	inline void Activate() { m_TextField->Activate(); }
+	inline void Deactivate() { m_TextField->Deactivate(); }
+	inline const bool IsActive() const { return m_TextField->GetActivated(); }
 
 private:
 	// Private functions
-	void UpdatePosition(const sf::Vector2f &mousePos);
+	void UpdatePosition(const sf::Vector2f &mouse_position);
 	void UpdateTextField();
 	void InitTextBox();
 	void DisplayMessage();
 	void HandleCommand();
 
-	bool _hovered;
-	bool _selected;
-	TextField* _textField;
-	std::list<sf::Text> _textBox;
+	float m_Timer;
+	bool m_Hovered;
+	bool m_Selected;
+	TextField* m_TextField;
+	std::list<sf::Text> m_TextBox;
 };
 
 #endif // !CHAT_BOX_GUI_H

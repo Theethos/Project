@@ -14,52 +14,51 @@ public:
 	{
 		// Value of HP added every level
 		const long _increment = 15;
-		long _currentHP;
+		long m_CurrentHP;
 		// Player gains HP every level (increment/level)
-		long _levelHP;
+		long m_LevelHP;
 		// HP gained with characteristics
-		long _statisticsHP;
+		long m_StatisticsHP;
 		// HP gained with stuff
-		long _equipmentHP;
+		long m_EquipmentHP;
 
 		// Constructor
-		inline HealthPoints(long currentHP = 150, long levelHP = 150, long statisticsHP = 0, long equipmentHP = 0) :
-		_currentHP(currentHP),
-		_levelHP(levelHP),
-		_statisticsHP(statisticsHP),
-		_equipmentHP(equipmentHP) {}
+		inline HealthPoints(long current_HP = 150, long level_HP = 150, long statistics_HP = 0, long equipment_HP = 0) :
+		m_CurrentHP(current_HP),
+		m_LevelHP(level_HP),
+		m_StatisticsHP(statistics_HP),
+		m_EquipmentHP(equipment_HP) {}
 	};
 	struct Experience
 	{
-		// Value of the increase of _next every level
+		// Value of the increase of m_Next every level
 		const float _increment = 1.405;
-		int _level;
-		long long _current;
-		long long _next;
+		int m_Level;
+		long long m_Current;
+		long long m_Next;
 
 		// Constructor
 		Experience(int level = 1, long long current = 0, long long next = 150) :
-		_level(level),
-		_current(current),
-		_next(next) {}
+		m_Level(level),
+		m_Current(current),
+		m_Next(next) {}
 	};
 	struct Mana
 	{
 		// Works the same way as HP
 		const int _increment = 50;
-		long _currentMana;
-		long _levelMana;
-		long _statisticsMana;
-		long _equipmentMana;
+		long m_CurrentMana;
+		long m_LevelMana;
+		long m_StatisticsMana;
+		long m_EquipmentMana;
 
 		// Constructor
-		inline Mana(long currentMana = 150, long levelMana = 150, long statisticsMana = 0, long equipmentMana = 0) :
-		_currentMana(currentMana),
-		_levelMana(levelMana),
-		_statisticsMana(statisticsMana),
-		_equipmentMana(equipmentMana)
-		{
-		}
+		inline Mana(long current_mana = 150, long level_mana = 150, long statistics_mana = 0, long equipment_mana = 0) :
+		m_CurrentMana(current_mana),
+		m_LevelMana(level_mana),
+		m_StatisticsMana(statistics_mana),
+		m_EquipmentMana(equipment_mana)
+		{}
 	};
 
 	// Functions
@@ -71,19 +70,19 @@ public:
 	void RemoveMana(long amount);
 
 	// Getters
-	inline const long &getCurrentHP() const { return _healthPoints._currentHP; }
-	inline const long &getMaxHP() const { return _healthPoints._levelHP + _healthPoints._statisticsHP + _healthPoints._equipmentHP; }
-	inline const long &getCurrentMana() const { return _mana._currentMana; }
-	inline const long &getMaxMana() const { return _mana._levelMana + _mana._statisticsMana + _mana._equipmentMana; }
-	inline const int& getLevel() const { return _experience._level; }
-	inline const long long& getCurrentLevelExp() const { return _experience._current; }
-	inline const long long& getNextLevelExp() const { return _experience._next; }
-	long long getPreviousNext();
+	long long GetPreviousNext();
+	inline const long &GetCurrentHP() const { return m_HealthPoints.m_CurrentHP; }
+	inline const long &GetMaxHP() const { return m_HealthPoints.m_LevelHP + m_HealthPoints.m_StatisticsHP + m_HealthPoints.m_EquipmentHP; }
+	inline const long &GetCurrentMana() const { return m_Mana.m_CurrentMana; }
+	inline const long &GetMaxMana() const { return m_Mana.m_LevelMana + m_Mana.m_StatisticsMana + m_Mana.m_EquipmentMana; }
+	inline const int& GetLevel() const { return m_Experience.m_Level; }
+	inline const long long& GetCurrentLevelExp() const { return m_Experience.m_Current; }
+	inline const long long& GetNextLevelExp() const { return m_Experience.m_Next; }
 
 private:
-	HealthPoints _healthPoints;
-	Experience _experience;
-	Mana _mana;
+	HealthPoints m_HealthPoints;
+	Experience m_Experience;
+	Mana m_Mana;
 
 };
 

@@ -2,28 +2,29 @@
 #include "../Include/Macros.h"
 #include "../Include/MiniMapGUI.h"
 
+using namespace sf;
 
-const float MiniMapGUI::_miniMapScale = 0.3;
+const float MiniMapGUI::s_MiniMapScale = 0.3;
 
-MiniMapGUI::MiniMapGUI(sf::RenderWindow &window, Player & player, sf::Texture *mapTexture) :
-GUI(window, player)
+MiniMapGUI::MiniMapGUI(RenderWindow& window, Player & player, Texture& map_texture) :
+GUI(window, player),
+m_MapTexture(map_texture)
 {
-	_playerPosition.setRadius(2);
-	_playerPosition.setFillColor(sf::Color::Red);
+	m_PlayerPosition.setRadius(2);
+	m_PlayerPosition.setFillColor(Color::Red);
 
-	_mapTexture = mapTexture;
+	m_MapShape.setSize(Vector2f(m_MapTexture.getSize()));
+	m_MapShape.setTexture(&m_MapTexture);
+	m_MapShape.setScale(s_MiniMapScale, s_MiniMapScale);
 
-	_mapShape.setSize(sf::Vector2f(_mapTexture->getSize()));
-	_mapShape.setTexture(_mapTexture);
-	_mapShape.setScale(_miniMapScale, _miniMapScale);
+	m_GlobalShape.setSize(Vector2f(m_MapShape.getSize().x * s_MiniMapScale, m_MapShape.getSize().y * s_MiniMapScale) 
+						+ Vector2f(m_Window.getSize().x * 0.01, m_Window.getSize().x * 0.01));
+	m_GlobalShape.setFillColor(m_GlobalColor);
 
-	_globalShape.setSize(sf::Vector2f(_mapShape.getSize().x * _miniMapScale, _mapShape.getSize().y * _miniMapScale) + sf::Vector2f(_window.getSize().x * 0.01, _window.getSize().x * 0.01));
-	_globalShape.setFillColor(_globalColor);
-
-	_globalShape.setPosition(sf::Vector2f(_window.getSize().x - _globalShape.getSize().x, _window.getPosition().y));
-	_mapShape.setPosition(_globalShape.getPosition() + sf::Vector2f(_globalShape.getSize().x / 2 - _mapShape.getSize().x * _miniMapScale / 2,
-		_globalShape.getSize().y / 2 - _mapShape.getSize().y * _miniMapScale / 2));
-	_mapShape.setTextureRect(sf::IntRect(0, 0, _mapShape.getSize().x, _mapShape.getSize().y));
+	m_GlobalShape.setPosition(Vector2f(m_Window.getSize().x - m_GlobalShape.getSize().x, m_Window.getPosition().y));
+	m_MapShape.setPosition(m_GlobalShape.getPosition() + Vector2f(m_GlobalShape.getSize().x / 2 - m_MapShape.getSize().x * s_MiniMapScale / 2,
+		m_GlobalShape.getSize().y / 2 - m_MapShape.getSize().y * s_MiniMapScale / 2));
+	m_MapShape.setTextureRect(IntRect(0, 0, m_MapShape.getSize().x, m_MapShape.getSize().y));
 }
 
 MiniMapGUI::~MiniMapGUI()
@@ -32,63 +33,58 @@ MiniMapGUI::~MiniMapGUI()
 
 void MiniMapGUI::Update(const float & dt)
 {
-	if (!sf::Joystick::isConnected(0) && (!GUI::_token || _move))
-		Move();
-
-	if (_mapTexture->getSize().x > _mapShape.getSize().x || _mapTexture->getSize().y > _mapShape.getSize().y)
-		setTexture(_mapTexture);
-	
-	UpdatePlayerPosition();
-}
-
-void MiniMapGUI::Render(sf::RenderTarget * target)
-{
-	if (_visible)
+	if (m_Visible)
 	{
-		if (!target)
-			target = &_window;
+		if (!Joystick::isConnected(0) && (!GUI::s_Token || m_Move))
+			Move();
 
-		target->draw(_globalShape);
-		target->draw(_mapShape);
-		target->draw(_playerPosition);
+		if (m_MapTexture.getSize().x > m_MapShape.getSize().x || m_MapTexture.getSize().y > m_MapShape.getSize().y)
+			SetTexture(m_MapTexture);
+
+		UpdatePlayerPosition();
 	}
 }
 
-/*void MiniMapGUI::Init(sf::RenderWindow & window, sf::Texture * mapTexture)
+void MiniMapGUI::Render(RenderTarget& target)
 {
-	
-
-}*/
-
-void MiniMapGUI::setTexture(sf::Texture * texture)
-{
-	if (_mapTexture != texture)
+	if (m_Visible)
 	{
-		_mapTexture = texture; 
-		_mapShape.setTexture(_mapTexture);
+		target.draw(m_GlobalShape);
+		target.draw(m_MapShape);
+		target.draw(m_PlayerPosition);
+	}
+}
+
+void MiniMapGUI::SetTexture(Texture& texture)
+{
+	if (&m_MapTexture != &texture)
+	{
+		m_MapTexture = texture; 
+		m_MapShape.setTexture(&m_MapTexture);
 	}
 	
-	_mapShape.setTextureRect(sf::IntRect((_player.getSprite()->getPosition().x / _player.getSprite()->getScale().x - _mapShape.getSize().x / 2),
-										 (_player.getSprite()->getPosition().y / _player.getSprite()->getScale().y - _mapShape.getSize().y / 2),
-										 _mapShape.getTextureRect().width, _mapShape.getTextureRect().height));
+	m_MapShape.setTextureRect(IntRect((m_Player.GetSprite().getPosition().x / m_Player.GetSprite().getScale().x - m_MapShape.getSize().x / 2),
+									  (m_Player.GetSprite().getPosition().y / m_Player.GetSprite().getScale().y - m_MapShape.getSize().y / 2),
+									   m_MapShape.getTextureRect().width,
+									   m_MapShape.getTextureRect().height));
 
 }
 
-void MiniMapGUI::UpdatePosition(const sf::Vector2f & mousPos)
+void MiniMapGUI::UpdatePosition(const Vector2f & mouse_position)
 {
-	_globalShape.setPosition(mousPos);
-	_mapShape.setPosition(_globalShape.getPosition() + sf::Vector2f(_globalShape.getSize().x / 2 - _mapShape.getSize().x * _miniMapScale / 2,
-						  _globalShape.getSize().y / 2 - _mapShape.getSize().y * _miniMapScale / 2));
+	m_GlobalShape.setPosition(mouse_position);
+	m_MapShape.setPosition(m_GlobalShape.getPosition() + Vector2f(m_GlobalShape.getSize().x / 2 - m_MapShape.getSize().x * s_MiniMapScale / 2,
+						   m_GlobalShape.getSize().y / 2 - m_MapShape.getSize().y * s_MiniMapScale / 2));
 }
 
 void MiniMapGUI::UpdatePlayerPosition()
 {
 	// If the texture is bigger than the shape, the player is always on center of the minimap, and it is the minimap that moves
-	if (_mapTexture->getSize().x > _mapShape.getSize().x || _mapTexture->getSize().y > _mapShape.getSize().y)
-		_playerPosition.setPosition(_globalShape.getPosition() + sf::Vector2f(_globalShape.getSize().x / 2, _globalShape.getSize().y / 2));
+	if (m_MapTexture.getSize().x > m_MapShape.getSize().x || m_MapTexture.getSize().y > m_MapShape.getSize().y)
+		m_PlayerPosition.setPosition(m_GlobalShape.getPosition() + Vector2f(m_GlobalShape.getSize().x / 2, m_GlobalShape.getSize().y / 2));
 	// Else, the minimap is fixed and the player moves on it
 	else
-		_playerPosition.setPosition(_mapShape.getPosition() + sf::Vector2f(
-			(_player.getSprite()->getPosition().x / _player.getSprite()->getScale().x) * _miniMapScale,
-			(_player.getSprite()->getPosition().y / _player.getSprite()->getScale().y) * _miniMapScale));
+		m_PlayerPosition.setPosition(m_MapShape.getPosition() + 
+						   Vector2f((m_Player.GetSprite().getPosition().x / m_Player.GetSprite().getScale().x) * s_MiniMapScale,
+									(m_Player.GetSprite().getPosition().y / m_Player.GetSprite().getScale().y) * s_MiniMapScale));
 }

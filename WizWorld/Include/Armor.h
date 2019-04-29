@@ -1,3 +1,4 @@
+/*
 #ifndef _ARMOR_H_
 #define _ARMOR_H_
 
@@ -11,8 +12,8 @@ public:
 
 	Armor &operator=(const Armor &armor);
 
-	/* Getters */
-	ArmorCategories getArmorCategory() const;
+	// Getters
+	ArmorCategories GetArmorCategory() const;
 	std::string showCategory() const;
 
 private:
@@ -21,5 +22,5 @@ private:
 
 #endif // !_ARMOR_H_
 
-
+*/
 

@@ -5,26 +5,26 @@ class MusicComponent
 {
 public:
 	// Constructor
-	MusicComponent(std::string path);
+	MusicComponent(const std::string path);
 	// Destructor
 	virtual ~MusicComponent();
 
 	// Functions
-	void Play(const float &dt, std::string music_key);
-	void Pause(std::string music_key);
-	void Stop(std::string music_key);
+	void Play(const float &dt, const std::string music_key);
+	void Pause(const std::string music_key);
+	void Stop(const std::string music_key);
 
 	// Getter 
-	const std::pair<sf::Music*, float >* getPlay() const;
+	inline const std::pair<sf::Music*, float >* GetPlay() const { return m_Playing; }
 
 private:
 	// The float parameter is the timer to launch the music
-	std::map<std::string, std::pair<sf::Music*, float>> musics;
+	std::map<std::string, std::pair<sf::Music*, float>> m_Musics;
 	// Pointer to the music currently played
-	std::pair<sf::Music*, float >* isPlaying;
+	std::pair<sf::Music*, float >* m_Playing;
 	// Time between two music
-	float waitingBeforePlay;
-	int maxVolume;
+	float m_Timer;
+	int m_MaxVolume;
 	
 	// Private functions
 	void InitMusics(std::string path);

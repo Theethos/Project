@@ -2,130 +2,132 @@
 #include "../Include/Macros.h"
 #include "../Include/GUI.h"
 
+using namespace sf;
+
 // Static variables;
-bool GUI::_token = false;
-std::list<GUI*> GUI::_instances;
+bool GUI::s_Token = false;
+std::list<GUI*> GUI::s_Instances;
 
 // Constructor
-GUI::GUI(sf::RenderWindow &window, Player &player) :
-_window(window),
-_player(player),
-_visible(true),
-_move(false),
-_offset(0, 0)
+GUI::GUI(RenderWindow& window, Player& player) :
+m_Window(window),
+m_Player(player),
+m_Visible(true),
+m_Move(false),
+m_Offset(0, 0)
 {
-	if (!_font.loadFromFile("../External/Fonts/GOTHICB.TTF"))
+	if (!m_Font.loadFromFile("../External/Fonts/GOTHICB.TTF"))
 		std::cerr << "Error while loading font in PlayerGUI. Line " << __LINE__ << std::endl;
 
-	_globalColor = sf::Color(0, 0, 0, 128);
-	_globalColorText = sf::Color(sf::Color::White);
-	_globalShape.setOutlineThickness(1);
-	_globalShape.setOutlineColor(sf::Color::Black);
+	m_GlobalColor = Color(0, 0, 0, 128);
+	m_GlobalTextColor = Color(Color::White);
+	m_GlobalShape.setOutlineThickness(1);
+	m_GlobalShape.setOutlineColor(Color::Black);
 
 	// Add the new GUI element to the vector that store every instance
 	// It is used to check for collision between instance
-	GUI::_instances.push_back(this);
+	GUI::s_Instances.push_back(this);
 }
 // Destructor
 GUI::~GUI()
 {
-	_instances.remove(this);
+	s_Instances.remove(this);
 }
 
 // Function
 void GUI::Move()
 {
 	// Move the GUI in Drag&Drop
-	sf::Vector2f mousePos(sf::Mouse::getPosition());
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && _move)
+	Vector2f mouse_position(Mouse::getPosition());
+	if (Mouse::isButtonPressed(Mouse::Button::Left) && m_Move)
 	{
 		
-		_window.setMouseCursorVisible(false);
-		mousePos -= _offset;
-		sf::Vector2f window_size(_window.getSize());
+		m_Window.setMouseCursorVisible(false);
+		mouse_position -= m_Offset;
+		Vector2f window_size(m_Window.getSize());
 		
-		if (mousePos.x < 0)
-			mousePos.x = 0;
-		else if (mousePos.x > window_size.x - _globalShape.getSize().x)
-			mousePos.x = window_size.x - _globalShape.getSize().x;
-		if (mousePos.y < 0)
-			mousePos.y = 0;
-		else if (mousePos.y > window_size.y - _globalShape.getSize().y)
-			mousePos.y = window_size.y - _globalShape.getSize().y;
+		if (mouse_position.x < 0)
+			mouse_position.x = 0;
+		else if (mouse_position.x > window_size.x - m_GlobalShape.getSize().x)
+			mouse_position.x = window_size.x - m_GlobalShape.getSize().x;
+		if (mouse_position.y < 0)
+			mouse_position.y = 0;
+		else if (mouse_position.y > window_size.y - m_GlobalShape.getSize().y)
+			mouse_position.y = window_size.y - m_GlobalShape.getSize().y;
 		
 		// Update positions with the virtual function
-		UpdatePosition(mousePos);
+		UpdatePosition(mouse_position);
 	}
-	else if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && _globalShape.getGlobalBounds().contains(mousePos))
+	else if (Mouse::isButtonPressed(Mouse::Button::Left) && m_GlobalShape.getGlobalBounds().contains(mouse_position))
 	{
-		GUI::_token = true;
-		_move = true;
-		_window.setMouseCursorVisible(false);
-		_offset = sf::Vector2f(mousePos - _globalShape.getPosition());
+		GUI::s_Token = true;
+		m_Move = true;
+		m_Window.setMouseCursorVisible(false);
+		m_Offset = Vector2f(mouse_position - m_GlobalShape.getPosition());
 	}
 	else
 	{
 		// Checking for collision between instances
-		if (_move)
+		if (m_Move)
 		{
-			for (auto &it : GUI::_instances)
+			for (auto &it : GUI::s_Instances)
 			{
 				if (it != this)
 				{
-					if (it->_globalShape.getGlobalBounds().intersects(_globalShape.getGlobalBounds()))
+					if (it->m_GlobalShape.getGlobalBounds().intersects(m_GlobalShape.getGlobalBounds()))
 					{
-						UpdatePosition(getNewPosition(it->_globalShape.getGlobalBounds()));
+						UpdatePosition(GetNewPosition(it->m_GlobalShape.getGlobalBounds()));
 					}
 				}
 			}
 		}
-		_move = false;
-		_window.setMouseCursorVisible(true);
-		GUI::_token = false;
+		m_Move = false;
+		m_Window.setMouseCursorVisible(true);
+		GUI::s_Token = false;
 	}
 }
 
 // Private Function
-const sf::Vector2f GUI::getNewPosition(const sf::FloatRect & intersect) const
+const Vector2f GUI::GetNewPosition(const FloatRect & intersect) const
 {
-	// Calculate the minimum offset of the intersection
-	float offset_top = std::abs(_globalShape.getPosition().y + _globalShape.getSize().y - intersect.top);
-	float offset_left = std::abs(_globalShape.getPosition().x + _globalShape.getSize().x - intersect.left);
-	float offset_bottom = std::abs((_globalShape.getPosition().y) - (intersect.top + intersect.height));
-	float offset_right = std::abs((_globalShape.getPosition().x) - (intersect.left + intersect.width));
+	// Calculate the minimum offSet of the intersection
+	float offSet_top = std::abs(m_GlobalShape.getPosition().y + m_GlobalShape.getSize().y - intersect.top);
+	float offSet_left = std::abs(m_GlobalShape.getPosition().x + m_GlobalShape.getSize().x - intersect.left);
+	float offSet_bottom = std::abs((m_GlobalShape.getPosition().y) - (intersect.top + intersect.height));
+	float offSet_right = std::abs((m_GlobalShape.getPosition().x) - (intersect.left + intersect.width));
 
-	float min = std::min(offset_bottom, std::min(offset_left, std::min(offset_right, offset_top)));
+	float min = std::min(offSet_bottom, std::min(offSet_left, std::min(offSet_right, offSet_top)));
 
-	sf::Vector2f newPosition(_globalShape.getPosition());
+	Vector2f newPosition(m_GlobalShape.getPosition());
 
 	// And then calculate the new position of the GUI
-	if (min == offset_bottom)
+	if (min == offSet_bottom)
 	{
-		if (intersect.top + intersect.height > _window.getPosition().y + _window.getSize().y - _globalShape.getSize().y)
-			newPosition.y = intersect.top - _globalShape.getSize().y;
+		if (intersect.top + intersect.height > m_Window.getPosition().y + m_Window.getSize().y - m_GlobalShape.getSize().y)
+			newPosition.y = intersect.top - m_GlobalShape.getSize().y;
 		else
 			newPosition.y = intersect.top + intersect.height;
 	}
-	else if (min == offset_top)
+	else if (min == offSet_top)
 	{
-		if (intersect.top - _globalShape.getSize().y < 0)
+		if (intersect.top - m_GlobalShape.getSize().y < 0)
 			newPosition.y = intersect.top + intersect.height;
 		else
-			newPosition.y = intersect.top - _globalShape.getSize().y;
+			newPosition.y = intersect.top - m_GlobalShape.getSize().y;
 	}
-	else if (min == offset_right)
+	else if (min == offSet_right)
 	{
-		if (intersect.left + intersect.width > _window.getPosition().x + _window.getSize().x - _globalShape.getSize().x)
-			newPosition.x = intersect.left - _globalShape.getSize().x;
+		if (intersect.left + intersect.width > m_Window.getPosition().x + m_Window.getSize().x - m_GlobalShape.getSize().x)
+			newPosition.x = intersect.left - m_GlobalShape.getSize().x;
 		else
 			newPosition.x = intersect.left + intersect.width;
 	}
-	else if (min == offset_left)
+	else if (min == offSet_left)
 	{
-		if (intersect.left - _globalShape.getSize().x < 0)
+		if (intersect.left - m_GlobalShape.getSize().x < 0)
 			newPosition.x = intersect.left + intersect.width;
 		else
-			newPosition.x = intersect.left - _globalShape.getSize().x;
+			newPosition.x = intersect.left - m_GlobalShape.getSize().x;
 	}
 
 	return newPosition;

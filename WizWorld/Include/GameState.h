@@ -13,42 +13,44 @@ class GameState : public State
 {
 public:
 	// Construtor
-	GameState(sf::RenderWindow *window, std::stack<State*>* states, WhichState state, std::string config_file, int sprite_scale, std::string player_name, sf::Font* player_name_font);
+	GameState(sf::RenderWindow& window, std::stack<State*>& states_stack, WhichState state, const std::string path, const int sprite_scale,
+			  const std::string player_name, sf::Font& player_name_font);
 	// Destructor
 	virtual ~GameState();
 
 	// Functions
 	void Update(const float &dt);
-	void Render(sf::RenderTarget* target);
+	void Render(sf::RenderTarget& target);
 	void HandleInput(int input, const float &dt);
 
 private:
 	// GUI
-	std::map<std::string, GUI*> _GUI;
+	std::map<std::string, GUI*> m_GUI;
 
 	// Player
-	Player player;	
-	bool movementLocked;
+	Player m_Player;	
+	bool m_CantMove;
 	
 	// Map managers
-	std::map<std::string, Map*> maps;
-	std::map<std::string, Map*> collisionMaps;
-	std::string currentMap;
-	TransitionComponent transition;
-	sf::Color transitionColor;
+	std::map<std::string, Map*> m_Maps;
+	std::map<std::string, Map*> m_CollisionsMaps;
+	std::string m_CurrentMap;
+
+	TransitionComponent m_Transition;
+	sf::Color m_TransitionColor;
 
 	// Camera managers
-	sf::View playerView;
-	std::map<std::string, int> viewLocked;
-	sf::RectangleShape viewMovementArea;
+	sf::View m_PlayerView;
+	std::map<std::string, int> m_LockView;
+	sf::RectangleShape m_ViewArea;
 	
 	// Private functions
 	void InitMaps(int scale);
 	void InitView();
-	void InitGUI(std::string &player_name);
-	void ResetView(bool new_map = false);
-	void ChangeMap(sf::Color color);
-	bool CheckSpriteCollision(const float & dt, std::string movement);
+	void InitGUI(const std::string &player_name);
+	void ReSetView(bool new_map = false);
+	void ChangeMap(const sf::Color& color);
+	bool CheckSpriteCollision(const float & dt, const std::string movement);
 };
 
 #endif // !_GAME_STATE_H_
