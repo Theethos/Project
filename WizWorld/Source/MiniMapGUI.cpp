@@ -19,12 +19,17 @@ m_MapTexture(map_texture)
 
 	m_GlobalShape.setSize(Vector2f(m_MapShape.getSize().x * s_MiniMapScale, m_MapShape.getSize().y * s_MiniMapScale) 
 						+ Vector2f(m_Window.getSize().x * 0.01, m_Window.getSize().x * 0.01));
-	m_GlobalShape.setFillColor(m_GlobalColor);
 
 	m_GlobalShape.setPosition(Vector2f(m_Window.getSize().x - m_GlobalShape.getSize().x, m_Window.getPosition().y));
+	m_GlobalShape.setOutlineThickness(1);
+	m_GlobalShape.setOutlineColor(Color::Black);
+	m_GlobalShape.setFillColor(m_GlobalColor);
+
 	m_MapShape.setPosition(m_GlobalShape.getPosition() + Vector2f(m_GlobalShape.getSize().x / 2 - m_MapShape.getSize().x * s_MiniMapScale / 2,
 		m_GlobalShape.getSize().y / 2 - m_MapShape.getSize().y * s_MiniMapScale / 2));
 	m_MapShape.setTextureRect(IntRect(0, 0, m_MapShape.getSize().x, m_MapShape.getSize().y));
+	
+	m_Shape = &m_GlobalShape;
 }
 
 MiniMapGUI::~MiniMapGUI()
@@ -36,7 +41,7 @@ void MiniMapGUI::Update(const float & dt)
 	if (m_Visible)
 	{
 		if (!Joystick::isConnected(0) && (!GUI::s_Token || m_Move))
-			Move();
+			Move<RectangleShape>();
 
 		if (m_MapTexture.getSize().x > m_MapShape.getSize().x || m_MapTexture.getSize().y > m_MapShape.getSize().y)
 			SetTexture(m_MapTexture);
@@ -72,7 +77,8 @@ void MiniMapGUI::SetTexture(Texture& texture)
 
 void MiniMapGUI::UpdatePosition(const Vector2f & mouse_position)
 {
-	m_GlobalShape.setPosition(mouse_position);
+	m_Shape->setPosition(mouse_position);
+	m_GlobalShape.setPosition(m_Shape->getPosition());
 	m_MapShape.setPosition(m_GlobalShape.getPosition() + Vector2f(m_GlobalShape.getSize().x / 2 - m_MapShape.getSize().x * s_MiniMapScale / 2,
 						   m_GlobalShape.getSize().y / 2 - m_MapShape.getSize().y * s_MiniMapScale / 2));
 }

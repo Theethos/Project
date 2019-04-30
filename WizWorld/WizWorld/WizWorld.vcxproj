@@ -24,6 +24,7 @@
     <ClInclude Include="..\Include\Button.h" />
     <ClInclude Include="..\Include\Character.h" />
     <ClInclude Include="..\Include\ChatBoxGUI.h" />
+    <ClInclude Include="..\Include\CommandComponent.h" />
     <ClInclude Include="..\Include\Entity.h" />
     <ClInclude Include="..\Include\Game.h" />
     <ClInclude Include="..\Include\GameState.h" />
@@ -33,6 +34,7 @@
     <ClInclude Include="..\Include\Item.h" />
     <ClInclude Include="..\Include\Macros.h" />
     <ClInclude Include="..\Include\Map.h" />
+    <ClInclude Include="..\Include\MenuGUI.h" />
     <ClInclude Include="..\Include\MenuState.h" />
     <ClInclude Include="..\Include\MiniMapGUI.h" />
     <ClInclude Include="..\Include\MovementComponent.h" />
@@ -53,6 +55,7 @@
     <ClCompile Include="..\Source\Button.cpp" />
     <ClCompile Include="..\Source\Character.cpp" />
     <ClCompile Include="..\Source\ChatBoxGUI.cpp" />
+    <ClCompile Include="..\Source\CommandComponent.cpp" />
     <ClCompile Include="..\Source\Entity.cpp" />
     <ClCompile Include="..\Source\Game.cpp" />
     <ClCompile Include="..\Source\GameState.cpp" />
@@ -62,6 +65,7 @@
     <ClCompile Include="..\Source\Item.cpp" />
     <ClCompile Include="..\Source\Main.cpp" />
     <ClCompile Include="..\Source\Map.cpp" />
+    <ClCompile Include="..\Source\MenuGUI.cpp" />
     <ClCompile Include="..\Source\MenuState.cpp" />
     <ClCompile Include="..\Source\MiniMapGUI.cpp" />
     <ClCompile Include="..\Source\MovementComponent.cpp" />
@@ -77,6 +81,7 @@
     <ClCompile Include="..\Source\TextField.cpp" />
     <ClCompile Include="..\Source\TilesMap.cpp" />
     <ClCompile Include="..\Source\TransitionComponent.cpp" />
+    <ClCompile Include="..\Source\Utility.cpp" />
     <ClCompile Include="..\Source\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>

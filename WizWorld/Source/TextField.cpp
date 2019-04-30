@@ -138,6 +138,26 @@ void TextField::CaptureText()
 			AddChar('?');
 		else if (Keyboard::isKeyPressed(Keyboard::Period) && !m_OnlyLetter)
 			AddChar(';');
+		else if (Keyboard::isKeyPressed(Keyboard::Num0) && !m_OnlyLetter)
+			AddChar('0');
+		else if (Keyboard::isKeyPressed(Keyboard::Num1) && !m_OnlyLetter)
+			AddChar('1');
+		else if (Keyboard::isKeyPressed(Keyboard::Num2) && !m_OnlyLetter)
+			AddChar('2');
+		else if (Keyboard::isKeyPressed(Keyboard::Num3) && !m_OnlyLetter)
+			AddChar('3');
+		else if (Keyboard::isKeyPressed(Keyboard::Num4) && !m_OnlyLetter)
+			AddChar('4');
+		else if (Keyboard::isKeyPressed(Keyboard::Num5) && !m_OnlyLetter)
+			AddChar('5');
+		else if (Keyboard::isKeyPressed(Keyboard::Num6) && !m_OnlyLetter)
+			AddChar('6');
+		else if (Keyboard::isKeyPressed(Keyboard::Num7) && !m_OnlyLetter)
+			AddChar('7');
+		else if (Keyboard::isKeyPressed(Keyboard::Num8) && !m_OnlyLetter)
+			AddChar('8');
+		else if (Keyboard::isKeyPressed(Keyboard::Num9) && !m_OnlyLetter)
+			AddChar('9');
 		else if (Keyboard::isKeyPressed(Keyboard::A))
 		{
 			AddChar('A');
@@ -266,6 +286,26 @@ void TextField::CaptureText()
 		AddChar('-');
 	else if (Keyboard::isKeyPressed(Keyboard::LBracket) && !m_OnlyLetter)
 		AddChar(')');
+	else if (Keyboard::isKeyPressed(Keyboard::Numpad0) && !m_OnlyLetter)
+		AddChar('0');
+	else if (Keyboard::isKeyPressed(Keyboard::Numpad1) && !m_OnlyLetter)
+		AddChar('1');
+	else if (Keyboard::isKeyPressed(Keyboard::Numpad2) && !m_OnlyLetter)
+		AddChar('2');
+	else if (Keyboard::isKeyPressed(Keyboard::Numpad3) && !m_OnlyLetter)
+		AddChar('3');
+	else if (Keyboard::isKeyPressed(Keyboard::Numpad4) && !m_OnlyLetter)
+		AddChar('4');
+	else if (Keyboard::isKeyPressed(Keyboard::Numpad5) && !m_OnlyLetter)
+		AddChar('5');
+	else if (Keyboard::isKeyPressed(Keyboard::Numpad6) && !m_OnlyLetter)
+		AddChar('6');
+	else if (Keyboard::isKeyPressed(Keyboard::Numpad7) && !m_OnlyLetter)
+		AddChar('7');
+	else if (Keyboard::isKeyPressed(Keyboard::Numpad8) && !m_OnlyLetter)
+		AddChar('8');
+	else if (Keyboard::isKeyPressed(Keyboard::Numpad9) && !m_OnlyLetter)
+		AddChar('9');
 	// NORMALE letter
 	else
 	{
@@ -388,12 +428,7 @@ void TextField::Blink()
 	m_BackgroundColor.a = 128;
 }
 
-// Getter
-const std::string & TextField::GetTextEntered() const
-{
-	return m_TextEntered;
-}
-
+// Setter
 void TextField::SetPosition(float x, float y)
 { 
 	m_Shape.setPosition(x, y);

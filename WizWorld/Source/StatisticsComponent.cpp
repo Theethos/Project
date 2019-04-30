@@ -4,7 +4,9 @@
 
 // Constructor
 StatisticsComponent::StatisticsComponent()
-{}
+{
+	InitExpPerLevel();
+}
 // Destructor
 StatisticsComponent::~StatisticsComponent()
 {}
@@ -34,7 +36,7 @@ void StatisticsComponent::AddExp(long long amount)
 void StatisticsComponent::RemoveExp(long long amount)
 {
 	m_Experience.m_Current -= amount;
-	long long previousNext = GetPreviousNext();
+	long long previousNext = GetExpForLevel(m_Experience.m_Level - 1);
 	while (m_Experience.m_Current < previousNext)
 	{
 		if (m_Experience.m_Level > 1)
@@ -45,7 +47,7 @@ void StatisticsComponent::RemoveExp(long long amount)
 			m_HealthPoints.m_CurrentHP = GetMaxHP();
 			m_Mana.m_LevelMana -= m_Mana._increment;
 			m_Mana.m_CurrentMana = GetMaxMana();
-			previousNext = GetPreviousNext();
+			previousNext = GetExpForLevel(m_Experience.m_Level - 1);
 		}
 		else // Level min
 		{
@@ -76,12 +78,31 @@ void StatisticsComponent::RemoveMana(long amount)
 	m_Mana.m_CurrentMana = std::max(m_Mana.m_CurrentMana - amount, static_cast<long>(0));
 }
 
-long long StatisticsComponent::GetPreviousNext()
+void StatisticsComponent::SetLevel(int level)
 {
-	// Get the amount of exp required for the previous level
-	long long startingNext = 150; // Initial amount of xp
-	long long previousNext = 150; 
-	while ((startingNext *= m_Experience._increment) && startingNext < m_Experience.m_Next)
-		previousNext = startingNext;
-	return previousNext;
+	if (level > 0 && level <= 50)
+	{
+		m_Experience.m_Level = level;
+		m_Experience.m_Current = m_ExpPerLevel[level];
+		m_Experience.m_Next = m_ExpPerLevel[level + 1];
+		m_HealthPoints.m_LevelHP = 150 + (m_HealthPoints._increment * (level - 1));
+		m_HealthPoints.m_CurrentHP = GetMaxHP();
+		m_Mana.m_LevelMana = 150 + (m_Mana._increment * (level - 1));
+		m_Mana.m_CurrentMana = GetMaxMana();
+	}
+}
+
+void StatisticsComponent::InitExpPerLevel()
+{
+	std::ifstream file("../External/Data/ExpPerLevel.value");
+
+	if (file.is_open())
+	{
+		int index = 0;
+		long long amount = 0;
+		while (file >> index >> amount)
+		{
+			m_ExpPerLevel[index] = amount;
+		}
+	}
 }

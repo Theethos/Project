@@ -19,7 +19,8 @@ public:
 	void Blink();
 
 	// Getter
-	const std::string& GetTextEntered() const;
+	inline std::string& GetTextEntered() { return m_TextEntered; }
+	inline std::string GetTextEnteredConst() const { return m_TextEntered; }
 
 	// Setter
 	inline void SetMaxSize(const int value) { m_MaxSize = value; }

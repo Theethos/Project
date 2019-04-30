@@ -15,7 +15,9 @@
 #include <cstdlib>
 #include <stack>
 #include <vector>
+#include <queue>
 #include <map>
+#include <array>
 #include <unordered_map>
 #include <algorithm>
 #include <math.h>

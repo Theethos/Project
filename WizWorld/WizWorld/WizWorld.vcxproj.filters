@@ -24,9 +24,6 @@
     <Filter Include="Entity">
       <UniqueIdentifier>{556ace7e-68bf-41d6-b670-2f77f77cee20}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Component">
-      <UniqueIdentifier>{83395c0f-5095-49fa-9eb1-1db27d8ed77f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Tile/Map">
       <UniqueIdentifier>{abe9f394-e5a1-4826-8f4a-3b55dda9700b}</UniqueIdentifier>
     </Filter>
@@ -37,14 +34,17 @@
     <Filter Include="GUI">
       <UniqueIdentifier>{e01bd434-bd58-4f1b-900e-2b89d836724f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Button/Field">
+      <UniqueIdentifier>{6cbce9fc-9867-45a1-bd5b-b46d55f5519d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{83395c0f-5095-49fa-9eb1-1db27d8ed77f}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Component\Game">
       <UniqueIdentifier>{06f22a7e-d7df-423e-9a0c-1e045c602b5f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Component\GUI">
       <UniqueIdentifier>{0a24d785-4d49-4ac3-862b-345d7512699a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Button/Field">
-      <UniqueIdentifier>{6cbce9fc-9867-45a1-bd5b-b46d55f5519d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +129,12 @@
     <ClInclude Include="..\Include\TextField.h">
       <Filter>Button/Field</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\MenuGUI.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\CommandComponent.h">
+      <Filter>Component\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Weapon.cpp">
@@ -211,6 +217,15 @@
     </ClCompile>
     <ClCompile Include="..\Source\TextField.cpp">
       <Filter>Button/Field</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\MenuGUI.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Utility.cpp">
+      <Filter>Fichiers de ressources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\CommandComponent.cpp">
+      <Filter>Component\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

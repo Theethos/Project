@@ -19,6 +19,8 @@ GUI(window, player)
 	m_GlobalShape.setSize(Vector2f(m_Window.getSize().x * 0.11 + std::max(m_PlayerName.getGlobalBounds().width, m_PlayerLevel.first.getRadius() * 2),
 	m_Window.getSize().y * 0.11));
 	m_GlobalShape.setPosition(m_Window.getPosition().x, m_Window.getPosition().y);
+	m_GlobalShape.setOutlineThickness(1);
+	m_GlobalShape.setOutlineColor(Color::Black);
 	m_GlobalShape.setFillColor(m_GlobalColor);
 
 	// Infos
@@ -84,6 +86,8 @@ GUI(window, player)
 	m_ManaValue.setFont(m_Font);
 	m_ManaValue.setFillColor(m_GlobalTextColor);
 	m_ManaValue.setPosition(m_ManaBar.first.getPosition() + Vector2f((m_ManaBar.first.getSize().x - m_ManaValue.getGlobalBounds().width) / 2, 0));	
+
+	m_Shape = &m_GlobalShape;
 }
 // Destructor
 PlayerGUI::~PlayerGUI()
@@ -96,14 +100,16 @@ void PlayerGUI::Update(const float & dt)
 	{
 		// Check Drag&Drop
 		if (!Joystick::isConnected(0) && (!GUI::s_Token || m_Move))
-			Move();
+			Move<RectangleShape>();
 
 		// Update texts' and bars' size
 		long long currentXp = m_Player.GetStatistics().GetCurrentLevelExp();
-		long long nextXp = m_Player.GetStatistics().GetNextLevelExp();
-		float previous_next = m_Player.GetStatistics().GetPreviousNext() == 150 ? 0 : m_Player.GetStatistics().GetPreviousNext();
-		m_EXPBar.first.setSize(Vector2f(m_EXPBar.second.getSize().x * static_cast<double>(currentXp - previous_next) / static_cast<double>(nextXp - previous_next), m_EXPBar.second.getSize().y));
-		
+		long long nextXp = m_Player.GetStatistics().GetExpForLevel(m_Player.GetStatistics().GetLevel() + 1);
+		float previous_next = m_Player.GetStatistics().GetExpForLevel(m_Player.GetStatistics().GetLevel());
+		if (m_Player.GetStatistics().GetLevel() < 50)
+			m_EXPBar.first.setSize(Vector2f(m_EXPBar.second.getSize().x * (static_cast<double>(currentXp - previous_next) / static_cast<double>(nextXp - previous_next)), m_EXPBar.second.getSize().y));
+		else 
+			m_EXPBar.first.setSize(Vector2f(m_EXPBar.second.getSize().x, m_EXPBar.second.getSize().y));
 		m_EXPValue.setString(std::to_string(currentXp) + "/" + std::to_string(nextXp));
 
 		long currentHp = m_Player.GetStatistics().GetCurrentHP();
@@ -155,7 +161,8 @@ void PlayerGUI::Render(RenderTarget& target)
 void PlayerGUI::UpdatePosition(const Vector2f & mouse_position)
 {
 	// Update all the position based on the new position of the global shape (Text are updated in Update())
-	m_GlobalShape.setPosition(mouse_position);
+	m_Shape->setPosition(mouse_position);
+	m_GlobalShape.setPosition(m_Shape->getPosition());
 	m_PlayerName.setPosition(m_GlobalShape.getPosition().x + m_GlobalShape.getSize().x * 0.01, m_GlobalShape.getPosition().y + m_GlobalShape.getSize().y * 0.1);
 	if (m_PlayerName.getGlobalBounds().width > m_PlayerLevel.first.getRadius() * 2)
 		m_PlayerLevel.first.setPosition(m_PlayerName.getPosition() + Vector2f(m_PlayerName.getGlobalBounds().width / 2 - m_PlayerLevel.first.getRadius(),

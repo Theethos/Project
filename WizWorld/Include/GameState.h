@@ -8,6 +8,7 @@
 #include "PlayerGUI.h"
 #include "MiniMapGUI.h"
 #include "ChatBoxGUI.h"
+#include "MenuGUI.h"
 
 class GameState : public State
 {

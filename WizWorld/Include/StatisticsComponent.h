@@ -31,7 +31,7 @@ public:
 	};
 	struct Experience
 	{
-		// Value of the increase of m_Next every level
+		// Value of the increase of exp every level
 		const float _increment = 1.405;
 		int m_Level;
 		long long m_Current;
@@ -70,7 +70,7 @@ public:
 	void RemoveMana(long amount);
 
 	// Getters
-	long long GetPreviousNext();
+	inline long long GetExpForLevel(int level) { return level > 0 ? (level <= 50 ? m_ExpPerLevel[level] : m_ExpPerLevel[50]) : m_ExpPerLevel[0]; }
 	inline const long &GetCurrentHP() const { return m_HealthPoints.m_CurrentHP; }
 	inline const long &GetMaxHP() const { return m_HealthPoints.m_LevelHP + m_HealthPoints.m_StatisticsHP + m_HealthPoints.m_EquipmentHP; }
 	inline const long &GetCurrentMana() const { return m_Mana.m_CurrentMana; }
@@ -79,11 +79,15 @@ public:
 	inline const long long& GetCurrentLevelExp() const { return m_Experience.m_Current; }
 	inline const long long& GetNextLevelExp() const { return m_Experience.m_Next; }
 
+	// Setter
+	void SetLevel(int level);
 private:
 	HealthPoints m_HealthPoints;
 	Experience m_Experience;
 	Mana m_Mana;
+	std::array<long long, 50> m_ExpPerLevel;	// Level from 0 to 50
 
+	void InitExpPerLevel();
 };
 
 #endif // !STATISTICS_COMPONENT_H

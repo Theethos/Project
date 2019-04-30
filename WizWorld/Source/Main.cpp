@@ -3,6 +3,8 @@
 #include "../Include/Character.h"
 #include "../Include/Game.h"
 
+
+
 int main()
 {	
 	
@@ -11,7 +13,6 @@ int main()
 	 * ================ SFML display ====================
 	 * ==================================================
 	 */
-
 	Game game;
 
 	game.Run();

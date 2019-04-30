@@ -178,7 +178,7 @@ void MenuState::HandleInput(int input, const float & dt)
 
 void MenuState::Update(const float& dt)
 {
-	m_MousePosition = Vector2f(Mouse::getPosition());
+	m_MousePosition = m_Window.mapPixelToCoords(Mouse::getPosition(m_Window));
 	
 	UpdateButtons();
 

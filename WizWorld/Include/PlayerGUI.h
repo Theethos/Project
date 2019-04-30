@@ -19,6 +19,9 @@ private:
 	// Private function
 	void UpdatePosition(const sf::Vector2f& mouse_position);
 
+	// Redefining GlobalShape
+	sf::RectangleShape m_GlobalShape;
+
 	// Health bar
 	std::pair<sf::RectangleShape, sf::RectangleShape> m_HPBar;
 	sf::Text m_HPValue;

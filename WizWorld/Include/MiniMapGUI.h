@@ -21,6 +21,9 @@ public:
 
 	static const float s_MiniMapScale;
 private:
+	// Redefining GlobalShape
+	sf::RectangleShape m_GlobalShape;
+
 	// Private function
 	void UpdatePosition(const sf::Vector2f& mouse_position);
 	void UpdatePlayerPosition();

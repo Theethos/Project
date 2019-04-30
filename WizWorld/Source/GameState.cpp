@@ -254,7 +254,7 @@ void GameState::ChangeMap(const Color& color)
 
 void GameState::Update(const float& dt)
 {
-	m_MousePosition = Vector2f(Mouse::getPosition());
+	m_MousePosition = m_Window.mapPixelToCoords(Mouse::getPosition(m_Window));
 
 	m_Player.Update(dt);
 	
@@ -343,6 +343,7 @@ void GameState::InitGUI(const std::string& player_name)
 	m_GUI["PLAYER"] = new PlayerGUI(m_Window, m_Player, player_name);
 	m_GUI["MINI_MAP"] = new MiniMapGUI(m_Window, m_Player, *m_Maps[m_CurrentMap]->GetTexture());
 	m_GUI["CHAT_BOX"] = new ChatBoxGUI(m_Window, m_Player);
+	m_GUI["MENU"] = new MenuGUI(m_Window, m_Player);
 }
 
 void GameState::ReSetView(bool new_map)
