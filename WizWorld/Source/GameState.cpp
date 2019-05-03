@@ -37,7 +37,6 @@ m_Transition(m_Window.getSize())
 	InitMaps(sprite_scale);
 	InitGUI(player_name);
 
-
 	m_PlayerView.setSize(m_Window.getSize().x, m_Window.getSize().y);
 	m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetSize().x * sprite_scale / 2, m_Maps[m_CurrentMap]->GetSize().y * sprite_scale / 2);
 
@@ -55,10 +54,8 @@ GameState::~GameState()
 {
 	for (auto &it : m_Maps)
 		delete it.second;
-
 	for (auto &it : m_CollisionsMaps)
 		delete it.second;
-
 	for (auto &it : m_GUI)
 		delete it.second;
 }
@@ -66,93 +63,30 @@ GameState::~GameState()
 // Functions
 void GameState::HandleInput(int input, const float & dt)
 {
-	bool chating = static_cast<ChatBoxGUI*>(m_GUI["CHAT_BOX"])->IsActive();
-	if (chating) // Consume the input if the m_Player is in the chat box
-		input = -1;
-	// Open pause menu when "Options" or "Escape" is pressed
-	else if (input == (Joystick::isConnected(0) ? m_Actions["PAUSE"] : Keyboard::Key(m_Actions["PAUSE"])))
+	auto chat_box = static_cast<ChatBoxGUI*>(m_GUI["CHAT_BOX"]);
+	if (chat_box->IsActive())
+	{
+		chat_box->HandleInput(input);
+		input = -1;										// Consumes the input
+	}
+	else if (input == m_Actions["PAUSE"])				// Open pause menu when "Options" or "Escape" is pressed
 		m_StatesStack.push(new MenuState(m_Window, m_StatesStack, WhichState::MENU_STATE, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));
-	else if (input == (Joystick::isConnected(0) ? m_Actions["ENTER_CHAT"] : Keyboard::Key(m_Actions["ENTER_CHAT"])))
-		static_cast<ChatBoxGUI*>(m_GUI["CHAT_BOX"])->Activate();
-	// Only-Joystick inputs
-	else if (Joystick::isConnected(0))
+	else if (input == m_Actions["ENTER_CHAT"])
+		chat_box->Activate();
+	else if (Joystick::isConnected(0))					// Only-Joystick inputs
 	{
 		if (input == m_Actions["TOGGLE_GUI"])
 		{
 			for (auto &it : m_GUI)
 				it.second->Toggle();
 		}
-		else if (input == m_Keys["Square"])
-			m_Player.GetStatistics().AddExp(100);
-		else if (input == m_Keys["Triangle"])
-			m_Player.GetStatistics().RemoveExp(100);
-		else if (input == m_Keys["Cross"])
-			m_Player.GetStatistics().AddHp(100);
-		else if (input == m_Keys["Circle"])
-			m_Player.GetStatistics().RemoveHp(100);
 	}
-	// Only-Keyboard inputs
-	else
+	else												// Only-Keyboard inputs
 	{
-		if (input == Keyboard::Key(m_Actions["TOGGLE_PLAYER_GUI"]))
+		if (input == m_Actions["TOGGLE_PLAYER_GUI"])
 			m_GUI["PLAYER"]->Toggle();
-		else if (input == Keyboard::Key(m_Actions["TOGGLE_MINIMAP_GUI"]))
+		else if (input == m_Actions["TOGGLE_MINIMAP_GUI"])
 			m_GUI["MINI_MAP"]->Toggle();
-	}
-	// Makes the m_Player run
-	bool running = false;
-	if (Joystick::isButtonPressed(0, m_Actions["RUN"]) || Keyboard::isKeyPressed(Keyboard::Key(m_Actions["RUN"])))
-	{
-		m_Player.GetMovement().SetMaxVelocity(2.f);
-		running = true;
-	}
-	else
-		m_Player.GetMovement().SetMaxVelocity(1.f);
-
-	Vector2f controller_position(Joystick::getAxisPosition(0, Joystick::Axis::X), Joystick::getAxisPosition(0, Joystick::Axis::Y));
-
-	if (!m_CantMove && !chating)
-	{
-		if (controller_position.y < -80 || Keyboard::isKeyPressed(Keyboard::Key(m_Actions["UP"])))
-		{
-			if (!CheckSpriteCollision(dt, "UP"))
-			{
-				m_Player.GetMovement().SetVelocityX(0);
-				m_Player.Move(dt, 0.f, (running ? -2.f : -1.f));
-			}
-			else
-				m_Player.GetAnimation().PlayAnimation(0, dt, "UP");
-		}
-		else if (controller_position.y > 80 || Keyboard::isKeyPressed(Keyboard::Key(m_Actions["DOWN"])))
-		{
-			if (!CheckSpriteCollision(dt, "DOWN"))
-			{
-				m_Player.GetMovement().SetVelocityX(0);
-				m_Player.Move(dt, 0.f, (running ? 2.f : 1.f));
-			}
-			else
-				m_Player.GetAnimation().PlayAnimation(0, dt, "DOWN");
-		}
-		else if (controller_position.x < -80 || Keyboard::isKeyPressed(Keyboard::Key(m_Actions["LEFT"])))
-		{
-			if (!CheckSpriteCollision(dt, "LEFT"))
-			{
-				m_Player.GetMovement().SetVelocityY(0);
-				m_Player.Move(dt, (running ? -2.f : -1.f), 0.f);
-			}
-			else
-				m_Player.GetAnimation().PlayAnimation(0, dt, "LEFT");
-		}
-		else if (controller_position.x > 80 || Keyboard::isKeyPressed(Keyboard::Key(m_Actions["RIGHT"])))
-		{
-			if (!CheckSpriteCollision(dt, "RIGHT"))
-			{
-				m_Player.GetMovement().SetVelocityY(0);
-				m_Player.Move(dt, (running ? 2.f : 1.f), 0.f);
-			}
-			else
-				m_Player.GetAnimation().PlayAnimation(0, dt, "RIGHT");
-		}
 	}
 }
 
@@ -164,25 +98,25 @@ void GameState::ChangeMap(const Color& color)
 		{
 			m_CurrentMap = "Hogwarts_Hallways";
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("START"));
-			ReSetView(true);
+			ResetView(true);
 		}
 		else if (color == Color::Green)
 		{
 			m_CurrentMap = "Library";
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("START"));
-			ReSetView(true);
+			ResetView(true);
 		}
 		else if (color == Color::Yellow)
 		{
 			m_CurrentMap = "Potions_Room";
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("START"));
-			ReSetView(true);
+			ResetView(true);
 		}
 		else if (color == Color::Magenta)
 		{
 			m_CurrentMap = "The_Great_Hall";
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("START"));
-			ReSetView(true);
+			ResetView(true);
 		}
 	}
 	else if (m_CurrentMap == "Hogwarts_Hallways")
@@ -219,18 +153,18 @@ void GameState::ChangeMap(const Color& color)
 		if (color == Color::Blue)
 		{
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("FROM_BLUE"));
-			ReSetView();
+			ResetView();
 		}
 		else if (color == Color::Magenta)
 		{
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("FROM_MAGENTA"));
-			ReSetView();
+			ResetView();
 		}
 		else if (color == Color::Green)
 		{
 			m_CurrentMap = "Library";
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("START"));
-			ReSetView(true);
+			ResetView(true);
 		}
 	}
 	else if (m_CurrentMap == "The_Great_Hall")
@@ -238,12 +172,12 @@ void GameState::ChangeMap(const Color& color)
 		if (color == Color::Magenta)
 		{
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("FROM_BLUE"));
-			ReSetView();
+			ResetView();
 		}
 		else if (color == Color::Blue)
 		{
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("FROM_MAGENTA"));
-			ReSetView();
+			ResetView();
 		}
 		else if (color == Color::Red)
 		{
@@ -257,10 +191,11 @@ void GameState::Update(const float& dt)
 	m_MousePosition = m_Window.mapPixelToCoords(Mouse::getPosition(m_Window));
 
 	m_Player.Update(dt);
-	
-	HandleInput(-1, dt);
 
-	ReSetView();
+	if (!static_cast<ChatBoxGUI*>(m_GUI["CHAT_BOX"])->IsActive())
+		MovePlayer(dt);
+
+	ResetView();
 
 	for (auto &it : m_GUI)
 		it.second->Update(dt);
@@ -346,7 +281,7 @@ void GameState::InitGUI(const std::string& player_name)
 	m_GUI["MENU"] = new MenuGUI(m_Window, m_Player);
 }
 
-void GameState::ReSetView(bool new_map)
+void GameState::ResetView(bool new_map)
 {
 	Vector2f sprite_size(m_Player.GetSprite().getGlobalBounds().width, m_Player.GetSprite().getGlobalBounds().height);
 
@@ -424,4 +359,61 @@ bool GameState::CheckSpriteCollision(const float & dt,std::string movement)
 		}
 	}
 	return false;
+}
+
+void GameState::MovePlayer(const float &dt)
+{
+	bool running = false;								// Makes the m_Player run
+	if (Joystick::isButtonPressed(0, m_Actions["RUN"]) || Keyboard::isKeyPressed(Keyboard::Key(m_Actions["RUN"])))
+	{
+		m_Player.GetMovement().SetMaxVelocity(2.f);
+		running = true;
+	}
+	else
+		m_Player.GetMovement().SetMaxVelocity(1.f);
+	Vector2f controller_position(Joystick::getAxisPosition(0, Joystick::Axis::X), Joystick::getAxisPosition(0, Joystick::Axis::Y));
+
+	if (!m_CantMove)
+	{
+		if (controller_position.y < -80 || Keyboard::isKeyPressed(Keyboard::Key(m_Actions["UP"])))
+		{
+			if (!CheckSpriteCollision(dt, "UP"))
+			{
+				m_Player.GetMovement().SetVelocityX(0);
+				m_Player.Move(dt, 0.f, (running ? -2.f : -1.f));
+			}
+			else
+				m_Player.GetAnimation().PlayAnimation(0, dt, "UP");
+		}
+		else if (controller_position.y > 80 || Keyboard::isKeyPressed(Keyboard::Key(m_Actions["DOWN"])))
+		{
+			if (!CheckSpriteCollision(dt, "DOWN"))
+			{
+				m_Player.GetMovement().SetVelocityX(0);
+				m_Player.Move(dt, 0.f, (running ? 2.f : 1.f));
+			}
+			else
+				m_Player.GetAnimation().PlayAnimation(0, dt, "DOWN");
+		}
+		else if (controller_position.x < -80 || Keyboard::isKeyPressed(Keyboard::Key(m_Actions["LEFT"])))
+		{
+			if (!CheckSpriteCollision(dt, "LEFT"))
+			{
+				m_Player.GetMovement().SetVelocityY(0);
+				m_Player.Move(dt, (running ? -2.f : -1.f), 0.f);
+			}
+			else
+				m_Player.GetAnimation().PlayAnimation(0, dt, "LEFT");
+		}
+		else if (controller_position.x > 80 || Keyboard::isKeyPressed(Keyboard::Key(m_Actions["RIGHT"])))
+		{
+			if (!CheckSpriteCollision(dt, "RIGHT"))
+			{
+				m_Player.GetMovement().SetVelocityY(0);
+				m_Player.Move(dt, (running ? 2.f : 1.f), 0.f);
+			}
+			else
+				m_Player.GetAnimation().PlayAnimation(0, dt, "RIGHT");
+		}
+	}
 }

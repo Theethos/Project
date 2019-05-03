@@ -17,6 +17,7 @@ public:
 	inline void Activate() { m_TextField->Activate(); }
 	inline void Deactivate() { m_TextField->Deactivate(); }
 	inline const bool IsActive() const { return m_TextField->GetActivated(); }
+	inline void HandleInput(int input) { m_TextField->HandleInput(input); }
 
 	friend CommandComponent;
 private:

@@ -18,6 +18,7 @@ public:
 
 private:
 	sf::RenderWindow m_Window;
+
 	bool m_Fullscreen;
 	sf::Event m_Event;
 	std::stack<State*> m_States;

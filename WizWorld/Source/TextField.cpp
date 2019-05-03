@@ -10,7 +10,6 @@ Color active_color, int text_size, bool only_letter) :
 Button(x, y, width, height, text, font, idle_color, hover_color, active_color, text_size),
 m_TextEntered(""),
 m_Window(window), 
-m_Thread(&TextField::CaptureText, this), 
 m_Blinking(false), 
 m_Running(false),
 m_OnlyLetter(only_letter),
@@ -35,31 +34,12 @@ m_MaxSize(12)
 // Destructor
 TextField::~TextField()
 {
-	if (m_Running)
-		m_Thread.wait();
 }
 
 // Functions
 void TextField::Update(const Vector2f mouse_position)
 {
 	Button::Update(mouse_position);
-
-	Text letter("a", m_Font, m_TextSize);                                                       
-	// Launch the m_Thread                                    Check that the text is not bigger than the shape
-	if (m_Activated && m_TextEntered.size() < m_MaxSize && !(m_TextRendered.getGlobalBounds().width + 2 * letter.getGlobalBounds().width > m_Shape.getSize().x) && !m_Running)
-	{
-		// Lock the m_Thread
-		m_Running = true;
-		m_Thread.launch();
-	}
-	// If user presses "BackSpace"
-	else if (m_Activated && (m_TextEntered.size() == m_MaxSize || (m_TextRendered.getGlobalBounds().width + 2 * letter.getGlobalBounds().width > m_Shape.getSize().x)))
-	{
-		if (Keyboard::isKeyPressed(Keyboard::BackSpace))
-		{
-			RemoveChar();
-		}
-	}
 }
 
 void TextField::Render(RenderTarget& target)
@@ -105,10 +85,11 @@ void TextField::Render(RenderTarget& target)
 void TextField::AddChar(char character)
 {
 	// Add the character to the text string
-	m_TextEntered += character;
-	m_TextRendered.setString(m_TextEntered);
-	// Then put a delay between 2 character
-	sleep(milliseconds(150));
+	if (m_TextEntered.size() < m_MaxSize)
+	{
+		m_TextEntered += character;
+		m_TextRendered.setString(m_TextEntered);
+	}
 }
 
 void TextField::RemoveChar()
@@ -119,304 +100,198 @@ void TextField::RemoveChar()
 		// Remove the character to the text string
 		m_TextEntered.pop_back();
 		m_TextRendered.setString(m_TextEntered);
-		// Then put a delay between 2 character
-		sleep(milliseconds(150));
 	}
 }
 
-void TextField::CaptureText()
+void TextField::HandleInput(int input)
 {
-	m_Mutex.lock();
-	// I can't use pollEvent because otherwise it may crash with the Game function "UpdateEvent"
-	// and I have to use a m_Thread in order to keep the game moving when the user enters its text */
-	// Testing MAJ letter and SHIFT + key
 	if (Keyboard::isKeyPressed(Keyboard::LShift) || Keyboard::isKeyPressed(Keyboard::RShift))
 	{
-		if (Keyboard::isKeyPressed(Keyboard::Slash) && !m_OnlyLetter)
+		if (input == Keyboard::Slash && !m_OnlyLetter)
 			AddChar('/');
-		else if (Keyboard::isKeyPressed(Keyboard::Comma) && !m_OnlyLetter)
+		else if (input == Keyboard::Comma && !m_OnlyLetter)
 			AddChar('?');
-		else if (Keyboard::isKeyPressed(Keyboard::Period) && !m_OnlyLetter)
+		else if (input == Keyboard::Period && !m_OnlyLetter)
 			AddChar(';');
-		else if (Keyboard::isKeyPressed(Keyboard::Num0) && !m_OnlyLetter)
+		else if (input == Keyboard::Num0 && !m_OnlyLetter)
 			AddChar('0');
-		else if (Keyboard::isKeyPressed(Keyboard::Num1) && !m_OnlyLetter)
+		else if (input == Keyboard::Num1 && !m_OnlyLetter)
 			AddChar('1');
-		else if (Keyboard::isKeyPressed(Keyboard::Num2) && !m_OnlyLetter)
+		else if (input == Keyboard::Num2 && !m_OnlyLetter)
 			AddChar('2');
-		else if (Keyboard::isKeyPressed(Keyboard::Num3) && !m_OnlyLetter)
+		else if (input == Keyboard::Num3 && !m_OnlyLetter)
 			AddChar('3');
-		else if (Keyboard::isKeyPressed(Keyboard::Num4) && !m_OnlyLetter)
+		else if (input == Keyboard::Num4 && !m_OnlyLetter)
 			AddChar('4');
-		else if (Keyboard::isKeyPressed(Keyboard::Num5) && !m_OnlyLetter)
+		else if (input == Keyboard::Num5 && !m_OnlyLetter)
 			AddChar('5');
-		else if (Keyboard::isKeyPressed(Keyboard::Num6) && !m_OnlyLetter)
+		else if (input == Keyboard::Num6 && !m_OnlyLetter)
 			AddChar('6');
-		else if (Keyboard::isKeyPressed(Keyboard::Num7) && !m_OnlyLetter)
+		else if (input == Keyboard::Num7 && !m_OnlyLetter)
 			AddChar('7');
-		else if (Keyboard::isKeyPressed(Keyboard::Num8) && !m_OnlyLetter)
+		else if (input == Keyboard::Num8 && !m_OnlyLetter)
 			AddChar('8');
-		else if (Keyboard::isKeyPressed(Keyboard::Num9) && !m_OnlyLetter)
+		else if (input == Keyboard::Num9 && !m_OnlyLetter)
 			AddChar('9');
-		else if (Keyboard::isKeyPressed(Keyboard::A))
-		{
+		else if (input == Keyboard::A)
 			AddChar('A');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::B))
-		{
+		else if (input == Keyboard::B)
 			AddChar('B');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::C))
-		{
+		else if (input == Keyboard::C)
 			AddChar('C');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::D))
-		{
+		else if (input == Keyboard::D)
 			AddChar('D');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::E))
-		{
+		else if (input == Keyboard::E)
 			AddChar('E');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::F))
-		{
+		else if (input == Keyboard::F)
 			AddChar('F');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::G))
-		{
+		else if (input == Keyboard::G)
 			AddChar('G');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::H))
-		{
+		else if (input == Keyboard::H)
 			AddChar('H');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::I))
-		{
+		else if (input == Keyboard::I)
 			AddChar('I');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::J))
-		{
+		else if (input == Keyboard::J)
 			AddChar('J');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::K))
-		{
+		else if (input == Keyboard::K)
 			AddChar('K');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::L))
-		{
+		else if (input == Keyboard::L)
 			AddChar('L');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::M))
-		{
+		else if (input == Keyboard::M)
 			AddChar('M');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::N))
-		{
+		else if (input == Keyboard::N)
 			AddChar('N');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::O))
-		{
+		else if (input == Keyboard::O)
 			AddChar('O');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::P))
-		{
+		else if (input == Keyboard::P)
 			AddChar('P');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::Q))
-		{
+		else if (input == Keyboard::Q)
 			AddChar('Q');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::R))
-		{
+		else if (input == Keyboard::R)
 			AddChar('R');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::S))
-		{
+		else if (input == Keyboard::S)
 			AddChar('S');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::T))
-		{
+		else if (input == Keyboard::T)
 			AddChar('T');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::U))
-		{
+		else if (input == Keyboard::U)
 			AddChar('U');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::V))
-		{
+		else if (input == Keyboard::V)
 			AddChar('V');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::W))
-		{
+		else if (input == Keyboard::W)
 			AddChar('W');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::X))
-		{
+		else if (input == Keyboard::X)
 			AddChar('X');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::Y))
-		{
+		else if (input == Keyboard::Y)
 			AddChar('Y');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::Z))
-		{
+		else if (input == Keyboard::Z)
 			AddChar('Z');
-		}
 	}
-	// Backspace
-	else if (Keyboard::isKeyPressed(Keyboard::BackSpace))
+	else if (input == Keyboard::BackSpace)
 		RemoveChar();
-	else if (Keyboard::isKeyPressed(Keyboard::Space) && !m_OnlyLetter)
+	else if (input == Keyboard::Space && !m_OnlyLetter)
 		AddChar(' ');
-	else if (Keyboard::isKeyPressed(Keyboard::Divide) && !m_OnlyLetter)
+	else if (input == Keyboard::Divide && !m_OnlyLetter)
 		AddChar('/');
-	else if (Keyboard::isKeyPressed(Keyboard::Slash) && !m_OnlyLetter)
+	else if (input == Keyboard::Slash && !m_OnlyLetter)
 		AddChar(':');
-	else if (Keyboard::isKeyPressed(Keyboard::Comma) && !m_OnlyLetter)
+	else if (input == Keyboard::Comma && !m_OnlyLetter)
 		AddChar(',');
-	else if (Keyboard::isKeyPressed(Keyboard::Period) && !m_OnlyLetter)
+	else if (input == Keyboard::Period && !m_OnlyLetter)
 		AddChar('.');
-	else if (Keyboard::isKeyPressed(Keyboard::Num3) && !m_OnlyLetter)
+	else if (input == Keyboard::Num0 && !m_OnlyLetter)
+		AddChar('à');
+	else if (input == Keyboard::Num1 && !m_OnlyLetter)
+		AddChar('&');
+	else if (input == Keyboard::Num3 && !m_OnlyLetter)
+		AddChar('é');
+	else if (input == Keyboard::Num3 && !m_OnlyLetter)
 		AddChar('"');
-	else if (Keyboard::isKeyPressed(Keyboard::Num4) && !m_OnlyLetter)
+	else if (input == Keyboard::Num4 && !m_OnlyLetter)
 		AddChar('\'');
-	else if (Keyboard::isKeyPressed(Keyboard::Num5) && !m_OnlyLetter)
+	else if (input == Keyboard::Num5 && !m_OnlyLetter)
 		AddChar('(');
-	else if (Keyboard::isKeyPressed(Keyboard::Num6))
+	else if (input == Keyboard::Num6)
 		AddChar('-');
-	else if (Keyboard::isKeyPressed(Keyboard::LBracket) && !m_OnlyLetter)
+	else if (input == Keyboard::Num7 && !m_OnlyLetter)
+		AddChar('è');
+	else if (input == Keyboard::Num8 && !m_OnlyLetter)
+		AddChar('_');
+	else if (input == Keyboard::Num9 && !m_OnlyLetter)
+		AddChar('ç');
+	else if (input == Keyboard::LBracket && !m_OnlyLetter)
 		AddChar(')');
-	else if (Keyboard::isKeyPressed(Keyboard::Numpad0) && !m_OnlyLetter)
+	else if (input == Keyboard::Numpad0 && !m_OnlyLetter)
 		AddChar('0');
-	else if (Keyboard::isKeyPressed(Keyboard::Numpad1) && !m_OnlyLetter)
+	else if (input == Keyboard::Numpad1 && !m_OnlyLetter)
 		AddChar('1');
-	else if (Keyboard::isKeyPressed(Keyboard::Numpad2) && !m_OnlyLetter)
+	else if (input == Keyboard::Numpad2 && !m_OnlyLetter)
 		AddChar('2');
-	else if (Keyboard::isKeyPressed(Keyboard::Numpad3) && !m_OnlyLetter)
+	else if (input == Keyboard::Numpad3 && !m_OnlyLetter)
 		AddChar('3');
-	else if (Keyboard::isKeyPressed(Keyboard::Numpad4) && !m_OnlyLetter)
+	else if (input == Keyboard::Numpad4 && !m_OnlyLetter)
 		AddChar('4');
-	else if (Keyboard::isKeyPressed(Keyboard::Numpad5) && !m_OnlyLetter)
+	else if (input == Keyboard::Numpad5 && !m_OnlyLetter)
 		AddChar('5');
-	else if (Keyboard::isKeyPressed(Keyboard::Numpad6) && !m_OnlyLetter)
+	else if (input == Keyboard::Numpad6 && !m_OnlyLetter)
 		AddChar('6');
-	else if (Keyboard::isKeyPressed(Keyboard::Numpad7) && !m_OnlyLetter)
+	else if (input == Keyboard::Numpad7 && !m_OnlyLetter)
 		AddChar('7');
-	else if (Keyboard::isKeyPressed(Keyboard::Numpad8) && !m_OnlyLetter)
+	else if (input == Keyboard::Numpad8 && !m_OnlyLetter)
 		AddChar('8');
-	else if (Keyboard::isKeyPressed(Keyboard::Numpad9) && !m_OnlyLetter)
+	else if (input == Keyboard::Numpad9 && !m_OnlyLetter)
 		AddChar('9');
-	// NORMALE letter
-	else
-	{
-		if (Keyboard::isKeyPressed(Keyboard::A))
-		{
-			AddChar('a');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::B))
-		{
-			AddChar('b');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::C))
-		{
-			AddChar('c');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::D))
-		{
-			AddChar('d');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::E))
-		{
-			AddChar('e');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::F))
-		{
-			AddChar('f');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::G))
-		{
-			AddChar('g');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::H))
-		{
-			AddChar('h');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::I))
-		{
-			AddChar('i');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::J))
-		{
-			AddChar('j');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::K))
-		{
-			AddChar('k');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::L))
-		{
-			AddChar('l');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::M))
-		{
-			AddChar('m');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::N))
-		{
-			AddChar('n');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::O))
-		{
-			AddChar('o');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::P))
-		{
-			AddChar('p');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::Q))
-		{
-			AddChar('q');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::R))
-		{
-			AddChar('r');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::S))
-		{
-			AddChar('s');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::T))
-		{
-			AddChar('t');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::U))
-		{
-			AddChar('u');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::V))
-		{
-			AddChar('v');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::W))
-		{
-			AddChar('w');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::X))
-		{
-			AddChar('x');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::Y))
-		{
-			AddChar('y');
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::Z))
-		{
-			AddChar('z');
-		}
-	}
-
-	m_Running = false;
-	m_Mutex.unlock();
+	else if (input == Keyboard::A)
+		AddChar('a');
+	else if (input == Keyboard::B)
+		AddChar('b');
+	else if (input == Keyboard::C)
+		AddChar('c');
+	else if (input == Keyboard::D)
+		AddChar('d');
+	else if (input == Keyboard::E)
+		AddChar('e');
+	else if (input == Keyboard::F)
+		AddChar('f');
+	else if (input == Keyboard::G)
+		AddChar('g');
+	else if (input == Keyboard::H)
+		AddChar('h');
+	else if (input == Keyboard::I)
+		AddChar('i');
+	else if (input == Keyboard::J)
+		AddChar('j');
+	else if (input == Keyboard::K)
+		AddChar('k');
+	else if (input == Keyboard::L)
+		AddChar('l');
+	else if (input == Keyboard::M)
+		AddChar('m');
+	else if (input == Keyboard::N)
+		AddChar('n');
+	else if (input == Keyboard::O)
+		AddChar('o');
+	else if (input == Keyboard::P)
+		AddChar('p');
+	else if (input == Keyboard::Q)
+		AddChar('q');
+	else if (input == Keyboard::R)
+		AddChar('r');
+	else if (input == Keyboard::S)
+		AddChar('s');
+	else if (input == Keyboard::T)
+		AddChar('t');
+	else if (input == Keyboard::U)
+		AddChar('u');
+	else if (input == Keyboard::V)
+		AddChar('v');
+	else if (input == Keyboard::W)
+		AddChar('w');
+	else if (input == Keyboard::X)
+		AddChar('x');
+	else if (input == Keyboard::Y)
+		AddChar('y');
+	else if (input == Keyboard::Z)
+		AddChar('z');
 }
 
 void TextField::Blink()

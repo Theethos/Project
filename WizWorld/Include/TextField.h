@@ -17,6 +17,7 @@ public:
 	void Update(const sf::Vector2f mouse_position);
 	void Render(sf::RenderTarget& target);
 	void Blink();
+	void HandleInput(int input);
 
 	// Getter
 	inline std::string& GetTextEntered() { return m_TextEntered; }
@@ -40,19 +41,15 @@ private:
 	// Background when the text is entered
 	sf::Color m_BackgroundColor;
 	
-	// Thread managing
-	sf::Thread m_Thread;
-	sf::Mutex m_Mutex;
-	
 	// States of the button
 	bool m_Running;
 	bool m_Blinking;
 	bool m_OnlyLetter;
+	bool m_Maj;							// When user presses shift
 	
 	// Private functions
 	void AddChar(const char character);
 	void RemoveChar();
-	void CaptureText();
 };
 
 #endif // !BUTTON_TEXT_H

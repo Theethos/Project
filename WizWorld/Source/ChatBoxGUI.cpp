@@ -45,7 +45,7 @@ void ChatBoxGUI::Update(const float & dt)
 {
 	if (m_Visible)
 	{
-		if (Keyboard::isKeyPressed(Keyboard::Key::Escape) && m_TextField->GetActivated())
+		if (Keyboard::isKeyPressed(Keyboard::Escape) && m_TextField->GetActivated())
 			m_Quit = true;
 		else if (m_Quit)
 		{
@@ -63,7 +63,7 @@ void ChatBoxGUI::Update(const float & dt)
 			m_Hovered = false;
 
 
-		if (Keyboard::isKeyPressed(Keyboard::Key::Enter) && m_TextField->GetTextEntered() != "")
+		if (Keyboard::isKeyPressed(Keyboard::Enter) && m_TextField->GetTextEntered() != "")
 		{
 			DisplayMessage();
 			m_Selected = true;

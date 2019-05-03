@@ -12,6 +12,10 @@ m_Music("../External/Config/Music/Music.cfg")
 {
 	InitWindow();
 	InitStates();
+	if (Joystick::isConnected(0))
+		m_Window.setMouseCursorVisible(false);
+	else
+		m_Window.setMouseCursorVisible(true);
 }
 // Destructor
 Game::~Game()
@@ -39,9 +43,7 @@ void Game::Run()
 
 void Game::Update()
 {
-	// Check if user close the window
 	UpdateEvents();
-
 	// Updates from top state
 	if (!m_States.empty())
 	{
@@ -56,16 +58,13 @@ void Game::Update()
 	}
 	// There is no more states
 	else
-	{
 		m_Window.close();
-	}
 }
 
 void Game::UpdateEvents()
 {
 	while (m_Window.pollEvent(m_Event))
 	{
-		// User closed the m_Window
 		if (m_Event.type == Event::Closed)
 		{
 			m_Window.close();
@@ -82,30 +81,17 @@ void Game::UpdateEvents()
 			m_States.top()->InitKeyboardKeys();
 			m_States.top()->InitKeyboardActions();
 			m_Window.setMouseCursorVisible(true);
-
 		}
-		if (Joystick::isConnected(0))
+		else if (m_Event.type == Event::JoystickMoved)
 		{
-			m_Window.setMouseCursorVisible(false);
-			if (m_Event.type == Event::JoystickMoved)
-			{
-				if (std::abs(m_Event.joystickMove.position) > 80)
-				{
-					m_States.top()->HandleInput(-1, m_DeltaTime);
-				}
-			}
-			else if (m_Event.type == Event::JoystickButtonReleased)
-			{
-				m_States.top()->HandleInput(m_Event.joystickButton.button, m_DeltaTime);
-			}
+			if (std::abs(m_Event.joystickMove.position) > 80)
+				m_States.top()->HandleInput(-1, m_DeltaTime);
 		}
-		else if (m_Event.type != Event::TextEntered)
+		else if (m_Event.type == Event::JoystickButtonReleased)
+			m_States.top()->HandleInput(m_Event.joystickButton.button, m_DeltaTime);
+		else if (m_Event.type == Event::KeyReleased)
 		{
-			m_Window.setMouseCursorVisible(true);
-			if (m_Event.type == Event::KeyReleased)
-			{
-				m_States.top()->HandleInput(m_Event.key.code, m_DeltaTime);
-			}
+			m_States.top()->HandleInput(m_Event.key.code, m_DeltaTime);
 		}
 	}
 }
@@ -178,7 +164,6 @@ void Game::InitWindow()
 {
 	std::ifstream config_file("../External/Config/window/window.cfg");
 
-	// m_Window's attributes
 	std::string title("None");
 	VideoMode video_mode(VideoMode::getDesktopMode());
 	unsigned fps = 120;
@@ -199,7 +184,6 @@ void Game::InitWindow()
 		m_Window.create(video_mode, title, Style::Fullscreen);
 	else
 		m_Window.create(video_mode, title);
-
 	m_Window.setFramerateLimit(fps);
 	m_Window.setVerticalSyncEnabled(vertical_sync_enabled);
 }

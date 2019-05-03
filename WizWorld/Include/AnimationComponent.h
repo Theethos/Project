@@ -46,7 +46,7 @@ private:
 				m_Sprite.setTexture(*m_TextureSheet, true);
 				m_Sprite.setTextureRect(m_CurrentRect);
 				
-				// ReSets m_Timer
+				// Resets m_Timer
 				m_Timer = 0;
 
 				// Moves on to the next frame of the animation
@@ -89,7 +89,7 @@ public:
 	// Functions
 	void AddAnimation(const std::string key, sf::Texture* texture_sheet, int texture_size, int width, int height, float frame_delay = 0.5);
 	void PlayAnimation(const float & velocity, const float & dt, const std::string animation);
-	void ReSetAnimation(const std::string animation);
+	void ResetAnimation(const std::string animation);
 	void IdleAnimation(const float &dt, const std::string animation);
 
 	// Getters

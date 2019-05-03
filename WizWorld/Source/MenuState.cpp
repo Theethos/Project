@@ -12,17 +12,8 @@ m_ActivatedButtons{ nullptr, "" },
 m_MovedX(false),
 m_MovedY(false)
 {
-	if (Joystick::isConnected(0))
-	{
-		InitControllerKeys();
-		InitControllerActions();
-	}
-	else
-	{
-		InitKeyboardKeys();
-		InitKeyboardActions();
-	}
-
+	Joystick::isConnected(0) ? InitControllerKeys() : InitKeyboardKeys(); 
+	Joystick::isConnected(0) ? InitControllerActions() : InitKeyboardActions();
 	InitFonts();
 	InitTitle(path);
 	InitButtons(path);
@@ -75,6 +66,13 @@ MenuState::~MenuState()
 // Functions
 void MenuState::HandleInput(int input, const float & dt)
 {
+	if (m_Type == Menu::CHARACTER_MENU && m_Buttons["PSEUDO"]->GetActivated())	
+	{
+		auto text_field = static_cast<TextField*>(m_Buttons["PSEUDO"]);
+		text_field->HandleInput(input);
+		if (!Joystick::isConnected(0))
+			input = -1;									// Consumes the input
+	}
 	// Specific parts
 	switch (m_Type)
 	{
