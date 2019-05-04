@@ -3,8 +3,6 @@
 #include "../Include/Character.h"
 #include "../Include/Game.h"
 
-
-
 int main()
 {	
 	
