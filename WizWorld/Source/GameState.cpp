@@ -70,7 +70,7 @@ void GameState::HandleInput(int input, const float & dt)
 		input = -1;										// Consumes the input
 	}
 	else if (input == m_Actions["PAUSE"])				// Open pause menu when "Options" or "Escape" is pressed
-		m_StatesStack.push(new MenuState(m_Window, m_StatesStack, WhichState::MENU_STATE, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));
+		m_StatesStack.push(new MenuState(m_Window, m_StatesStack, WhichState::MENU_STATE, m_Running, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));
 	else if (input == m_Actions["ENTER_CHAT"])
 		chat_box->Activate();
 	else if (Joystick::isConnected(0))					// Only-Joystick inputs

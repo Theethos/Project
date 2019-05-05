@@ -1,0 +1,2 @@
+﻿  Precompiled_Header.cpp
+c:\users\théo brichet\desktop\project\wizworld\source\precompiled_header.h(5): fatal error C1083: Impossible d'ouvrir le fichier include : 'SFML/Graphics.hpp' : No such file or directory
