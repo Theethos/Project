@@ -21,9 +21,11 @@ private:
 	std::vector<std::pair<sf::Texture*, std::vector<int>>> m_TilesTextureSheets;
 	std::vector<sf::RectangleShape> m_Tiles;
 	sf::RectangleShape m_DrawingArea, m_TileCursor;
+	sf::RectangleShape m_SelectedTile;
 	EditorGUI m_GUI;
 	float m_MaxWidthTiles;
-	int m_SelectedTile;
+	int m_TileIndex;
+	int m_TilesSize;
 	
 	// Private function
 	void InitTilesSheets();
