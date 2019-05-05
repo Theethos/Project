@@ -31,7 +31,7 @@ void AnimationComponent::PlayAnimation(const float & velocity, const float & dt,
 	m_Animation[animation]->Play(velocity, dt);
 }
 
-void AnimationComponent::ReSetAnimation(const std::string animation)
+void AnimationComponent::ResetAnimation(const std::string animation)
 {
 	m_Animation[animation]->Reset();
 }

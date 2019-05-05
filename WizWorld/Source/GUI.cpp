@@ -9,7 +9,7 @@ bool GUI::s_Token = false;
 std::list<GUI*> GUI::s_Instances;
 
 // Constructor
-GUI::GUI(RenderWindow& window, Player& player) :
+GUI::GUI(RenderWindow& window, Player* player) :
 m_Window(window),
 m_Player(player),
 m_Visible(true),

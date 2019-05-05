@@ -3,9 +3,10 @@
 #include "../Include/Character.h"
 #include "../Include/Game.h"
 
+using namespace sf;
+
 int main()
 {	
-	
 	/*
 	 * ==================================================
 	 * ================ SFML display ====================

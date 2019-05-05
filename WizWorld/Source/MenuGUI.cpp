@@ -5,7 +5,7 @@
 using namespace sf;
 
 // Constructor
-MenuGUI::MenuGUI(RenderWindow &window, Player &player) :
+MenuGUI::MenuGUI(RenderWindow &window, Player *player) :
 GUI(window, player),
 m_GlobalShape(0)
 {
@@ -31,7 +31,7 @@ m_GlobalShape(0)
 			m_GlobalShape.setPoint(index++, point);
 		}
 	}
-	m_GlobalShape.setPosition(Vector2f(m_Window.getPosition().x + m_Window.getSize().x * 0.25, m_Window.getPosition().y)
+	m_GlobalShape.setPosition(Vector2f(m_Window.getSize().x * 0.25, 0)
 							- Vector2f(corner.getRadius(), corner.getRadius() * 1.06)); // 1.06 in hard otherwise it doesn't reach the top of the window
 	m_GlobalShape.setFillColor(m_GlobalColor);
 	m_GlobalShape.setOutlineThickness(1);

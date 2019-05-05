@@ -6,9 +6,10 @@
 using namespace sf;
 
 // Constructor
-State::State(RenderWindow& window, std::stack<State*>& states_stack, WhichState state) :
+State::State(RenderWindow& window, std::stack<State*>& states_stack, WhichState state, bool &running) :
 m_Window(window),
 m_Quit(false),
+m_Running(running),
 m_MousePosition(0, 0),
 m_StatesStack(states_stack), 
 m_State(state)
@@ -65,6 +66,9 @@ void State::InitKeyboardKeys()
 			break;
 		}
 		break;
+	case WhichState::EDITOR_STATE:
+		config_file.open("../External/Config/Input/Keyboard/Editor/Inputs.cfg");
+		break;
 	default:
 		break;
 	}
@@ -113,6 +117,9 @@ void State::InitControllerKeys()
 			break;
 		}
 		break;
+	case WhichState::EDITOR_STATE:
+		config_file.open("../External/Config/Input/Controller/" + name + "_" + vendorId + "_" + productId + "/Editor/Inputs.cfg");
+		break;
 	default:
 		break;
 	}
@@ -158,6 +165,9 @@ void State::InitKeyboardActions()
 		default:
 			break;
 		}
+		break;
+	case WhichState::EDITOR_STATE:
+		config_file.open("../External/Config/Input/Keyboard/Editor/Actions.cfg");
 		break;
 	default:
 		break;
@@ -205,6 +215,9 @@ void State::InitControllerActions()
 		default:
 			break;
 		}
+		break;
+	case WhichState::EDITOR_STATE:
+		config_file.open("../External/Config/Input/Controller/" + name + "_" + vendorId + "_" + productId + "/Editor/Actions.cfg");
 		break;
 	default:
 		break;

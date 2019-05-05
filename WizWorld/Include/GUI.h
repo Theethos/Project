@@ -6,7 +6,7 @@
 class GUI
 {
 public:
-	GUI(sf::RenderWindow& window, Player& player);
+	GUI(sf::RenderWindow& window, Player* player);
 	virtual ~GUI();
 
 	// Functions
@@ -30,7 +30,7 @@ protected:
 	sf::Font m_Font;
 
 	// Entity related to
-	Player &m_Player;
+	Player *m_Player;
 
 	// Global
 	sf::Shape* m_Shape;

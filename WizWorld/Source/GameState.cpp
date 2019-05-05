@@ -27,9 +27,9 @@ AnimationSide StringToSide(const std::string side)
 }
 
 // Construtor
-GameState::GameState(RenderWindow& window, std::stack<State*>& states_stack, WhichState state, const std::string path,
+GameState::GameState(RenderWindow& window, std::stack<State*>& states_stack, WhichState state, bool &running, const std::string path,
 					 const int sprite_scale, const std::string player_name, Font& player_name_font) :
-State(window, states_stack, state),
+State(window, states_stack, state, running),
 m_Player(1.f, 0.0, 0.0, path, player_name, player_name_font, sprite_scale),
 m_CantMove(false),
 m_Transition(m_Window.getSize())
@@ -71,7 +71,7 @@ void GameState::HandleInput(int input, const float & dt)
 		input = -1;
 	// Open pause menu when "Options" or "Escape" is pressed
 	else if (input == (Joystick::isConnected(0) ? m_Actions["PAUSE"] : Keyboard::Key(m_Actions["PAUSE"])))
-		m_StatesStack.push(new MenuState(m_Window, m_StatesStack, WhichState::MENU_STATE, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));
+		m_StatesStack.push(new MenuState(m_Window, m_StatesStack, WhichState::MENU_STATE, m_Running, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));
 	else if (input == (Joystick::isConnected(0) ? m_Actions["ENTER_CHAT"] : Keyboard::Key(m_Actions["ENTER_CHAT"])))
 		static_cast<ChatBoxGUI*>(m_GUI["CHAT_BOX"])->Activate();
 	// Only-Joystick inputs
@@ -164,25 +164,25 @@ void GameState::ChangeMap(const Color& color)
 		{
 			m_CurrentMap = "Hogwarts_Hallways";
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("START"));
-			ReSetView(true);
+			ResetView(true);
 		}
 		else if (color == Color::Green)
 		{
 			m_CurrentMap = "Library";
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("START"));
-			ReSetView(true);
+			ResetView(true);
 		}
 		else if (color == Color::Yellow)
 		{
 			m_CurrentMap = "Potions_Room";
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("START"));
-			ReSetView(true);
+			ResetView(true);
 		}
 		else if (color == Color::Magenta)
 		{
 			m_CurrentMap = "The_Great_Hall";
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("START"));
-			ReSetView(true);
+			ResetView(true);
 		}
 	}
 	else if (m_CurrentMap == "Hogwarts_Hallways")
@@ -219,18 +219,18 @@ void GameState::ChangeMap(const Color& color)
 		if (color == Color::Blue)
 		{
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("FROM_BLUE"));
-			ReSetView();
+			ResetView();
 		}
 		else if (color == Color::Magenta)
 		{
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("FROM_MAGENTA"));
-			ReSetView();
+			ResetView();
 		}
 		else if (color == Color::Green)
 		{
 			m_CurrentMap = "Library";
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("START"));
-			ReSetView(true);
+			ResetView(true);
 		}
 	}
 	else if (m_CurrentMap == "The_Great_Hall")
@@ -238,12 +238,12 @@ void GameState::ChangeMap(const Color& color)
 		if (color == Color::Magenta)
 		{
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("FROM_BLUE"));
-			ReSetView();
+			ResetView();
 		}
 		else if (color == Color::Blue)
 		{
 			m_Player.GetSprite().setPosition(m_Maps[m_CurrentMap]->GetStartingPosition("FROM_MAGENTA"));
-			ReSetView();
+			ResetView();
 		}
 		else if (color == Color::Red)
 		{
@@ -260,7 +260,7 @@ void GameState::Update(const float& dt)
 	
 	HandleInput(-1, dt);
 
-	ReSetView();
+	ResetView();
 
 	for (auto &it : m_GUI)
 		it.second->Update(dt);
@@ -340,13 +340,13 @@ void GameState::InitView()
 
 void GameState::InitGUI(const std::string& player_name)
 {
-	m_GUI["PLAYER"] = new PlayerGUI(m_Window, m_Player, player_name);
-	m_GUI["MINI_MAP"] = new MiniMapGUI(m_Window, m_Player, *m_Maps[m_CurrentMap]->GetTexture());
-	m_GUI["CHAT_BOX"] = new ChatBoxGUI(m_Window, m_Player);
-	m_GUI["MENU"] = new MenuGUI(m_Window, m_Player);
+	m_GUI["PLAYER"] = new PlayerGUI(m_Window, &m_Player, player_name);
+	m_GUI["MINI_MAP"] = new MiniMapGUI(m_Window, &m_Player, *m_Maps[m_CurrentMap]->GetTexture());
+	m_GUI["CHAT_BOX"] = new ChatBoxGUI(m_Window, &m_Player);
+	m_GUI["MENU"] = new MenuGUI(m_Window, &m_Player);
 }
 
-void GameState::ReSetView(bool new_map)
+void GameState::ResetView(bool new_map)
 {
 	Vector2f sprite_size(m_Player.GetSprite().getGlobalBounds().width, m_Player.GetSprite().getGlobalBounds().height);
 

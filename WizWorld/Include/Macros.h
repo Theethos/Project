@@ -47,6 +47,6 @@ enum class ArmorCategories { HAT, CLOAK, CHEST, BELT, PANTS, BOOTS, GLOVE_1, GLO
 enum class Sexe { MALE, FEMALE };
 enum class AnimationSide { LEFT, RIGHT, DOWN, UP };
 enum class Menu { NONE, MAIN_MENU, PAUSE_MENU, CHARACTER_MENU };
-enum class WhichState { NONE, GAME_STATE, MENU_STATE };
+enum class WhichState { NONE, GAME_STATE, MENU_STATE, EDITOR_STATE };
 enum class TransitionStatus { NONE, HALF, WAIT_COMPLETE, COMPLETE };
 #endif // !_MACROS_H_

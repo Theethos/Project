@@ -25,6 +25,8 @@
     <ClInclude Include="..\Include\Character.h" />
     <ClInclude Include="..\Include\ChatBoxGUI.h" />
     <ClInclude Include="..\Include\CommandComponent.h" />
+    <ClInclude Include="..\Include\EditorGUI.h" />
+    <ClInclude Include="..\Include\EditorState.h" />
     <ClInclude Include="..\Include\Entity.h" />
     <ClInclude Include="..\Include\Game.h" />
     <ClInclude Include="..\Include\GameState.h" />
@@ -56,9 +58,14 @@
     <ClCompile Include="..\Source\Character.cpp" />
     <ClCompile Include="..\Source\ChatBoxGUI.cpp" />
     <ClCompile Include="..\Source\CommandComponent.cpp" />
+    <ClCompile Include="..\Source\EditorGUI.cpp" />
+    <ClCompile Include="..\Source\EditorState.cpp" />
     <ClCompile Include="..\Source\Entity.cpp" />
     <ClCompile Include="..\Source\Game.cpp" />
     <ClCompile Include="..\Source\GameState.cpp" />
+    <ClCompile Include="..\Source\glad.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\Source\GUI.cpp" />
     <ClCompile Include="..\Source\HitboxComponent.cpp" />
     <ClCompile Include="..\Source\Inventory.cpp" />
@@ -156,13 +163,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\External\SFML_64bits\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\External\SFML_64bits\include;$(SolutionDir)\External\OpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled_Header.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)\External\SFML_64bits\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-d.lib;sfml-audio-d.lib;sfml-network-d.lib;sfml-window-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-graphics-d.lib;sfml-audio-d.lib;sfml-network-d.lib;sfml-window-d.lib;sfml-system-d.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -190,7 +198,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\External\SFML_64bits\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\External\SFML_64bits\include;$(SolutionDir)\External\OpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled_Header.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -198,7 +206,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)\External\SFML_64bits\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics.lib;sfml-audio.lib;sfml-network.lib;sfml-window.lib;sfml-system.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-graphics.lib;sfml-audio.lib;sfml-network.lib;sfml-window.lib;sfml-system.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

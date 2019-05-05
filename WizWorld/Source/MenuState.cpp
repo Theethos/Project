@@ -5,8 +5,8 @@
 using namespace sf;
 
 // Constructor
-MenuState::MenuState(RenderWindow& window, std::stack<State*>& states_stack, WhichState state, const std::string path, const Menu menu_type) :
-State(window, states_stack, state),
+MenuState::MenuState(RenderWindow& window, std::stack<State*>& states_stack, WhichState state, bool &running, const std::string path, const Menu menu_type) :
+State(window, states_stack, state, running),
 m_Type(menu_type), 
 m_ActivatedButtons{ nullptr, "" },
 m_MovedX(false),
@@ -211,11 +211,16 @@ void MenuState::UpdateButtons()
 					m_SelectedButtons = std::make_pair(-1, -1);
 				}
 				it.second->SetPressed(false);
-				m_StatesStack.push(new MenuState(m_Window, m_StatesStack, WhichState::MENU_STATE, "../External/Config/Buttons/Choose_character_menu.cfg", Menu::CHARACTER_MENU));
+				m_StatesStack.push(new MenuState(m_Window, m_StatesStack, WhichState::MENU_STATE, m_Running, "../External/Config/Buttons/Choose_character_menu.cfg", Menu::CHARACTER_MENU));
+			}
+			else if (it.first == "EDITOR")
+			{
+				it.second->SetPressed(false);
+				m_StatesStack.push(new EditorState(m_Window, m_StatesStack, WhichState::EDITOR_STATE, m_Running));
 			}
 			else if (it.first == "QUIT")
 			{
-				m_Window.close();
+				m_Running = false;
 			}
 			// Pause Menu
 			else if (it.first == "RESUME")
@@ -230,10 +235,10 @@ void MenuState::UpdateButtons()
 				}
 				else
 				{
-					m_StatesStack.push(new MenuState(m_Window, m_StatesStack, WhichState::MENU_STATE, "../External/Config/Buttons/Main_menu.cfg", Menu::MAIN_MENU));
+					m_StatesStack.push(new MenuState(m_Window, m_StatesStack, WhichState::MENU_STATE, m_Running, "../External/Config/Buttons/Main_menu.cfg", Menu::MAIN_MENU));
 				}
 			}
-			else if (it.first == "SetTINGS")
+			else if (it.first == "SETTINGS")
 			{
 			}
 			// Choose Character Menu
@@ -287,7 +292,7 @@ void MenuState::UpdateButtons()
 				}
 				else
 				{
-					m_StatesStack.push(new GameState(m_Window, m_StatesStack, WhichState::GAME_STATE, path_to_sprite, m_SpritesScale, button->GetTextEntered(), m_Font["ALL"]));
+					m_StatesStack.push(new GameState(m_Window, m_StatesStack, WhichState::GAME_STATE, m_Running, path_to_sprite, m_SpritesScale, button->GetTextEntered(), m_Font["ALL"]));
 				}
 
 				m_Buttons["PSEUDO"]->Deactivate();
@@ -388,13 +393,13 @@ void MenuState::RenderSprites(RenderTarget& target)
 
 void MenuState::InitFonts()
 {
-	if (!m_Font["TITLE"].loadFromFile("../External/Fonts/harryp__.ttf"))
+	if (!m_Font.count("TITLE"))
 	{
-		std::cerr << "Error in 'MenuState' : Could not load \"harryp__.ttf\" m_Font\n";
+		m_Font["TITLE"].loadFromFile("../External/Fonts/harryp__.ttf");
 	}
-	if (!m_Font["ALL"].loadFromFile("../External/Fonts/GOTHICB.TTF"))
+	if (!m_Font.count("ALL"))
 	{
-		std::cerr << "Error in 'MenuState' : Could not load \"GOTHICB.TTF\" m_Font\n";
+		m_Font["ALL"].loadFromFile("../External/Fonts/GOTHICB.TTF");
 	}
 }
 /////////////////////////////////////////////////////////////////////
@@ -406,7 +411,7 @@ void MenuState::InitFonts()
 /////////////////////////////////////////////////////////////////////
 void MenuState::InitButtons(const std::string path)
 {
-	float x_m_Window = m_Window.getSize().x, y_m_Window = m_Window.getSize().y;
+	float x_window = m_Window.getSize().x, y_window = m_Window.getSize().y;
 
 	std::ifstream config_file(path);
 	if (config_file.is_open())
@@ -425,13 +430,13 @@ void MenuState::InitButtons(const std::string path)
 		int a = 255;
 		Color idle_color = Color::White, hover_color = Color::White, active_color = Color::White;
 		/* Size of the text on the button */
-		float textSize = 12.0;
+		float text_size = 12.0;
 		int navigation_row = 0;
 
 		/* Skip the first line */
 		std::getline(config_file, line, '\n');
 
-		/* For each m_Buttons of this state */
+		/* For each buttons of this state */
 		while(i < m_NumberButtons)
 		{
 			/* Get button_type */
@@ -443,17 +448,17 @@ void MenuState::InitButtons(const std::string path)
 
 			/* Get coordinates*/
 			std::getline(config_file, line, ' ');
-			x = static_cast<float>(std::atof(line.c_str())*x_m_Window);
+			x = static_cast<float>(std::atof(line.c_str())*x_window);
 
 			std::getline(config_file, line, ' ');
-			y = static_cast<float>(std::atof(line.c_str())*y_m_Window);
+			y = static_cast<float>(std::atof(line.c_str())*y_window);
 
 			/* Get size */
 			std::getline(config_file, line, ' ');
-			w = static_cast<float>(std::atof(line.c_str())*x_m_Window);
+			w = static_cast<float>(std::atof(line.c_str())*x_window);
 
 			std::getline(config_file, line, ' ');
-			h = static_cast<float>(std::atof(line.c_str())*y_m_Window);
+			h = static_cast<float>(std::atof(line.c_str())*y_window);
 			
 			/* Get text */
 			std::getline(config_file, text, '-');
@@ -490,7 +495,7 @@ void MenuState::InitButtons(const std::string path)
 
 			/* Get Text_size */
 			std::getline(config_file, line, ' ');
-			textSize = (static_cast<float>(std::atof(line.c_str())*x_m_Window));
+			text_size = (static_cast<float>(std::atof(line.c_str())*x_window));
 
 			/* Get navigation_row */
 			std::getline(config_file, line, '\n');
@@ -500,10 +505,10 @@ void MenuState::InitButtons(const std::string path)
 			switch (button_type)
 			{
 			case 0:
-				m_Buttons[action] = new Button(x, y, w, h, text, m_Font["ALL"], idle_color, hover_color, active_color, textSize);
+				m_Buttons[action] = new Button(x, y, w, h, text, m_Font["ALL"], idle_color, hover_color, active_color, text_size);
 				break;
 			case 1:
-				m_Buttons[action] = new TextField(m_Window, m_Font["ALL"], x, y, w, h, text, idle_color, hover_color, active_color, textSize, true);
+				m_Buttons[action] = new TextField(m_Window, m_Font["ALL"], x, y, w, h, text, idle_color, hover_color, active_color, text_size, true);
 				break;
 			default:
 				break;
@@ -581,7 +586,7 @@ void MenuState::InitSprites()
 	m_Sprites["UP"] = new Sprite();
 	m_Sprites["RIGHT"] = new Sprite();
 
-	m_SpritesScale = m_Window.getSize().y / 270; // Equals to 4 in 1920 x 1080
+	m_SpritesScale = 4 * m_Window.getSize().y / 1080; // Equals to 4 in 1920 x 1080
 	for (auto &it : m_Sprites)
 	{
 		it.second->setScale(m_SpritesScale, m_SpritesScale);

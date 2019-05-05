@@ -8,10 +8,13 @@ using namespace sf;
 Game::Game() :
 m_DeltaTime(0.0), 
 m_Fullscreen(false),
+m_Running(true),
 m_Music("../External/Config/Music/Music.cfg")
 {
 	InitWindow();
 	InitStates();
+
+	m_Window.setActive(true);
 }
 // Destructor
 Game::~Game()
@@ -28,7 +31,7 @@ Game::~Game()
 void Game::Run()
 {
 	// Main loop
-	while (m_Window.isOpen())
+	while (m_Running)
 	{
 		// Update delta time to know how long it takes to do the entire loop
 		UpdateDt();
@@ -41,10 +44,13 @@ void Game::Update()
 {
 	// Check if user close the window
 	UpdateEvents();
+	
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Updates from top state
 	if (!m_States.empty())
 	{
+		UpdateMusic();
 		m_States.top()->Update(m_DeltaTime);
 		// Pops the state it is finished/closed 
 		if (m_States.top()->GetQuit())
@@ -52,12 +58,11 @@ void Game::Update()
 			delete m_States.top();
 			m_States.pop();
 		}
-		UpdateMusic();
 	}
 	// There is no more states
 	else
 	{
-		m_Window.close();
+		m_Running = false;
 	}
 }
 
@@ -68,8 +73,12 @@ void Game::UpdateEvents()
 		// User closed the m_Window
 		if (m_Event.type == Event::Closed)
 		{
-			m_Window.close();
+			m_Running = false;
 			break;
+		}
+		else if (m_Event.type == sf::Event::Resized)
+		{
+			glViewport(0, 0, m_Event.size.width, m_Event.size.height);
 		}
 		else if (m_Event.type == Event::JoystickConnected)
 		{
@@ -142,8 +151,6 @@ void Game::UpdateDt()
 
 void Game::Render()
 {
-	m_Window.clear();
-
 	// Renders from state
 	if (!m_States.empty())
 	{
@@ -180,6 +187,7 @@ void Game::InitWindow()
 
 	// m_Window's attributes
 	std::string title("None");
+	ContextSettings contexte;
 	VideoMode video_mode(VideoMode::getDesktopMode());
 	unsigned fps = 120;
 	bool vertical_sync_enabled = false;
@@ -187,18 +195,17 @@ void Game::InitWindow()
 	if (config_file.is_open())
 	{
 		std::getline(config_file, title);
+		config_file >> contexte.depthBits >> contexte.stencilBits >> contexte.antialiasingLevel >> contexte.majorVersion >> contexte.minorVersion;
 		config_file >> video_mode.width >> video_mode.height;
 		config_file >> m_Fullscreen;
 		config_file >> fps;
 		config_file >> vertical_sync_enabled;
-		
 		config_file.close();
 	}
-
 	if (m_Fullscreen)
-		m_Window.create(video_mode, title, Style::Fullscreen);
+		m_Window.create(video_mode, title, Style::Fullscreen, contexte);
 	else
-		m_Window.create(video_mode, title);
+		m_Window.create(video_mode, title, Style::Close, contexte);
 
 	m_Window.setFramerateLimit(fps);
 	m_Window.setVerticalSyncEnabled(vertical_sync_enabled);
@@ -206,7 +213,7 @@ void Game::InitWindow()
 
 void Game::InitStates()
 {
-	m_States.push(new MenuState(m_Window, m_States, WhichState::MENU_STATE, "../External/Config/Buttons/Main_menu.cfg", Menu::MAIN_MENU));
+	m_States.push(new MenuState(m_Window, m_States, WhichState::MENU_STATE, m_Running, "../External/Config/Buttons/Main_menu.cfg", Menu::MAIN_MENU));
 }
 
 void Game::DisplayFPS()

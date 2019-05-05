@@ -7,7 +7,7 @@ class PlayerGUI : public GUI
 {
 public:
 	// Constructor
-	PlayerGUI(sf::RenderWindow& window, Player& player, const std::string& player_name);
+	PlayerGUI(sf::RenderWindow& window, Player *player, const std::string& player_name);
 	// Destructor
 	~PlayerGUI();
 

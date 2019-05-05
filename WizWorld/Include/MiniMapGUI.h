@@ -8,7 +8,7 @@ class MiniMapGUI : public GUI
 {
 public:
 	// Constructor
-	MiniMapGUI(sf::RenderWindow& window, Player& player, sf::Texture& map_texture);
+	MiniMapGUI(sf::RenderWindow& window, Player *player, sf::Texture& map_texture);
 	// Destructor
 	~MiniMapGUI();
 
@@ -19,7 +19,7 @@ public:
 	// Setter
 	void SetTexture(sf::Texture& texture);
 
-	static const float s_MiniMapScale;
+	static float s_MiniMapScale;
 private:
 	// Redefining GlobalShape
 	sf::RectangleShape m_GlobalShape;

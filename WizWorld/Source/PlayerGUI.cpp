@@ -5,20 +5,20 @@
 using namespace sf;
 
 // Constructor
-PlayerGUI::PlayerGUI(RenderWindow& window, Player& player, const std::string& player_name) :
+PlayerGUI::PlayerGUI(RenderWindow& window, Player *player, const std::string& player_name) :
 GUI(window, player)
 {
 	// Needed initialisation
 	m_PlayerLevel.first.setRadius(m_Window.getSize().x * 0.015); 
 	m_PlayerName.setString(player_name);
-	m_PlayerName.setCharacterSize(25);
+	m_PlayerName.setCharacterSize(25 * m_Window.getSize().y / 1080);
 	m_PlayerName.setFont(m_Font);
 
 	// Global
 	// 15% of the m_Window's width and 10% of the m_Window's height by default
 	m_GlobalShape.setSize(Vector2f(m_Window.getSize().x * 0.11 + std::max(m_PlayerName.getGlobalBounds().width, m_PlayerLevel.first.getRadius() * 2),
 	m_Window.getSize().y * 0.11));
-	m_GlobalShape.setPosition(m_Window.getPosition().x, m_Window.getPosition().y);
+	m_GlobalShape.setPosition(0, 0);
 	m_GlobalShape.setOutlineThickness(1);
 	m_GlobalShape.setOutlineColor(Color::Black);
 	m_GlobalShape.setFillColor(m_GlobalColor);
@@ -36,7 +36,7 @@ GUI(window, player)
 	else
 		m_PlayerLevel.first.setPosition(m_PlayerName.getPosition() + Vector2f(0, m_PlayerName.getGlobalBounds().height + m_PlayerLevel.first.getRadius() / 2));
 	m_PlayerLevel.second.setString("1");
-	m_PlayerLevel.second.setCharacterSize(25);
+	m_PlayerLevel.second.setCharacterSize(25 * m_Window.getSize().y / 1080);
 	m_PlayerLevel.second.setFont(m_Font);
 	m_PlayerLevel.second.setFillColor(m_GlobalTextColor);
 	m_PlayerLevel.second.setPosition(m_PlayerLevel.first.getPosition() + Vector2f((m_PlayerLevel.first.getRadius() + m_PlayerLevel.second.getGlobalBounds().width) / 2.f , m_PlayerLevel.first.getRadius() / 2.f));
@@ -52,7 +52,7 @@ GUI(window, player)
 	m_HPBar.second.setOutlineThickness(1);
 	m_HPBar.second.setFillColor(Color::Transparent);
 	m_HPValue.setString("150/150");
-	m_HPValue.setCharacterSize(20);
+	m_HPValue.setCharacterSize(20 * m_Window.getSize().y / 1080);
 	m_HPValue.setFont(m_Font);
 	m_HPValue.setFillColor(m_GlobalTextColor);
 	m_HPValue.setPosition(m_HPBar.first.getPosition() + Vector2f((m_HPBar.first.getSize().x - m_HPValue.getGlobalBounds().width) / 2, 0));
@@ -67,7 +67,7 @@ GUI(window, player)
 	m_EXPBar.second.setOutlineThickness(1);
 	m_EXPBar.second.setFillColor(Color::Transparent);
 	m_EXPValue.setString("0/150");
-	m_EXPValue.setCharacterSize(20);
+	m_EXPValue.setCharacterSize(20 * m_Window.getSize().y / 1080);
 	m_EXPValue.setFont(m_Font);
 	m_EXPValue.setFillColor(m_GlobalTextColor);
 	m_EXPValue.setPosition(m_EXPBar.first.getPosition() + Vector2f((m_EXPBar.first.getSize().x - m_EXPValue.getGlobalBounds().width) / 2, 0));
@@ -82,7 +82,7 @@ GUI(window, player)
 	m_ManaBar.second.setOutlineThickness(1);
 	m_ManaBar.second.setFillColor(Color::Transparent);
 	m_ManaValue.setString("150/150");
-	m_ManaValue.setCharacterSize(20);
+	m_ManaValue.setCharacterSize(20 * m_Window.getSize().y / 1080);
 	m_ManaValue.setFont(m_Font);
 	m_ManaValue.setFillColor(m_GlobalTextColor);
 	m_ManaValue.setPosition(m_ManaBar.first.getPosition() + Vector2f((m_ManaBar.first.getSize().x - m_ManaValue.getGlobalBounds().width) / 2, 0));	
@@ -103,28 +103,28 @@ void PlayerGUI::Update(const float & dt)
 			Move<RectangleShape>();
 
 		// Update texts' and bars' size
-		long long currentXp = m_Player.GetStatistics().GetCurrentLevelExp();
-		long long nextXp = m_Player.GetStatistics().GetExpForLevel(m_Player.GetStatistics().GetLevel() + 1);
-		float previous_next = m_Player.GetStatistics().GetExpForLevel(m_Player.GetStatistics().GetLevel());
-		if (m_Player.GetStatistics().GetLevel() < 50)
+		long long currentXp = m_Player->GetStatistics().GetCurrentLevelExp();
+		long long nextXp = m_Player->GetStatistics().GetExpForLevel(m_Player->GetStatistics().GetLevel() + 1);
+		float previous_next = m_Player->GetStatistics().GetExpForLevel(m_Player->GetStatistics().GetLevel());
+		if (m_Player->GetStatistics().GetLevel() < 50)
 			m_EXPBar.first.setSize(Vector2f(m_EXPBar.second.getSize().x * (static_cast<double>(currentXp - previous_next) / static_cast<double>(nextXp - previous_next)), m_EXPBar.second.getSize().y));
 		else 
 			m_EXPBar.first.setSize(Vector2f(m_EXPBar.second.getSize().x, m_EXPBar.second.getSize().y));
 		m_EXPValue.setString(std::to_string(currentXp) + "/" + std::to_string(nextXp));
 
-		long currentHp = m_Player.GetStatistics().GetCurrentHP();
-		long maxHp = m_Player.GetStatistics().GetMaxHP();
+		long currentHp = m_Player->GetStatistics().GetCurrentHP();
+		long maxHp = m_Player->GetStatistics().GetMaxHP();
 		m_HPBar.first.setSize(Vector2f(m_HPBar.second.getSize().x * static_cast<double>(currentHp) / static_cast<double>(maxHp), m_HPBar.second.getSize().y));
 		
 		m_HPValue.setString(std::to_string(currentHp) + "/" + std::to_string(maxHp));
 
-		long currentMana = m_Player.GetStatistics().GetCurrentMana();
-		long maxMana = m_Player.GetStatistics().GetMaxMana();
+		long currentMana = m_Player->GetStatistics().GetCurrentMana();
+		long maxMana = m_Player->GetStatistics().GetMaxMana();
 		m_ManaBar.first.setSize(Vector2f(m_ManaBar.second.getSize().x * static_cast<double>(currentMana) / static_cast<double>(maxMana), m_ManaBar.second.getSize().y));
 		
 		m_ManaValue.setString(std::to_string(currentMana) + "/" + std::to_string(maxMana));
 
-		std::string level = std::to_string(m_Player.GetStatistics().GetLevel());
+		std::string level = std::to_string(m_Player->GetStatistics().GetLevel());
 		m_PlayerLevel.second.setString(level);
 
 		// Update texts' positions
