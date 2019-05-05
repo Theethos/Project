@@ -73,9 +73,7 @@ private:
 			if (m_Timer >= m_FrameDelay)
 			{
 				m_Sprite.setTexture(*m_TextureSheet, true);
-				m_Sprite.setTextureRect(sf::IntRect(m_CurrentRect.width, 0, m_CurrentRect.width, m_CurrentRect.height));
-				// Reset m_Timer
-				m_Timer = 0;
+				m_Sprite.setTextureRect(sf::IntRect(0, 0, m_CurrentRect.width, m_CurrentRect.height));
 			}
 		}
 	};

@@ -27,9 +27,9 @@ AnimationSide StringToSide(const std::string side)
 }
 
 // Construtor
-GameState::GameState(RenderWindow& window, std::stack<State*>& states_stack, WhichState state, const std::string path,
+GameState::GameState(RenderWindow& window, std::stack<State*>& states_stack, WhichState state, bool &running, const std::string path,
 					 const int sprite_scale, const std::string player_name, Font& player_name_font) :
-State(window, states_stack, state),
+State(window, states_stack, state, running),
 m_Player(1.f, 0.0, 0.0, path, player_name, player_name_font, sprite_scale),
 m_CantMove(false),
 m_Transition(m_Window.getSize())
@@ -275,10 +275,10 @@ void GameState::InitView()
 
 void GameState::InitGUI(const std::string& player_name)
 {
-	m_GUI["PLAYER"] = new PlayerGUI(m_Window, m_Player, player_name);
-	m_GUI["MINI_MAP"] = new MiniMapGUI(m_Window, m_Player, *m_Maps[m_CurrentMap]->GetTexture());
-	m_GUI["CHAT_BOX"] = new ChatBoxGUI(m_Window, m_Player);
-	m_GUI["MENU"] = new MenuGUI(m_Window, m_Player);
+	m_GUI["PLAYER"] = new PlayerGUI(m_Window, &m_Player, player_name);
+	m_GUI["MINI_MAP"] = new MiniMapGUI(m_Window, &m_Player, *m_Maps[m_CurrentMap]->GetTexture());
+	m_GUI["CHAT_BOX"] = new ChatBoxGUI(m_Window, &m_Player);
+	m_GUI["MENU"] = new MenuGUI(m_Window, &m_Player);
 }
 
 void GameState::ResetView(bool new_map)

@@ -2,6 +2,7 @@
 #define _MENU_STATE_H_
 
 #include "GameState.h"
+#include "EditorState.h"
 #include "TextField.h"
 #include "AnimationComponent.h"
 
@@ -9,7 +10,7 @@ class MenuState : public State
 {
 public:
 	// Constructor
-	MenuState(sf::RenderWindow& window, std::stack<State*>& states_stack, const WhichState state, const std::string path, const Menu menu_type);
+	MenuState(sf::RenderWindow& window, std::stack<State*>& states_stack, const WhichState state, bool &running, const std::string path, const Menu menu_type);
 	// Destructor
 	virtual ~MenuState();
 
@@ -28,7 +29,6 @@ private:
 
 	std::map<std::string, sf::Font> m_Font;
 	
-	
 	sf::Text m_Title;
 	
 	std::map<std::string, Button*> m_Buttons;
@@ -39,9 +39,9 @@ private:
 	bool m_MovedY;
 	int m_NumberButtons;
 
-	std::map<std::string, sf::Sprite*> m_Sprites;						// The sprites displayed in the character menu
+	std::map<std::string, sf::Sprite*> m_Sprites;					// The sprites displayed in the character menu
 	std::map<std::string, AnimationComponent*> m_SpritesAnimations;	// The sprite's animation that has to be displayed in the character menu
-	sf::RectangleShape m_SpritesBackground;								// Background behind the sprites
+	sf::RectangleShape m_SpritesBackground;							// Background behind the sprites
 	int m_SpritesScale;												// Scale of the sprite in the character menu
 	
 	sf::Cursor m_Cursor;

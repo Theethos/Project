@@ -8,7 +8,7 @@
 class ChatBoxGUI : public GUI
 {
 public:
-	ChatBoxGUI(sf::RenderWindow& window, Player& player);
+	ChatBoxGUI(sf::RenderWindow& window, Player *player);
 	~ChatBoxGUI();
 
 	// Functions

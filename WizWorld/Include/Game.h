@@ -20,6 +20,7 @@ private:
 	sf::RenderWindow m_Window;
 
 	bool m_Fullscreen;
+	bool m_Running;
 	sf::Event m_Event;
 	std::stack<State*> m_States;
 	sf::Clock m_Clock;

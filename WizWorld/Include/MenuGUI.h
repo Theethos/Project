@@ -7,7 +7,7 @@ class MenuGUI : public GUI
 {
 public:
 	// Constructor
-	MenuGUI(sf::RenderWindow &window, Player &player);
+	MenuGUI(sf::RenderWindow &window, Player *player);
 	// Destructor
 	~MenuGUI();
 

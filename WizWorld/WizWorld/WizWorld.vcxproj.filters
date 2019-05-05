@@ -135,6 +135,12 @@
     <ClInclude Include="..\Include\CommandComponent.h">
       <Filter>Component\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\EditorState.h">
+      <Filter>State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\EditorGUI.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Weapon.cpp">
@@ -172,9 +178,6 @@
     </ClCompile>
     <ClCompile Include="..\Source\Player.cpp">
       <Filter>Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Precompiled_Header.cpp">
-      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Main.cpp">
       <Filter>Fichiers sources</Filter>
@@ -226,6 +229,18 @@
     </ClCompile>
     <ClCompile Include="..\Source\CommandComponent.cpp">
       <Filter>Component\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\glad.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Precompiled_Header.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\EditorState.cpp">
+      <Filter>State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\EditorGUI.cpp">
+      <Filter>GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

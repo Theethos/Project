@@ -4,7 +4,7 @@
 
 using namespace sf;
 
-ChatBoxGUI::ChatBoxGUI(RenderWindow& window, Player& player) :
+ChatBoxGUI::ChatBoxGUI(RenderWindow& window, Player *player) :
 GUI(window, player),
 m_CommandHandler(*this),
 m_TextField(nullptr),
@@ -13,7 +13,7 @@ m_Selected(false),
 m_Quit(false)
 {
 	m_GlobalShape.setSize(Vector2f(m_Window.getSize().x * 0.25, m_Window.getSize().y * 0.25));
-	m_GlobalShape.setPosition(m_Window.getPosition().x, m_Window.getPosition().y + m_Window.getSize().y - m_GlobalShape.getSize().y);
+	m_GlobalShape.setPosition(0, m_Window.getSize().y - m_GlobalShape.getSize().y);
 	m_GlobalShape.setOutlineThickness(1);
 	m_GlobalShape.setOutlineColor(Color::Black);
 	m_GlobalShape.setFillColor(m_GlobalColor);

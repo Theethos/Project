@@ -14,7 +14,7 @@ class GameState : public State
 {
 public:
 	// Construtor
-	GameState(sf::RenderWindow& window, std::stack<State*>& states_stack, WhichState state, const std::string path, const int sprite_scale,
+	GameState(sf::RenderWindow& window, std::stack<State*>& states_stack, WhichState state, bool &running, const std::string path, const int sprite_scale,
 			  const std::string player_name, sf::Font& player_name_font);
 	// Destructor
 	virtual ~GameState();

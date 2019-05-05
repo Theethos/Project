@@ -5,7 +5,7 @@ class State
 {
 public:
 	// Constructor
-	State(sf::RenderWindow& window, std::stack<State*>& states_stack, WhichState state);
+	State(sf::RenderWindow& window, std::stack<State*>& states_stack, WhichState state, bool &running);
 	// Destructor
 	virtual ~State();
 
@@ -29,7 +29,8 @@ protected:
 	
 	WhichState m_State;						// Actual state
 	bool m_Quit;							// If the state wants to m_Quit
-	
+	bool& m_Running;						// End the game if player presses "QUIT"
+
 	sf::Vector2f m_MousePosition;
 
 	std::stack<State*>& m_StatesStack;		// Reference to the stack of States
