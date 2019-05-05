@@ -11,7 +11,7 @@ m_MaxWidthTiles(0),
 m_TileIndex(-1)
 {
 	InitTilesSheets();
-	int witdh = (int)(m_Window.getSize().x - m_MaxWidthTiles) / m_TilesSize;
+	int witdh = (int)(m_Window.getSize().x - m_MaxWidthTiles) /  m_TilesSize;
 	int height = (int)(m_Window.getSize().y) / m_TilesSize;
 	std::cout << witdh << " " << height << std::endl;
 	m_DrawingArea.setSize(Vector2f((witdh - 1) * m_TilesSize, (height - 1) * m_TilesSize));
