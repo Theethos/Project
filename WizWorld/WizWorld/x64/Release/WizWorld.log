@@ -450,8 +450,12 @@ c:\users\théo brichet\desktop\project\wizworld\include\statisticscomponent.h(35
   Weapon.cpp
   glad.c
   Génération de code en cours
-  541 of 2614 functions (20.7%) were compiled, the rest were copied from previous compilation.
-    345 functions were new in current compilation
-    247 functions had inline decision re-evaluated but remain unchanged
+c:\users\théo brichet\desktop\project\wizworld\include\statisticscomponent.h(77): warning C4172: retourne l'adresse d'une variable locale ou  temporaire
+c:\users\théo brichet\desktop\project\wizworld\include\statisticscomponent.h(75): warning C4172: retourne l'adresse d'une variable locale ou  temporaire
+c:\users\théo brichet\desktop\project\wizworld\source\entity.cpp(93): warning C4715: 'Entity::GetMovement' : les chemins de contrôle ne retournent pas tous une valeur
+c:\users\théo brichet\desktop\project\wizworld\source\entity.cpp(99): warning C4715: 'Entity::GetAnimation' : les chemins de contrôle ne retournent pas tous une valeur
+c:\users\théo brichet\desktop\project\wizworld\source\gamestate.cpp(27): warning C4715: 'StringToSide' : les chemins de contrôle ne retournent pas tous une valeur
+c:\users\théo brichet\desktop\project\wizworld\source\map.cpp(57): warning C4715: 'Map::GetStartingPosition' : les chemins de contrôle ne retournent pas tous une valeur
+  All 2614 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Fin de la génération du code
   WizWorld.vcxproj -> C:\Users\Théo Brichet\Desktop\Project\WizWorld\x64\Release\WizWorld.exe
