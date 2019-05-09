@@ -15,7 +15,7 @@ public:
 	void Update(const float &dt);
 	void Render(sf::RenderTarget &target);
 	void Divide(float number_of_textures);
-	inline const int &GetSelectedShape() const { return m_SelectedShape; }
+	inline const int &GetSelectedTileset() const { return m_SelectedShape; }
 	inline const void SetSelectedShape(int value) { m_SelectedShape = value; }
 	inline const sf::Vector2f &GetSize() const { return m_GlobalShape.getSize(); }
 

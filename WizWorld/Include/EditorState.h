@@ -19,16 +19,18 @@ public:
 
 private:
 	std::vector<std::pair<sf::Texture*, std::vector<int>>> m_TilesTextureSheets;
-	std::vector<sf::RectangleShape> m_Tiles;
+	std::vector<sf::RectangleShape> m_Tiles, m_DrawableTiles;
 	sf::RectangleShape m_DrawingArea, m_TileCursor;
 	sf::RectangleShape m_SelectedTile;
 	EditorGUI m_GUI;
-	float m_MaxWidthTiles;
+	float m_OffsetLeft;
 	int m_TileIndex;
 	int m_TilesSize;
+	static const float m_TilesScale;
 	
 	// Private function
-	void InitTilesSheets();
+	void InitTiles();
+	void InitDrawingArea();
 };
 
 #endif // !EDITOR_STATE_H
