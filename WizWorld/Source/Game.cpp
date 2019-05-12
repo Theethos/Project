@@ -105,6 +105,11 @@ void Game::UpdateEvents()
 		{
 			m_States.top()->HandleInput(m_Event.key.code, m_DeltaTime);
 		}
+		else if (m_Event.type == Event::MouseButtonReleased && m_States.top()->GetState() == WhichState::EDITOR_STATE)
+		{
+			auto state = static_cast<EditorState*>(m_States.top());
+			state->Update(m_DeltaTime, &m_Event);
+		}
 	}
 }
 
@@ -130,6 +135,11 @@ void Game::UpdateMusic()
 		m_Music.Stop("PAUSE_MENU");
 		m_Music.Stop("MENU");
 		m_Music.Play(m_DeltaTime, "GAME");
+	}
+	else if (m_States.top()->GetState() == WhichState::EDITOR_STATE)
+	{
+		m_Music.Stop("PAUSE_MENU");
+		m_Music.Stop("MENU");
 	}
 }
 

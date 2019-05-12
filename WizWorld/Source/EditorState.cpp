@@ -26,7 +26,7 @@ EditorState::~EditorState()
 }
 
 // Functions
-void EditorState::Update(const float & dt)
+void EditorState::Update(const float & dt, Event *event)
 {
 	m_GUI.Update(dt);
 
@@ -35,23 +35,26 @@ void EditorState::Update(const float & dt)
 	if (m_DrawingArea.getGlobalBounds().contains(mouse_position))
 	{
 		m_Window.setMouseCursorVisible(true);
-		int total_column = m_DrawingArea.getSize().x / m_TilesSize;											// Calculate the total number of column			
-		int row_index = (mouse_position.y - m_DrawingArea.getPosition().y) / m_TilesSize;					// Calculate the row and the column index
-		int column_index = (mouse_position.x - m_DrawingArea.getPosition().x) / m_TilesSize;				// So we have access to the corresponding drawable_tile 
-		m_SelectedTile.setPosition(m_DrawableTiles[column_index + total_column * row_index].getPosition());	// By doing column_index + total_column * row_index
-		
-		if (Mouse::isButtonPressed(Mouse::Left))
+		int total_column = m_DrawingArea.getSize().x / m_TilesSize;														// Calculate the total number of column			
+		int row_index = (mouse_position.y - m_DrawingArea.getPosition().y) / m_TilesSize;								// Calculate the row and the column index
+		int column_index = (mouse_position.x - m_DrawingArea.getPosition().x) / m_TilesSize;							// So we have access to the corresponding drawable_tile 
+		m_SelectedTile.setPosition(m_DrawableTiles[column_index + total_column * row_index].first[0].getPosition());	// By doing column_index + total_column * row_index
+
+		if (event && event->type == Event::MouseButtonReleased && event->mouseButton.button == Mouse::Button::Left)
 		{
 			m_Window.setMouseCursorVisible(false);
-			Vector2f previous_pos = m_DrawableTiles[column_index + total_column * row_index].getPosition();
-			m_DrawableTiles[column_index + total_column * row_index] = m_SelectedTile;						// Copying the selected tile on the corresponding drawable_tile 
-			m_DrawableTiles[column_index + total_column * row_index].setPosition(previous_pos);
+			m_DrawableTiles[column_index + total_column * row_index].first.push_back(RectangleShape(Vector2f(m_TilesSize, m_TilesSize)));
+			Vector2f previous_pos = m_DrawableTiles[column_index + total_column * row_index].first[0].getPosition();
+			m_DrawableTiles[column_index + total_column * row_index].first.back() = m_SelectedTile;	// Copying the selected tile on the corresponding drawable_tile 
+			m_DrawableTiles[column_index + total_column * row_index].first.back().setPosition(previous_pos);
 		}
-		else if (Mouse::isButtonPressed(Mouse::Right))
+		else if (event && event->type == Event::MouseButtonReleased && event->mouseButton.button == Mouse::Button::Right)
 		{
 			m_Window.setMouseCursorVisible(false);
-			m_DrawableTiles[column_index + total_column * row_index].setTexture(nullptr);					// Removing the tile on the corresponding drawable_tile
-			m_DrawableTiles[column_index + total_column * row_index].setFillColor(Color::Transparent);
+			m_DrawableTiles[column_index + total_column * row_index].first.back().setTexture(nullptr);	// Removing the tile on the corresponding drawable_tile
+			m_DrawableTiles[column_index + total_column * row_index].first.back().setFillColor(Color::Transparent);
+			if (m_DrawableTiles[column_index + total_column * row_index].first.size() > 1)
+				m_DrawableTiles[column_index + total_column * row_index].first.pop_back();
 		}
 	}
 	else
@@ -82,7 +85,10 @@ void EditorState::Render(RenderTarget & target)
 	}
 	target.draw(m_DrawingArea);
 	for (auto &it : m_DrawableTiles)
-		target.draw(it);
+	{
+		for (auto &ite : it.first)
+			target.draw(ite);
+	}
 	if (m_TileIndex >= 0)
 		m_TileCursor.setOutlineColor(Color::Red);
 	else 
@@ -211,9 +217,10 @@ void EditorState::InitDrawingArea()
 	{
 		for (unsigned column = 0; column < m_DrawingArea.getSize().x / m_TilesSize; ++column)
 		{
-			m_DrawableTiles.push_back(RectangleShape(Vector2f(m_TilesSize, m_TilesSize)));
-			m_DrawableTiles.back().setPosition(m_DrawingArea.getPosition() + Vector2f(column * m_TilesSize, line * m_TilesSize));
-			m_DrawableTiles.back().setFillColor(Color::Transparent);
+			m_DrawableTiles.push_back(std::make_pair(std::vector<RectangleShape>(), 0));
+			m_DrawableTiles.back().first.push_back(RectangleShape(Vector2f(m_TilesSize, m_TilesSize)));
+			m_DrawableTiles.back().first.back().setPosition(m_DrawingArea.getPosition() + Vector2f(column * m_TilesSize, line * m_TilesSize));
+			m_DrawableTiles.back().first.back().setFillColor(Color::Transparent);
 		}
 	}
 }

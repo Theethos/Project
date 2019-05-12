@@ -13,13 +13,15 @@ public:
 	~EditorState();
 
 	// Functions
-	void Update(const float &dt);
+	inline void Update(const float &dt) { Update(dt, nullptr); }
+	void Update(const float &dt, sf::Event *event = nullptr);
 	void Render(sf::RenderTarget &target);
 	void HandleInput(int input, const float &dt);
 
 private:
 	std::vector<std::pair<sf::Texture*, std::vector<int>>> m_TilesTextureSheets;
-	std::vector<sf::RectangleShape> m_Tiles, m_DrawableTiles;
+	std::vector<sf::RectangleShape> m_Tiles;
+	std::vector< std::pair< std::vector<sf::RectangleShape>, int> > m_DrawableTiles;
 	sf::RectangleShape m_DrawingArea, m_TileCursor;
 	sf::RectangleShape m_SelectedTile;
 	EditorGUI m_GUI;

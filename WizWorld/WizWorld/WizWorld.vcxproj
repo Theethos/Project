@@ -71,6 +71,7 @@
     <ClCompile Include="..\Source\Inventory.cpp" />
     <ClCompile Include="..\Source\Item.cpp" />
     <ClCompile Include="..\Source\Main.cpp" />
+    <ClCompile Include="..\Source\Main_OpenGL.cpp" />
     <ClCompile Include="..\Source\Map.cpp" />
     <ClCompile Include="..\Source\MenuGUI.cpp" />
     <ClCompile Include="..\Source\MenuState.cpp" />
