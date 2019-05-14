@@ -182,7 +182,7 @@ void EditorState::InitTiles()
 					}
 				}
 			}
-			m_OffsetLeft = std::max(static_cast<float>(m_GUI.GetSize().x + (current_column + 1) * m_TilesSize), m_OffsetLeft);	// Update the offset of the drawing area
+			m_OffsetLeft = std::max<float>(static_cast<float>(m_GUI.GetSize().x + (current_column + 1) * m_TilesSize), m_OffsetLeft);	// Update the offset of the drawing area
 			m_TilesTextureSheets.push_back(std::make_pair(texture, id_vector));
 		}
 		config_file.close();

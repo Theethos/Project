@@ -33,7 +33,7 @@ void Character::receiveDamage(int damageValue)
 void Character::hitWithWeapon(Character &target) const
 {
 	// Select the best weapon 
-	Weapon *weapon = MAX(_inventory.GetWeapon_1()->GetDamage(), _inventory.GetWeapon_2()->GetDamage(), _inventory.GetWeapon_1(), _inventory.GetWeapon_2());
+	Weapon *weapon = IF_MAX(_inventory.GetWeapon_1()->GetDamage(), _inventory.GetWeapon_2()->GetDamage(), _inventory.GetWeapon_1(), _inventory.GetWeapon_2());
 	std::cout << _name << " hits " << target.name << " with " << GENDER(_sexe, "his ", "her ") << weapon->GetName() << "." << std::endl;
 
 	target.receiveDamage(weapon->GetDamage());

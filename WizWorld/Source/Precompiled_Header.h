@@ -7,8 +7,6 @@
 #include "SFML/Audio.hpp"
 #include "SFML/Network.hpp"
 #include "SFML/System.hpp"
-#include "SFML/OpenGL.hpp"
-#include <gl/GLU.h>
 
 // Standard
 #include <iostream>
@@ -23,5 +21,6 @@
 #include <unordered_map>
 #include <algorithm>
 #include <math.h>
+
 
 #endif // !PRECOMPILED_HEADER_H

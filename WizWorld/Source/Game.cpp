@@ -48,8 +48,6 @@ void Game::Update()
 {
 	UpdateEvents();
 	
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	// Updates from top state
 	if (!m_States.empty())
 	{
@@ -77,10 +75,6 @@ void Game::UpdateEvents()
 		{
 			m_Running = false;
 			break;
-		}
-		else if (m_Event.type == sf::Event::Resized)
-		{
-			glViewport(0, 0, m_Event.size.width, m_Event.size.height);
 		}
 		else if (m_Event.type == Event::JoystickConnected)
 		{

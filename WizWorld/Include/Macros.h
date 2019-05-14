@@ -9,8 +9,8 @@
 
 #define GENDER(sexe, maleAction, femaleAction) ((sexe == Sexe::MALE) ? maleAction : femaleAction)
 #define PLURAL(x, plural, singular) ((x>1) ? plural : singular)
-#define MIN(x, y, ifX, ifY) ((x<y) ? ifX : ifY)
-#define MAX(x, y, ifX, ifY) ((x>y) ? ifX : ifY)
+#define IF_MIN(x, y, ifX, ifY) ((x<y) ? ifX : ifY)
+#define IF_MAX(x, y, ifX, ifY) ((x>y) ? ifX : ifY)
 
 /*
  * ==================================================

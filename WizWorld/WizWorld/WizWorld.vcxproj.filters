@@ -242,9 +242,6 @@
     <ClCompile Include="..\Source\EditorGUI.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Main_OpenGL.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Item_STATS.txt">
