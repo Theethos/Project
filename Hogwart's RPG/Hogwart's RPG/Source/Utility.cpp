@@ -20,3 +20,4 @@ void CreateEXPValueFile()
 		stats.AddExp(stats.GetNextLevelExp() - stats.GetCurrentLevelExp());
 	}
 }
+
