@@ -1,107 +1,5 @@
 #include "Precompiled_Header_OpenGL.h"
-
-static std::string LoadSourceFromFile(const std::string& path)
-{
-	std::ifstream file(path);
-	if (file.is_open())
-	{
-		std::string line, source;
-		while (getline(file, line, '/'))					// Le délimiteur n'est pas dans le fichier, donc getline() récupère tout
-		{
-			source += line;
-		}
-		file.close();
-		return source;
-	}
-	std::cerr << "Can't open the file " << path << std::endl;
-	return "";
-}
-
-
-static unsigned CompileShader(unsigned type, const char * source)
-{
-	unsigned id = glCreateShader(type);
-	glShaderSource(id, 1, &source, nullptr);
-	glCompileShader(id);										// Compile le vertexShader
-
-	int compilation_status;
-	glGetShaderiv(id, GL_COMPILE_STATUS, &compilation_status);
-	if (compilation_status != GL_TRUE)
-	{
-		int length;
-		char log[1024];
-		glGetShaderInfoLog(id, 1024, &length, log);
-		std::cout << "Error line " << __LINE__ << " : " << log << std::endl;
-
-		glDeleteShader(id);
-		return 0;
-	}
-	return id;
-}
-
-
-static unsigned CreateShader(const char * vertexShader, const char * fragmentShader)
-{
-	if (vertexShader && fragmentShader)
-	{
-		unsigned program			= glCreateProgram();
-		unsigned vertex_shader		= CompileShader(GL_VERTEX_SHADER, vertexShader);
-		unsigned fragment_shader	= CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
-
-		glAttachShader(program, vertex_shader);
-		glAttachShader(program, fragment_shader);
-		glLinkProgram(program);
-		glValidateProgram(program);
-
-		glDeleteShader(vertex_shader);
-		glDeleteShader(fragment_shader);
-
-		return program;
-	}
-	return 0;
-}
-
-static void UpdateColor(float &r, float &g, float &b, int &timer)
-{
-	if (timer == 0)
-	{
-		r = 1.f;
-	}
-	else if (timer == 100)
-	{
-		r = 0.f;
-		g = 1.f;
-	}
-	else if (timer == 200)
-	{
-		g = 0.f;
-		b = 1.f;
-	}
-	else if (timer == 300)
-	{
-		r = 1.f;
-		g = 1.f;
-		b = 0.f;
-	}
-	else if (timer == 400)
-	{
-		g = 0.f;
-		b = 1.f;
-	}
-	else if (timer == 500)
-	{
-		r = 0.f;
-		g = 1.f;
-	}
-	else if (timer == 600)
-	{
-		timer = -1;
-		r = 0.f;
-		g = 0.f;
-		b = 0.f;
-	}
-	++timer;
-}
+#include "Shader.h"
 
 int main(void)
 {
@@ -140,7 +38,6 @@ int main(void)
 	};
 
 	GLFWwindow* window;
-
 	// Initialize the library 
 	if (!glfwInit())
 	{
@@ -196,17 +93,8 @@ int main(void)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	
 	
-	const char *vertexShader = LoadSourceFromFile("../External/Shader/Basic.vtx").c_str();
-	const char *fragmentShader = LoadSourceFromFile("../External/Shader/Basic.frg").c_str();
-
-	unsigned shader = CreateShader(vertexShader, fragmentShader);
-	glUseProgram(shader);
-
-	// Récupération de la variable uniforme u_Color dans le fragmentShader
-	int u_Color = glGetUniformLocation(shader, "u_Color");
-	if (u_Color == -1) return -1;
-	float r = 0.f, g = 0.f, b = 0.f;
-	int timer = 0.f;
+	Shader shader("../External/Shader/Basic.vtx", "../External/Shader/Basic.frg");
+	glUseProgram(shader.program());
 
 	// Loop until the user closes the window 
 	while (!glfwWindowShouldClose(window))
@@ -214,7 +102,6 @@ int main(void)
 		// Render here 
 		glClear(GL_COLOR_BUFFER_BIT);
 		
-		glUniform4f(u_Color, r, g, b, 1.f);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);			// Dessine les triangles à partir des indices; nullptr car on a déjà bind notre indexBuffer
 
 		// Swap front and back buffers 
@@ -223,10 +110,9 @@ int main(void)
 		// Poll for and process events 
 		glfwPollEvents();
 
-		UpdateColor(r, g, b, timer);
+		shader.UpdateColor();
 	}
 
-	glDeleteProgram(shader);
 	glfwTerminate();
 	return 0;
 }
