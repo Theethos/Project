@@ -4,10 +4,7 @@
 // Constructor
 Shader::Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
 {
-	const char *vertexShader	= LoadSourceFromFile(vertexShaderPath).c_str();
-	const char *fragmentShader	= LoadSourceFromFile(fragmentShaderPath).c_str();
-	
-	m_Program = CreateShader(vertexShader, fragmentShader);
+	m_Program = CreateShader(LoadSourceFromFile(vertexShaderPath).c_str(), LoadSourceFromFile(fragmentShaderPath).c_str());
 
 	u_Color = glGetUniformLocation(m_Program, "u_Color");
 	r = 0.f; g = 0.f; b = 0.f;
@@ -17,6 +14,16 @@ Shader::Shader(const std::string& vertexShaderPath, const std::string& fragmentS
 Shader::~Shader()
 {
 	glDeleteProgram(m_Program);
+}
+
+void Shader::Bind() const
+{
+	glUseProgram(m_Program);
+}
+
+void Shader::Unbind() const
+{
+	glUseProgram(0);
 }
 
 // Functions
@@ -104,7 +111,7 @@ unsigned Shader::CompileShader(unsigned type, const char * source)
 		int length;
 		char log[1024];
 		glGetShaderInfoLog(id, 1024, &length, log);
-		std::cout << "Error line " << __LINE__ << " : " << log << std::endl;
+		std::cout << "Error while compiling in the file " << source << ", line " << __LINE__ << " : " << log << std::endl;
 
 		glDeleteShader(id);
 		return 0;

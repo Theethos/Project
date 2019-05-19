@@ -90,7 +90,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\External\OpenGL\GLEW\include;$(SolutionDir)\External\OpenGL\GLFW_64bits\include\GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\External\SDL2\include;$(SolutionDir)\External\SFML_64bits\include;$(SolutionDir)\External\OpenGL\GLEW\include;$(SolutionDir)\External\OpenGL\GLFW_64bits\include\GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled_Header_OpenGL.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -99,8 +99,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)\External\OpenGL\GLEW\lib\x64;$(SolutionDir)\External\OpenGL\GLFW_64bits\lib-vc2017;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\External\SDL2\lib\64bits;$(SolutionDir)\External\SFML_64bits\lib;$(SolutionDir)\External\OpenGL\GLEW\lib\Win64;$(SolutionDir)\External\OpenGL\GLFW_64bits\lib-vc2017;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;SDL2main.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -147,6 +147,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\DisplayManager.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\EventManager.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\Loader.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\MainGameLoop.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\RawModel.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\Renderer.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\Texture.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\TextureModel.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\VertexArray.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\VertexBufferLayout.cpp" />
+    <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="Shape.cpp" />
     <ClCompile Include="Main_OpenGL.cpp" />
     <ClCompile Include="Precompiled_Header_OpenGL.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -154,8 +166,23 @@
     <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\DisplayManager.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\EventManager.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\Loader.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\RawModel.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\Renderer.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\Texture.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\TextureModel.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\VertexArray.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\VertexBufferLayout.h" />
+    <ClInclude Include="Buffer.h" />
+    <ClInclude Include="Shape.h" />
     <ClInclude Include="Precompiled_Header_OpenGL.h" />
     <ClInclude Include="Shader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Hogwart%27s RPG\External\Shaders\Basic.frg" />
+    <None Include="..\..\Hogwart%27s RPG\External\Shaders\Basic.vtx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
