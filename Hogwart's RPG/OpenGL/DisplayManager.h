@@ -15,8 +15,8 @@ public:
 
 	inline static bool ShouldBeRunning() { return DisplayManager::IsRunning; }
 private:
-	static SDL_Window * Window;
-	static SDL_GLContext Settings;
+	static sf::RenderWindow Window;
+	static sf::ContextSettings Settings;
 	static bool IsInstantiated, IsRunning;
 	static unsigned Width, Height, FpsCap;
 	

@@ -8,7 +8,7 @@ public:
 	~Loader();
 
 	RawModel		LoadToVAO(std::vector<float> & positions, std::vector<unsigned> & indices, std::vector<float> & textureCoord);
-	unsigned		LoadTexture(const std::string & filePath);
+	//unsigned		LoadTexture(const std::string & filePath);
 	void			CleanUp();
 
 private:
@@ -16,10 +16,11 @@ private:
 	void			BindIndicesBuffer(std::vector<unsigned> & indices);
 	void			StoreDataInAttributeList(unsigned attributeNumber, unsigned coordSize, std::vector<float> & data);
 	void			Unbind();
-	GLenum			GetTextureFormat(SDL_Surface * texture);
-	GLenum			GetTextureInternalFormat(SDL_Surface * texture);
-	std::vector<unsigned*>	m_VAOInstances;
-	std::vector<unsigned*>	m_VBOInstances;
-	std::vector<unsigned*>	m_Textures;
+	//GLenum			GetTextureInternalFormat(SDL_Surface * texture);
+	//GLenum			GetTextureFormat(SDL_Surface * texture, const GLenum & internal_format);
+	
+	std::vector<unsigned*>		m_VAOInstances;
+	std::vector<unsigned*>		m_VBOInstances;
+	std::vector<unsigned*>		m_TextureIDs;
 };
 

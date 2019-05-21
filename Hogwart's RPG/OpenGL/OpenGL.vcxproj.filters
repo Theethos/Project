@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Shapes">
-      <UniqueIdentifier>{5574f778-b34d-4e64-9b29-8ff05df5543f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Buffers/Layout">
-      <UniqueIdentifier>{54daa714-d0b2-4f84-a7d1-69e49c424710}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ThinMatrix">
       <UniqueIdentifier>{bc060468-3805-4d00-85f5-f05073fe2210}</UniqueIdentifier>
     </Filter>
@@ -40,93 +34,63 @@
     <Filter Include="ThinMatrix\Textures">
       <UniqueIdentifier>{7bad42ff-fe2b-4a82-ad93-5dbb71f80fbd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ThinMatrix\Managers">
+      <UniqueIdentifier>{e3c8e73a-2c81-44db-bb37-3669463871c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Precompiled_Header_OpenGL.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Main_OpenGL.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>ThinMatrix\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="Shape.cpp">
-      <Filter>Shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="Buffer.cpp">
-      <Filter>Buffers/Layout</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\VertexBufferLayout.cpp">
-      <Filter>Buffers/Layout</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\VertexArray.cpp">
-      <Filter>Buffers/Layout</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\Texture.cpp">
-      <Filter>ThinMatrix\Textures</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\DisplayManager.cpp">
-      <Filter>ThinMatrix\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\MainGameLoop.cpp">
       <Filter>ThinMatrix\EngineTester</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\EventManager.cpp">
-      <Filter>ThinMatrix\OwnAddition</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\Loader.cpp">
-      <Filter>ThinMatrix\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\Renderer.cpp">
       <Filter>ThinMatrix\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\RawModel.cpp">
       <Filter>ThinMatrix\Models</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Hogwart%27s RPG\OpenGL\TextureModel.cpp">
-      <Filter>ThinMatrix\Models</Filter>
+    <ClCompile Include="ModelTexture.cpp">
+      <Filter>ThinMatrix\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayManager.cpp">
+      <Filter>ThinMatrix\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>ThinMatrix\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderOPG.cpp">
+      <Filter>ThinMatrix\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled_Header_OpenGL.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>ThinMatrix\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="Shape.h">
-      <Filter>Shapes</Filter>
-    </ClInclude>
-    <ClInclude Include="Buffer.h">
-      <Filter>Buffers/Layout</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\VertexBufferLayout.h">
-      <Filter>Buffers/Layout</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\VertexArray.h">
-      <Filter>Buffers/Layout</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\Texture.h">
-      <Filter>ThinMatrix\Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\DisplayManager.h">
-      <Filter>ThinMatrix\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\EventManager.h">
-      <Filter>ThinMatrix\OwnAddition</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\Loader.h">
-      <Filter>ThinMatrix\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\Renderer.h">
       <Filter>ThinMatrix\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\RawModel.h">
       <Filter>ThinMatrix\Models</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Hogwart%27s RPG\OpenGL\TextureModel.h">
-      <Filter>ThinMatrix\Models</Filter>
+    <ClInclude Include="ModelTexture.h">
+      <Filter>ThinMatrix\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayManager.h">
+      <Filter>ThinMatrix\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>ThinMatrix\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderOPG.h">
+      <Filter>ThinMatrix\Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -134,6 +98,12 @@
       <Filter>Fichiers de ressources</Filter>
     </None>
     <None Include="..\..\Hogwart%27s RPG\External\Shaders\Basic.vtx">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="..\External\Shaders\Texture.frg">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="..\External\Shaders\Texture.vtx">
       <Filter>Fichiers de ressources</Filter>
     </None>
   </ItemGroup>

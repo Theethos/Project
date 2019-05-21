@@ -13,7 +13,7 @@ public:
 
 private:
 	static bool IsInstantiated;
-	static SDL_Event Event;
+	static sf::Event Event;
 
 	EventManager();
 	~EventManager();

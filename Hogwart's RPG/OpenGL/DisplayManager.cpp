@@ -1,8 +1,8 @@
 #include "Precompiled_Header_OpenGL.h"
 #include "DisplayManager.h"
 
-SDL_GLContext DisplayManager::Settings;
-SDL_Window * DisplayManager::Window	= nullptr;
+sf::ContextSettings DisplayManager::Settings(24, 8, 0, 3, 3);
+sf::RenderWindow DisplayManager::Window(sf::VideoMode(DisplayManager::Width, DisplayManager::Height), "OpenGL de ses morts", sf::Style::Default, DisplayManager::Settings);
 bool DisplayManager::IsInstantiated	= false;
 bool DisplayManager::IsRunning		= true;
 unsigned DisplayManager::Width		= 0;
@@ -19,37 +19,10 @@ void DisplayManager::Create(unsigned w, unsigned h)
 	{
 		if (!DisplayManager::IsInstantiated)
 		{
-			if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
-			{
-				std::cerr << "Can't initialize SDL, error in file " << __FILE__ << ", line " << __LINE__ << std::endl;
-				throw std::exception();
-			}
-			
-			SDL_GLprofile(SDL_GL_CONTEXT_PROFILE_CORE);
-			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-
 			DisplayManager::Width = w;
 			DisplayManager::Height = h;
 
-			DisplayManager::Window = SDL_CreateWindow("Hogwart's RPG in OpenGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
-			if (!DisplayManager::Window)
-			{
-				std::cerr << "Can't create the SDL_Window, error in file " << __FILE__ << ", line " << __LINE__ << std::endl;
-				SDL_Quit();
-				throw std::exception();
-			}
-
-			DisplayManager::Settings = SDL_GL_CreateContext(DisplayManager::Window);
-			if (!DisplayManager::Settings)
-			{
-				std::cout << "Can't create the SDL_Contexte, error in file " << __FILE__ << ", line " << __LINE__ << std::endl;
-				SDL_DestroyWindow(DisplayManager::Window);
-				SDL_Quit();
-				throw std::exception();
-			}
+			DisplayManager::Window.setSize(sf::Vector2u(w, h));
 
 			if (glewInit() != GLEW_OK)
 			{
@@ -73,13 +46,10 @@ void DisplayManager::Create(unsigned w, unsigned h)
 
 void DisplayManager::Update()
 {
-	SDL_GL_SwapWindow(DisplayManager::Window);
+	DisplayManager::Window.display();
 }
 
 void DisplayManager::Destroy()
 {
 	DisplayManager::IsInstantiated = false;
-	SDL_GL_DeleteContext(DisplayManager::Settings);
-	SDL_DestroyWindow(DisplayManager::Window);
-	SDL_Quit();
 }

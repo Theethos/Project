@@ -6,26 +6,22 @@
 ////////////////////////////////////////////////////////////
 
 #include "Precompiled_Header_OpenGL.h"
-#include "DisplayManager.h"
-#include "Loader.h"
-#include "Renderer.h"
-#include "Shader.h"
-//#include "TextureModel.h"
-
+#include "Game.h"
 ////////////////////////////////////////////////////////////
 /// Entry point of application
 ///
 /// \return Application exit code
 ///
 ////////////////////////////////////////////////////////////
-int main(int argc, char * argv[])
+/*int main()
 {
 	DisplayManager::Create();
 	EventManager::Create();
 
-	Loader loader;
-	Renderer renderer;
-	Shader shader("../External/Shaders/Basic.vtx", "../External/Shaders/Basic.frg");
+	//Loader loader;
+	//Renderer renderer;
+	//Shader shader("../External/Shaders/Basic.vtx", "../External/Shaders/Basic.frg");
+	//Shader shader("../External/Shaders/Texture.vtx", "../External/Shaders/Texture.frg");
 
 	std::vector<float> positions = {
 		-0.5f,  0.5f, 0.f,
@@ -42,26 +38,61 @@ int main(int argc, char * argv[])
 	std::vector<float> textureCoords = {
 		0.f, 0.f,
 		0.f, 1.f,
-		1.f, 1.f,
 		1.f, 0.f,
+		
+		1.f, 0.f,
+		0.f, 1.f,
+		1.f, 1.f,
 	};
 
-	RawModel rawModel = loader.LoadToVAO(positions, indices, textureCoords);
-	/*sf::Texture * texture = loader.LoadTexture("./texture.jpg");
-	TextureModel textureModel(model, texture);*/
+	//RawModel rawModel = loader.LoadToVAO(positions, indices, textureCoords);
+	//unsigned texture = Texture("./Textures/Down.png").Load();
+	//TextureModel textureModel(rawModel, texture);
 
+
+	// OpenGL version
+	//std::cout << glGetString(GL_VERSION) << std::endl;
+
+	//shader.Bind();
 	// Main loop
 	while (DisplayManager::ShouldBeRunning())
 	{
-		renderer.Clear();
+		//renderer.Clear();
 		EventManager::Update();
-		shader.Bind();
-		renderer.Render(rawModel);
+		//renderer.Render(rawModel);
 		DisplayManager::Update();
 	}
 	
-	loader.CleanUp();
+	//loader.CleanUp();
 	EventManager::Destroy();
 	DisplayManager::Destroy();
+	return 0;
+}*/
+int main()
+{
+	std::vector<float> positions = {
+		-0.5f,  0.5f, 0.f,
+		-0.5f, -0.5f, 0.f,
+		 0.5f, -0.5f, 0.f,
+		 0.5f,  0.5f, 0.f,
+	};
+
+	std::vector<unsigned> indices = {
+		0, 1, 3,
+		3, 1, 2
+	};
+
+	std::vector<float> textureCoords = {
+		0.f, 0.f,
+		0.f, 1.f,
+		1.f, 0.f,
+
+		1.f, 0.f,
+		0.f, 1.f,
+		1.f, 1.f,
+	};
+
+	GameGL game;
+	game.Run();
 	return 0;
 }

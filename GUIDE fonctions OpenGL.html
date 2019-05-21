@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./style.css">
+    <title></title>
+  </head>
+  <body>
+    <span> Source : <a href="https://openclassrooms.com/fr/courses/966823-developpez-vos-applications-3d-avec-opengl-3-3?status=published"> Site d'OpenClassRooms </a> </span>
+    <h1> <span class="functions_name">glDrawArrays<span><span class="attributes_name"> (GLenum mode, GLint first, GLsizei count)<span> </h1>
+    <ul>
+      <li> <b> mode : </b> La forme à afficher :
+        <table>
+          <thead>
+            <th> <b> Valeur </b> </th>
+            <th> <b> Définition </b> </th>
+          </thead>
+          <tbody>
+            <td> <span class="gl_constantes">GL_TRIANGLES</span> </td>
+            <td> Avec ce mode, chaque groupe de 3 vertices formera un triangle. C'est le mode le plus utilisé. </td>
+          </tbody>
+          <tbody>
+            <td> <span class="gl_constantes">GL_POLYGON</span> </td>
+            <td> Tous les vertices s'assemblent pour former un polygone de type convexe (Hexagone, Heptagone, ...). </td>
+          </tbody>
+          <tbody>
+            <td> <span class="gl_constantes">GL_LINES</span> </td>
+            <td> Chaque duo de vertices formera une ligne. </td>
+          </tbody>
+          <tbody>
+            <td> <span class="gl_constantes">GL_TRIANGLE_STRIP</span> </td>
+            <td> Ici les triangles s'assembleront. Les deux derniers vertices d'un triangle s'assembleront avec un 4ième vertex pour former un nouveau triangle. </td>
+          </tbody>
+        </table>
+      </li>
+      <li> <b> first : </b> C'est l'indice du premier vertex à afficher. </li>
+      <li> <b> count : </b> C'est le nombre de vertices à afficher depuis first. (Dans un std::vector, cela vaut vector.size() / dimention du vertex (3 si x, y, et z)) </li>
+    </ul>
+
+
+    <h1> <span class="functions_name">glVertexAttribPointer<span><span class="attributes_name"> (GLuint index, GLuint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer)<span> </h1>
+    <ul>
+      <li> <b> index : </b> C'est le numéro du tableau, son identifiant. </li>
+      <li> <b> size : </b> C'est le nombre de coordonnées par vertex. En 2D ce sera 2 et en 3D ce sera 3. </li>
+      <li> <b> type : </b> C'est le type de données (float, int, ...). </li>
+      <li> <b> normalized : </b> Booléen permettant à OpenGL de normaliser les données. </li>
+      <li> <b> stride : </b> _____. </li>
+      <li> <b> pointer : </b> C'est le pointeur sur nos données (positions, textureCoords, ...). </li>
+    </ul>
+  </body>
+</html>

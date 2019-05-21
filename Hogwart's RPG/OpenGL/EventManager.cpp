@@ -3,7 +3,7 @@
 #include "DisplayManager.h"
 
 bool EventManager::IsInstantiated = false;
-SDL_Event EventManager::Event;
+sf::Event EventManager::Event;
 
 void EventManager::Create() 
 {
@@ -22,16 +22,16 @@ void EventManager::Create()
 
 void EventManager::Update() 
 {
-	while (SDL_PollEvent(&EventManager::Event))
+	while (DisplayManager::Window.pollEvent(EventManager::Event))
 	{
-		if (EventManager::Event.window.event == SDL_WINDOWEVENT_CLOSE)
+		if (EventManager::Event.type == sf::Event::Closed)
 			DisplayManager::IsRunning = false;
-		else if (EventManager::Event.type == SDL_KEYUP)
+		else if (EventManager::Event.type == sf::Event::KeyReleased)
 		{
-			switch (EventManager::Event.key.keysym.sym)
+			switch (EventManager::Event.key.code)
 			{
-			case SDLK_ESCAPE:	DisplayManager::IsRunning = false;	break;
-			default:												break;
+			case sf::Keyboard::Escape:	DisplayManager::IsRunning = false;	break;
+			default:														break;
 			}
 		}
 	}
