@@ -22,6 +22,9 @@
     <Filter Include="Shader">
       <UniqueIdentifier>{a841ad45-b82f-4b17-9989-8cd7cc14c527}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shapes">
+      <UniqueIdentifier>{a0318ae4-b1f2-47d1-a41a-becc3d9f8c75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -39,6 +42,15 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Shader</Filter>
     </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="Axis.cpp">
+      <Filter>Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="Drawable.cpp">
+      <Filter>Shapes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DisplayManager.h">
@@ -55,6 +67,15 @@
     </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Axis.h">
+      <Filter>Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Drawable.h">
+      <Filter>Shapes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -24,6 +24,8 @@ private:
 	static bool IsInstantiated, IsRunning;
 	static unsigned Width, Height, FpsCap;
 
+	static glm::vec3 Eyes, Center, Axe;
+
 	DisplayManager() = delete;
 	~DisplayManager() = delete;
 

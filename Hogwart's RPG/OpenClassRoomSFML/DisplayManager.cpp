@@ -3,6 +3,7 @@
 
 glm::mat4 DisplayManager::Projection;
 glm::mat4 DisplayManager::ModelView;
+glm::vec3 DisplayManager::Eyes(3, 3, 3), DisplayManager::Center(0, 0, 0), DisplayManager::Axe(0, 1, 0);
 bool DisplayManager::IsInstantiated	= false;
 bool DisplayManager::IsRunning		= true;
 unsigned DisplayManager::Width		= 0;
@@ -13,15 +14,15 @@ sf::RenderWindow DisplayManager::Window;
 
 void DisplayManager::Create(unsigned w, unsigned h)
 {
-	if (!DisplayManager::IsInstantiated)
+	if (!IsInstantiated)
 	{	
-		DisplayManager::Width = w;
-		DisplayManager::Height = h;
+		Width = w;
+		Height = h;
 
-		DisplayManager::Settings = sf::ContextSettings();
+		Settings = sf::ContextSettings();
 
 		// Update the window
-		DisplayManager::Window.create(sf::VideoMode(w, h), "OpenGL de ses morts", sf::Style::Default, DisplayManager::Settings);
+		Window.create(sf::VideoMode(w, h), "OpenGL de ses morts", sf::Style::Default, Settings);
 
 		if (glewInit() != GLEW_OK)
 		{
@@ -29,10 +30,12 @@ void DisplayManager::Create(unsigned w, unsigned h)
 			throw std::exception();
 		}
 
-		DisplayManager::Projection	= glm::perspective(70.0, static_cast<double>(DisplayManager::Width) / static_cast<double>(DisplayManager::Height), 1.0, 100.0);
-		DisplayManager::ModelView	= glm::mat4(1.0);
+		glEnable(GL_DEPTH_TEST);
 
-		DisplayManager::IsInstantiated = true;
+		Projection	= glm::perspective(70.0, static_cast<double>(Width) / Height, 1.0, 100.0);
+		ModelView	= glm::mat4(1.0);
+
+		IsInstantiated = true;
 	}
 	// Only one window can be created
 	else
@@ -43,16 +46,16 @@ void DisplayManager::Create(unsigned w, unsigned h)
 
 void DisplayManager::Clear()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
-	DisplayManager::ModelView = glm::mat4(1.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	ModelView = glm::lookAt(Eyes, Center, Axe);
 }
 
 void DisplayManager::Display()
 {
-	DisplayManager::Window.display();
+	Window.display();
 }
 
 void DisplayManager::Destroy()
 {
-	DisplayManager::IsInstantiated = false;
+	IsInstantiated = false;
 }

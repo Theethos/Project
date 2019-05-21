@@ -8,16 +8,58 @@ int main()
 	DisplayManager::Create();
 	EventManager::Create(); 
 
-	std::vector<float> vertices = {
-		 0.0f,  0.0f, -1.f,
-		 0.5f,  0.0f, -1.f,
-		 0.0f,  0.5f, -1.f
+	std::vector<float> axis = {
+		//	/ X-axis			/ Red
+		0.f, 0.f, 0.f,		1.f, 0.f, 0.f,
+		0.5f, 0.f, 0.f,		1.f, 0.f, 0.f,
+		//	/ Y-axis			/ Green
+		0.f, 0.f, 0.f,		0.f, 1.f, 0.f,
+		0.f, 0.5f, 0.f,		0.f, 1.f, 0.f,
+		//	/ Z-axis			/ Blue
+		0.f, 0.f, 0.f,		0.f, 0.f, 1.f,
+		0.f, 0.f, 0.5f,		0.f, 0.f, 1.f,
 	};
 
+	std::vector<float> vertices = {
+		-1.f, -1.f, -1.f,	 1.f, -1.f, -1.f,    1.f,  1.f, -1.f,   // Face 1-1
+		-1.f, -1.f, -1.f,	 1.f,  1.f, -1.f,   -1.f,  1.f, -1.f,	// Face 1-2
+
+		 1.f, -1.f,  1.f,    1.f,  1.f, -1.f,	 1.f, -1.f, -1.f,	// Face 2-1
+		 1.f, -1.f,  1.f,	 1.f,  1.f,  1.f,    1.f,  1.f, -1.f,   // Face 2-2
+
+		-1.f, -1.f,  1.f,	 1.f, -1.f,  1.f,    1.f, -1.f, -1.f,   // Face 3-1
+		-1.f, -1.f,  1.f,	 1.f, -1.f, -1.f,   -1.f, -1.f, -1.f,   // Face 3-2
+
+		-1.f,  1.f,  1.f,   -1.f, -1.f,  1.f,    1.f, -1.f,  1.f,   // Face 4-1
+		-1.f,  1.f,  1.f,    1.f,  1.f,  1.f,    1.f, -1.f,  1.f,   // Face 4-2
+
+		-1.f, -1.f,  1.f,   -1.f,  1.f,  1.f,   -1.f,  1.f, -1.f,	// Face 5-1
+		-1.f, -1.f,  1.f,   -1.f, -1.f, -1.f,   -1.f,  1.f, -1.f,	// Face 5-2
+
+		-1.f,  1.f, -1.f,    1.f,  1.f, -1.f,    1.f,  1.f,  1.f,	// Face 6-1
+		-1.f,  1.f, -1.f,   -1.f,  1.f,  1.f,    1.f,  1.f,  1.f	// Face 6-2
+	};
+
+
 	std::vector<float> colors = {
-		1.f, 0.f, 0.f,
-		0.f, 1.f, 0.f,
-		0.f, 0.f, 1.f,
+		// Face arrière		-> Rouge
+		1.f,  0.f,  0.f,    1.f,  0.f,  0.f,   1.f,  0.f,  0.f,
+		1.f,  0.f,  0.f,    1.f,  0.f,  0.f,   1.f,  0.f,  0.f,
+		// Face droite			-> Vert
+		0.f,  1.f,  0.f,    0.f,  1.f,  0.f,   0.f,  1.f,  0.f,
+		0.f,  1.f,  0.f,    0.f,  1.f,  0.f,   0.f,  1.f,  0.f,
+		// Face avant			-> Bleu
+		0.f,  0.f,  1.f,    0.f,  0.f,  1.f,   0.f,  0.f,  1.f,
+		0.f,  0.f,  1.f,    0.f,  0.f,  1.f,   0.f,  0.f,  1.f,
+		// Face gauche		-> Jaune
+		0.f,  1.f,  1.f,	0.f,  1.f,  1.f,   0.f,  1.f,  1.f,
+		0.f,  1.f,  1.f,    0.f,  1.f,  1.f,   0.f,  1.f,  1.f,
+		// Face dessus			-> Orange
+		1.f,  1.f,  0.f,    1.f,  1.f,  0.f,   1.f,  1.f,  0.f,
+		1.f,  1.f,  0.f,    1.f,  1.f,  0.f,   1.f,  1.f,  0.f,
+		// Face dessous		-> Rose
+		1.f,  0.f,  1.f,    1.f,  0.f,  1.f,   1.f,  0.f,  1.f,
+		1.f,  0.f,  1.f,    1.f,  0.f,  1.f,   1.f,  0.f,  1.f
 	};
 
 	Shader shader("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
@@ -32,6 +74,25 @@ int main()
 		EventManager::Update();
 		
 		shader.Bind();
+		
+		/// Affichage des axes
+		// Envoie des vertices
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, axis.data());
+		glEnableVertexAttribArray(0);
+
+		// Envoie des couleurs
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, axis.data() + 3);
+		glEnableVertexAttribArray(1);
+
+		// Envoie des matrices
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetID(), "modelview"), 1, GL_FALSE, value_ptr(DisplayManager::ModelView));
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetID(), "projection"), 1, GL_FALSE, value_ptr(DisplayManager::Projection));
+
+		glDrawArrays(GL_LINES, 0, axis.size() / 3);
+
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(0);
+		/// !Affichage des axes
 
 		// Envoie des vertices
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices.data());
@@ -40,10 +101,6 @@ int main()
 		// Envoie des couleurs
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, colors.data());
 		glEnableVertexAttribArray(1);
-			
-		//DisplayManager::ModelView = glm::translate(DisplayManager::ModelView, glm::vec3(0.4, 0.0, 0.0));
-		//DisplayManager::ModelView = glm::rotate(DisplayManager::ModelView, 60.0f, glm::vec3(0.0, 0.0, 1.0));
-		DisplayManager::ModelView = glm::scale(DisplayManager::ModelView, glm::vec3(2.0, 2.0, 1.0));
 		
 		// Envoie des matrices
 		glUniformMatrix4fv(glGetUniformLocation(shader.GetID(), "modelview"), 1, GL_FALSE, value_ptr(DisplayManager::ModelView));

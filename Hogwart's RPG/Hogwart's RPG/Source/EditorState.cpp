@@ -99,7 +99,7 @@ void EditorState::Render(RenderTarget & target)
 
 void EditorState::HandleInput(int input, const float & dt)
 {
-	Vector2f controller_position(Joystick::getAxisPosition(0, Joystick::Axis::X), Joystick::getAxisPosition(0, Joystick::Axis::Y));
+	Vector2f controller_position(Joystick::getAxePosition(0, Joystick::Axe::X), Joystick::getAxePosition(0, Joystick::Axe::Y));
 	
 	if (input == m_Actions["PAUSE"])
 		m_StatesStack.push(new MenuState(m_Window, m_StatesStack, WhichState::MENU_STATE, m_Running, "../External/Config/Buttons/Pause_menu.cfg", Menu::PAUSE_MENU));

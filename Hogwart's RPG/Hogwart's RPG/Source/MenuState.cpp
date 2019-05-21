@@ -102,7 +102,7 @@ void MenuState::HandleInput(int input, const float & dt)
 	/// Infos about controller : 
 	/// PS4 : name : Wireless Controller, vendorID : 1356, productID : 2508
 	////////////////////////////////////
-	Vector2f controller_position(Joystick::getAxisPosition(0, Joystick::Axis::X), Joystick::getAxisPosition(0, Joystick::Axis::Y));
+	Vector2f controller_position(Joystick::getAxePosition(0, Joystick::Axe::X), Joystick::getAxePosition(0, Joystick::Axe::Y));
 
 	// Common parts
 	if (input == (Joystick::isConnected(0) ? m_Actions["VALIDATE"] : Keyboard::Key(m_Actions["VALIDATE"])))
@@ -184,7 +184,7 @@ void MenuState::Update(const float& dt)
 
 	if (Joystick::isConnected(0))
 	{
-		Vector2f controller_position(Joystick::getAxisPosition(0, Joystick::Axis::X), Joystick::getAxisPosition(0, Joystick::Axis::Y));
+		Vector2f controller_position(Joystick::getAxePosition(0, Joystick::Axe::X), Joystick::getAxePosition(0, Joystick::Axe::Y));
 
 		if (controller_position.y > -20 && controller_position.y < 20)
 			m_MovedY = false;

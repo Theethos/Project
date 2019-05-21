@@ -371,7 +371,7 @@ void GameState::MovePlayer(const float &dt)
 	}
 	else
 		m_Player.GetMovement().SetMaxVelocity(1.f);
-	Vector2f controller_position(Joystick::getAxisPosition(0, Joystick::Axis::X), Joystick::getAxisPosition(0, Joystick::Axis::Y));
+	Vector2f controller_position(Joystick::getAxePosition(0, Joystick::Axe::X), Joystick::getAxePosition(0, Joystick::Axe::Y));
 
 	if (!m_CantMove)
 	{
