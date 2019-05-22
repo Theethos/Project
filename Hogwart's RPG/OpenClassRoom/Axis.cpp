@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Axis.h"
 
-Axis::Axis(const float size, const std::string & vertexShader, const std::string & fragmentShader) :
+Axis::Axis(const float size, const char * vertexShader, const char * fragmentShader) :
 Drawable(vertexShader, fragmentShader)
 {
 	m_DrawType = GL_LINES;

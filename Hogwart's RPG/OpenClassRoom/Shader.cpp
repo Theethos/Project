@@ -2,7 +2,7 @@
 #include "Shader.h"
 
 // Constructor
-Shader::Shader(const std::string & vertexShaderPath, const std::string & fragmentShaderPath)
+Shader::Shader(const char * vertexShaderPath, const char * fragmentShaderPath)
 {
 	this->CreateShader(LoadSourceFromFile(vertexShaderPath).c_str(), LoadSourceFromFile(fragmentShaderPath).c_str());
 }
@@ -29,7 +29,7 @@ void Shader::Unbind() const
 
 // Private functions
 // Load the source code from a file to a string
-std::string Shader::LoadSourceFromFile(const std::string & path)
+const std::string Shader::LoadSourceFromFile(const char * path)
 {
 	std::ifstream file(path);
 	if (file.is_open())
@@ -81,9 +81,9 @@ void Shader::CreateShader(const char * vertexShader, const char * fragmentShader
 		glAttachShader(m_ProgramID, m_VertexID);
 		glAttachShader(m_ProgramID, m_FragmentID);
 
-		glBindAttribLocation(m_ProgramID, 0, "in_Positions");				// ~= à in_Vertex dans les fichiers OPC
+		glBindAttribLocation(m_ProgramID, 0, "in_Vertex");
 		glBindAttribLocation(m_ProgramID, 1, "in_Color");
-		glBindAttribLocation(m_ProgramID, 2, "in_TextureCoords");			// ~= à in_TexCoord0 dans les fichiers OPC
+		glBindAttribLocation(m_ProgramID, 2, "in_TextureCoord");		// ~= à in_TexCoord0 dans les fichiers OPC
 
 		glLinkProgram(m_ProgramID);
 		glValidateProgram(m_ProgramID);

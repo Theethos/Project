@@ -28,6 +28,9 @@
     <Filter Include="Texture">
       <UniqueIdentifier>{82f6646f-fa7c-4fdf-a03c-83e28ddf6390}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{e230e7d3-0b1b-4ab2-8aea-cbdedb51f49b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -54,8 +57,14 @@
     <ClCompile Include="InputManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Texture</Filter>
+    <ClCompile Include="..\..\Hogwart%27s RPG\OpenClassRoom\Crate.cpp">
+      <Filter>Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Hogwart%27s RPG\OpenClassRoom\Camera.cpp">
+      <Filter>Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -83,8 +92,40 @@
     <ClInclude Include="InputManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Texture</Filter>
+    <ClInclude Include="..\..\Hogwart%27s RPG\OpenClassRoom\Crate.h">
+      <Filter>Shapes</Filter>
     </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Hogwart%27s RPG\OpenClassRoom\Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Hogwart%27s RPG\OpenClassRoom\Shaders\basique2D.frag">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="..\..\Hogwart%27s RPG\OpenClassRoom\Shaders\basique2D.vert">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="..\..\Hogwart%27s RPG\OpenClassRoom\Shaders\couleur2D.frag">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="..\..\Hogwart%27s RPG\OpenClassRoom\Shaders\couleur2D.vert">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="..\..\Hogwart%27s RPG\OpenClassRoom\Shaders\couleur3D.frag">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="..\..\Hogwart%27s RPG\OpenClassRoom\Shaders\couleur3D.vert">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="..\..\Hogwart%27s RPG\OpenClassRoom\Shaders\texture.frag">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="..\..\Hogwart%27s RPG\OpenClassRoom\Shaders\texture.vert">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
   </ItemGroup>
 </Project>

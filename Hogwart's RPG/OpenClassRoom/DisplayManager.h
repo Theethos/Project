@@ -1,6 +1,7 @@
 #pragma once
 
-#include "InputManager.h"
+#include "Camera.h"
+class InputManager;
 
 ////////////////////////////////////////////////////////////
 /// \brief Static class that manages the window display 
@@ -15,6 +16,7 @@ public:
 	static void Display();
 	static void Destroy();
 	inline static bool ShouldBeRunning() { return DisplayManager::IsRunning; }
+	inline static void MoveCamera() { Camera.Move(); }
 
 	static glm::mat4 Projection;	// 3D --> 2D
 	static glm::mat4 ModelView;		// Toutes les transformations
@@ -25,7 +27,7 @@ private:
 	static unsigned Width, Height;
 	static float FpsCap;
 	static Uint32 StartTime, DeltaTime;
-	static glm::vec3 Eyes, Center, Axe;
+	static Camera Camera;
 
 	DisplayManager() = delete;
 	~DisplayManager() = delete;

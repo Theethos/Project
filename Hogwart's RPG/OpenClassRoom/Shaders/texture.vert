@@ -4,7 +4,7 @@
 // Entrées
 
 in vec3 in_Vertex;
-in vec2 in_TexCoord0;
+in vec2 in_TextureCoord;
 
 
 // Uniform
@@ -29,5 +29,5 @@ void main()
 
     // Envoi des coordonnées de texture au Fragment Shader
 
-    coordTexture = in_TexCoord0;
+    coordTexture = in_TextureCoord;
 }

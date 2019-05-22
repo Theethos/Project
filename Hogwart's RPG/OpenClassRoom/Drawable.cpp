@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Drawable.h"
 
-Drawable::Drawable(const std::string & vertexShader, const std::string & fragmentShader) :
+Drawable::Drawable(const char * vertexShader, const char * fragmentShader) :
 m_Shader(vertexShader, fragmentShader),
 m_Vertices(1.0),
 m_Colors(1.0),
@@ -17,7 +17,7 @@ m_DrawType(GL_TRIANGLES)
 
 Drawable::~Drawable(){}
 
-void Drawable::Draw(glm::mat4 & modelView, glm::mat4 projection)
+void Drawable::Draw()
 {
 	// Bind the shader
 	m_Shader.Bind();
@@ -31,8 +31,8 @@ void Drawable::Draw(glm::mat4 & modelView, glm::mat4 projection)
 	glEnableVertexAttribArray(1);
 
 	// Send the matrixes
-	glUniformMatrix4fv(glGetUniformLocation(m_Shader.GetID(), "projection"), 1, GL_FALSE, value_ptr(projection));
-	glUniformMatrix4fv(glGetUniformLocation(m_Shader.GetID(), "modelview"), 1, GL_FALSE, value_ptr(modelView));
+	glUniformMatrix4fv(glGetUniformLocation(m_Shader.GetID(), "projection"), 1, GL_FALSE, value_ptr(DisplayManager::Projection));
+	glUniformMatrix4fv(glGetUniformLocation(m_Shader.GetID(), "modelview"), 1, GL_FALSE, value_ptr(DisplayManager::ModelView));
 
 	// Draw
 	glDrawArrays(m_DrawType, 0, m_Vertices.size() / 3);

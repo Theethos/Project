@@ -6,9 +6,9 @@
 class Drawable
 {
 public:
-	virtual void Draw(glm::mat4 & modelView, glm::mat4 projection);
+	virtual void Draw();
 protected:
-	Drawable(const std::string & vertexShader, const std::string & fragmentShader);
+	Drawable(const char * vertexShader, const char * fragmentShader);
 	Drawable(Shader & shader);
 	virtual ~Drawable();
 

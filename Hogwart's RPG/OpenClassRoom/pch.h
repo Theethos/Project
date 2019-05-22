@@ -18,4 +18,9 @@
 #include <iostream>
 #include <chrono>
 #include <map>
+#include <math.h>
 
+// Managers
+#include "DisplayManager.h"
+#include "InputManager.h"
+#include "TextureManager.h"

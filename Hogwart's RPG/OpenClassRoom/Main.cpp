@@ -1,10 +1,7 @@
 #include "pch.h"
-#include "DisplayManager.h"
 #include "Renderer.h"
 #include "Axis.h"
-#include "Cube.h" // Shader.h
-#include "Texture.h"
-
+#include "Crate.h" // Cube.h, Shader.h
 
 /*		AXIS
 		y
@@ -17,24 +14,16 @@ int main(int argc, char * argv[])
 {
 	DisplayManager::Create();
 	InputManager::Create(); 
+	TextureManager::Create();
 
-	Shader shader("Shaders/texture.vert", "Shaders/texture.frag");
+	Shader shaderCouleur("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
+	Shader shaderTexture("Shaders/texture.vert", "Shaders/texture.frag");
 
-	Cube cube(1.f, shader);
-	Axis axis(2.f, shader);
-	Texture caisse;
-	caisse.LoadFromFile("Textures/Caisse.jpg");
+	Axis axis(2.f, shaderCouleur);
 
-	std::vector<float> vertices = {
-		-2, -2, -2,   2, -2, -2,   2, 2, -2,
-		-2, -2, -2,   -2, 2, -2,   2, 2, -2 
-	};
+	TextureManager::LoadFromFile("Textures/crate/crate13.jpg", "crateTexture");
 
-	std::vector<float> coordTexture = {
-		0.f, 0.f,	1.f, 0.f,	1.f, 1.f,
-		0.f, 0.f,	0.f, 1.f,	1.f, 1.f,
-
-	};
+	Crate crate(1.f, shaderTexture, TextureManager::GetTexture("crateTexture"));
 
 	// OpenGL version
 	std::cout << glGetString(GL_VERSION) << std::endl;
@@ -44,32 +33,16 @@ int main(int argc, char * argv[])
 	{
 		InputManager::Update();
 		DisplayManager::Clear();
-		
-		shader.Bind();
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices.data());
-		glEnableVertexAttribArray(0);
+		axis.Draw();
 
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, coordTexture.data());
-		glEnableVertexAttribArray(2);
-
-		glUniformMatrix4fv(glGetUniformLocation(shader.GetID(), "projection"), 1, GL_FALSE, glm::value_ptr(DisplayManager::Projection));
-		glUniformMatrix4fv(glGetUniformLocation(shader.GetID(), "modelview"), 1, GL_FALSE, glm::value_ptr(DisplayManager::ModelView));
-
-		glBindTexture(GL_TEXTURE_2D, caisse.GetID());
-
-		glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 3);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		glDisableVertexAttribArray(2);
-		glDisableVertexAttribArray(0);
-
-		shader.Unbind();
+		crate.Draw();
+		DisplayManager::MoveCamera();
 
 		DisplayManager::Display();
 	}
 
+	TextureManager::Destroy();
 	InputManager::Destroy();
 	DisplayManager::Destroy();
 	return 0;

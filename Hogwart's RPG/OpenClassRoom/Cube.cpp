@@ -2,7 +2,7 @@
 #include "Cube.h"
 
 
-Cube::Cube(const float size, const std::string & vertexShader, const std::string & fragmentShader) :
+Cube::Cube(const float size, const char * vertexShader, const char * fragmentShader) :
 Drawable(vertexShader, fragmentShader)
 {
 	m_DrawType = GL_TRIANGLES;

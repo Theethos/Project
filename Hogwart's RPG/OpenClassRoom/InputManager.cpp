@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "DisplayManager.h" // InputManager.h
 
 /////////////////////////////////////////////////////
 /// STATIC CLASS
@@ -32,6 +31,9 @@ void InputManager::Create()
 			{
 				Mouse.push_back(false);
 			}
+
+			HideCursor(true);
+			CatchCursor(true);
 		}
 		else
 			throw std::exception("An InputManager has already been instantiated\n");

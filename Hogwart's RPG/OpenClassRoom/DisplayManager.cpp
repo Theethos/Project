@@ -1,13 +1,10 @@
 #include "pch.h"
-#include "DisplayManager.h"
 
 // Matrix4
 glm::mat4 DisplayManager::Projection;
 glm::mat4 DisplayManager::ModelView;
-// Vector3
-glm::vec3 DisplayManager::Eyes(0, 1, 4);
-glm::vec3 DisplayManager::Center(0, 0, 0);
-glm::vec3 DisplayManager::Axe(0, 1, 0);
+// Camera
+Camera DisplayManager::Camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,1,0));
 // FPS Management
 Uint32 DisplayManager::StartTime(0);
 Uint32 DisplayManager::DeltaTime(0);
@@ -36,7 +33,7 @@ void DisplayManager::Create(unsigned w, unsigned h)
 		std::cout << static_cast<double>(duree.count()) << std::endl;
 
 		// Set OpenGL to core
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+		//SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 		// Set OpenGL's version
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -79,8 +76,6 @@ void DisplayManager::Create(unsigned w, unsigned h)
 		Projection	= glm::perspective(70.0, static_cast<double>(Width) / Height, 1.0, 100.0);
 		ModelView	= glm::mat4(1.0);
 
-		//glEnable(GL_DEPTH_TEST);
-
 		IsInstantiated = true;
 	}
 	// Only one window can be created
@@ -94,7 +89,7 @@ void DisplayManager::Clear()
 {
 	StartTime = SDL_GetTicks();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	ModelView = glm::lookAt(Eyes, Center, Axe);
+	Camera.LookAt();
 }
 
 void DisplayManager::Display()
