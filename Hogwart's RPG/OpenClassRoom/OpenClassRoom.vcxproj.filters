@@ -25,15 +25,15 @@
     <Filter Include="Shapes">
       <UniqueIdentifier>{a0318ae4-b1f2-47d1-a41a-becc3d9f8c75}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{82f6646f-fa7c-4fdf-a03c-83e28ddf6390}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="DisplayManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="EventManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
@@ -51,12 +51,15 @@
     <ClCompile Include="Drawable.cpp">
       <Filter>Shapes</Filter>
     </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DisplayManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="EventManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
@@ -76,6 +79,12 @@
     </ClInclude>
     <ClInclude Include="Drawable.h">
       <Filter>Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Texture</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

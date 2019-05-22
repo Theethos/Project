@@ -1,5 +1,3 @@
-// Version du GLSL
-
 #version 150 core
 
 
@@ -10,7 +8,7 @@ in vec2 coordTexture;
 
 // Uniform
 
-uniform sampler2D texture;
+uniform sampler2D Texture;
 
 
 // Sortie 
@@ -24,5 +22,5 @@ void main()
 {
     // Couleur du pixel
 
-    out_Color = texture(texture, coordTexture);
+    out_Color = texture(Texture, coordTexture);
 }

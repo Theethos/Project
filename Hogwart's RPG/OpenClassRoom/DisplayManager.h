@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EventManager.h"
+#include "InputManager.h"
 
 ////////////////////////////////////////////////////////////
 /// \brief Static class that manages the window display 
@@ -22,13 +22,14 @@ private:
 	static SDL_Window * Window;
 	static SDL_GLContext Settings;
 	static bool IsInstantiated, IsRunning;
-	static unsigned Width, Height, FpsCap;
-
+	static unsigned Width, Height;
+	static float FpsCap;
+	static Uint32 StartTime, DeltaTime;
 	static glm::vec3 Eyes, Center, Axe;
 
 	DisplayManager() = delete;
 	~DisplayManager() = delete;
 
-	friend EventManager;
+	friend InputManager;
 };
 

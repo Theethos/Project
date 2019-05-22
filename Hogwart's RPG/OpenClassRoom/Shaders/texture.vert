@@ -1,5 +1,3 @@
-// Version du GLSL
-
 #version 150 core
 
 

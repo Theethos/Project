@@ -1,16 +1,25 @@
 #include "pch.h"
 #include "DisplayManager.h"
 
+// Matrix4
 glm::mat4 DisplayManager::Projection;
 glm::mat4 DisplayManager::ModelView;
-glm::vec3 DisplayManager::Eyes(3,3,3), DisplayManager::Center(0,0,0), DisplayManager::Axe(0,1,0);
+// Vector3
+glm::vec3 DisplayManager::Eyes(0, 1, 4);
+glm::vec3 DisplayManager::Center(0, 0, 0);
+glm::vec3 DisplayManager::Axe(0, 1, 0);
+// FPS Management
+Uint32 DisplayManager::StartTime(0);
+Uint32 DisplayManager::DeltaTime(0);
+float DisplayManager::FpsCap(1000/60);			// (1000 / FpsDesired)
+// Window and OpenGl
 SDL_GLContext DisplayManager::Settings;
-SDL_Window * DisplayManager::Window	= nullptr;
-bool DisplayManager::IsInstantiated	= false;
-bool DisplayManager::IsRunning		= true;
-unsigned DisplayManager::Width		= 0;
-unsigned DisplayManager::Height		= 0;
-unsigned DisplayManager::FpsCap		= 120;
+SDL_Window * DisplayManager::Window(nullptr);
+unsigned DisplayManager::Width(0);
+unsigned DisplayManager::Height(0);
+// Internal state boolean
+bool DisplayManager::IsInstantiated(false);
+bool DisplayManager::IsRunning(true);
 
 void DisplayManager::Create(unsigned w, unsigned h)
 {
@@ -18,14 +27,16 @@ void DisplayManager::Create(unsigned w, unsigned h)
 	{
 		auto tStart = std::chrono::high_resolution_clock::now();
 		// Initialize the SDL
-		if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+		if (SDL_Init( SDL_INIT_EVERYTHING ) < 0)
 		{
 			std::cout << "Can't initialize SDL, error in file " << __FILE__ << ", line " << __LINE__ << std::endl;
 			throw std::exception("Can't initialize SDL");
 		}
 		std::chrono::duration<double> duree = std::chrono::high_resolution_clock::now() - tStart;
 		std::cout << static_cast<double>(duree.count()) << std::endl;
-		//SDL_GLprofile(SDL_GL_CONTEXT_PROFILE_CORE);
+
+		// Set OpenGL to core
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 		// Set OpenGL's version
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -81,6 +92,7 @@ void DisplayManager::Create(unsigned w, unsigned h)
 
 void DisplayManager::Clear()
 {
+	StartTime = SDL_GetTicks();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	ModelView = glm::lookAt(Eyes, Center, Axe);
 }
@@ -88,6 +100,11 @@ void DisplayManager::Clear()
 void DisplayManager::Display()
 {
 	SDL_GL_SwapWindow(Window);
+
+	// Managing FPS
+	DeltaTime = SDL_GetTicks() - StartTime;
+	if (DeltaTime < FpsCap)
+		SDL_Delay(FpsCap - DeltaTime);
 }
 
 void DisplayManager::Destroy()

@@ -1,16 +1,23 @@
 #include "pch.h"
 #include "DisplayManager.h"
 
+// Matrix4
 glm::mat4 DisplayManager::Projection;
 glm::mat4 DisplayManager::ModelView;
-glm::vec3 DisplayManager::Eyes(3, 3, 3), DisplayManager::Center(0, 0, 0), DisplayManager::Axe(0, 1, 0);
-bool DisplayManager::IsInstantiated	= false;
-bool DisplayManager::IsRunning		= true;
-unsigned DisplayManager::Width		= 0;
-unsigned DisplayManager::Height		= 0;
-unsigned DisplayManager::FpsCap		= 120;
+// Vector3
+glm::vec3 DisplayManager::Eyes(3, 3, 3);
+glm::vec3 DisplayManager::Center(0, 0, 0);
+glm::vec3 DisplayManager::Axe(0, 1, 0);
+// FPS Management
+unsigned DisplayManager::FpsCap(120);
+// Window and OpenGl
 sf::ContextSettings DisplayManager::Settings;
 sf::RenderWindow DisplayManager::Window;
+unsigned DisplayManager::Width(0);
+unsigned DisplayManager::Height(0);
+// Internal state boolean
+bool DisplayManager::IsInstantiated(false);
+bool DisplayManager::IsRunning(true);
 
 void DisplayManager::Create(unsigned w, unsigned h)
 {
@@ -18,8 +25,6 @@ void DisplayManager::Create(unsigned w, unsigned h)
 	{	
 		Width = w;
 		Height = h;
-
-		Settings = sf::ContextSettings();
 
 		// Update the window
 		Window.create(sf::VideoMode(w, h), "OpenGL de ses morts", sf::Style::Default, Settings);
@@ -29,6 +34,8 @@ void DisplayManager::Create(unsigned w, unsigned h)
 			std::cerr << "Can't initialize glew, error in file " << __FILE__ << ", line " << __LINE__ << std::endl;
 			throw std::exception();
 		}
+
+		Window.setFramerateLimit(FpsCap);
 
 		glEnable(GL_DEPTH_TEST);
 
