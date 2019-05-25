@@ -131,6 +131,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\Hogwart%27s RPG\OpenClassRoom\Camera.cpp" />
     <ClCompile Include="..\..\Hogwart%27s RPG\OpenClassRoom\Crate.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\OpenClassRoom\Crystal.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\OpenClassRoom\FrameBuffer.cpp" />
+    <ClCompile Include="SceneTP.h" />
+    <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\OpenClassRoom\Hut.cpp" />
     <ClCompile Include="Axis.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="DisplayManager.cpp" />
@@ -149,13 +154,17 @@
   <ItemGroup>
     <ClInclude Include="..\..\Hogwart%27s RPG\OpenClassRoom\Camera.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\OpenClassRoom\Crate.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\OpenClassRoom\Crystal.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\OpenClassRoom\FrameBuffer.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\OpenClassRoom\ShapesHeader.h" />
+    <ClInclude Include="Ground.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\OpenClassRoom\Hut.h" />
     <ClInclude Include="Axis.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="DisplayManager.h" />
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>

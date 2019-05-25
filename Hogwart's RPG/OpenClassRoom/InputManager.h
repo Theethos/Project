@@ -1,5 +1,8 @@
 #pragma once
 
+#define GetKey InputManager::IsKeyPressed
+#define GetButton InputManager::IsButtonPressed
+
 ////////////////////////////////////////////////////////////
 /// \brief Static class that manages the game events
 ///
@@ -19,6 +22,7 @@ public:
 	static void HideCursor(const bool & hide);
 	static void CatchCursor(const bool & _catch);
 
+	static bool MouseWheel[2];
 private:
 	static bool IsInstantiated;
 	static SDL_Event Event;

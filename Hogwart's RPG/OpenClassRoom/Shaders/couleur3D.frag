@@ -1,23 +1,9 @@
-// Version du GLSL
-
 #version 150 core
 
-
-// Entrée
-
-in vec3 color;
-
-
-// Sortie 
-
+in vec4 Color;
 out vec4 out_Color;
-
-
-// Fonction main
 
 void main()
 {
-    // Couleur finale du pixel
-
-    out_Color = vec4(color, 1.0);
+	out_Color = Color;
 }

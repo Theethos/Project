@@ -1,6 +1,7 @@
 #include "pch.h"
 
 std::map<std::string, unsigned> TextureManager::TextureID;
+std::vector<unsigned> TextureManager::EmptyTextureID;
 bool TextureManager::IsIntantiate(false);
 
 void TextureManager::Create()
@@ -18,12 +19,31 @@ void TextureManager::Destroy()
 	if (IsIntantiate)
 	{
 		for (auto & it : TextureID)
-			glDeleteTextures(1, &(it.second));
+		{
+			if (glIsTexture(it.second))
+				glDeleteTextures(1, &(it.second));
+		}
+		for (auto & it : EmptyTextureID)
+		{
+			if (glIsTexture(it))
+				glDeleteTextures(1, &(it));
+		}
 		IsIntantiate = false;
 	}
 }
 
-bool TextureManager::LoadFromFile(const char * texturePath, const std::string & key)
+unsigned & TextureManager::GetTexture(const std::string & key)
+{
+	if (TextureID.count(key))
+		return TextureID[key]; 
+	else
+	{
+		std::cerr << "Can't find the texture '" << key << "'.\n";
+		return TextureID.begin()->second;
+	}
+}
+
+unsigned TextureManager::LoadFromFile(const char * texturePath, const std::string & key)
 {
 	if (IsIntantiate && !TextureID.count(key))
 	{
@@ -54,17 +74,45 @@ bool TextureManager::LoadFromFile(const char * texturePath, const std::string & 
 		SDL_FreeSurface(texture);
 		// Add the texture to the map
 		TextureID[key] = texture_id;
-		return true;
+		return texture_id;
 	}
 	else if (TextureID.count(key))
-		std::cerr << "Texture already created\n";
-	return false;
+		return TextureID.count(key);
+	
+	// Else
+	std::cerr << "Can't load the texture '" << texturePath << "'. Please check\
+				 the file path or that you used Texture::Manager::Create() before this call\n";
+	return 0;
+}
+
+unsigned TextureManager::LoadEmptyTexture(const unsigned & w, const unsigned & h, 
+									  const unsigned & format, const unsigned & internalFormat)
+{
+	unsigned texture_id(0);
+
+	glGenTextures(1, &texture_id);
+	glBindTexture(GL_TEXTURE_2D, texture_id);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, w, h, 0, format, GL_UNSIGNED_BYTE, nullptr);
+	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	EmptyTextureID.push_back(texture_id);
+
+	return texture_id;
 }
 
 bool TextureManager::DeleteTexture(const std::string & key)
 {
 	if (IsIntantiate)
+	{
 		glDeleteTextures(1, &(TextureID[key]));
+		return true;
+	}
+	return false;
 }
 
 unsigned TextureManager::GetTextureFormat(SDL_Surface * texture, unsigned internalFormat)

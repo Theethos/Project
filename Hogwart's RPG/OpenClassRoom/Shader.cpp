@@ -83,7 +83,7 @@ void Shader::CreateShader(const char * vertexShader, const char * fragmentShader
 
 		glBindAttribLocation(m_ProgramID, 0, "in_Vertex");
 		glBindAttribLocation(m_ProgramID, 1, "in_Color");
-		glBindAttribLocation(m_ProgramID, 2, "in_TextureCoord");		// ~= à in_TexCoord0 dans les fichiers OPC
+		glBindAttribLocation(m_ProgramID, 2, "in_TextureCoord0");		// ~= à in_TexCoord0 dans les fichiers OPC
 
 		glLinkProgram(m_ProgramID);
 		glValidateProgram(m_ProgramID);

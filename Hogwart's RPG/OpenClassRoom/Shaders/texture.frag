@@ -1,26 +1,13 @@
 #version 150 core
 
+in vec2 TextureCoord0;
 
-// Entrée
-
-in vec2 coordTexture;
-
-
-// Uniform
-
-uniform sampler2D Texture;
-
-
-// Sortie 
+uniform sampler2D texture2D;
 
 out vec4 out_Color;
 
-
-// Fonction main
-
 void main()
 {
-    // Couleur du pixel
-
-    out_Color = texture(Texture, coordTexture);
+	out_Color = texture(texture2D, TextureCoord0);
 }
+

@@ -3,8 +3,12 @@
 // Matrix4
 glm::mat4 DisplayManager::Projection;
 glm::mat4 DisplayManager::ModelView;
+glm::mat4 DisplayManager::SavedModelView;
+// Clear color
+glm::vec4 DisplayManager::ClearColor(0.4, 0.7, 1.0, 1.0);
 // Camera
-Camera DisplayManager::Camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,1,0));
+Camera DisplayManager::Camera(glm::vec3(3, 3, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+double DisplayManager::Fovy(70.0);
 // FPS Management
 Uint32 DisplayManager::StartTime(0);
 Uint32 DisplayManager::DeltaTime(0);
@@ -32,12 +36,12 @@ void DisplayManager::Create(unsigned w, unsigned h)
 		std::chrono::duration<double> duree = std::chrono::high_resolution_clock::now() - tStart;
 		std::cout << static_cast<double>(duree.count()) << std::endl;
 
-		// Set OpenGL to core
-		//SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
 		// Set OpenGL's version
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+		
+		// Set OpenGL' profile to core
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 		// Set double buffering
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -71,9 +75,10 @@ void DisplayManager::Create(unsigned w, unsigned h)
 			throw std::exception();
 		}
 
+		glClearColor(ClearColor.x, ClearColor.y, ClearColor.z, ClearColor.w);
 		glEnable(GL_DEPTH_TEST);
 
-		Projection	= glm::perspective(70.0, static_cast<double>(Width) / Height, 1.0, 100.0);
+		Projection	= glm::perspective(Fovy, static_cast<double>(Width) / Height, 1.0, 100.0);
 		ModelView	= glm::mat4(1.0);
 
 		IsInstantiated = true;
@@ -85,14 +90,16 @@ void DisplayManager::Create(unsigned w, unsigned h)
 	}
 }
 
-void DisplayManager::Clear()
+void DisplayManager::StartLoop()
 {
 	StartTime = SDL_GetTicks();
+	InputManager::Update();
+	Camera.Move();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	Camera.LookAt();
 }
 
-void DisplayManager::Display()
+void DisplayManager::EndLoop()
 {
 	SDL_GL_SwapWindow(Window);
 
@@ -108,4 +115,25 @@ void DisplayManager::Destroy()
 	SDL_GL_DeleteContext(Settings);
 	SDL_DestroyWindow(Window);
 	SDL_Quit();
+}
+
+struct Zooms
+{
+	double none = 70.0;
+	double in = 69.5;
+	double out = 71.0;
+} Zooms;
+
+void DisplayManager::Zoom(const bool & in)
+{
+	if (in && (Fovy == static_cast<double>(Zooms.none)))
+		Fovy = static_cast<double>(Zooms.in);
+	else if (in && (Fovy == static_cast<double>(Zooms.out)))
+		Fovy = static_cast<double>(Zooms.none);
+	else if (!in && (Fovy == static_cast<double>(Zooms.none)))
+		Fovy = static_cast<double>(Zooms.out);
+	else if (!in && (Fovy == static_cast<double>(Zooms.in)))
+		Fovy = static_cast<double>(Zooms.none);
+
+	Projection = glm::perspective(Fovy, static_cast<double>(Width) / Height, 1.0, 100.0);
 }

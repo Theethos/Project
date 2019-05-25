@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Axis.h"
 
-Axis::Axis(const float size, const char * vertexShader, const char * fragmentShader) :
+Axis::Axis(const float size, const char * vertexShader, const char * fragmentShader, const bool & load) :
 Drawable(vertexShader, fragmentShader)
 {
 	m_DrawType = GL_LINES;
@@ -29,9 +29,11 @@ Drawable(vertexShader, fragmentShader)
 		0.f, 0.f, 1.f,
 		0.f, 0.f, 1.f,
 	};
+	if (load)
+		Load();
 }
 
-Axis::Axis(const float size, Shader & shader) :
+Axis::Axis(const float size, Shader & shader, const bool & load) :
 Drawable(shader)
 {
 	m_DrawType = GL_LINES;
@@ -59,6 +61,8 @@ Drawable(shader)
 		0.f, 0.f, 1.f,
 		0.f, 0.f, 1.f,
 	};
+	if (load)
+		Load();
 }
 
 Axis::~Axis()

@@ -6,8 +6,9 @@ Camera::Camera() :
 	m_Sensitivity(0.05f),
 	m_Phi(0.f),
 	m_Theta(0.f),
-	m_Orientation(3,3,3),
+	m_Orientation(3, 3, 3),
 	m_VerticalAxis(0, 0, 1),
+	m_ForwardMotion(0, 1, 0),
 	m_Position(),
 	m_Target(0,0,0),
 	m_LateralMotion()
@@ -18,7 +19,7 @@ Camera::Camera() :
 	InitAngles();
 }
 
-Camera::Camera(glm::vec3 eyes, glm::vec3 center, glm::vec3 up) :
+Camera::Camera(const glm::vec3 & eyes, const  glm::vec3 & center, const glm::vec3 & up) :
 	m_Speed(0.05f),
 	m_Sensitivity(0.05f),
 	m_Phi(0.f),
@@ -27,11 +28,11 @@ Camera::Camera(glm::vec3 eyes, glm::vec3 center, glm::vec3 up) :
 	m_VerticalAxis(up),
 	m_Position(eyes),
 	m_Target(center),
-	m_LateralMotion()
+	m_LateralMotion(),
+	m_ForwardMotion()
 {
 	m_Orientation = m_Target - m_Position;
 	m_Orientation = glm::normalize(m_Orientation);
-
 	InitAngles();
 }
 
@@ -83,9 +84,28 @@ void Camera::Orientate()
 	// Update the orientation vector depending on the vertical axis
 	UpdateOrientation();
 
-	// Update the lateral motion
+	// Update the motions
 	m_LateralMotion = glm::cross(m_VerticalAxis, m_Orientation);
 	m_LateralMotion = glm::normalize(m_LateralMotion);
+	m_ForwardMotion = glm::cross(m_VerticalAxis, m_LateralMotion);
+	m_ForwardMotion = glm::normalize(m_ForwardMotion);
+
+	// Remove the component on the vertical axis, so the camera doesn't move inside or over the ground
+	if (m_VerticalAxis.x)
+	{
+		m_ForwardMotion.x = 0;
+		m_LateralMotion.x = 0;
+	}
+	else if (m_VerticalAxis.y)
+	{
+		m_ForwardMotion.y = 0;
+		m_LateralMotion.y = 0;
+	}
+	else if (m_VerticalAxis.z)
+	{
+		m_ForwardMotion.z = 0;
+		m_LateralMotion.z = 0;
+	}
 
 	// Update target point
 	m_Target = m_Orientation + m_Position;
@@ -95,26 +115,42 @@ void Camera::Move()
 {
 	if (InputManager::DidMouseMove())
 		Orientate();
-
+	
 	// QWERTY INPUTS
+	// Move forward
 	if (InputManager::IsKeyPressed(SDL_SCANCODE_W))
 	{
-		m_Position += (m_Orientation * m_Speed);
+		m_Position -= (m_ForwardMotion * m_Speed);
 		m_Target = m_Position + m_Orientation;
 	}
+	// Move backward
 	if (InputManager::IsKeyPressed(SDL_SCANCODE_S))
 	{
-		m_Position -= (m_Orientation * m_Speed);
+		m_Position += (m_ForwardMotion * m_Speed);
 		m_Target = m_Position + m_Orientation;
 	}
+	// Move right
 	if (InputManager::IsKeyPressed(SDL_SCANCODE_A))
 	{
 		m_Position += (m_LateralMotion * m_Speed);
 		m_Target = m_Position + m_Orientation;
 	}
+	// Move left
 	if (InputManager::IsKeyPressed(SDL_SCANCODE_D))
 	{
 		m_Position -= (m_LateralMotion * m_Speed);
+		m_Target = m_Position + m_Orientation;
+	}
+	// Move up
+	if (InputManager::IsKeyPressed(SDL_SCANCODE_SPACE))
+	{
+		m_Position += (m_VerticalAxis * m_Speed);
+		m_Target = m_Position + m_Orientation;
+	}
+	// Move down
+	if (InputManager::IsKeyPressed(SDL_SCANCODE_LSHIFT))
+	{
+		m_Position -= (m_VerticalAxis * m_Speed);
 		m_Target = m_Position + m_Orientation;
 	}
 }
@@ -144,8 +180,8 @@ void Camera::UpdateOrientation()
 	}
 	else if (m_VerticalAxis.z)
 	{
-		m_Orientation.y = cos(phi_radian) * cos(theta_radian);
-		m_Orientation.z = cos(phi_radian) * sin(theta_radian);
-		m_Orientation.x = sin(phi_radian);
+		m_Orientation.x = cos(phi_radian) * cos(theta_radian);
+		m_Orientation.y = cos(phi_radian) * sin(theta_radian);
+		m_Orientation.z = sin(phi_radian);
 	}
 }

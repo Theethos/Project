@@ -6,9 +6,10 @@
 // Internal state boolean
 SDL_Event InputManager::Event;
 bool InputManager::IsInstantiated = false;
-// Inputs maps
+// Inputs vectors
 std::vector<bool> InputManager::Keys;
 std::vector<bool> InputManager::Mouse;
+bool InputManager::MouseWheel[2];
 // Mouse positions
 int InputManager::MouseX(0);
 int InputManager::MouseY(0);
@@ -73,10 +74,14 @@ void InputManager::Update()
 			else if (Event.type == SDL_MOUSEBUTTONUP)
 			{
 				Mouse[Event.button.button] = false;
+				if (Event.button.button == SDL_BUTTON_RIGHT)
+					DisplayManager::Zoom(false);
 			}
 			else if (Event.type == SDL_MOUSEBUTTONDOWN)
 			{
 				Mouse[Event.button.button] = true;
+				if (Event.button.button == SDL_BUTTON_RIGHT)
+					DisplayManager::Zoom(true);
 			}
 			else if (Event.type == SDL_MOUSEMOTION)
 			{
@@ -84,6 +89,13 @@ void InputManager::Update()
 				MouseY		= Event.motion.y;
 				MouseRelX	= Event.motion.xrel;
 				MouseRelY	= Event.motion.yrel;
+			}
+			else if (Event.type == SDL_MOUSEWHEEL)
+			{
+				if (Event.wheel.y > 0)
+					DisplayManager::Zoom(true);
+				else if (Event.wheel.y < 0)
+					DisplayManager::Zoom(false);
 			}
 		}
 	}

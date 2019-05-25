@@ -24,3 +24,8 @@
 #include "DisplayManager.h"
 #include "InputManager.h"
 #include "TextureManager.h"
+
+// Macros
+#ifndef BUFFER_OFFSET
+	#define BUFFER_OFFSET(offset) ((char*)NULL + (offset)) 
+#endif // !BUFFER_OFFSET
