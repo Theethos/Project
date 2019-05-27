@@ -2,38 +2,44 @@
 #include "Drawable.h"
 
 Drawable::Drawable(const char * vertexShader, const char * fragmentShader) :
-m_Shader(vertexShader, fragmentShader),
-m_Vertices(1.0),
-m_Colors(1.0),
-m_TextureCoordinates(1.0),
-m_Textures(1.0),
-m_Textured(false),
-m_DrawType(GL_TRIANGLES),
-m_VaoID(0),
-m_VboID(0),
-m_SizeOfColors(0),
-m_SizeOfVertices(0),
-m_SizeOfTextureCoordinates(0)
+	m_Shader(vertexShader, fragmentShader),
+	m_Vertices(1.0),
+	m_Colors(1.0),
+	m_TextureCoordinates(1.0),
+	m_Indices(1.0),
+	m_Textures(1.0),
+	m_Textured(false),
+	m_Indiced(false),
+	m_DrawType(GL_TRIANGLES),
+	m_VaoID(0),
+	m_VboID(0),
+	m_SizeOfColors(0),
+	m_SizeOfVertices(0),
+	m_SizeOfTextureCoordinates(0)
 {}
 
 Drawable::Drawable(Shader & shader) : 
-m_Shader(shader),
-m_Vertices(1.0),
-m_Colors(1.0),
-m_TextureCoordinates(1.0),
-m_Textures(1.0),
-m_Textured(false),
-m_DrawType(GL_TRIANGLES),
-m_VaoID(0),
-m_VboID(0),
-m_SizeOfColors(0),
-m_SizeOfVertices(0),
-m_SizeOfTextureCoordinates(0)
+	m_Shader(shader),
+	m_Vertices(1.0),
+	m_Colors(1.0),
+	m_TextureCoordinates(1.0),
+	m_Indices(1.0),
+	m_Textures(1.0),
+	m_Textured(false),
+	m_Indiced(false),
+	m_DrawType(GL_TRIANGLES),
+	m_VaoID(0),
+	m_VboID(0),
+	m_SizeOfColors(0),
+	m_SizeOfVertices(0),
+	m_SizeOfTextureCoordinates(0)
 {}
 
 Drawable::~Drawable()
 {
 	glDeleteBuffers(1, &m_VboID);
+	if (glIsBuffer(m_IndexBufferID))
+		glDeleteBuffers(1, &m_IndexBufferID);
 	glDeleteVertexArrays(1, &m_VaoID);
 }
 
@@ -45,6 +51,8 @@ void Drawable::Draw(const glm::mat4 & modelview, const glm::mat4 & projection)
 	// Bind the vao
 	glBindVertexArray(m_VaoID);
 
+	if (m_Indiced)
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBufferID);
 	// Send the matrixe
 	glUniformMatrix4fv(glGetUniformLocation(m_Shader.GetID(), "modelviewProjection"), 1, GL_FALSE, value_ptr(projection * modelview));
 
@@ -57,20 +65,30 @@ void Drawable::Draw(const glm::mat4 & modelview, const glm::mat4 & projection)
 			glBindTexture(GL_TEXTURE_2D, it.first);
 
 			// Draw
-			glDrawArrays(m_DrawType, vertices_count / 3, it.second / 3);
-			
+			if (m_Indiced)
+				glDrawElements(m_DrawType, it.second, GL_UNSIGNED_SHORT, BUFFER_OFFSET(vertices_count));
+			else
+				glDrawArrays(m_DrawType, vertices_count / 3, it.second / 3);
+
 			// Unbind the texture and disable the texture data
 			glBindTexture(GL_TEXTURE_2D, 0);
-			vertices_count += it.second;
+			if (m_Indiced)
+				vertices_count += (it.second * sizeof(GLushort));
+			else
+				vertices_count += (it.second * sizeof(GLfloat));
 		}
 	}
 	else
 		// Draw
-		glDrawArrays(m_DrawType, 0, m_Vertices.size() / 3);
+		if (m_Indiced)
+			glDrawElements(m_DrawType, m_Indices.size(), GL_UNSIGNED_SHORT, 0);
+		else	
+			glDrawArrays(m_DrawType, 0, m_Vertices.size() / 3);
 
+	if (m_Indiced)
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	// Disable the vertices data
 	glBindVertexArray(0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	// Unbind the shader
 	m_Shader.Unbind();
@@ -127,6 +145,25 @@ void Drawable::Load()
 	
 	// Unbind the buffer 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	/* """""""""""""""""""""" */
+	if (m_Indiced)
+	{
+		m_SizeOfIndices = m_Indices.size() * sizeof(unsigned short);
+
+		if (glIsBuffer(m_IndexBufferID) == GL_TRUE)
+			glDeleteBuffers(1, &m_IndexBufferID);
+
+		glGenBuffers(1, &m_IndexBufferID);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBufferID);
+
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_SizeOfIndices, 0, GL_STATIC_DRAW);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_SizeOfIndices, m_Indices.data());
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
+	/* """""""""""""""""""""" */
 
 	if (glIsVertexArray(m_VaoID))
 		glDeleteVertexArrays(1, &m_VaoID);

@@ -14,7 +14,7 @@ int main(int argc, char * argv[])
 	for (unsigned i = 0; i < argc; ++i)
 		std::cout << argv[i] << std::endl;
 
-	//SceneTP::Run();
+	SceneTP::Run();
 	DisplayManager::Create();
 	InputManager::Create(); 
 	TextureManager::Create();
@@ -37,7 +37,7 @@ int main(int argc, char * argv[])
 	{
 		DisplayManager::StartLoop();
 
-		fbo.StartDrawingInto();
+	/*	fbo.StartDrawingInto();
 
 			angle > 360.f ? angle -= 360.f : angle += 0.001f;
 
@@ -47,10 +47,8 @@ int main(int argc, char * argv[])
 			fbo.PopMatrix();
 
 
-		fbo.EndDrawingInto(DisplayManager::GetWidth(), DisplayManager::GetHeight(), true);
+		fbo.EndDrawingInto(DisplayManager::GetWidth(), DisplayManager::GetHeight(), true);			*/
 
-		Push;
-		MV = glm::rotate(MV, angle, glm::vec3(0, 1, 0));
 		crate.Draw();
 		//cube.Draw();
 

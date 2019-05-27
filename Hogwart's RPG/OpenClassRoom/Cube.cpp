@@ -9,44 +9,91 @@ Drawable(vertexShader, fragmentShader)
 {
 	m_Vertices = std::vector<float>
 	{
-		-size / 2.f, -size / 2.f, -size / 2.f,	  size / 2.f, -size / 2.f, -size / 2.f,    size / 2.f,  size / 2.f, -size / 2.f,	// Face 1-1
-		-size / 2.f, -size / 2.f, -size / 2.f,	  size / 2.f,  size / 2.f, -size / 2.f,   -size / 2.f,  size / 2.f, -size / 2.f,	// Face 1-2
-
-		 size / 2.f, -size / 2.f,  size / 2.f,    size / 2.f,  size / 2.f, -size / 2.f,	   size / 2.f, -size / 2.f, -size / 2.f,	// Face 2-1
-		 size / 2.f, -size / 2.f,  size / 2.f,	  size / 2.f,  size / 2.f,  size / 2.f,    size / 2.f,  size / 2.f, -size / 2.f,	// Face 2-2
-
-		-size / 2.f, -size / 2.f,  size / 2.f,	  size / 2.f, -size / 2.f,  size / 2.f,    size / 2.f, -size / 2.f, -size / 2.f,	// Face 3-1
-		-size / 2.f, -size / 2.f,  size / 2.f,	  size / 2.f, -size / 2.f, -size / 2.f,   -size / 2.f, -size / 2.f, -size / 2.f,	// Face 3-2
-
-		-size / 2.f,  size / 2.f,  size / 2.f,   -size / 2.f, -size / 2.f,  size / 2.f,    size / 2.f, -size / 2.f,  size / 2.f,	// Face 4-1
-		-size / 2.f,  size / 2.f,  size / 2.f,    size / 2.f,  size / 2.f,  size / 2.f,    size / 2.f, -size / 2.f,  size / 2.f,	// Face 4-2
-
-		-size / 2.f, -size / 2.f,  size / 2.f,   -size / 2.f,  size / 2.f,  size / 2.f,   -size / 2.f,  size / 2.f, -size / 2.f,	// Face 5-1
-		-size / 2.f, -size / 2.f,  size / 2.f,   -size / 2.f, -size / 2.f, -size / 2.f,   -size / 2.f,  size / 2.f, -size / 2.f,	// Face 5-2
-
-		-size / 2.f,  size / 2.f, -size / 2.f,    size / 2.f,  size / 2.f, -size / 2.f,    size / 2.f,  size / 2.f,  size / 2.f,	// Face 6-1
-		-size / 2.f,  size / 2.f, -size / 2.f,   -size / 2.f,  size / 2.f,  size / 2.f,    size / 2.f,  size / 2.f,  size / 2.f		// Face 6-2
+		// Back face
+		-size / 2.f, -size / 2.f, -size / 2.f,	// 0	0, 1, 2,
+		 size / 2.f, -size / 2.f, -size / 2.f,	// 1	0, 3, 2,
+		 size / 2.f,  size / 2.f, -size / 2.f,	// 2
+		-size / 2.f,  size / 2.f, -size / 2.f,	// 3
+		// Right face
+		 size / 2.f, -size / 2.f,  size / 2.f,	// 4	4, 5, 6,
+		 size / 2.f, -size / 2.f, -size / 2.f,	// 5	4, 7, 6,
+		 size / 2.f,  size / 2.f, -size / 2.f,	// 6	
+		 size / 2.f,  size / 2.f,  size / 2.f,	// 7
+		// Bottom face
+		-size / 2.f, -size / 2.f,  size / 2.f,	// 8	8, 9, 10,
+		 size / 2.f, -size / 2.f,  size / 2.f,	// 9	8, 11, 10,
+		 size / 2.f, -size / 2.f, -size / 2.f,	// 10
+		-size / 2.f, -size / 2.f, -size / 2.f,	// 11
+		// Front face
+		-size / 2.f, -size / 2.f,  size / 2.f,	// 12	15, 14, 13,
+		 size / 2.f, -size / 2.f,  size / 2.f,	// 13	15, 12, 13,
+		 size / 2.f,  size / 2.f,  size / 2.f,	// 14
+		-size / 2.f,  size / 2.f,  size / 2.f,	// 15	
+		// Left face
+		-size / 2.f, -size / 2.f,  size / 2.f,	// 16	16, 19, 18,
+		-size / 2.f, -size / 2.f, -size / 2.f,	// 17	16, 17, 18,
+		-size / 2.f,  size / 2.f, -size / 2.f,	// 18
+		-size / 2.f,  size / 2.f,  size / 2.f,	// 19	
+		// Top face
+		-size / 2.f,  size / 2.f,  size / 2.f,	// 23	23, 20, 21,
+		 size / 2.f,  size / 2.f,  size / 2.f,	// 22	23, 22, 21
+		 size / 2.f,  size / 2.f, -size / 2.f,	// 21	
+		-size / 2.f,  size / 2.f, -size / 2.f,	// 20	
 	};
 	m_Colors = std::vector<float>
 	{
-		// Face 1			-> Red
-		1.f,  0.f,  0.f,    1.f,  0.f,  0.f,   1.f,  0.f,  0.f,
-		1.f,  0.f,  0.f,    1.f,  0.f,  0.f,   1.f,  0.f,  0.f,
-		// Face 2			-> Green
-		0.f,  1.f,  0.f,    0.f,  1.f,  0.f,   0.f,  1.f,  0.f,
-		0.f,  1.f,  0.f,    0.f,  1.f,  0.f,   0.f,  1.f,  0.f,
-		// Face 3			-> Blue
-		0.f,  0.f,  1.f,    0.f,  0.f,  1.f,   0.f,  0.f,  1.f,
-		0.f,  0.f,  1.f,    0.f,  0.f,  1.f,   0.f,  0.f,  1.f,
-		// Face 4			-> Light-Blue
-		0.f,  1.f,  1.f,	0.f,  1.f,  1.f,   0.f,  1.f,  1.f,
-		0.f,  1.f,  1.f,    0.f,  1.f,  1.f,   0.f,  1.f,  1.f,
-		// Face 5			-> Yellow
-		1.f,  1.f,  0.f,    1.f,  1.f,  0.f,   1.f,  1.f,  0.f,
-		1.f,  1.f,  0.f,    1.f,  1.f,  0.f,   1.f,  1.f,  0.f,
-		// Face 6			-> Rose
-		1.f,  0.f,  1.f,    1.f,  0.f,  1.f,   1.f,  0.f,  1.f,
-		1.f,  0.f,  1.f,    1.f,  0.f,  1.f,   1.f,  0.f,  1.f,
+		// Face 1 -> Red
+		1.f,  0.f,  0.f,
+		1.f,  0.f,  0.f,
+		1.f,  0.f,  0.f,
+		1.f,  0.f,  0.f,
+		// Face 2 -> Green	
+		0.f,  1.f,  0.f,
+		0.f,  1.f,  0.f,
+		0.f,  1.f,  0.f,
+		0.f,  1.f,  0.f,
+		// Face 3 -> Blue	
+		0.f,  0.f,  1.f,
+		0.f,  0.f,  1.f,
+		0.f,  0.f,  1.f,
+		0.f,  0.f,  1.f,
+		// Face 4 -> Light Blue		
+		0.f,  1.f,  1.f,
+		0.f,  1.f,  1.f,
+		0.f,  1.f,  1.f,
+		0.f,  1.f,  1.f,
+		// Face 5 -> Yellow	
+		1.f,  1.f,  0.f,
+		1.f,  1.f,  0.f,
+		1.f,  1.f,  0.f,
+		1.f,  1.f,  0.f,
+		// Face 6 -> Pink
+		1.f,  0.f,  1.f,
+		1.f,  0.f,  1.f,
+		1.f,  0.f,  1.f,
+		1.f,  0.f,  1.f,
+	};
+	m_Indiced = true;
+	m_Indices = std::vector<unsigned short>
+	{
+		0, 1, 2,
+		0, 3, 2,
+
+		4, 5, 6,
+		4, 7, 6,
+
+		8, 9, 10,
+		8, 11, 10,
+
+		15, 14, 13,
+		15, 12, 13,
+
+		16, 19, 18,
+		16, 17, 18,
+
+		23, 20, 21,
+		23, 22, 21
+
 	};
 	if (load)
 		Load();
@@ -57,95 +104,92 @@ Drawable(shader)
 {
 	m_Vertices = std::vector<float>
 	{
-		-size / 2.f, -size / 2.f, -size / 2.f,	  size / 2.f, -size / 2.f, -size / 2.f,    size / 2.f,  size / 2.f, -size / 2.f,	// Face 1-1
-		-size / 2.f, -size / 2.f, -size / 2.f,	  size / 2.f,  size / 2.f, -size / 2.f,   -size / 2.f,  size / 2.f, -size / 2.f,	// Face 1-2
-
-		 size / 2.f, -size / 2.f,  size / 2.f,    size / 2.f,  size / 2.f, -size / 2.f,	   size / 2.f, -size / 2.f, -size / 2.f,	// Face 2-1
-		 size / 2.f, -size / 2.f,  size / 2.f,	  size / 2.f,  size / 2.f,  size / 2.f,    size / 2.f,  size / 2.f, -size / 2.f,	// Face 2-2
-
-		-size / 2.f, -size / 2.f,  size / 2.f,	  size / 2.f, -size / 2.f,  size / 2.f,    size / 2.f, -size / 2.f, -size / 2.f,	// Face 3-1
-		-size / 2.f, -size / 2.f,  size / 2.f,	  size / 2.f, -size / 2.f, -size / 2.f,   -size / 2.f, -size / 2.f, -size / 2.f,	// Face 3-2
-
-		-size / 2.f,  size / 2.f,  size / 2.f,   -size / 2.f, -size / 2.f,  size / 2.f,    size / 2.f, -size / 2.f,  size / 2.f,	// Face 4-1
-		-size / 2.f,  size / 2.f,  size / 2.f,    size / 2.f,  size / 2.f,  size / 2.f,    size / 2.f, -size / 2.f,  size / 2.f,	// Face 4-2
-
-		-size / 2.f, -size / 2.f,  size / 2.f,   -size / 2.f,  size / 2.f,  size / 2.f,   -size / 2.f,  size / 2.f, -size / 2.f,	// Face 5-1
-		-size / 2.f, -size / 2.f,  size / 2.f,   -size / 2.f, -size / 2.f, -size / 2.f,   -size / 2.f,  size / 2.f, -size / 2.f,	// Face 5-2
-
-		-size / 2.f,  size / 2.f, -size / 2.f,    size / 2.f,  size / 2.f, -size / 2.f,    size / 2.f,  size / 2.f,  size / 2.f,	// Face 6-1
-		-size / 2.f,  size / 2.f, -size / 2.f,   -size / 2.f,  size / 2.f,  size / 2.f,    size / 2.f,  size / 2.f,  size / 2.f		// Face 6-2
+		// Back face
+		-size / 2.f, -size / 2.f, -size / 2.f,	// 0	0, 1, 2,
+		 size / 2.f, -size / 2.f, -size / 2.f,	// 1	0, 3, 2,
+		 size / 2.f,  size / 2.f, -size / 2.f,	// 2
+		-size / 2.f,  size / 2.f, -size / 2.f,	// 3
+		// Right face
+		 size / 2.f, -size / 2.f,  size / 2.f,	// 4	4, 5, 6,
+		 size / 2.f, -size / 2.f, -size / 2.f,	// 5	4, 7, 6,
+		 size / 2.f,  size / 2.f, -size / 2.f,	// 6	
+		 size / 2.f,  size / 2.f,  size / 2.f,	// 7
+		// Bottom face
+		-size / 2.f, -size / 2.f,  size / 2.f,	// 8	8, 9, 10,
+		 size / 2.f, -size / 2.f,  size / 2.f,	// 9	8, 11, 10,
+		 size / 2.f, -size / 2.f, -size / 2.f,	// 10
+		-size / 2.f, -size / 2.f, -size / 2.f,	// 11
+		// Front face
+		-size / 2.f, -size / 2.f,  size / 2.f,	// 12	15, 14, 13,
+		 size / 2.f, -size / 2.f,  size / 2.f,	// 13	15, 12, 13,
+		 size / 2.f,  size / 2.f,  size / 2.f,	// 14
+		-size / 2.f,  size / 2.f,  size / 2.f,	// 15	
+		// Left face
+		-size / 2.f, -size / 2.f,  size / 2.f,	// 16	16, 19, 18,
+		-size / 2.f, -size / 2.f, -size / 2.f,	// 17	16, 17, 18,
+		-size / 2.f,  size / 2.f, -size / 2.f,	// 18
+		-size / 2.f,  size / 2.f,  size / 2.f,	// 19	
+		// Top face
+		-size / 2.f,  size / 2.f,  size / 2.f,	// 23	23, 20, 21,
+		 size / 2.f,  size / 2.f,  size / 2.f,	// 22	23, 22, 21
+		 size / 2.f,  size / 2.f, -size / 2.f,	// 21	
+		-size / 2.f,  size / 2.f, -size / 2.f,	// 20	
 	};
 	m_Colors = std::vector<float>
 	{
-		// Face 1			-> Red
-		1.f,  0.f,  0.f,	1.f,  0.f,  0.f,	1.f,  0.f,  0.f,
-		1.f,  0.f,  0.f,	1.f,  0.f,  0.f,	1.f,  0.f,  0.f,
-		// Face 2			-> Green
-		0.f,  1.f,  0.f,	0.f,  1.f,  0.f,	0.f,  1.f,  0.f,
-		0.f,  1.f,  0.f,	0.f,  1.f,  0.f,	0.f,  1.f,  0.f,
-		// Face 3			-> Blue
-		0.f,  0.f,  1.f,    0.f,  0.f,  1.f,	0.f,  0.f,  1.f,
-		0.f,  0.f,  1.f,	0.f,  0.f,  1.f,	0.f,  0.f,  1.f,
-		// Face 4			-> Light-Blue
-		0.f,  1.f,  1.f,	0.f,  1.f,  1.f,	0.f,  1.f,  1.f,
-		0.f,  1.f,  1.f,	0.f,  1.f,  1.f,	0.f,  1.f,  1.f,
-		// Face 5			-> Yellow
-		1.f,  1.f,  0.f,	1.f,  1.f,  0.f,	1.f,  1.f,  0.f,
-		1.f,  1.f,  0.f,	1.f,  1.f,  0.f,	1.f,  1.f,  0.f,
-		// Face 6			-> Rose
-		1.f,  0.f,  1.f,	1.f,  0.f,  1.f,	1.f,  0.f,  1.f,
-		1.f,  0.f,  1.f,	1.f,  0.f,  1.f,	1.f,  0.f,  1.f,
-	};
-	/*m_Vertices = std::vector<float>
-	{
-		 size / 2.f,  size / 2.f,  size / 2.f,
-		 size / 2.f,  size / 2.f, -size / 2.f,
-		 size / 2.f, -size / 2.f,  size / 2.f,
-		 size / 2.f, -size / 2.f, -size / 2.f,
-		-size / 2.f,  size / 2.f,  size / 2.f,
-		-size / 2.f,  size / 2.f, -size / 2.f,
-		-size / 2.f, -size / 2.f,  size / 2.f,
-		-size / 2.f, -size / 2.f, -size / 2.f,
-	};
-	m_VerticesIndices = std::vector<unsigned short>
-	{
-		7, 3, 1,
-		7, 1, 5,
-
-		2, 1, 3,
-		2, 0, 1,
-
-		6, 2, 3,
-		6, 3, 7,
-
-		4, 6, 2,
-		4, 0, 2,
-
-		6, 4, 5,
-		6, 7, 5,
-
-		5, 1, 0,
-		5, 4, 0,
-	};
-	m_Colors = std::vector<float>
-	{
+		// Face 1 -> Red
 		1.f,  0.f,  0.f,
+		1.f,  0.f,  0.f,
+		1.f,  0.f,  0.f,
+		1.f,  0.f,  0.f,
+		// Face 2 -> Green	
 		0.f,  1.f,  0.f,
+		0.f,  1.f,  0.f,
+		0.f,  1.f,  0.f,
+		0.f,  1.f,  0.f,
+		// Face 3 -> Blue	
 		0.f,  0.f,  1.f,
+		0.f,  0.f,  1.f,
+		0.f,  0.f,  1.f,
+		0.f,  0.f,  1.f,
+		// Face 4 -> Light Blue		
 		0.f,  1.f,  1.f,
+		0.f,  1.f,  1.f,
+		0.f,  1.f,  1.f,
+		0.f,  1.f,  1.f,
+		// Face 5 -> Yellow	
 		1.f,  1.f,  0.f,
+		1.f,  1.f,  0.f,
+		1.f,  1.f,  0.f,
+		1.f,  1.f,  0.f,
+		// Face 6 -> Pink
+		1.f,  0.f,  1.f,
+		1.f,  0.f,  1.f,
+		1.f,  0.f,  1.f,
 		1.f,  0.f,  1.f,
 	};
-	m_ColorsIndices = std::vector<unsigned short>
+	m_Indiced = true;
+	m_Indices = std::vector<unsigned short>
 	{
-		0, 0, 0, 0, 0, 0,
-		1, 1, 1, 1, 1, 1,
-		2, 2, 2, 2, 2, 2,
-		3, 3, 3, 3, 3, 3,
-		4, 4, 4, 4, 4, 4,
-		5, 5, 5, 5, 5, 5,
-	};*/
+		0, 1, 2,
+		0, 3, 2,
 
+		4, 5, 6,
+		4, 7, 6,
+
+		8, 9, 10,
+		8, 11, 10,
+
+		15, 14, 13,
+		15, 12, 13,
+
+		16, 19, 18,
+		16, 17, 18,
+
+		23, 20, 21,
+		23, 22, 21
+
+	};
 	if (load)
 		Load();
 }

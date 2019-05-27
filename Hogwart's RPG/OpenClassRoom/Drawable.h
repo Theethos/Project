@@ -16,16 +16,13 @@ protected:
 	virtual void Load();
 
 	unsigned m_DrawType;
-	unsigned m_SizeOfVertices, m_SizeOfColors, m_SizeOfTextureCoordinates;
-	unsigned m_SizeOfVerticesIndices, m_SizeOfColorsIndices, m_SizeOfTextureCoordinatesIndices;
+	unsigned m_SizeOfVertices, m_SizeOfColors, m_SizeOfTextureCoordinates, m_SizeOfIndices;
 	unsigned m_VboID, m_VaoID, m_IndexBufferID;
-	bool m_Textured;
+	bool m_Textured, m_Indiced;
 	Shader m_Shader;
 	std::vector<float> m_Vertices;
 	std::vector<float> m_Colors;
 	std::vector<float> m_TextureCoordinates;
-	std::vector<unsigned short> m_VerticesIndices;
-	std::vector<unsigned short> m_ColorsIndices;
-	std::vector<unsigned short> m_TextureCoordinatesIndices;
+	std::vector<unsigned short> m_Indices;
 	std::vector<std::pair<unsigned, unsigned>> m_Textures;	// Pair of textureID & numberOfVerticesAffectedWithThatTexture
 };
