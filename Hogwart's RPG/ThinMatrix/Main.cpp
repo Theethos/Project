@@ -24,7 +24,7 @@ int main(int argc, char * argv[])
 	Shader shader("res/shaders/texture.vert", "res/shaders/texture.frag");
 	Renderer renderer(shader);
 
-	std::vector<float> positions = {
+	/*std::vector<float> positions = {
 		-0.5f, 0.5f,-0.5f,
 		-0.5f,-0.5f,-0.5f,
 		 0.5f,-0.5f,-0.5f,
@@ -106,25 +106,30 @@ int main(int argc, char * argv[])
 			
 			20,21,23,
 			23,21,22
-	};
+	};*/
 
 
-	RawModel model = OBJLoader::LoadFromFile("res/obj/stall.obj", loader);
-	ModelTexture texture(loader.LoadTexture("res/obj/stall.png"));
+	RawModel model = OBJLoader::LoadFromFile("res/obj_file/stall.obj", loader);
+	//RawModel model = loader.LoadToVAO(positions, indices, textureCoords);
+	ModelTexture texture(loader.LoadTexture("res/obj_file/stall.png"));
 	TexturedModel texModel(model, texture);
-	Entity entity(texModel, glm::vec3(0, 0, -10), glm::vec3(0, 0, 0), 1.f);
+	
+	Entity entity(texModel, glm::vec3(0, 0, -25), glm::vec3(0, 0, 0), 1.f);
+	Light light(glm::vec3(0, 0, -20), glm::vec3(1, 1, 1));
+
 	Camera camera;
 
 	while (DisplayManager::ShouldBeRunning())
 	{
 		DisplayManager::StartLoop();
 
-		entity.IncreaseRotation(0, 0.01, 0);
+		entity.IncreaseRotation(0, 0.05, 0);
 
 		camera.Move();
 
 		shader.Bind();
 
+		shader.LoadLight(light);
 		shader.LoadMatrix("viewMatrix", Maths::CreateViewMatrix(camera));
 
 		renderer.Render(entity);

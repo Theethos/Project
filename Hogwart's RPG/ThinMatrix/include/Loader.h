@@ -8,7 +8,8 @@ public:
 	Loader();
 	~Loader();
 
-	RawModel LoadToVAO(const std::vector<float> & vertices, const std::vector<unsigned int> & indices, const std::vector<float> & textureCoords);
+	RawModel LoadToVAO(const std::vector<float>& vertices, const std::vector<float> & textureCoords,
+					   const std::vector<float> & normals, const std::vector<unsigned int> & indices);
 	unsigned LoadTexture(const std::string & texturePath);
 private:
 	// Store the vao and vbo to delete them at the end

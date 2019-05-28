@@ -78,6 +78,9 @@
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\OBJLoader.cpp">
       <Filter>Loaders</Filter>
     </ClCompile>
+    <ClCompile Include="src\Light.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\pch.h">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\OBJLoader.h">
       <Filter>Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Light.h">
+      <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

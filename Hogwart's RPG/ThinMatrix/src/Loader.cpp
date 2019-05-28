@@ -15,14 +15,16 @@ Loader::~Loader()
 		glDeleteTextures(1, &it);
 }
 
-RawModel Loader::LoadToVAO(const std::vector<float>& vertices, const std::vector<unsigned int> & indices, const std::vector<float> & textureCoords)
+RawModel Loader::LoadToVAO(const std::vector<float>& vertices, const std::vector<float> & textureCoords,
+						   const std::vector<float> & normals, const std::vector<unsigned int> & indices)
 {
 	// Load the data in a VAO
 	unsigned vao_id = CreateVAO();
 	BindIndicesBuffer(indices);
 	
 	StoreDataInAttributeList(0, 3, vertices);
-	StoreDataInAttributeList(2, 2, textureCoords);
+	StoreDataInAttributeList(1, 2, textureCoords);
+	StoreDataInAttributeList(2, 3, normals);
 
 	glBindVertexArray(0);
 
@@ -50,8 +52,10 @@ unsigned Loader::LoadTexture(const std::string & texturePath)
 
 	glTexImage2D(GL_TEXTURE_2D, 0, internal_format, texture->w, texture->h, 0, format, GL_UNSIGNED_BYTE, texture->pixels);
 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	/*glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);*/
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -83,6 +87,7 @@ void Loader::StoreDataInAttributeList(const unsigned & attributeNumber, const un
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), 0, GL_STATIC_DRAW);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, data.size() * sizeof(float), data.data());	
 	glVertexAttribPointer(attributeNumber, dimension, GL_FLOAT, GL_FALSE, 0, 0);
+	//glEnableVertexAttribArray(attributeNumber);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	m_Vbos.push_back(vbo_id);

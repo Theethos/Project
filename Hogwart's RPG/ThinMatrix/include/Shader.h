@@ -1,6 +1,8 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include "Light.h"
+
 class Shader
 {
 public:
@@ -17,6 +19,7 @@ public:
 	inline void				LoadBool(const char * location, const bool & data) { glUniform1f(GetUniformLocation(location), (float)data); }
 	inline void				LoadVector(const char * location, const glm::vec3 & data) { glUniform3f(GetUniformLocation(location), data.x, data.y, data.z); }
 	inline void				LoadMatrix(const char * location, const glm::mat4 & data) { glUniformMatrix4fv(GetUniformLocation(location), 1, GL_FALSE, value_ptr(data)); }
+	inline void				LoadLight(Light & light) { LoadVector("lightPosition", light.GetPosition()); LoadVector("lightColor", light.GetColor()); }
 private:
 	// Private functions
 	const std::string		LoadSourceFromFile(const char * path);
