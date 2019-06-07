@@ -8,8 +8,10 @@ public:
 	~RawModel();
 
 	inline const unsigned GetVaoID() const { return m_VaoID; }
-	// VertexCount -> vector.size()
+	// VertexCount -> indices.size()
 	inline const unsigned GetVertexCount() const { return m_VertexCount; }
+
+	//bool operator<(const )
 
 private:
 	unsigned m_VaoID;

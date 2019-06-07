@@ -11,6 +11,7 @@ int InputManager::MouseX(0);
 int InputManager::MouseY(0);
 int InputManager::MouseRelX(0);
 int InputManager::MouseRelY(0);
+int InputManager::MouseWheelY(0);
 
 
 void InputManager::Create() 
@@ -46,8 +47,9 @@ void InputManager::Update()
 	if (IsInstantiated)
 	{
 		// Reset relative position of the mouse (if there is no event, it has to stay at 0)
-		MouseRelX = 0;
-		MouseRelY = 0;
+		MouseRelX	= 0;
+		MouseRelY	= 0;
+		MouseWheelY = 0;
 		while (SDL_PollEvent(&Event))
 		{
 			if (Event.window.event == SDL_WINDOWEVENT_CLOSE)
@@ -81,6 +83,10 @@ void InputManager::Update()
 				MouseY		= Event.motion.y;
 				MouseRelX	= Event.motion.xrel;
 				MouseRelY	= Event.motion.yrel;
+			}
+			else if (Event.type == SDL_MOUSEWHEEL)
+			{
+				MouseWheelY = Event.wheel.y;
 			}
 		}
 	}

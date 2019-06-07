@@ -2,20 +2,18 @@
 
 #include "Shader.h"
 #include "Entity.h"
+#include "Terrain.h"
 
 class Renderer
 {
 public:
-	Renderer(Shader & shader);
+	Renderer();
 	~Renderer();
 
-	void Render(const Entity & model);
+	void RenderEntity(const Entity * entity, Shader & shader, Light & light, Camera & camera);
+	void RenderEntities(const std::map<TexturedModel, std::vector<Entity *>> & entities, Shader & shader, Light & light, Camera & camera);
+	void RenderTerrains(const std::vector<Terrain> & terrains, Shader & shader, Light & light, Camera & camera);
 
 private:
-	Shader & m_Shader;
-	glm::mat4 m_ProjectionMatrix;
-	double m_Fov;
-	double m_AspectRatio;
-	double m_Near, m_Far;
 };
 

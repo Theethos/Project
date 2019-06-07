@@ -1,7 +1,7 @@
 #include "pch.h"
 
 // Clear color
-glm::vec4 DisplayManager::ClearColor(0.4, 0.7, 1.0, 1.0);
+glm::vec4 DisplayManager::ClearColor(0.4, 0.9, 1.0, 1.0);///(0.4, 0.9, 1.0, 1.0); /// (0.4, 0.05, 0.05, 1.0);
 // FPS Management
 Uint32 DisplayManager::StartTime(0);
 Uint32 DisplayManager::DeltaTime(0);
@@ -14,8 +14,14 @@ unsigned DisplayManager::Height(0);
 // Internal state boolean
 bool DisplayManager::IsInstantiated(false);
 bool DisplayManager::IsRunning(true);
+// Projection matrix
+double DisplayManager::Fov(70.0);
+double DisplayManager::AspectRatio((double)Width / (double)Height);
+double DisplayManager::Near(0.1);
+double DisplayManager::Far(1000.0);
+glm::mat4 DisplayManager::ProjectionMatrix;
 
-void DisplayManager::Create(unsigned w, unsigned h)
+void DisplayManager::Create(unsigned w, unsigned h, const bool & fullscreen)
 {
 	if (!IsInstantiated)
 	{
@@ -40,9 +46,20 @@ void DisplayManager::Create(unsigned w, unsigned h)
 		Width = w;
 		Height = h;
 
+		AspectRatio = (double)w / (double)h;
+		std::cout << AspectRatio << std::endl;
+
+		ProjectionMatrix = glm::perspective(Fov, AspectRatio, Near, Far);
+
+		unsigned int flags;
+		if (fullscreen)
+			flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN;
+		else
+			flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
+
 		// Create the window
-		Window = SDL_CreateWindow("Hogwart's RPG in OpenGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
-		if (!Window)
+		Window = SDL_CreateWindow("Hogwart's RPG in OpenGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, flags);
+		if (!Window) 
 		{
 			std::cerr << "Can't create the SDL_Window, error in file " << __FILE__ << ", line " << __LINE__ << std::endl;
 			SDL_Quit();
@@ -59,13 +76,14 @@ void DisplayManager::Create(unsigned w, unsigned h)
 			throw std::exception("Can't create the SDL_Context");
 		}
 
-		if (glewInit() != GLEW_OK)
+		if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
 		{
-			std::cerr << "Can't initialize glew, error in file " << __FILE__ << ", line " << __LINE__ << std::endl;
-			throw std::exception();
+			std::cerr << "Failed to initialize GLAD" << std::endl;
+			throw std::exception("Failed to initialize GLAD");
 		}
 
 		glClearColor(ClearColor.x, ClearColor.y, ClearColor.z, ClearColor.w);
+		glViewport(0, 0, w, h);
 		glEnable(GL_DEPTH_TEST);
 
 		IsInstantiated = true;
@@ -97,8 +115,8 @@ void DisplayManager::EndLoop()
 		DeltaTime = SDL_GetTicks() - StartTime;
 		// Display the fps -> 
 		SDL_SetWindowTitle(Window, ("FPS : " + std::to_string(( 1 / (DeltaTime / 1000.f)))).c_str());
-		if (DeltaTime < FpsCap)
-			SDL_Delay(FpsCap - DeltaTime);
+		//if (DeltaTime < FpsCap)
+			//SDL_Delay(FpsCap - DeltaTime);
 	}
 }
 

@@ -6,21 +6,19 @@
 #pragma once
 
 // OpenGL
+#include "glad/glad.h"
 #include "glm/glm.hpp"
 #include "glm/gtx/transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
-#include "glew.h"
 
-// SFML
-#include "SFML/Graphics.hpp"
-#include "SFML/Window.hpp"
-#include "SFML/Audio.hpp"
-#include "SFML/Network.hpp"
-#include "SFML/System.hpp"
+// Assimp includes
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 // SDL
-#include "SDL.h"
-#include "SDL_image.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_Image.h>
 
 // STL
 #include <cstdlib>
@@ -33,7 +31,10 @@
 #include <map>
 #include <math.h>
 
+// Other libs
+#include "stb_image.h"
+
 // Managers / Static classes
 #include "DisplayManager.h"
 #include "InputManager.h"
-#include "Maths.h"
+#include "MyMaths.h"

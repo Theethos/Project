@@ -22,7 +22,23 @@
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\Main.cpp" />
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\Camera.cpp" />
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\DisplayManager.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\glad.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\OBJLoader.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\Player.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\stb_image.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\Terrain.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\TerrainTexture.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\TerrainTexturePack.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\InputManager.cpp" />
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\Loader.cpp" />
@@ -42,10 +58,15 @@
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\Camera.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\DisplayManager.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\OBJLoader.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\Player.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\stb_image.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\Terrain.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\TerrainTexture.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\TerrainTexturePack.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\InputManager.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\Loader.h" />
-    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\Maths.h" />
+    <ClInclude Include="include\MyMaths.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\ModelTexture.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\pch.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\RawModel.h" />
@@ -55,8 +76,10 @@
     <ClInclude Include="include\TexturedModel.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\texture.frag" />
-    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\texture.vert" />
+    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\StaticShader.frag" />
+    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\StaticShader.vert" />
+    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\TerrainShader.frag" />
+    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\TerrainShader.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -110,10 +133,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)\bin</OutDir>
+    <OutDir>$(ProjectDir)\bin\Win64\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)\bin</OutDir>
+    <OutDir>$(ProjectDir)\bin\Win64\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(ProjectDir)\bin\Win32\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(ProjectDir)\bin\Win32\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -125,13 +154,13 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\External\OpenGL\GLEW\include;$(SolutionDir)\External\SFML_64bits\include;$(SolutionDir)\External\OpenGL\GLM;$(SolutionDir)\External\SDL2\include;$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)\External\OpenGL\GLEW\lib\Win64;$(SolutionDir)\External\SDL2\lib\64bits;$(SolutionDir)\External\SFML_64bits\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2test.lib;SDL2_net.lib;SDL2_ttf.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-network.lib;sfml-window.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\lib\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2test.lib;SDL2_net.lib;SDL2_ttf.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -140,7 +169,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(ProjectDir)\lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenGL32.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_net.lib;SDL2_ttf.lib;SDL2test.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -148,11 +184,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\External\OpenGL\GLEW\include;$(SolutionDir)\External\SFML_64bits\include;$(SolutionDir)\External\OpenGL\GLM;$(SolutionDir)\External\SDL2\include;$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)\External\OpenGL\GLEW\lib\Win64;$(SolutionDir)\External\SDL2\lib\64bits;$(SolutionDir)\External\SFML_64bits\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2test.lib;SDL2_net.lib;SDL2_ttf.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-network.lib;sfml-window.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\lib\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2test.lib;SDL2_net.lib;SDL2_ttf.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -163,10 +201,15 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(ProjectDir)\lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenGL32.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_net.lib;SDL2_ttf.lib;SDL2test.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

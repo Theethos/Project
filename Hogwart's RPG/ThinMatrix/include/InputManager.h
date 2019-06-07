@@ -19,10 +19,11 @@ public:
 	static bool DidMouseMove();
 	static glm::vec2 GetMousePosition();
 	static glm::vec2 GetMouseRelativePosition();
+	inline static int GetMouseWheelY() { return MouseWheelY; }
 	static void HideCursor(const bool & hide);
 	static void CatchCursor(const bool & _catch);
 
-	static bool MouseWheel[2];
+
 private:
 	static bool IsInstantiated;
 	static SDL_Event Event;
@@ -30,7 +31,7 @@ private:
 	static std::vector<bool> Keys;
 	static std::vector<bool> Mouse;
 
-	static int MouseX, MouseY, MouseRelX, MouseRelY;
+	static int MouseX, MouseY, MouseRelX, MouseRelY, MouseWheelY;
 
 	InputManager() = delete;
 	~InputManager() = delete;

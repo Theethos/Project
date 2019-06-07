@@ -2,9 +2,19 @@
 #include "Shader.h"
 
 // Constructor
-Shader::Shader(const char * vertexShaderPath, const char * fragmentShaderPath)
+Shader::Shader(const std::string & vertexShaderPath, const std::string & fragmentShaderPath)
 {
-	this->CreateShader(LoadSourceFromFile(vertexShaderPath).c_str(), LoadSourceFromFile(fragmentShaderPath).c_str());
+	this->CreateShader(LoadSourceFromFile(("res/shaders/" + vertexShaderPath + ".vert").c_str()).c_str(), LoadSourceFromFile(("res/shaders/" + fragmentShaderPath + ".frag").c_str()).c_str());
+	this->Bind();
+	this->LoadMatrix("projectionMatrix", DisplayManager::GetProjectionMatrix());
+	this->Unbind();
+}
+Shader::Shader(const std::string & shaderName)
+{
+	this->CreateShader(LoadSourceFromFile(("res/shaders/" + shaderName + ".vert").c_str()).c_str(), LoadSourceFromFile(("res/shaders/" + shaderName + ".frag").c_str()).c_str());
+	this->Bind();
+	this->LoadMatrix("projectionMatrix", DisplayManager::GetProjectionMatrix());
+	this->Unbind();
 }
 // Destructor
 Shader::~Shader()
@@ -25,6 +35,16 @@ void Shader::Bind() const
 void Shader::Unbind() const
 {
 	glUseProgram(0);
+}
+
+// Function for the terrains textures
+void Shader::ConnectTextureUnits()
+{
+	LoadInt("bgColor", 0);
+	LoadInt("rColor", 1);
+	LoadInt("gColor", 2);
+	LoadInt("bColor", 3);
+	LoadInt("blendMap", 4);
 }
 
 // Private functions
@@ -80,10 +100,6 @@ void Shader::CreateShader(const char * vertexShader, const char * fragmentShader
 
 		glAttachShader(m_ProgramID, m_VertexID);
 		glAttachShader(m_ProgramID, m_FragmentID);
-
-		glBindAttribLocation(m_ProgramID, 0, "in_Vertex");
-		glBindAttribLocation(m_ProgramID, 1, "in_TextureCoord0");		// ~= à in_TexCoord0 dans les fichiers OPC
-		glBindAttribLocation(m_ProgramID, 2, "in_Normal");
 
 		glLinkProgram(m_ProgramID);
 		glValidateProgram(m_ProgramID);
