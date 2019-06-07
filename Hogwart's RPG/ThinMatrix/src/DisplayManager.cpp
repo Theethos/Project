@@ -47,7 +47,6 @@ void DisplayManager::Create(unsigned w, unsigned h, const bool & fullscreen)
 		Height = h;
 
 		AspectRatio = (double)w / (double)h;
-		std::cout << AspectRatio << std::endl;
 
 		ProjectionMatrix = glm::perspective(Fov, AspectRatio, Near, Far);
 

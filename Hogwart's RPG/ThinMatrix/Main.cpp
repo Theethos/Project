@@ -41,7 +41,7 @@ static void ProcessEntity(std::map<TexturedModel, std::vector<Entity *>> & entit
 
 int main(int argc, char * argv[])
 {
-	DisplayManager::Create();
+	DisplayManager::Create(800, 600, false);
 	InputManager::Create();
 
 	Loader loader;
@@ -215,7 +215,7 @@ int main(int argc, char * argv[])
 	};
 
 	// Player
-	Player player(texPlayer, { -40, 0, -40 }, { 0, 0, 0 }, 0.5f);
+	Player player(texPlayer, { -200, 0, -200 }, { 0, 0, 0 }, 0.5f);
 	ProcessEntity(entities, &player);
 
 	Camera camera(player);
