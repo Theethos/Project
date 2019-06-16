@@ -28,8 +28,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\GuiRenderer.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\GuiTexture.cpp" />
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\OBJLoader.cpp" />
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\Player.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\SkyboxRenderer.cpp" />
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\stb_image.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -39,6 +42,10 @@
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\Terrain.cpp" />
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\TerrainTexture.cpp" />
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\TerrainTexturePack.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\TextureData.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\WaterFrameBuffer.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\WaterRenderer.cpp" />
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\WaterTile.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\InputManager.cpp" />
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\Loader.cpp" />
@@ -57,12 +64,20 @@
   <ItemGroup>
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\Camera.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\DisplayManager.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\GuiRenderer.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\GuiTexture.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\Macros.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\OBJLoader.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\Player.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\SkyboxRenderer.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\stb_image.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\Terrain.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\TerrainTexture.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\TerrainTexturePack.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\TextureData.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\WaterFrameBuffer.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\WaterRenderer.h" />
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\WaterTile.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\InputManager.h" />
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\Loader.h" />
@@ -76,10 +91,16 @@
     <ClInclude Include="include\TexturedModel.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\GuiShader.frag" />
+    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\GuiShader.vert" />
+    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\SkyboxShader.frag" />
+    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\SkyboxShader.vert" />
     <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\StaticShader.frag" />
     <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\StaticShader.vert" />
     <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\TerrainShader.frag" />
     <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\TerrainShader.vert" />
+    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\WaterShader.frag" />
+    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\WaterShader.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

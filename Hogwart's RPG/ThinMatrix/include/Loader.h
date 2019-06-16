@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RawModel.h"
+#include "TextureData.h"
 
 class Loader
 {
@@ -8,9 +9,11 @@ public:
 	Loader();
 	~Loader();
 
-	RawModel LoadToVAO(const std::vector<float>& vertices, const std::vector<float> & textureCoords,
+	RawModel		LoadToVAO(const std::vector<float> & positions, const std::vector<float> & textureCoords,
 					   const std::vector<float> & normals, const std::vector<unsigned int> & indices);
-	unsigned LoadTexture(const char * texturePath, const bool & flip = false);
+	RawModel		LoadToVAO(const std::vector<float> & positions, const unsigned int & dimension);
+	unsigned int	LoadTexture(const char * texturePath, const bool & flip = false);
+	unsigned int	LoadCubeMap(const std::vector<std::string> & texturePaths);
 private:
 	// Store the vao and vbo to delete them at the end
 	std::vector<unsigned> m_Vaos;

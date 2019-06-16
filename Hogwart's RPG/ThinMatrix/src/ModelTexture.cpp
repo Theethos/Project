@@ -6,7 +6,8 @@ ModelTexture::ModelTexture(const unsigned & textureID, const float & shininess, 
 	m_Shininess(shininess),
 	m_Reflectivity(reflectivity),
 	m_HasTransparency(false),
-	m_HasFakeLight(false)
+	m_HasFakeLight(false),
+	m_NumberOfRows(1)
 {
 }
 

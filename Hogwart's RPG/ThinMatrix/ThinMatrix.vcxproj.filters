@@ -16,9 +16,6 @@
     <Filter Include="Managers">
       <UniqueIdentifier>{81404006-7255-4610-a34e-c425b86a6e85}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Loaders">
-      <UniqueIdentifier>{cd12e831-0c9e-4549-9602-21b364df558e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Renderer">
       <UniqueIdentifier>{c097fc01-4eb2-4c27-8c7b-b21834ae14b6}</UniqueIdentifier>
     </Filter>
@@ -39,6 +36,15 @@
     </Filter>
     <Filter Include="Terrain">
       <UniqueIdentifier>{e42e5849-38f5-471e-83b2-957b4924cc7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUIs">
+      <UniqueIdentifier>{46e3407d-e405-45f8-9fd1-1ceed1f571c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Water">
+      <UniqueIdentifier>{42630132-0d4a-4216-a403-bdff74cdc07d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loaders">
+      <UniqueIdentifier>{cd12e831-0c9e-4549-9602-21b364df558e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -93,14 +99,35 @@
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\Terrain.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\TerrainTexture.cpp">
-      <Filter>Terrain</Filter>
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\Player.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\GuiTexture.cpp">
+      <Filter>GUIs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\GuiRenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\TextureData.cpp">
+      <Filter>Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\SkyboxRenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\WaterRenderer.cpp">
+      <Filter>Water</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\WaterTile.cpp">
+      <Filter>Water</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\WaterFrameBuffer.cpp">
+      <Filter>Water</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\TerrainTexturePack.cpp">
       <Filter>Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\Player.cpp">
-      <Filter>Entities</Filter>
+    <ClCompile Include="..\..\Hogwart%27s RPG\ThinMatrix\src\TerrainTexture.cpp">
+      <Filter>Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -152,14 +179,38 @@
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\Terrain.h">
       <Filter>Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\TerrainTexture.h">
-      <Filter>Terrain</Filter>
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\Player.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\Macros.h">
+      <Filter>Toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\GuiTexture.h">
+      <Filter>GUIs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\GuiRenderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\TextureData.h">
+      <Filter>Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\SkyboxRenderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\WaterRenderer.h">
+      <Filter>Water</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\WaterTile.h">
+      <Filter>Water</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\WaterFrameBuffer.h">
+      <Filter>Water</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\TerrainTexturePack.h">
       <Filter>Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\Player.h">
-      <Filter>Entities</Filter>
+    <ClInclude Include="..\..\Hogwart%27s RPG\ThinMatrix\include\TerrainTexture.h">
+      <Filter>Terrain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -173,6 +224,24 @@
       <Filter>Fichiers de ressources\Shaders</Filter>
     </None>
     <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\TerrainShader.frag">
+      <Filter>Fichiers de ressources\Shaders</Filter>
+    </None>
+    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\GuiShader.frag">
+      <Filter>Fichiers de ressources\Shaders</Filter>
+    </None>
+    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\GuiShader.vert">
+      <Filter>Fichiers de ressources\Shaders</Filter>
+    </None>
+    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\SkyboxShader.vert">
+      <Filter>Fichiers de ressources\Shaders</Filter>
+    </None>
+    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\SkyboxShader.frag">
+      <Filter>Fichiers de ressources\Shaders</Filter>
+    </None>
+    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\WaterShader.frag">
+      <Filter>Fichiers de ressources\Shaders</Filter>
+    </None>
+    <None Include="..\..\Hogwart%27s RPG\ThinMatrix\res\shaders\WaterShader.vert">
       <Filter>Fichiers de ressources\Shaders</Filter>
     </None>
   </ItemGroup>

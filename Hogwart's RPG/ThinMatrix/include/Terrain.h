@@ -7,7 +7,7 @@
 class Terrain
 {
 public:
-	Terrain(const int & gridX, const int & gridZ, Loader & loader, const TerrainTexturePack & textures, const TerrainTexture & blendMap);
+	Terrain(const int & gridX, const int & gridZ, Loader & loader, const TerrainTexturePack & textures, const TerrainTexture & blendMap, const char * heightMap);
 	Terrain(const Terrain & other);
 	Terrain(const Terrain && other);
 	~Terrain();
@@ -20,14 +20,18 @@ public:
 	inline const RawModel			GetRawModel() const { return m_Model; }
 	inline const TerrainTexturePack	GetTextures() const { return m_Textures; }
 	inline const TerrainTexture		GetBlendMap() const { return m_BlendMap; }
+	inline const float				GetMinimumHeight() const { return m_MinHeight; }
+	float							GetHeightOfTerrain(const float & worldX, const float & worldZ) const;
 
 private:
-	static unsigned int Size, VertexCount;
-	int m_WorldPositionX, m_WorldPositionZ;
+	static float SIZE, MAX_HEIGHT, MAX_PIXEL_COLOR;
+	int m_WorldPositionX, m_WorldPositionZ, m_VertexCount;
 	RawModel m_Model;
 	TerrainTexturePack m_Textures;
 	TerrainTexture m_BlendMap;
-
-	RawModel GenerateTerrain(Loader & loader);
+	float ** m_Heights, m_MinHeight;
+	RawModel		GenerateTerrain(Loader & loader, const char * heightMap);
+	inline float	GetHeight(const unsigned int & x, const unsigned int & y, const SDL_Surface * data);
+	glm::vec3		CalculateNormal(const unsigned int & x, const unsigned int & y, const SDL_Surface * data);
 };
 

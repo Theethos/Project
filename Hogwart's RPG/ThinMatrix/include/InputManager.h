@@ -1,6 +1,7 @@
 #pragma once
 
 #define GetKey InputManager::IsKeyPressed
+#define GetKeyOnce InputManager::IsKeyPressedOnce
 #define GetButton InputManager::IsButtonPressed
 
 ////////////////////////////////////////////////////////////
@@ -15,6 +16,7 @@ public:
 	static void Destroy();
 
 	static bool IsKeyPressed(const int & keyCode);
+	static bool IsKeyPressedOnce(const int & keyCode);
 	static bool IsButtonPressed(const int & buttonCode);
 	static bool DidMouseMove();
 	static glm::vec2 GetMousePosition();
@@ -30,6 +32,8 @@ private:
 
 	static std::vector<bool> Keys;
 	static std::vector<bool> Mouse;
+
+	static int PreviousKey;
 
 	static int MouseX, MouseY, MouseRelX, MouseRelY, MouseWheelY;
 

@@ -12,7 +12,8 @@ int InputManager::MouseY(0);
 int InputManager::MouseRelX(0);
 int InputManager::MouseRelY(0);
 int InputManager::MouseWheelY(0);
-
+// Keyboards states
+int InputManager::PreviousKey(-1);
 
 void InputManager::Create() 
 {
@@ -29,9 +30,6 @@ void InputManager::Create()
 			{
 				Mouse.push_back(false);
 			}
-
-			HideCursor(true);
-			CatchCursor(true);
 		}
 		else
 			throw std::exception("An InputManager has already been instantiated\n");
@@ -104,6 +102,21 @@ bool InputManager::IsKeyPressed(const int & keyCode)
 	{
 		if (keyCode < Keys.size())
 			return Keys[keyCode];
+		return false;
+	}
+}
+
+bool InputManager::IsKeyPressedOnce(const int & keyCode)
+{
+	if (IsInstantiated)
+	{
+		if (Keys[keyCode] && keyCode != PreviousKey)
+		{
+			PreviousKey = keyCode;
+			return true;
+		}
+		if (PreviousKey != -1 && !Keys[PreviousKey])
+			PreviousKey = -1;
 		return false;
 	}
 }

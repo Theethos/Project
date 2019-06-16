@@ -30,6 +30,8 @@
 #include <chrono>
 #include <map>
 #include <math.h>
+#include <array>
+#include <initializer_list>
 
 // Other libs
 #include "stb_image.h"
@@ -38,3 +40,5 @@
 #include "DisplayManager.h"
 #include "InputManager.h"
 #include "MyMaths.h"
+#include "Macros.h"
+

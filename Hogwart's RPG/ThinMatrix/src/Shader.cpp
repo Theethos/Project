@@ -47,6 +47,26 @@ void Shader::ConnectTextureUnits()
 	LoadInt("blendMap", 4);
 }
 
+void Shader::LoadLights(const std::vector<Light> & light)
+{
+	if (light.size() > 1)
+	{
+		for (unsigned int i = 0; i < light.size(); ++i)
+		{
+			std::string index = std::to_string(i);
+			LoadVector3(("lightPosition[" + index + "]").c_str(), light[i].GetPosition());
+			LoadVector3(("lightColor[" + index + "]").c_str(), light[i].GetColor());
+			LoadVector3(("attenuation[" + index + "]").c_str(), light[i].GetAttenuation());
+		}
+	}
+	else
+	{
+		LoadVector3("lightPosition", light[0].GetPosition());
+		LoadVector3("lightColor", light[0].GetColor());
+		LoadVector3("attenuation", light[0].GetAttenuation());
+	}
+}
+
 // Private functions
 // Load the source code from a file to a string
 const std::string Shader::LoadSourceFromFile(const char * path)

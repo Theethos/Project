@@ -10,10 +10,11 @@ public:
 	Renderer();
 	~Renderer();
 
-	void RenderEntity(const Entity * entity, Shader & shader, Light & light, Camera & camera);
-	void RenderEntities(const std::map<TexturedModel, std::vector<Entity *>> & entities, Shader & shader, Light & light, Camera & camera);
-	void RenderTerrains(const std::vector<Terrain> & terrains, Shader & shader, Light & light, Camera & camera);
+	void RenderEntity(const Entity * entity, Shader & shader, std::vector<Light> & light, Camera & camera, const glm::vec4 & plane = { 0, 0, 0, 0 });
+	void RenderEntities(const std::map<TexturedModel, std::vector<Entity *>> & entities, Shader & shader, std::vector<Light> & light, Camera & camera, const glm::vec4 & plane = { 0, 0, 0, 0 });
+	void RenderTerrains(const std::vector<Terrain> & terrains, Shader & shader, std::vector<Light> & light, Camera & camera, const glm::vec4 & plane = { 0, 0, 0, 0 });
 
 private:
+	static unsigned int NUMBER_LIGHT;
 };
 
